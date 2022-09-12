@@ -10,7 +10,7 @@ Materials for DATS0001 Foundations of Data Science, ULiège, Fall 2022.
 
 | Date | Topic |
 | --- | --- |
-| September 26 | Course syllabus<br> Lecture 1: Introduction |
+| September 26 | [Course syllabus](https://glouppe.github.io/dats0001-foundations-of-data-science/?p=course-syllabus.md)<br> Lecture 1: Introduction |
 | October 3 | Lecture 2: Data |
 | October 10 | Lecture 3: Visualization |
 | October 17 | Lecture 4: Bayesian modeling |
