@@ -25,7 +25,7 @@ Instructions and materials are all available on GitHub [github.com/glouppe/dats0
 
 - The course is hands-on. 
 - Practice your data science skills in the classroom and at home. 
-- Biweekly homeworks.
+- Biweekly~ homeworks.
 
 ---
 
