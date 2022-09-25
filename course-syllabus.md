@@ -21,9 +21,15 @@ Instructions and materials are all available on GitHub [github.com/glouppe/dats0
 
 ---
 
+# Lectures
+
+- Mondays, 1:45 PM
+- Come with your laptop! 
+
+---
+
 # Homeworks
 
-- The course is hands-on. 
 - Practice your data science skills in the classroom and at home. 
 - Biweekly~ homeworks.
 
@@ -31,7 +37,8 @@ Instructions and materials are all available on GitHub [github.com/glouppe/dats0
 
 # Exam
 
-- Data science study to do at home.
+- Data science analysis to do at home.
+- Short oral exam to explain your analysis.
 
 ---
 
@@ -46,3 +53,10 @@ class: end-slide, center
 count: false
 
 Let's start!
+
+???
+
+- Proceed with `nb01`
+- Draw the Box's loop (see sidenotes)
+- Eplain the outline of the course
+- Move on to the content of the notebook.
