@@ -5,6 +5,7 @@ Materials for DATS0001 Foundations of Data Science, ULiège, Fall 2022.
 - Instructor: Gilles Louppe
 - When: Fall 2022, Monday 1:45 PM
 - Classroom: 2.93 / B28
+- [Discord](https://discord.gg/g2SXBeNA) server
 
 ## Agenda
 
