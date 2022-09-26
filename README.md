@@ -10,8 +10,8 @@ Materials for DATS0001 Foundations of Data Science, ULiège, Fall 2022.
 
 | Date | Topic |
 | --- | --- |
-| September 26 | [Course syllabus](https://glouppe.github.io/dats0001-foundations-of-data-science/?p=course-syllabus.md)<br> Lecture 1: Introduction<br>`nb01`: Build, compute, critique, repeat<br>`nb02`: Data science with Python<br>Reading: [Blei, 2014](http://www.cs.columbia.edu/~blei/fogm/2020F/readings/Blei2014.pdf) |
-| October 3 | Lecture 2: Data<br>`nb03`: Tables<br>`nb04`: Data wrangling |
+| September 26 | [Course syllabus](https://glouppe.github.io/dats0001-foundations-of-data-science/?p=course-syllabus.md)<br> Lecture 1: Introduction<br>`nb01`: Build, compute, critique, repeat [[notebook](./nb01-box-loop.ipynb)]<br>Reading: [Blei, 2014](http://www.cs.columbia.edu/~blei/fogm/2020F/readings/Blei2014.pdf) |
+| October 3 | Lecture 2: Data<br>`nb02`: Data science with Python<br>`nb03`: Tables<br>`nb04`: Data wrangling |
 | October 10 | Lecture 3: Visualization<br>`nb05`: Plots<br>`nb06`: Visualizing high-dimensional data  |
 | October 17 | Lecture 4: Probabilistic modeling<br>`nb07`: Probabilistic modeling |
 | October 24 | Lecture 5: Approximate Bayesian inference (part 1)<br>`nb08`: Point-valued estimates |
