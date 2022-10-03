@@ -17,9 +17,9 @@ Materials for DATS0001 Foundations of Data Science, ULiège, Fall 2022.
 | October 17 | Lecture 4: Probabilistic modeling<br>`nb06`: Probabilistic modeling |
 | October 24 | Lecture 5: Approximate Bayesian inference (part 1)<br>`nb07`: Point-valued estimates |
 | November 7 | Lecture 6: Approximate Bayesian inference (part 2)<br>`nb08`: Markov Chain Monte Carlo, Variational inference |
-| November 14 | Lecture 7: Model criticism<br>`nb9`: Model evaluation<br>`nb09`: Model revision and comparison |
-| November 21 | Lecture 8: Applications<br>`nb12`: Answering questions and claiming discoveries<br>`nb13`: Bayesian decision theory |
-| November 28 | Lecture 9: Wrap-up case study<br>`nb14`: Wrap-up case study |
+| November 14 | Lecture 7: Model criticism<br>`nb09`: Model evaluation<br>`nb10`: Model revision and comparison |
+| November 21 | Lecture 8: Applications<br>`nb11`: Answering questions and claiming discoveries<br>`nb12`: Bayesian decision theory |
+| November 28 | Lecture 9: Wrap-up case study<br>`nb13`: Wrap-up case study |
 
 ## Homeworks
 
