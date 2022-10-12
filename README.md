@@ -16,6 +16,7 @@ Materials for DATS0001 Foundations of Data Science, ULiège, Fall 2022.
 | October 10 | Lecture 3: Visualization<br>`nb04`: Plots [[notebook](./nb04-plots.ipynb)]<br>`nb05`: Visualizing high-dimensional data [[notebook](./nb05-high-dimensional-data.ipynb)]<br>Reading: Rougier et al, [Ten Simple Rules for Better Figures](https://journals.plos.org/ploscompbiol/article/file?id=10.1371/journal.pcbi.1003833&type=printable), 2014  |
 | October 17 | Lecture 4: Probabilistic modeling<br>`nb06`: Probabilistic modeling |
 | October 24 | Lecture 5: Approximate Bayesian inference (part 1)<br>`nb07`: Point-valued estimates |
+| October 31 | Homework 1: [Explore the Argo data](https://github.com/glouppe-teaching/dats0001-hw1)
 | November 7 | Lecture 6: Approximate Bayesian inference (part 2)<br>`nb08`: Markov Chain Monte Carlo, Variational inference |
 | November 14 | Lecture 7: Model criticism<br>`nb09`: Model evaluation<br>`nb10`: Model revision and comparison |
 | November 21 | Lecture 8: Applications<br>`nb11`: Answering questions and claiming discoveries<br>`nb12`: Bayesian decision theory |
@@ -23,4 +24,6 @@ Materials for DATS0001 Foundations of Data Science, ULiège, Fall 2022.
 
 ## Homeworks
 
-TBD.
+- Homework 1: [Explore the Argo data](https://github.com/glouppe-teaching/dats0001-hw1) (due by October 31)
+- Homework 2: TBD
+- Homework 3: TBD
