@@ -16,15 +16,16 @@ Materials for DATS0001 Foundations of Data Science, ULiège, Fall 2022.
 | October 10 | Lecture 3: Visualization<br>`nb04`: Plots [[notebook](./nb04-plots.ipynb)]<br>`nb05`: Visualizing high-dimensional data [[notebook](./nb05-high-dimensional-data.ipynb)]<br>Sidenotes: Probabilistic PCA [[PDF](./pdf/lec03-sidenotes.pdf)]<br>Reading: Rougier et al, [Ten Simple Rules for Better Figures](https://journals.plos.org/ploscompbiol/article/file?id=10.1371/journal.pcbi.1003833&type=printable), 2014  |
 | October 17 | Lecture 4: Bayesian probabilistic modeling<br>Sidenotes: Bayesian probabilistic modeling [[PDF](./pdf/lec04-sidenotes.pdf)]<br>`nb06`: Latent variable models [[notebook](./nb06-latent-variable-models.ipynb)]<br>Reading: Gelman et al, [Bayesian workflow](https://arxiv.org/abs/2011.01808), 2020 [Sections 1 and 2]<br>Reading: Blei, [Build, Compute, Critique, Repeat](http://www.cs.columbia.edu/~blei/fogm/2020F/readings/Blei2014.pdf), 2014 [Sections 2 and 3] |
 | October 24 | Lecture 5: Expectation-Minimization<br>Sidenotes: Expectation-Maximization [[PDF](./pdf/lec05-sidenotes.pdf)]<br>`nb07`: Expectation-Maximization [[notebook](./nb07-em.ipynb)]<br>Reading: Dempster et al, [Maximum Likelihood from Incomplete Data via EM](https://www.jstor.org/stable/2984875), 1977 |
-| October 31 | Homework 1: [Explore the Argo data](https://github.com/glouppe-teaching/dats0001-hw1)
+| October 31 | Homework 1: [Explore the Argo data](https://github.com/glouppe-teaching/dats0001-hw1) |
 | November 7 | Lecture 6: Variational inference<br>Sidenotes: ADVI [[PDF](./pdf/lec06-sidenotes.pdf)]<br>`nb08`: ADVI [[notebook](./nb08-advi.ipynb)]<br>Reading: Kucukelbir et al, [Automatic Differentiation Variational Inference](https://arxiv.org/abs/1603.00788), 2016  |
 | November 14 | Lecture 7: Markov Chain Monte Carlo<br>`nb09`: Markov Chain Monte Carlo |
 | November 21 | Lecture 8: Model criticism<br>`nb10`: Model evaluation and comparison |
-| November 28 | Lecture 9: Applications<br>`nb11`: Answering questions and claiming discoveries<br>`nb12`: Bayesian decision theory
+| November 28 | Lecture 9: Applications<br>`nb11`: Answering questions and claiming discoveries<br>`nb12`: Bayesian decision theory |
+| November 28 | Homework 2: [Random walks for Argo floats](https://github.com/glouppe-teaching/dats0001-hw2) |
 | December 5 | Wrap-up case study<br>`nb13`: Wrap-up case study |
 
 ## Homeworks
 
 - Homework 1: [Explore the Argo data](https://github.com/glouppe-teaching/dats0001-hw1) (due by October 31)
-- Homework 2: TBD
+- Homework 2: [Random walks for Argo floats](https://github.com/glouppe-teaching/dats0001-hw2) (due by November 28)
 - Homework 3: TBD
