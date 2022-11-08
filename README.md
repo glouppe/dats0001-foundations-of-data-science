@@ -21,11 +21,11 @@ Materials for DATS0001 Foundations of Data Science, ULiège, Fall 2022.
 | November 14 | Lecture 7: Markov Chain Monte Carlo<br>`nb09`: Markov Chain Monte Carlo |
 | November 21 | Lecture 8: Model criticism<br>`nb10`: Model evaluation and comparison |
 | November 28 | Lecture 9: Applications<br>`nb11`: Answering questions and claiming discoveries<br>`nb12`: Bayesian decision theory |
-| November 28 | Homework 2: [Random walks for Argo floats](https://github.com/glouppe-teaching/dats0001-hw2) |
+| November 28 | Homework 2: [Random walks of Argo floats](https://github.com/glouppe-teaching/dats0001-hw2) |
 | December 5 | Wrap-up case study<br>`nb13`: Wrap-up case study |
 
 ## Homeworks
 
 - Homework 1: [Explore the Argo data](https://github.com/glouppe-teaching/dats0001-hw1) (due by October 31)
-- Homework 2: [Random walks for Argo floats](https://github.com/glouppe-teaching/dats0001-hw2) (due by November 28)
+- Homework 2: [Random walks of Argo floats](https://github.com/glouppe-teaching/dats0001-hw2) (due by November 28)
 - Homework 3: TBD
