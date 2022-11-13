@@ -18,7 +18,7 @@ Materials for DATS0001 Foundations of Data Science, ULiège, Fall 2022.
 | October 24 | Lecture 5: Expectation-Minimization<br>Sidenotes: Expectation-Maximization [[PDF](./pdf/lec05-sidenotes.pdf)]<br>`nb07`: Expectation-Maximization [[notebook](./nb07-em.ipynb)]<br>Reading: Dempster et al, [Maximum Likelihood from Incomplete Data via EM](https://www.jstor.org/stable/2984875), 1977 |
 | October 31 | Homework 1: [Explore the Argo data](https://github.com/glouppe-teaching/dats0001-hw1) |
 | November 7 | Lecture 6: Variational inference<br>Sidenotes: ADVI [[PDF](./pdf/lec06-sidenotes.pdf)]<br>`nb08`: ADVI [[notebook](./nb08-advi.ipynb)]<br>Reading: Kucukelbir et al, [Automatic Differentiation Variational Inference](https://arxiv.org/abs/1603.00788), 2016  |
-| November 14 | Lecture 7: Markov Chain Monte Carlo<br>`nb09`: Markov Chain Monte Carlo |
+| November 14 | Lecture 7: Markov Chain Monte Carlo<br>`nb09`: Markov Chain Monte Carlo [[notebook](./nb09-mcmc.ipynb)]<br>Reading: Gelman et al, [Bayesian Data Analysis, 3rd](http://www.stat.columbia.edu/~gelman/book/BDA3.pdf), 2021 [Chapter 11] |
 | November 21 | Lecture 8: Model criticism<br>`nb10`: Model evaluation and comparison |
 | November 28 | Lecture 9: Applications<br>`nb11`: Answering questions and claiming discoveries<br>`nb12`: Bayesian decision theory |
 | November 28 | Homework 2: [Random walks of Argo floats](https://github.com/glouppe-teaching/dats0001-hw2) |
