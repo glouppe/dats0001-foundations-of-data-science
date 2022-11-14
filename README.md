@@ -23,7 +23,7 @@ Materials for DATS0001 Foundations of Data Science, ULiège, Fall 2022.
 | November 28 | _No class_ |
 | November 28 | Homework 2: [Random walks of Argo floats](https://github.com/glouppe-teaching/dats0001-hw2) |
 | December 5  | _No class_ |
-| December 12 | Wrap-up case study<br>`nb12`: Wrap-up case study |
+| December 12 | Lecture 9: Wrap-up case study<br>`nb12`: Wrap-up case study |
 
 ## Homeworks
 
