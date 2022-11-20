@@ -19,7 +19,7 @@ Materials for DATS0001 Foundations of Data Science, ULiège, Fall 2022.
 | October 31 | Homework 1: [Explore the Argo data](https://github.com/glouppe-teaching/dats0001-hw1) |
 | November 7 | Lecture 6: Variational inference [[sidenotes](./pdf/lec06-sidenotes.pdf)]<br>`nb08`: ADVI [[notebook](./nb08-advi.ipynb)]<br>Reading: Kucukelbir et al, [Automatic Differentiation Variational Inference](https://arxiv.org/abs/1603.00788), 2016  |
 | November 14 | Lecture 7: Markov Chain Monte Carlo [[sidenotes](./pdf/lec07-sidenotes.pdf)]<br>`nb09`: Markov Chain Monte Carlo [[notebook](./nb09-mcmc.ipynb)]<br>Reading: Gelman et al, [Bayesian Data Analysis, 3rd](http://www.stat.columbia.edu/~gelman/book/BDA3.pdf), 2021 [Chapter 11] |
-| November 21 | Lecture 8: Model criticism<br>`nb10`: Model evaluation<br>`nb11`: Model comparison |
+| November 21 | Lecture 8: Model criticism<br>`nb10`: Model evaluation [[notebook](./nb10-model-checking.ipynb)]<br>`nb11`: Model comparison [[notebook](./nb11-model-comparison.ipynb)]<br>Reading: Gelman et al, [Bayesian Data Analysis, 3rd](http://www.stat.columbia.edu/~gelman/book/BDA3.pdf), 2021 [Chapters 6 and 7] |
 | November 28 | _No class_ |
 | November 28 | Homework 2: [Random walks of Argo floats](https://github.com/glouppe-teaching/dats0001-hw2) |
 | December 5  | _No class_ |
