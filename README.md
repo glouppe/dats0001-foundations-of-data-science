@@ -23,7 +23,7 @@ Materials for DATS0001 Foundations of Data Science, ULiège, Fall 2022.
 | November 28 | _No class_ |
 | November 28 | Homework 2: [Random walks of Argo floats](https://github.com/glouppe-teaching/dats0001-hw2) |
 | December 5  | _No class_ |
-| December 12 | Lecture 9: Wrap-up case study<br>`nb12`: Wrap-up case study |
+| December 12 | Lecture 9: Wrap-up case study<br>`nb12`: Space Shuttle Challenger disaster [[notebook](./nb12-space-shuttle-disaster.ipynb)]<br>Reading: Cam Davidson-Pilon, [Bayesian Methods for Hackers](https://camdavidsonpilon.github.io/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers/#contents), 2015 [Chapter 2]  |
 | Decembber 12 | Homework 3: [Posterior inference over random walks](https://github.com/glouppe-teaching/dats0001-hw3) | 
 | Decembber 17-21 | Exam-at-home | 
 
