@@ -25,11 +25,11 @@ Materials for DATS0001 Foundations of Data Science, ULiège, Fall 2022.
 | December 5  | _No class_ |
 | December 12 | Lecture 9: Wrap-up case study<br>`nb12`: Space Shuttle Challenger disaster [[notebook](./nb12-space-shuttle-disaster.ipynb)]<br>Reading: Cam Davidson-Pilon, [Bayesian Methods for Hackers](https://camdavidsonpilon.github.io/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers/#contents), 2015 [Chapter 2]  |
 | Decembber 12 | Homework 3: [Posterior inference over random walks](https://github.com/glouppe-teaching/dats0001-hw3) | 
-| Decembber 17-21 | Exam-at-home | 
+| Decembber 17-21 | Exam-at-home: [Estimating air pollution from satellite data](https://github.com/glouppe-teaching/dats0001-hw4) | 
 
 ## Homeworks
 
 - Homework 1: [Explore the Argo data](https://github.com/glouppe-teaching/dats0001-hw1) (due by October 31)
 - Homework 2: [Random walks of Argo floats](https://github.com/glouppe-teaching/dats0001-hw2) (due by November 28)
 - Homework 3: [Posterior inference over random walks](https://github.com/glouppe-teaching/dats0001-hw3) (due by December 12)
-- Exam-at-home: TBD (sent on December 17, due by December 21)
+- Exam-at-home: [Estimating air pollution from satellite data](https://github.com/glouppe-teaching/dats0001-hw4) (sent on December 17, due by December 21)

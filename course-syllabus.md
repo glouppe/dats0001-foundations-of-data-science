@@ -8,6 +8,10 @@ Fall 2022
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](g.louppe@uliege.be)
 
+???
+
+Check books from https://twitter.com/JulyanArbel/status/1664556409818685440
+
 ---
 
 # Course hub
@@ -58,5 +62,5 @@ Let's start!
 
 - Proceed with `nb01`
 - Draw the Box's loop (see sidenotes)
-- Eplain the outline of the course
+- Explain the outline of the course
 - Move on to the content of the notebook.
