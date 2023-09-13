@@ -11,6 +11,10 @@ Prof. Gilles Louppe<br>
 ???
 
 Check books from https://twitter.com/JulyanArbel/status/1664556409818685440
+Check http://jupiter.chem.uoa.gr/thanost/papers/papers8/JAmStatAssoc_71(1976)791.pdf
+R: revise order (Probabilistic PCA happened too early)
+
+Check https://www.paulamoraga.com/presentation-course/#1
 
 ---
 
