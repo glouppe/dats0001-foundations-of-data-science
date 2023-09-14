@@ -2,7 +2,7 @@ class: middle, center, title-slide
 
 # Foundations of Data Science
 
-Fall 2022
+Fall 2023
 
 <br><br>
 Prof. Gilles Louppe<br>
@@ -10,10 +10,7 @@ Prof. Gilles Louppe<br>
 
 ???
 
-Check books from https://twitter.com/JulyanArbel/status/1664556409818685440
-Check http://jupiter.chem.uoa.gr/thanost/papers/papers8/JAmStatAssoc_71(1976)791.pdf
-R: revise order (Probabilistic PCA happened too early)
-
+R: add lecture on temporal spatial models
 Check https://www.paulamoraga.com/presentation-course/#1
 
 ---
@@ -31,7 +28,7 @@ Instructions and materials are all available on GitHub [github.com/glouppe/dats0
 
 # Lectures
 
-- Mondays, 1:45 PM
+- Mondays, 1:30 PM
 - Come with your laptop! 
 
 ---
