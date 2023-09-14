@@ -8,11 +8,6 @@ Fall 2023
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](g.louppe@uliege.be)
 
-???
-
-R: add lecture on temporal spatial models
-Check https://www.paulamoraga.com/presentation-course/#1
-
 ---
 
 # Course hub
