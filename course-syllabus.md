@@ -31,7 +31,7 @@ Instructions and materials are all available on GitHub [github.com/glouppe/dats0
 # Homeworks
 
 - Practice your data science skills in the classroom and at home. 
-- Biweekly~ homeworks.
+- 3 homeworks.
 
 ---
 
