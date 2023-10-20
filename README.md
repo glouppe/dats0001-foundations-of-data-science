@@ -26,4 +26,9 @@ Materials for DATS0001 Foundations of Data Science, ULiège, Fall 2023.
 
 ## Homeworks
 
-TBD.
+- Homework 1: Exploration of solar power data and weather data (due by November 6)
+- Homework 2: TBD
+- Homework 3: TBD
+- Exam-at-home: TBD
+
+Homeworks must be submitted on Github classroom. Follow the links sent by email to register to each homework.
