@@ -8,6 +8,11 @@ Fall 2023
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](g.louppe@uliege.be)
 
+???
+
+Reorganize nb04 to show a full example of a latent variable model together with the corresponding prior predictive checks.
+Add a lecture on spatial and temporal models.
+
 ---
 
 # Course hub
