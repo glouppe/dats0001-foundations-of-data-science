@@ -10,8 +10,9 @@ Prof. Gilles Louppe<br>
 
 ???
 
-Reorganize nb04 to show a full example of a latent variable model together with the corresponding prior predictive checks.
-Add a lecture on spatial and temporal models.
+- Reorganize nb04 to show a full example of a latent variable model together with the corresponding prior predictive checks.
+- Add a lecture on spatial and temporal models.
+- p-values and tests as https://x.com/cjmaddison/status/1824835644591428021
 
 ---
 
