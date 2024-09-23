@@ -2,17 +2,11 @@ class: middle, center, title-slide
 
 # Foundations of Data Science
 
-Fall 2023
+Fall 2024
 
 <br><br>
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](g.louppe@uliege.be)
-
-???
-
-- Reorganize nb04 to show a full example of a latent variable model together with the corresponding prior predictive checks.
-- Add a lecture on spatial and temporal models.
-- p-values and tests as https://x.com/cjmaddison/status/1824835644591428021
 
 ---
 
