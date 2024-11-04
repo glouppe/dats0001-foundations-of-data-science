@@ -19,7 +19,7 @@ Materials for DATS0001 Foundations of Data Science, ULiège, Fall 2024.
 | October 21 | Lecture 5: Markov Chain Monte Carlo<br>`nb05`: Markov Chain Monte Carlo [[notebook](./nb05-mcmc.ipynb)] [[sidenotes](./pdf/lec05-mcmc.pdf)]<br>Reading: Gelman et al, [Bayesian Data Analysis, 3rd](http://www.stat.columbia.edu/~gelman/book/BDA3.pdf), 2021 [Chapter 11] |
 | October 28 | _No class_ |
 | November 4 | Lecture 6: Expectation-Minimization <br>`nb06`: Expectation-Maximization [[notebook](./nb06-em.ipynb)] [[sidenotes](./pdf/lec06-em.pdf)]<br>Reading: Dempster et al, [Maximum Likelihood from Incomplete Data via EM](https://www.jstor.org/stable/2984875), 1977  |
-| November 4 | Deadline of Homework 1 |
+| November 8 | Deadline of Homework 1 |
 | November 11 | _No class_ |
 | November 18 | Lecture 7: Variational inference <br>`nb07`: ADVI [[notebook](./nb07-advi.ipynb)] [[sidenotes](./pdf/lec07-advi.pdf)]<br>Reading: Kucukelbir et al, [Automatic Differentiation Variational Inference](https://arxiv.org/abs/1603.00788), 2016 |
 | November 25 | Lecture 8: Model criticism<br>`nb08a`: Model checking [[notebook](./nb08a-model-checking.ipynb)]<br>`nb08b`: Model comparison [[notebook](./nb08b-model-comparison.ipynb)]<br>Reading: Gelman et al, [Bayesian Data Analysis, 3rd](http://www.stat.columbia.edu/~gelman/book/BDA3.pdf), 2021 [Chapters 6 and 7] |
@@ -30,7 +30,7 @@ Materials for DATS0001 Foundations of Data Science, ULiège, Fall 2024.
 
 ## Homeworks
 
-- Homework 1: Exploration of pulse oximetry data, November 4.
+- Homework 1: Exploration of pulse oximetry data, November 8.
 - Homework 2: TBD
 - Homework 3: TBD
 - Exam-at-home: TBD
