@@ -23,6 +23,7 @@ Materials for DATS0001 Foundations of Data Science, ULiège, Fall 2024.
 | November 11 | _No class_ |
 | November 18 | Lecture 7: Variational inference <br>`nb07`: ADVI [[notebook](./nb07-advi.ipynb)] [[sidenotes](./pdf/lec07-advi.pdf)]<br>Reading: Kucukelbir et al, [Automatic Differentiation Variational Inference](https://arxiv.org/abs/1603.00788), 2016 |
 | November 25 | Lecture 8: Model criticism<br>`nb08a`: Model checking [[notebook](./nb08a-model-checking.ipynb)]<br>`nb08b`: Model comparison [[notebook](./nb08b-model-comparison.ipynb)]<br>Reading: Gelman et al, [Bayesian Data Analysis, 3rd](http://www.stat.columbia.edu/~gelman/book/BDA3.pdf), 2021 [Chapters 6 and 7] |
+| November 25 | Deadline of Homework 2 |
 | December 2 | Lecture 9: Wrap-up case study<br>`nb09`: Space Shuttle Challenger disaster [[notebook](./nb09-space-shuttle-disaster.ipynb)]<br>Reading: Cam Davidson-Pilon, [Bayesian Methods for Hackers](https://camdavidsonpilon.github.io/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers/#contents), 2015 [Chapter 2] |
 | December 9 | _No class_ |
 | December 16 | _No class_ |
@@ -31,7 +32,7 @@ Materials for DATS0001 Foundations of Data Science, ULiège, Fall 2024.
 ## Homeworks
 
 - Homework 1: Exploration of pulse oximetry data, November 8.
-- Homework 2: TBD
+- Homework 2: Oxygen saturation prediction, November 25.
 - Homework 3: TBD
 - Exam-at-home: TBD
 
