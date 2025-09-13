@@ -2,7 +2,7 @@ class: middle, center, title-slide
 
 # Foundations of Data Science
 
-Fall 2024
+Fall 2025
 
 <br><br>
 Prof. Gilles Louppe<br>
@@ -15,9 +15,7 @@ Prof. Gilles Louppe<br>
 Instructions and materials are all available on GitHub [github.com/glouppe/dats0001-foundations-of-data-science](https://github.com/glouppe/dats0001-foundations-of-data-science):
 - Schedule
 - Slides and notebooks
-- Homeworks
-
-.center.width-40[![](./figures/course-syllabus/Octocat.png)]
+- Project
 
 ---
 
@@ -28,35 +26,20 @@ Instructions and materials are all available on GitHub [github.com/glouppe/dats0
 
 ---
 
-# Homeworks
+# Case study
 
-- Practice your data science skills in the classroom and at home. 
-- 3 homeworks.
+- Practice your data science skills through an end-to-end analysis. 
+- Presentation/defense of your analysis and results. 
 
 ---
 
 # Exam
 
-- Data science analysis to do at home.
-- Short oral exam to explain your analysis.
+Oral exam on theory covered in class.
 
 ---
 
 # Evaluation
 
-- Homeworks (50%)
-- Exam (50%)
-
----
-
-class: end-slide, center
-count: false
-
-Let's start!
-
-???
-
-- Proceed with `nb01`
-- Draw the Box's loop (see sidenotes)
-- Explain the outline of the course
-- Move on to the content of the notebook.
+- Case study (50%)
+- Oral exam (50%)
