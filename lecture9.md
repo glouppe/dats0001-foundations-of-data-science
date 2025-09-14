@@ -8,6 +8,10 @@ Lecture 9: Model criticism and comparison
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](g.louppe@uliege.be)
 
+???
+
+- Feynman: "If it disagrees with experiment, it's wrong."
+
 ---
 
 

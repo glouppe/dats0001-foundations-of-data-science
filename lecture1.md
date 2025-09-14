@@ -12,9 +12,8 @@ Prof. Gilles Louppe<br>
 
 - Raise your hand if you remember March 2020.
 - You witnessed one of the largest real-time demonstrations of scientific modeling in human history. 
-- pidemiologists built models, made predictions, watched them fail, rebuilt them, and repeated - all while the world watched. 
+- Epidemiologists built models, made predictions, watched them fail, rebuilt them, and repeated. 
 - That process you witnessed? That's what this entire course is about.
-- and today, you'll do exactly what those epidemiologists did - build a model, watch it fail, and learn from that failure.
 
 ---
 
@@ -22,17 +21,17 @@ class: middle
 
 ## COVID-19 epidemiological models
 
-.center.width-85[![](figures/lec1/covid19-be.png)]
+.center.width-75[![](figures/lec1/covid19-be.png)]
 
-.center[Predictions of the first wave of COVID-19 in Belgium, 2020. Many models failed to predict the peak and duration of the wave.]
+.center[Predictions of the first wave of COVID-19 in Belgium, 2020.<br> Many models failed to predict the peak and duration of the wave.]
 
 ???
 
 - Build: Compartmental models (SIR, SEIR).
-- Compute: Infection rate predictions.
+- Compute: Infection rate, peak and duration of the wave.
 - Critique: Models failed to predict waves accurately.
 - Repeat: Added behavioral changes, vaccination dynamics, variants.
-- Impact: Informed public health policy worldwide
+- Impact: Informed public health policy worldwide.
 
 ---
 
@@ -40,17 +39,17 @@ class: middle
 
 ## Gravitational wave detection 
 
-.center.width-90[![](figures/lec1/ligo.png)
+.center.width-75[![](figures/lec1/ligo.png)]
 
-First direct detection of gravitational waves, LIGO, 2015. Many false alarms before the first confirmed detection.]
+.center[First direct detection of gravitational waves, LIGO, 2015.<br> Many false alarms before the first confirmed detection.]
 
 ???
 
-- Build: General relativity + noise models
-- Compute: Template matching for waveforms
-- Critique: False alarms dominated early searches
-- Repeat: Refined noise characterization, improved templates
-- Impact: Nobel Prize 2017, opened new field of astronomy
+- Build: General relativity model describing gravitational waves as ripples in spacetime. Initial LIGO (2002-2010). 
+- Compute: Searched for signals but found none due to noise / lack of sensitivity.
+- Critique: Sensitivity insufficient, noise poorly characterized.
+- Repeat: Advanced LIGO (2015-now), upgraded detectors, improved noise modeling.
+- Impact: Nobel Prize 2017, opened new field of astronomy.
 
 ---
 
@@ -60,19 +59,21 @@ class: middle
 
 .center.width-90[![](figures/lec1/ecs.png)]
 
-.center[What is the Earth's temperature increase if we double atmospheric CO2? Over 40 years, uncertainty narrowed from 3°C range to 1.5°C range.]
+.center[What is the Earth's temperature increase if we double atmospheric CO2?<br> Over 40 years, uncertainty narrowed from 3°C range to 1.5°C range.]
 
 ???
 
-- Build: Each IPCC report builds a model of climate sensitivity
-- Compute: Estimate sensitivity from data
-- Critique Each assessment identified limitations in previous estimates
-- Repeat: AR6 reduced uncertainty to 2.5-4°C from the long standing 1.5-4.5°C range
-- Impact: Informs climate policy worldwide
+- Build: Each IPCC report builds a model of equilibrium climate sensitivity (average global temperature increase if CO2 doubles).
+- Compute: Estimate sensitivity from climate models and observations.
+- Critique Each assessment identified limitations in previous estimates.
+- Repeat: AR6 (assessment report 6, 2021) reduced uncertainty to 2.5-4°C from the long standing 1.5-4.5°C range.
+- Impact: Informs climate policy worldwide.
 
 ---
 
 class: middle
+
+.avatars[![](figures/lec1/george-box.jpg)]
 
 # Box's loop
 
@@ -87,6 +88,8 @@ class: middle
 ## What is data science?
 
 Data science is the discipline of .bold[extracting knowledge] from data through the iterative application of the .bold[scientific method].
+
+But how? 
 
 ???
 
@@ -146,8 +149,8 @@ class: middle
 The third step is to .bold[critique] the model and its predictions, to assess whether they are consistent with the data and domain knowledge.
 
 - Compare predictions to observed data.
-- Diagnose model fit and identify discrepancies.
-- Scientific diagnostics: does it make sense? 
+- Identify model limitations and mismatches.
+- Reject the model if it fails to capture key aspects of the data.
 
 ---
 
@@ -169,17 +172,24 @@ class: middle
 
 ## Why this approach matters?
 
-The Fourth paradigm of science emphasizes the importance of data-intensive scientific discovery. However, data alone is not enough.
+The Fourth paradigm (Hey et al, 2009) of science emphasizes the importance of data-intensive scientific discovery. However, data alone is not enough.
 
 - Data without theory leads to spurious correlations.
 - Theory without data leads to ungrounded speculation.
-- Together, they enable robust scientific inquiry.
+- Together, they enable .bold[robust scientific inquiry].
 
 ---
 
 class: middle
 
-This principled approach contrasts with ad-hoc data analysis practices that often lead to unreliable results.
+.center.width-80[![](figures/lec1/spurious-correlation.png)]
+.center[Spurious correlation can easily mislead data analysis.]
+
+---
+
+class: middle
+
+The scientific method, as embodied in Box's loop, provides a principled framework for data analysis. It contrasts with .bold[ad-hoc data analysis practices that often lead to unreliable results].
 
 - Throw algorithms at data and see what sticks.
 - Focus only on prediction accuracy.
