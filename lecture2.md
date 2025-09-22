@@ -90,7 +90,7 @@ class: middle
 
 Categorical data
 - Nominal: $x \in \mathcal{C} = \\{c\_1, c\_2, ..., c\_n \\}$ (e.g., colors, types, text characters) without intrinsic order
-- Ordinal: $x \in \mathcal{C}$ with ordering relations $c\_1 \prec c\_2 \prec ... \prec c\_n$ (e.g., ratings, grades))
+- Ordinal: $x \in \mathcal{C}$ with ordering relations $c\_1 \prec c\_2 \prec ... \prec c\_n$ (e.g., ratings, grades)
 
 ---
 
@@ -98,6 +98,7 @@ class: middle
 
 .center.width-10[![](figures/lec2/health-report.png)]
 
+Example: medical records
 ```
 Patient ID: 10847        # Categorical, Nominal 
 Age: 34                  # Numerical, Discrete  
@@ -113,12 +114,11 @@ class: middle
 
 ## Data structures
 
-A measurement $x$ can be a single atomic value or a composite structure made of multiple atomic values. Common data structures include:
-
+A measurement $x$ can be a single atomic value or a composite structure made of multiple atomic values. Common aggregates or data structures include:
 - Tabular data
 - Arrays and tensors
-- Networks and graphs
 - Sequences
+- Networks and graphs
 
 ---
 
@@ -128,11 +128,14 @@ class: middle
 .kol-1-2.center[Tabular data<br>.width-100[![](figures/lec2/iris-tabular.png)]]
 .kol-1-2.center[Arrays and tensors<br>.width-60[![](figures/lec2/iris-image.jpg)]]
 ]
+
+<br>
+
 .grid[
-.kol-1-2.center[Networks and graphs<br>.width-70[![](figures/lec2/graph.png)]]
 .kol-1-2.center[Sequences
 
-`['F', 'l''o', 'w', 'e', 'r', 's']`]`
+`['F', 'l''o', 'w', 'e', 'r']`]
+.kol-1-2.center[Networks and graphs<br>.width-70[![](figures/lec2/graph.png)]]
 ]
 
 ---
@@ -146,16 +149,15 @@ x\_{21} & x\_{22} & \cdots & x\_{2d} \\\\
 \vdots & \vdots & \ddots & \vdots \\\\
 x\_{n1} & x\_{n2} & \cdots & x\_{nd}
 \end{pmatrix}.$$
+Each entry $x\_{ij}$ corresponds to the value of variable $j$ for record $i$. 
 
-Each entry $x\_{ij}$ corresponds to the value of variable $j$ for record $i$.
-
-When all variables are numerical and continuous, $\mathbf{X}$ is a matrix $\mathbb{R}^{n \times d}$.
+Variables are often heterogeneous (mixing numerical and categorical types). When all variables are numerical, the data frame can be viewed as a matrix $\mathbf{X} \in \mathbb{R}^{n \times d}$.
 
 ---
 
 class: middle
 
-Collections of homogeneous measurements can be represented as .bold[arrays] or .bold[tensors], where the position of each atomic value in the array is usually associated to spatial or temporal location.
+Collections of homogeneous measurements can be represented as .bold[arrays] or .bold[tensors] $\mathbf{X} \in \mathbb{R}^{d\_1 \times d\_2 \times \cdots \times d\_k}$, where the position of each atomic value in the array is usually associated to a spatial or temporal location.
 - Images: 3d arrays $\mathbf{X} \in [0, 255]^{h \times w \times c}$ (height, width, channels).
 - Videos: 4d arrays $\mathbf{X} \in [0, 255]^{t \times h \times w \times c}$ (time, height, width, channels).
 
@@ -163,7 +165,15 @@ Collections of homogeneous measurements can be represented as .bold[arrays] or .
 
 class: middle
 
-Data can also be organized as .bold[networks] or .bold[graphs] $G = (V, E)$, where entities are represented as nodes $V$ and relationships as edges $E$. Each may also have associated attributes, $x\_v$ for nodes and $x\_{uv}$ for edges.
+Data can also be structured as ordered .bold[sequences] $S = (x\_1, x\_2, ..., x\_T)$ indexed by time or position. Each element $x\_t$ can be atomic or composite.
+- Time series: $S = (x\_1, x\_2, ..., x\_T)$ where $x\_t$ is a measurement at time $t$ (e.g., stock prices).
+- Text: $S = (w\_1, w\_2, ..., w\_T)$ where $w\_t$ is the $t$-th word in a document.
+
+---
+
+class: middle
+
+Finally, data can be organized as .bold[networks] or .bold[graphs] $G = (V, E)$, where entities are represented as nodes $V$ and relationships as edges $E$. Each may also have associated attributes, $x\_v$ for nodes and $x\_{uv}$ for edges.
 - Molecular structures, where nodes represent atoms and edges represent bonds.
 - Social networks, where nodes represent individuals and edges represent interactions or relationships.
 
@@ -171,9 +181,9 @@ Data can also be organized as .bold[networks] or .bold[graphs] $G = (V, E)$, whe
 
 class: middle
 
-Finally, data can be structured as ordered .bold[sequences] $S = (x\_1, x\_2, ..., x\_T)$ indexed by time or position. Each element $x\_t$ can be atomic or composite.
-- Time series: $S = (x\_1, x\_2, ..., x\_T)$ where $x\_t$ is a measurement at time $t$ (e.g., stock prices).
-- Text: $S = (w\_1, w\_2, ..., w\_T)$ where $w\_t$ is the $t$-th word in a document.
+.center.width-10[![](figures/lec2/laptop.png)]
+
+Follow the tutorials in `nb02a-tables.ipynb`, `nb02b-jax.ipynb`, and `nb02c-data-wrangling.ipynb` to practice working with arrays and data frames in Python.
 
 ---
 
@@ -184,6 +194,7 @@ class: middle
 Real-world data are often imperfect and may suffer from various .bold[quality issues] that can impact analysis and modeling. Common data quality issues include:
 - Missing values
 - Measurement errors
+- Outliers
 
 ---
 
@@ -198,9 +209,9 @@ Let $\mathbf{X}\_\text{full} \in \mathbb{R}^{n \times d}$ be a complete data mat
 class: middle
 
 The patterns of missingness can be modeled as part of the measurement process:
-- Missing Completely at Random (MCAR): The probability of missingness is independent of both observed and unobserved data, $p(m\_{ij} = 0 | \mathbf{X}\_\text{full}) = p(m\_{ij} = 0)$.
-- Missing at Random (MAR): The probability of missingness may depend on observed data but not on unobserved data, $p(m\_{ij} = 0 | \mathbf{X}\_\text{full}) = p(m\_{ij} = 0 | \mathbf{X}\_\text{obs})$. 
-- Missing Not at Random (MNAR): The probability of missingness depends on unobserved data as well.
+- Missing Completely at Random (MCAR): The probability of missingness is independent of both observed and masked data, $p(m\_{ij} = 0 | \mathbf{X}\_\text{full}) = p(m\_{ij} = 0)$.
+- Missing at Random (MAR): The probability of missingness may depend on observed data but not on masked data, $p(m\_{ij} = 0 | \mathbf{X}\_\text{full}) = p(m\_{ij} = 0 | \mathbf{X})$. 
+- Missing Not at Random (MNAR): The probability of missingness depends on masked data as well.
 
 Each mechanism or assumption has implications for how to handle missing data during analysis.
 
@@ -210,12 +221,12 @@ class: middle
 
 Example&#58;
 
-Survey of $n=1000$ respondents, 30% refuse to answer income question.
+Survey of $n=1000$ respondents, 30% do not answer the income question.
 - MCAR: Randomly selected respondents skip the question.
 - MAR: Younger respondents are less likely to answer.
 - MNAR: High earners refuse to answer.
 
-Imputing missing values without considering the mechanism can lead to biased results.
+.alert[.bold[Imputing or discarding missing values] without expliciting the assumptions about the missingness mechanism can lead to biased results.]
 
 ---
 
@@ -233,11 +244,17 @@ Example&#58;
 
 Glitches in gravitational wave detectors are outliers that can mimic true signals and complicate detection efforts. They can arise from environmental disturbances, instrumental artifacts, or other non-astrophysical sources.
 
+???
+
+Here powerline glitches are visible at 60 Hz, due to electromagnetic interference from electrical power systems.
+
 ---
 
 class: middle
 
-Treating outliers requires a model of the measurement process that either describe measurements under normal conditions or explicitly accounts for anomalies. .bold[Outliers should not be removed blindly] unless explicitly justified by the measurement model or domain knowledge.
+Treating outliers requires a model of the measurement process that either describe measurements under normal conditions or explicitly accounts for anomalies. 
+
+.alert[.bold[Outliers should not be removed blindly] unless explicitly justified by the measurement model or domain knowledge.]
 
 ---
 
@@ -372,6 +389,10 @@ class: middle
 - Pearson correlation $$\rho\_{ij} = \frac{\text{cov}(\mathbf{x}\_i, \mathbf{x}\_j)}{\sigma\_{\mathbf{x}\_i} \sigma\_{\mathbf{x}\_j}}$$ measures linear relationships. It ignores non-linear dependencies.
 - Spearman correlation is the Pearson correlation of the rank-transformed variables. It captures monotonic relationships.
 - Correlation does not imply causation and can be affected by outliers.
+
+???
+
+Intuition behind Pearson: the ratio of the covariance to the product of standard deviations measures how much two variables co-vary relative to their individual variability. It captures linear relationships because covariance is a linear measure.
 
 ---
 
