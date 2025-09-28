@@ -35,7 +35,7 @@ class: middle
 ## Visual cues
 
 Visual cues are elements of a visualization that encode data. They are expressed as marks and channels:
-- A .bold[mark] is geometric primitive such as point, line, area, or volume.
+- A .bold[mark] is a geometric primitive such as points, lines, or areas.
 - A .bold[channel] is an attribute of a mark that can be used to encode data, such as position, size, shape, or color.
 
 <br><br>
@@ -91,6 +91,8 @@ Cleveland and McGill (1984) conducted experiments to evaluate the accuracy of vi
 
 class: middle
 
+.center.width-10[![](figures/lec3/coordinates.png)]
+
 ## Coordinate systems
 
 Before mapping (numerical) data to visual channels, it is important to choose an appropriate coordinate system as it affects the perception and effectiveness of the visualization.
@@ -111,6 +113,8 @@ class: middle, black-slide
 ---
 
 class: middle
+
+.center.width-10[![](figures/lec3/scale.png)]
 
 ## Scales and transformations
 
@@ -142,6 +146,8 @@ class: middle
 ---
 
 class: middle
+
+.center.width-10[![](figures/lec3/color-wheel.png)]
 
 ## Colors
 
@@ -192,9 +198,13 @@ class: middle
 
 class: middle
 
-.center.width-90[![](figures/lec3/sphx_glr_colormaps_001.png)]
+.center.width-75[![](figures/lec3/sphx_glr_colormaps_001.png)]
 
-Perceptually uniform colormaps ensure that equal steps in data are perceived as equal steps in color. They should be preferred over non-uniform colormaps (jet, rainbow) that can mislead interpretation.
+Perceptually uniform colormaps ensure that equal steps in data are perceived as equal steps in color.
+
+???
+
+They should be preferred over non-uniform colormaps (jet, rainbow) that can mislead interpretation.
 
 ---
 
@@ -230,6 +240,21 @@ class: middle
 
 ---
 
+
+class: middle
+
+.center.width-60[![](figures/lec3/3d-pie.png)]
+
+.center[.bold[Do not go for 3D.] It distorts perception and adds unnecessary complexity.]
+
+.footnote[Credits: Claus O. Wilke, [Fundamentals of Data Visualization](https://clauswilke.com/dataviz/), 2019.]
+
+???
+
+Worse than a pie chart? A 3D pie chart.
+
+---
+
 class: middle
 
 .center.width-60[![](figures/lec3/colorado.jpg)]
@@ -248,16 +273,6 @@ class: middle
 ]
 
 .footnote[Credits: John Muyskens, [Most of Trump's charts skew the data](https://www.washingtonpost.com/graphics/politics/2016-election/trump-charts/), The Washington Post, 2016.]
-
----
-
-class: middle
-
-.center.width-60[![](figures/lec3/3d-pie.png)]
-
-.center[.bold[Do not go for 3d. Ever.] It distorts perception and adds unnecessary complexity.]
-
-.footnote[Credits: Claus O. Wilke, [Fundamentals of Data Visualization](https://clauswilke.com/dataviz/), 2019.]
 
 ---
 
@@ -343,6 +358,37 @@ class: middle
 - Use appropriate coordinate systems and scales to enhance interpretability.
 - Choose colormaps that accurately represent the data and are accessible to all viewers.
 - Avoid common pitfalls such as 3D effects, misleading axes, and unnecessary complexity.
+
+---
+
+class: middle
+
+.center.width-10[![](figures/lec3/grade.png)]
+
+## Wrap-up exercise
+
+Let us discuss the following examples. For each of them, identify what is good and what could be improved.
+
+(All plots are taken from MSc theses of previous years. Author names have been removed to protect the innocent.)
+
+---
+
+class: middle
+
+.center.width-100[![](figures/lec3/discussion1.png)]
+
+---
+
+class: middle
+
+.center.width-85[![](figures/lec3/discussion2.png)]
+
+---
+
+class: middle
+
+.center.width-60[![](figures/lec3/discussion3.png)]
+
 
 ---
 
