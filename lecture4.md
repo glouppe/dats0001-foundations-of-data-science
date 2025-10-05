@@ -42,7 +42,7 @@ class: middle
 
 If the sample space $\Omega$ is equipped with a probability function $p$, then the data $x = f(\omega)$ can be viewed as a random variable with distribution induced by $p$, $$x \sim p\_r(x) = \int_{\omega \in \Omega} p(\omega) \delta(x - f(\omega)) d\omega,$$ where $\delta$ is the Dirac delta function.
 
-We call $p\_{r}(x)$ the .bold[data generating process] or the data distribution.
+We call $p\_{r}(x)$ the .bold[data generating process] or the data distribution, where $r$ stands for "real".
 
 ---
 
@@ -188,7 +188,7 @@ class: middle
 
 .center[![](figures/lec4/fig3a.svg)]
 
-$$p(x\_{1:3}, z\_{1:3}, \theta) = \left( \prod\_{n=1}^3 p(x\_n \mid z\_n, \theta) p(z\_n \mid \theta) \right) p(\theta)$$
+$$p(x\_{1:3}, z\_{1:3}, \theta) = \left( \prod\_{n=1}^3 p(x\_n \mid z\_n) p(z\_n \mid \theta) \right) p(\theta)$$
 
 Shaded nodes represent observed variables, unshaded nodes represent latent variables or parameters.
 
@@ -299,7 +299,7 @@ Therefore, writing $BB^T + \sigma^2 I = \Sigma$, maximum likelihood estimation r
 $$\begin{aligned}
 (\hat{B}, \hat{\mu}, \hat{\sigma}^2) &= \arg\max\_{B, \mu, \sigma^2} \prod\_{i=1}^N \mathcal{N}(x\_i | \mu, \Sigma) \\\\
 &= \arg\min\_{B, \mu, \sigma^2} \sum\_{i=1}^N (x\_i - \mu)^T \Sigma^{-1} (x\_i - \mu) + N \log |\Sigma| \\\\
-&= \arg\min\_{B, \mu, \sigma^2} \text{tr}(\Sigma^{-1} S) + N \log |\Sigma|,
+&= \arg\min\_{B, \mu, \sigma^2} N \text{tr}(\Sigma^{-1} S) + N \log |\Sigma|,
 \end{aligned}$$
 where $S = \frac{1}{N} \sum\_{i=1}^N (x\_i - \mu)(x\_i - \mu)^T$ is the sample covariance matrix.
 
@@ -307,6 +307,13 @@ The solution can be derived in closed form, yielding
 - $\hat{\mu} = \frac{1}{N} \sum\_{i=1}^N x\_i$ (the sample mean),
 - $\hat{B} = U\_m (\Lambda\_m - \hat{\sigma}^2 I)^{1/2} R$, where $U\_m$ are the top $m$ eigenvectors of $S$, $\Lambda\_m$ are the corresponding eigenvalues, and $R$ is an arbitrary rotation matrix,
 - $\hat{\sigma}^2 = \frac{1}{d - m} \sum\_{j=m+1}^d \lambda_j$, where $\lambda\_j$ are the eigenvalues of $S$.
+
+???
+
+Intuitive explanation for the solution:
+- $\hat{\mu}$ is the sample mean because it minimizes the squared deviations from the mean. This appears in the log-likelihood as the term $(x\_i - \mu)^T \Sigma^{-1} (x\_i - \mu)$.
+- $\hat{B}$ is related to the top $m$ eigenvectors of $S$ because these directions capture the most variance in the data. The term $\text{tr}(\Sigma^{-1} S)$ in the log-likelihood encourages $\Sigma$ to align with the directions of high variance in $S$.
+- $\hat{\sigma}^2$ is the average of the remaining eigenvalues because it represents the isotropic noise variance that accounts for the variance not captured by the top $m$ components. The term $\log |\Sigma|$ in the log-likelihood penalizes overly complex models, leading to a balance between fitting the data and maintaining a reasonable noise level.
 
 ---
 
@@ -386,6 +393,15 @@ For instance, in mixed membership models of text documents (.bold[latent dirichl
 
 .center[![](figures/lec4/mixed-membership.svg)]
 
+???
+
+- K is the number of topics,
+- M is the number of documents,
+- N is the number of words in a document,
+- $\theta\_m$ are the topic proportions for document $m$,
+- $z\_{m,n}$ is the topic assignment for word $n$ in document $m$,
+- $x\_{m,n}$ is the observed word.
+
 ---
 
 class: middle
@@ -418,3 +434,68 @@ class: end-slide, center
 count: false
 
 The end.
+
+---
+
+class: middle
+
+## Cheat sheet for Gaussian models (Särkkä, 2013)
+
+If $\mathbf{x}$ and $\mathbf{y}$ have the joint Gaussian distribution 
+$$
+\begin{aligned}
+p\left(\begin{matrix}
+\mathbf{x} \\\\
+\mathbf{y} 
+\end{matrix}\right) = \mathcal{N}\left( \left(\begin{matrix}
+\mathbf{x} \\\\
+\mathbf{y} 
+\end{matrix}\right) \bigg\vert \left(\begin{matrix}
+\mathbf{a} \\\\
+\mathbf{b} 
+\end{matrix}\right), \left(\begin{matrix}
+\mathbf{A} & \mathbf{C} \\\\
+\mathbf{C}^T & \mathbf{B}
+\end{matrix}\right) \right),
+\end{aligned}
+$$
+then the marginal and conditional distributions of $\mathbf{x}$ and $\mathbf{y}$ are given by
+$$
+\begin{aligned}
+p(\mathbf{x}) &= \mathcal{N}(\mathbf{x}|\mathbf{a}, \mathbf{A}) \\\\
+p(\mathbf{y}) &= \mathcal{N}(\mathbf{y}|\mathbf{b}, \mathbf{B}) \\\\
+p(\mathbf{x}|\mathbf{y}) &= \mathcal{N}(\mathbf{x}|\mathbf{a}+\mathbf{C}\mathbf{B}^{-1}(\mathbf{y}-\mathbf{b}), \mathbf{A}-\mathbf{C}\mathbf{B}^{-1}\mathbf{C}^T) \\\\
+p(\mathbf{y}|\mathbf{x}) &= \mathcal{N}(\mathbf{y}|\mathbf{b}+\mathbf{C}^T\mathbf{A}^{-1}(\mathbf{x} - \mathbf{a}) , \mathbf{B}-\mathbf{C}^T\mathbf{A}^{-1}\mathbf{C}).
+\end{aligned}
+$$
+
+---
+
+class: middle
+
+If the random variables $\mathbf{x}$ and $\mathbf{y}$ have Gaussian probability distributions
+$$
+\begin{aligned}
+p(\mathbf{x}) &= \mathcal{N}(\mathbf{x}|\mathbf{m}, \mathbf{P}) \\\\
+p(\mathbf{y}|\mathbf{x}) &= \mathcal{N}(\mathbf{y}|\mathbf{H}\mathbf{x}+\mathbf{u}, \mathbf{R}),
+\end{aligned}
+$$
+then the joint distribution of $\mathbf{x}$ and $\mathbf{y}$ is Gaussian with
+$$
+\begin{aligned}
+p\left(\begin{matrix}
+\mathbf{x} \\\\
+\mathbf{y} 
+\end{matrix}\right) = \mathcal{N}\left( \left(\begin{matrix}
+\mathbf{x} \\\\
+\mathbf{y} 
+\end{matrix}\right) \bigg\vert \left(\begin{matrix}
+\mathbf{m} \\\\
+\mathbf{H}\mathbf{m}+\mathbf{u} 
+\end{matrix}\right), \left(\begin{matrix}
+\mathbf{P} & \mathbf{P}\mathbf{H}^T \\\\
+\mathbf{H}\mathbf{P} & \mathbf{H}\mathbf{P}\mathbf{H}^T + \mathbf{R} 
+\end{matrix}\right) \right).
+\end{aligned}
+$$
+
