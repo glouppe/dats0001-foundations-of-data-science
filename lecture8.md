@@ -10,6 +10,7 @@ Prof. Gilles Louppe<br>
 
 ---
 
+case study on data assimilation
 
 ---
 

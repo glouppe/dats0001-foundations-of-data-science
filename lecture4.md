@@ -8,6 +8,10 @@ Lecture 4: Latent variable models
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](g.louppe@uliege.be)
 
+???
+
+XXX: Give a few more examples of latent variable models (from scientific domains, engineering, social sciences, etc.)
+
 ---
 
 class: middle
