@@ -55,7 +55,7 @@ class: middle
 
 .center[![](figures/lec5/sm.svg)]
 
-In a Markovian state-space model, the latent variables form a Markov chain $$p(z\_t | z\_{1:t-1}) = p(z\_t | z\_{t-1}),$$ where the conditional distribution $p(z\_t | z\_{t-1})$ is called the .bold[transition model] or .bold[dynamic model].
+In a Markovian state-space model, the latent variables form a Markov chain $$p(z\_t | z\_{1:t-1}) = p(z\_t | z\_{t-1}),$$ where the conditional distribution $p(z\_t | z\_{t-1})$ is called the .bold[transition model].
 
 The observations are conditionally independent given the latent variables, $$p(x\_t | x\_{1:t-1}, z\_{1:t}) = p(x\_t | z\_t),$$ where the conditional distribution $p(x\_t | z\_t)$ is called the .bold[observation model].
 
@@ -118,10 +118,19 @@ class: middle
 
 ## Bayes filter
 
-The Bayes filter is a recursive algorithm for estimating the filtering distributions $p(z\_t | x\_{1:t})$ for $t = 1, \ldots, T$. It consists of two steps at each time step $t$:
-1. .italic[Prediction step]: Push the filtering distribution from the previous time step through the transition model to obtain a prediction of the current state. That is,
+The Bayes filter is a recursive algorithm for estimating the filtering distributions $p(z\_t | x\_{1:t})$ as 
+$$p(z\_t | x\_{1:t}) = \frac{p(x\_t | z\_t) p(z\_t | x\_{1:t-1})}{p(x\_t | x\_{1:t-1})},$$
+for $t = 1, 2, \ldots, T$, with the base case $p(z\_1 | x\_1) = \frac{p(x\_1 | z\_1) p(z\_1)}{p(x\_1)}$.
+
+---
+
+class: middle
+
+.italic[Proof.] The filtering distribution can be derived in two steps:
+
+1. Prediction: Push the filtering distribution from the previous time step through the transition model to obtain a prediction of the current state. That is,
    $$p(z\_t | x\_{1:t-1}) = \int p(z\_t | z\_{t-1}) p(z\_{t-1} | x\_{1:t-1}) dz\_{t-1}.$$
-2. .italic[Update step]: Condition on the new observation to obtain the filtering distribution,
+2. Update: Condition on the new observation to obtain the filtering distribution,
    $$p(z\_t | x\_{1:t}) = \frac{p(x\_t | z\_t) p(z\_t | x\_{1:t-1})}{p(x\_t | x\_{1:t-1})},$$
    where the marginal likelihood $p(x\_t | x\_{1:t-1})$ is given by
    $$p(x\_t | x\_{1:t-1}) = \int p(x\_t | z\_t) p(z\_t | x\_{1:t-1}) dz\_t.$$
@@ -130,7 +139,7 @@ The Bayes filter is a recursive algorithm for estimating the filtering distribut
 
 class: middle
 
-Once we have computed the filtering distributions $p(z\_t | x\_{1:t})$ for $t = 1, \ldots, T$, we can compute the prediction distributions $p(z\_{t+k} | x\_{1:t})$ for $k \geq 1$ using the prediction step of the Bayes filter iteratively,
+Once we have computed the filtering distributions $p(z\_t | x\_{1:t})$ for $t = 1, \ldots, T$, we can compute the .bold[prediction distributions] $p(z\_{t+k} | x\_{1:t})$ for $k \geq 1$ using the prediction step of the Bayes filter iteratively,
 $$p(z\_{t+k} | x\_{1:t}) = \int p(z\_{t+k} | z\_{t+k-1}) p(z\_{t+k-1} | x\_{1:t}) dz\_{t+k-1},$$
 for $k = 1, 2, \ldots$.
 
@@ -200,7 +209,7 @@ These parameters can be computed recursively by adapting the Bayes filter equati
 
 class: middle
 
-For the prediction step, we have
+.italic[Proof.] For the prediction step, we have
 $$\begin{aligned}
 p(z\_t | x\_{1:t-1}) &= \int p(z\_t | z\_{t-1}) p(z\_{t-1} | x\_{1:t-1}) dz\_{t-1} \\\\
 &= \int \mathcal{N}(z\_t | A z\_{t-1}, Q) \mathcal{N}(z\_{t-1} | m\_{t-1}, P\_{t-1}) dz\_{t-1} \\\\
@@ -334,11 +343,13 @@ class: middle
 
 class: middle
 
+.center.width-10[![](figures/lec5/squiggle.png)]
+
 We have so far assumed that time is discretized regularly with a fixed time step $\Delta t$ and that both the transition and observation models are defined at these discrete time steps.
 
 However, 
-- physical processes are often more naturally modeled in continuous time;
-- observations may be collected at irregular time intervals, triggered by events rather than a clock, or at multiple time scales.
+- physical processes are often more naturally modeled in .bold[continuous time];
+- observations may be collected at .bold[irregular time intervals], triggered by events rather than a clock, or at multiple time scales.
 
 ---
 
@@ -360,7 +371,7 @@ where $z(t)$ is the state at time $t$ and $w(t)$ is continuous-time noise.
 
 class: middle
 
-Omitting the noise term $w(t)$, we get a .bold[deterministic] dynamical system described by an .bold[ordinary differential equation] (ODE)
+Omitting $\frac{dw(t)}{dt}$, we get a .bold[deterministic] dynamical system described by an .bold[ordinary differential equation] (ODE)
 $$\frac{dz(t)}{dt} = f(z(t)).$$
 
 The solution of this ODE with initial condition $z(0) = z\_0$ is given by
