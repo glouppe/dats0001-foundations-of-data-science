@@ -10,6 +10,36 @@ Prof. Gilles Louppe<br>
 
 ---
 
+the sampling problem
+
+---
+
+class: middle 
+
+# Markov chain Monte Carlo (MCMC)
+
+---
+
+- Markov chains 
+- Stationary distributions
+- Basic limit theorem for Markov chains
+- Time-reversibility, detailed balance
+- Metropolis-Hastings algorithm
+
+---
+
+class: middle
+
+# Bayesian inference with MCMC
+
+---
+
+- MCMC for posterior inference
+- Example 1: Bayesian linear regression
+- Example 2: (some latent variable model)
+- Diagnostics
+    - visual diagnostics
+    - quantitative diagnostics
 
 ---
 

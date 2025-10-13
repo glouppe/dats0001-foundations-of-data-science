@@ -71,7 +71,7 @@ We want to track the location of a wild animal (e.g., a wolf) over time using no
 
 Assumptions:
 - The animal has a home location (den, nest) at $\mu \in \mathbb{R}^2$.
-- The animal moves according to a random walk with drift towards the home location.
+- The animal moves according to a random walk with drift towards the home location. 
 - The GPS observations are noisy measurements of the animal's true location.
 - Time is discretized regularly every $\Delta t$ time units.
 
@@ -119,7 +119,7 @@ class: middle
 ## Bayes filter
 
 The Bayes filter is a recursive algorithm for estimating the filtering distributions $p(z\_t | x\_{1:t})$ as 
-$$p(z\_t | x\_{1:t}) = \frac{p(x\_t | z\_t) p(z\_t | x\_{1:t-1})}{p(x\_t | x\_{1:t-1})},$$
+$$p(z\_t | x\_{1:t}) = \frac{p(x\_t | z\_t) \int p(z\_t | z\_{t-1}) p(z\_{t-1} | x\_{1:t-1}) dz\_{t-1}}{p(x\_t | x\_{1:t-1})},$$
 for $t = 1, 2, \ldots, T$, with the base case $p(z\_1 | x\_1) = \frac{p(x\_1 | z\_1) p(z\_1)}{p(x\_1)}$.
 
 ---
@@ -194,7 +194,7 @@ p(x\_t | z\_t) &= \mathcal{N}(x\_t | H z\_t, R),
 \end{aligned}$$
 where $A$ is the state transition matrix, $Q$ is the process noise covariance, $H$ is the observation matrix, and $R$ is the observation noise covariance.
 
-.success[If the prior distribution $p(z\_0)$ is also Gaussian, then all filtering, prediction, and smoothing distributions are Gaussian.]
+.success[If the prior distribution $p(z\_1)$ is also Gaussian, then all filtering, prediction, and smoothing distributions are Gaussian.]
 
 ---
 
@@ -236,6 +236,19 @@ m\_t &= m^-\_t + K\_t (x\_t - H m^-\_t), \\\\
 P\_t &= (I - K\_t H) P^-\_t,
 \end{aligned}$$
 and $K\_t = P^-\_t H^T (H P^-\_t H^T + R)^{-1}$ is the Kalman gain and represents the weight given to the new observation.
+
+???
+
+Intuition:
+
+Mean update:
+- $H m^-\_t$ is the predicted observation based on the predicted state.
+- $x\_t - H m^-\_t$ is the innovation or measurement residual, i.e., the difference between the actual observation and the predicted observation.
+- The Kalman gain $K\_t$ determines how much we adjust our prediction based on the new observation.
+
+Covariance update:
+- If the observation noise $R$ is small compared to the prediction uncertainty $P^-\_t$, then $K\_t$ approaches $H^{-1}$ (if $H$ is invertible), and we rely heavily on the new observation.
+- Conversely, if $R$ is large, then $K\_t$ approaches zero, and we rely more on our prediction. 
 
 ---
 
@@ -292,7 +305,7 @@ p(x\_t=k | z\_t=j) &= B\_{j, k},
 \end{aligned}$$
 where $A$ is the state transition matrix and $B$ is the observation matrix.
 
-.success[If the prior distribution $p(z\_0)$ is also categorical, then all filtering, prediction, and smoothing distributions are categorical and can be computed exactly by enumeration.]
+.success[If the prior distribution $p(z\_1)$ is also categorical, then all filtering, prediction, and smoothing distributions are categorical and can be computed exactly by enumeration.]
 
 ---
 
@@ -313,7 +326,7 @@ The .bold[forward algorithm] provides a closed-form expression for the filtering
 
 At each time step $t$, $p(z\_t | x\_{1:t})$ is categorical with parameters $\alpha\_t(j) = p(z\_t=j | x\_{1:t})$. These parameters can be computed recursively using the forward algorithm equations
 $$\alpha\_t \propto O\_t A^T \alpha\_{t-1},$$
-for $t = 1, 2, \ldots, T$, with the base case $\alpha\_1 \propto O\_1 \pi$, where $\pi$ are the parameters of the prior distribution $p(z\_0)$ and $O\_t$ is a diagonal matrix with entries $B\_{:, x\_t}$. The proportionality constant is obtained by normalizing $\alpha\_t$ so that its entries sum to 1.
+for $t = 1, 2, \ldots, T$, with the base case $\alpha\_1 \propto O\_1 \pi$, where $\pi$ are the parameters of the prior distribution $p(z\_1)$ and $O\_t$ is a diagonal matrix with entries $B\_{:, x\_t}$ (the $x\_t$-th column of $B$). The proportionality constant is obtained by normalizing $\alpha\_t$ so that its entries sum to 1.
 
 ---
 
@@ -371,7 +384,7 @@ where $z(t)$ is the state at time $t$ and $w(t)$ is continuous-time noise.
 
 class: middle
 
-Omitting $\frac{dw(t)}{dt}$, we get a .bold[deterministic] dynamical system described by an .bold[ordinary differential equation] (ODE)
+Omitting $\frac{dw(t)}{dt}$ (for now), we get a .bold[deterministic] dynamical system described by an .bold[ordinary differential equation] (ODE)
 $$\frac{dz(t)}{dt} = f(z(t)).$$
 
 The solution of this ODE with initial condition $z(0) = z\_0$ is given by
@@ -396,6 +409,8 @@ where $\kappa > 0$ is the rate of decay and $\mu$ is the equilibrium point.
 
 The decay is 'exponential' because the difference $z(t) - \mu$ decreases exponentially fast.
 
+... although the system approaches the equilibrium point $\mu$ asymptotically, it never actually reaches it in finite time.
+
 ---
 
 class: middle
@@ -414,11 +429,11 @@ We can model the noise term $w(t)$ as a standard Brownian motion (Wiener process
 class: middle
 
 Adding Brownian motion to the ODE, we get a .bold[stochastic differential equation] (SDE)
-$$\frac{dz(t)}{dt} = f(z(t), t) + \frac{dB(t)}{dt},$$
+$$\frac{dz(t)}{dt} = f(z(t)) + \frac{dB(t)}{dt},$$
 where $\frac{dB(t)}{dt}$ is an informal notation for white noise.
 
 More rigorously, Brownian motion is nowhere differentiable and the notation $\frac{dB(t)}{dt}$ is only symbolic. The SDE can instead be defined in differential form as
-$$dz(t) = f(z(t), t) dt + dB(t).$$
+$$dz(t) = f(z(t)) dt + dB(t).$$
 
 ???
 
@@ -428,12 +443,19 @@ The "differential form" means that the change in $z(t)$ over an infinitesimal ti
 
 class: middle
 
-For more generality, we can introduce a .bold[diffusion term] $g(z(t), t)$ to scale the noise, leading to the SDE
+For more generality, we can extend $f(z(t))$ to depend on time $t$ as well, leading to a time-inhomogeneous SDE
+$$dz(t) = f(z(t), t) dt + dB(t).$$
+
+We can also introduce a .bold[diffusion term] $g(z(t), t)$ to scale the noise, leading to the SDE
 $$dz(t) = f(z(t), t) dt + g(z(t), t) dB(t).$$
 
 In this form, the SDE describes the infinitesimal change in the state $z(t)$ over an infinitesimal time interval $dt$.
 - The drift term $f(z(t), t) dt$ represents the deterministic change in the state.
 - The diffusion term $g(z(t), t) dB(t)$ represents the stochastic change in the state due to Brownian motion.
+
+???
+
+Teaser: this equation is the basis of modern generative models such as .bold[diffusion models] used in image synthesis (e.g., DALL-E 2, Stable Diffusion).
 
 ---
 
@@ -468,7 +490,7 @@ class: middle
 
 In continuous-time state-space models, the observation model can be defined as a conditional distribution $p(x({t\_i}) | z(t\_i))$ at any (continuous) time point $t\_i$.
 
-This is similar to the discrete-time case, except that observations can be collected at irregular time intervals $t\_1 < t\_2 < \ldots < t\_N$ rather than at fixed time steps.
+This is similar to the discrete-time case, except that observations can be collected at .bold[irregular time intervals] $t\_1 < t\_2 < \ldots < t\_N$ rather than at fixed time steps.
 
 ---
 
@@ -480,10 +502,10 @@ Linear Gaussian continuous-time state-space models are continuous-time analogs o
 
 They are defined by linear SDEs for the state dynamics and linear Gaussian observation models,
 $$\begin{aligned}
-dz(t) &= A z(t) dt + dB(t), \\\\
+dz(t) &= A z(t) dt + Q^{1/2} dB(t), \\\\
 x(t\_i) &\sim \mathcal{N}(x(t\_i) | H z(t\_i), R),
 \end{aligned}$$
-where $A$ is the state transition matrix, $H$ is the observation matrix, and $R$ is the observation noise covariance.
+where $A$ is the state transition matrix, $Q$ is the process noise covariance, $H$ is the observation matrix, and $R$ is the observation noise covariance.
 
 ---
 

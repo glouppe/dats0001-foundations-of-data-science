@@ -10,6 +10,14 @@ Prof. Gilles Louppe<br>
 
 ---
 
+case study on exoplanet characterization
+
+---
+
+case study on cytometry data and cell population identification
+
+---
+
 case study on data assimilation
 
 ---
