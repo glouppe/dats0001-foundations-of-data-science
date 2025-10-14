@@ -209,11 +209,13 @@ These parameters can be computed recursively by adapting the Bayes filter equati
 
 class: middle
 
-.italic[Proof.] For the prediction step, we have
+.italic[Proof.] By recursion, assume that at time step $t-1$, the filtering distribution is Gaussian, $p(z\_{t-1} | x\_{1:t-1}) = \mathcal{N}(z\_{t-1} | m\_{t-1}, P\_{t-1})$, with the base case $p(z\_1 | x\_1) = \mathcal{N}(z\_1 | m\_1, P\_1)$.
+
+For the prediction step, we have
 $$\begin{aligned}
-p(z\_t | x\_{1:t-1}) &= \int p(z\_t | z\_{t-1}) p(z\_{t-1} | x\_{1:t-1}) dz\_{t-1} \\\\
-&= \int \mathcal{N}(z\_t | A z\_{t-1}, Q) \mathcal{N}(z\_{t-1} | m\_{t-1}, P\_{t-1}) dz\_{t-1} \\\\
-&= \int \mathcal{N}\left(\begin{pmatrix} z\_t \\\\ z\_{t-1} \end{pmatrix} | \begin{bmatrix} A m\_{t-1} \\\\ m\_{t-1} \end{bmatrix}, \begin{bmatrix} Q + A P\_{t-1} A^T & A P\_{t-1} \\\\ P\_{t-1} A^T & P\_{t-1} \end{bmatrix}\right) dz\_{t-1} \\\\
+p(z\_t | x\_{1:t-1}) &= \int p(z\_{t-1} | x\_{1:t-1}) p(z\_t | z\_{t-1}) dz\_{t-1} \\\\
+&= \int \mathcal{N}(z\_{t-1} | m\_{t-1}, P\_{t-1}) \mathcal{N}(z\_t | A z\_{t-1}, Q) dz\_{t-1} \\\\
+&= \int \mathcal{N}\left(\begin{pmatrix} z\_{t-1} \\\\ z\_t \end{pmatrix} | \begin{bmatrix} m\_{t-1} \\\\ A m\_{t-1} \end{bmatrix}, \begin{bmatrix} P\_{t-1} & P\_{t-1} A^T \\\\ A P\_{t-1} & A P\_{t-1} A^T + Q \end{bmatrix}\right) dz\_{t-1} \\\\
 &= \mathcal{N}(z\_t | m^-\_t, P^-\_t),
 \end{aligned}$$
 where $m^-\_t = A m\_{t-1}$ and $P^-\_t = A P\_{t-1} A^T + Q$.
@@ -277,6 +279,10 @@ m^s\_t &= m\_t + C\_t (m^s\_{t+1} - m^-\_{t+1}), \\\\
 P^s\_t &= P\_t + C\_t (P^s\_{t+1} - P^-\_{t+1}) C\_t^T,
 \end{aligned}$$
 for $t = T-1, T-2, \ldots, 1$, with the base case $m^s\_T = m\_T$ and $P^s\_T = P\_T$.
+
+???
+
+XXX Check Sarkka's book for the full derivation. Consider adding it for completeness.
 
 ---
 

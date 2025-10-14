@@ -36,7 +36,8 @@ class: middle
 
 - MCMC for posterior inference
 - Example 1: Bayesian linear regression
-- Example 2: (some latent variable model)
+- Example 2: (some latent variable model from the literature)
+- Example 3: (some latent variable model from the literature)
 - Diagnostics
     - visual diagnostics
     - quantitative diagnostics
