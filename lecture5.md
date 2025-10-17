@@ -8,6 +8,10 @@ Lecture 5: State-space models
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](g.louppe@uliege.be)
 
+???
+
+- EnKF? Unscented KF? 
+
 ---
 
 class: middle
