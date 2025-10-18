@@ -92,6 +92,10 @@ The Gaussian random walk does not have a stationary distribution since its varia
 
 ]
 
+???
+
+The marginal $p(x\_t)$ is Gaussian with mean 0 and variance $1 + (t-1)\sigma^2$.
+
 ---
 
 class: middle
@@ -114,9 +118,14 @@ class: middle
 
 .center[
 
-The Gaussian random walk with drift has a stationary distribution $\pi(x) = \mathcal{N}(x | \mu, \frac{\sigma^2}{2\kappa})$.
+The Gaussian random walk with drift has a stationary distribution $\pi(x) = \mathcal{N}(x | \mu, \frac{\sigma^2}{2\kappa - \kappa^2})$.
 
 ]
+
+???
+
+Proof: The stationary distribution must satisfy
+$$\pi(x') = \int \pi(x) \mathcal{N}(x' | x - \kappa(x - \mu), \sigma^2) dx.$$ This can be proved using the properties of Gaussian integrals.
 
 ---
 
@@ -126,7 +135,7 @@ class: middle
 
 A markov chain is said to be:
 - .bold[irreducible] if any state $x'$ can be reached from any state $x$, i.e., for any $x$, $x'$, there exists $t$ such that $p(x\_t = x' \mid x\_1 = x) > 0$.
-- .bold[aperiodic] if there is no deterministic cycle, i.e., for all $x$, the greatest common divisor of the set $\{t : p(x\_t = x \mid x\_1 = x) > 0\}$ is 1.
+- .bold[aperiodic] if there is no deterministic cycle, i.e., for all $x$, the greatest common divisor of the set $\\{t : p(x\_t = x \mid x\_1 = x) > 0\\}$ is 1.
 - for discrete state spaces, .bold[positive recurrent] if the expected return time to any state is finite; for continuous state spaces, .bold[Harris recurrent] if the chain returns to any set $A$ with positive measure infinitely often with probability 1.
 
 ???
@@ -351,7 +360,7 @@ class: middle
 
 MCMC methods, such as Metropolis-Hastings, can be used to generate samples from the posterior distribution $p(z, \theta \mid x)$ even when the marginal density $p(x)$ is intractable.
 
-Since MCMC methods only require an unnormalized density $\tilde{p}$, .bold[we can use the joint tractable density $p(x, z, \theta) = p(x \mid z, \theta) p(z, \theta)$] as the target distribution.
+Since MCMC methods only require an unnormalized density $\tilde{p}$, .bold[we can use the joint tractable density $p(x, z, \theta) = p(x \mid z, \theta) p(z, \theta)$] as the target distribution, ignoring the marginalization constant $p(x)$.
 
 ---
 
@@ -401,7 +410,7 @@ class: middle
 class: middle
 
 .center.width-70[![](figures/lec6/example1-pp.png)]
-.center[Posterior predictive distribution.]
+.center[Posterior predictive distribution $p(y \mid x, \\\\{x\\\_i, y\\\_i\\\\}\_{i=1}^N)$.]
 
 ---
 
@@ -411,7 +420,7 @@ class: middle
 
 ## Diagnostics for MCMC
 
-MCMC algorithms produce only approximate samples from the target distribution. It is important to assess the quality of these samples using diagnostics in terms of .bold[convergence], .bold[mixing] and .bold[autocorrelation].
+MCMC algorithms produce only approximate samples from the target distribution. It is important to assess the quality of these samples using diagnostics in terms of .bold[autocorrelation], .bold[mixing] and .bold[convergence].
 
 ---
 
@@ -455,6 +464,10 @@ The first quantitative diagnostic to monitor is the .bold[acceptance rate], defi
 - A very low acceptance rate (e.g., < 10%) indicates that the proposal distribution is making too large jumps, leading to many rejections.
 - A very high acceptance rate (e.g., > 80%) suggests that the proposal distribution is making too small jumps, resulting in slow exploration of the state space.
 - An optimal acceptance rate often lies between 20% and 40%, depending on the dimensionality of the target distribution.
+
+???
+
+Here optimal means that the chain explores the target distribution efficiently, balancing exploration and exploitation.
 
 ---
 
