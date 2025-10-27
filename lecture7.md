@@ -67,7 +67,7 @@ Direct maximization of the marginal log-likelihood w.r.t. parameters $\\theta = 
 - No closed-form solution.
 - Numerically unstable.
 
-.alert[More, generally, latent variable models lead to log-likelihoods involving sums or integrals inside the logarithm. As their domain grows, these sums/integrals .bold[become intractable to even just evaluate], let alone optimize.]
+.alert[More generally, latent variable models lead to log-likelihoods involving sums or integrals inside the logarithm. As their domain grows, these sums/integrals .bold[become intractable to even just evaluate], let alone optimize.]
 
 ---
 
@@ -152,6 +152,8 @@ $$\\begin{aligned}
 \end{aligned}$$
 where $\text{KL}(q(z) || p(z | \theta)) = \mathbb{E}\_{q(z)} \left[\log \frac{q(z)}{p(z | \theta)}\right]$ is the Kullback-Leibler divergence between distributions $q(z)$ and $p(z | \theta)$.
 
+This expression highlights the trade-off between fitting the data well (first term) and keeping the variational distribution $q(z)$ close to the prior $p(z | \theta)$ (second term).
+
 ---
 
 class: middle
@@ -162,9 +164,10 @@ $$\\begin{aligned}
 &= \mathbb{E}\_{q(z)} \left[\log \frac{p(z | x, \theta) p(x | \theta)}{q(z)}\right] \\\\
 &= \log p(x | \theta) - \text{KL}(q(z) || p(z | x, \theta)).
 \end{aligned}$$
-
-Combining both expressions yields the decomposition
+Therefore,
 $$\log p(x | \theta) = \mathcal{L}(q, \theta) + \text{KL}(q(z) || p(z | x, \theta)).$$
+
+This decomposition reveals that the ELBO is a lower bound on the log-likelihood, with a gap measured by the KL divergence between the variational distribution $q(z)$ and the posterior distribution $p(z | x, \theta)$.
 
 ---
 
