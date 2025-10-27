@@ -11,6 +11,7 @@ Prof. Gilles Louppe<br>
 ???
 
 XXX Modern MCMC methods? HMC, NUTS, etc.
+XXX Next year: add HMC. 
 
 ---
 
@@ -333,6 +334,8 @@ While Metropolis-Hastings is foundational, several extensions improve efficiency
 ---
 
 class: middle, center
+
+.center.width-10[![](figures/lec6/laptop.png)]
 
 Run the first part of `nb06b-mcmc.ipynb` to see Metropolis-Hastings in action.
 
