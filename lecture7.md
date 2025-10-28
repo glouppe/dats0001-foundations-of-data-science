@@ -258,14 +258,16 @@ class: middle
 $$\log p(x | \theta^{(t)}) \leq \log p(x | \theta^{(t+1)})$$
 for all $t \geq 0$.
 
-.italic[Proof.] By construction of the EM algorithm, we have
+.italic[Proof.] Assume we have parameter estimates $\theta^{(t)}$ at iteration $t$.
 $$\begin{aligned}
-\log p(x | \theta^{(t)}) &= \mathcal{L}(q^{(t)}, \theta^{(t)}) \\\\
-&\leq \mathcal{L}(q^{(t+1)}, \theta^{(t)}) \\\\
+\log p(x | \theta^{(t)}) &= \mathcal{L}(q^{(t+1)}, \theta^{(t)}) + \text{KL}(q^{(t+1)}(z) || p(z | x, \theta^{(t)})) \\\\
+&= \mathcal{L}(q^{(t+1)}, \theta^{(t)}) \\\\
 &\leq \mathcal{L}(q^{(t+1)}, \theta^{(t+1)}) \\\\
 &\leq \log p(x | \theta^{(t+1)}),
 \end{aligned}$$
-where the first and last inequalities follow from the ELBO being a lower bound on the log-likelihood, the second inequality from the E-step, and the third inequality from the M-step. □
+where the second equality holds since the E-step sets $q^{(t+1)} = p(z|x,\theta^{(t)})$, making the KL gap zero; the first inequality follows from the M-step optimization; and the last inequality holds because the ELBO is always a lower bound on the log-likelihood. □
+
+
 
 ---
 
