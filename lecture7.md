@@ -89,9 +89,11 @@ The evaluation of the log-likelihood becomes tractable, and so does its optimiza
 class: middle
 
 For the Gaussian mixture model, differentiating the complete-data log-likelihood with respect to the parameters and setting to zero would even yield closed-form expressions for the maximum likelihood estimates:
+
 - $\mu\_k = \frac{1}{N\_k} \sum\_{\\{n: z\_n = k\\}} x\_n$
 - $\sigma\_k^2 = \frac{1}{N\_k} \sum\_{\\{n: z\_n = k\\}} |x\_n - \mu\_k|^2$
 - $\pi\_k = \frac{N\_k}{N}$
+
 where $N\_k = \sum\_{n=1}^N \mathbb{1}(z\_n = k)$.
 
 ---
