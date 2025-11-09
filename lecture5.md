@@ -10,6 +10,8 @@ Prof. Gilles Louppe<br>
 
 ???
 
+- Add data assimilation
+
 - Brownian motion: more simply, it is a gaussian process
 - The SDE is an Ito SDEs
 - Application: Black-Scholes model 
