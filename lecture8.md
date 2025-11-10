@@ -293,6 +293,8 @@ class: middle
 
 .center.width-70[![](figures/lec8/cavi-predicted-ratings.png)]
 
+.center[Predicted ratings matrix (using biclustering for visualization).]
+
 ---
 
 class: middle
@@ -503,6 +505,17 @@ SBI algorithms are a major evolution in Bayesian inference, enabling posterior i
 
 class: middle
 
+Alternative simulation-based inference algorithms include:
+- Neural likelihood estimation (NLE): learns a surrogate likelihood model $q(x | \theta; \phi)$ using samples from $p(\theta, x)$, then performs inference using standard methods (e.g., MCMC, VI) with the surrogate likelihood.
+- Neural ratio estimation (NRE): learns a likelihood-to-evidence ratio model $r(x, \theta; \phi) = \frac{p(x|\theta)}{p(x)}$ using samples from $p(\theta, x)$, then performs inference using standard methods with the learned ratio.
+- Neural score estimation (NSE): learns a score function model $s(\theta | x; \phi) = \nabla_\theta \log p(\theta | x; \phi)$ using samples from $p(\theta, x)$, then performs inference using score-based methods.
+
+These methods are not variational inference methods per se, but they share the same goal of approximating the posterior distribution in complex models.
+
+---
+
+class: middle
+
 # Examples and case studies
 
 ---
@@ -601,7 +614,7 @@ class: middle
 
 .center.width-100[![](figures/lec8/cytometry-flow.png)]
 
-Flow cytometry is used to measure the chemical characteristics of cells as they flow in a fluid stream through a beam of light. It is widely used across biology and medicine for applications in immunology, cancer research, and drug development.
+Flow cytometry is used to measure the chemical characteristics of cells as they flow in a fluid stream through a beam of light. It is used across biology and medicine for immune profiling, disease diagnosis, and drug development.
 
 ---
 
