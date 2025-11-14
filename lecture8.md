@@ -8,6 +8,11 @@ Lecture 8: Variational inference
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](g.louppe@uliege.be)
 
+???
+
+XXX better motivate each step of the functional derivation of CAVI
+XXX develop sbi a bit more (cavi takes a lot of place in comparison)
+
 ---
 
 class: middle
@@ -138,8 +143,8 @@ $$\begin{aligned}
 \end{aligned}$$
 
 Setting this derivative to zero and rearranging terms yields
-$$\log q^\*\_j(z\_j) = \mathbb{E}\_{q\_{-j}(z\_{-j})} \left[ \log p(z, x) \right] + \text{const},$$
-where the constant absorbs $-1 -\lambda$ and ensures that $q^\*\_j(z\_j)$ integrates to $1$.
+$$\log q^\*\_j(z\_j) = \mathbb{E}\_{q\_{-j}(z\_{-j})} \left[ \log p(z, x) \right] -1 -\lambda,$$
+where the value of $\lambda$ is determined by the normalization constraint $\int q^\*\_j(z\_j) dz\_j = 1$ (i.e., from $\frac{\partial \mathcal{L}}{\partial \lambda} = 0$). 
 
 ---
 
@@ -148,7 +153,9 @@ class: middle
 Finally, taking the exponential of both sides gives
 $$q^\*\_j(z\_j) \propto \exp\left( \mathbb{E}\_{q\_{-j}(z\_{-j})} \left[ \log p(z, x) \right] \right).$$
 
-This optimal factor maximizes the ELBO with respect to $q\_j(z\_j)$ while keeping the other factors fixed. It can therefore be used in a coordinate ascent algorithm to iteratively update each factor until convergence, leading to the .bold[coordinate ascent variational inference] algorithm.
+This optimal factor maximizes the ELBO with respect to $q\_j(z\_j)$ while keeping the other factors fixed. 
+
+Therefore, it can be used in a coordinate ascent algorithm to iteratively update each factor until convergence, leading to the .bold[coordinate ascent variational inference] algorithm.
 
 ---
 

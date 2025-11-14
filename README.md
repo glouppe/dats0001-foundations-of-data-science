@@ -22,7 +22,8 @@ Materials for DATS0001 Foundations of Data Science, ULiège, Fall 2025.
 | November 10 | Lecture 8: [Variational inference](https://glouppe.github.io/dats0001-foundations-of-data-science/?p=lecture8.md) [[PDF](https://glouppe.github.io/dats0001-foundations-of-data-science/pdf/lec8.pdf)]<br>`nb08a`: [Coordinate ascent variational inference](./nb08a-cavi.ipynb)<br>`nb08b`: [Automatic differentiation variational inference](./nb08b-advi.ipynb)<br>Reading: Kucukelbir et al, [Automatic differentiation variational inference](https://arxiv.org/abs/1603.00788), 2016 |
 | November 17 | Lecture 9: Model criticism and validation [PDF] |
 | November 24 | Lecture 10: Wrap-up case study [PDF] |
+| December 19 | Homework deadline |
 
-## Case study
+## Homework
 
-TBD.
+See instructions in the [homework notebook](./homework/homework.ipynb). Deadline: December 19, 2025.

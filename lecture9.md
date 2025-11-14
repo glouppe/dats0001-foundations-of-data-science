@@ -10,10 +10,25 @@ Prof. Gilles Louppe<br>
 
 ???
 
-- Feynman: "If it disagrees with experiment, it's wrong."
+XXX Feynman: "If it disagrees with experiment, it's wrong."
+XXX add computational diagnostics
 
 ---
 
+motivation
+- feynman quote 
+- newcomb's experiment as a guiding example
+
+model checking 
+- credible intervals and calibration 
+- posterior predictive checks
+- bayesian p-values
+- residual analysis
+- model checking leads to model improvement
+
+model comparison
+- bayes factors
+- cross-validation
 
 ---
 
