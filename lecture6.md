@@ -11,7 +11,8 @@ Prof. Gilles Louppe<br>
 ???
 
 XXX Modern MCMC methods? HMC, NUTS, etc.
-XXX Next year: add HMC. 
+XXX Next year: add HMC.
+XXX include calibration diagnostics! 
 
 ---
 

@@ -12,6 +12,7 @@ Prof. Gilles Louppe<br>
 
 XXX better motivate each step of the functional derivation of CAVI
 XXX develop sbi a bit more (cavi takes a lot of place in comparison)
+XXX include calibration diagnostics!
 
 ---
 
