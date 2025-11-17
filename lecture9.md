@@ -8,10 +8,6 @@ Lecture 9: Model criticism and comparison
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](g.louppe@uliege.be)
 
-???
-
-XXX add an example of the Occam's razor effect
-
 ---
 
 class: middle, black-slide
@@ -34,7 +30,7 @@ class: middle
 
 ## Newcomb's experiment (1882)
 
-In a famous experiment, Simon Newcomb measured the speed of light using a rotating octagonal mirror. He collected 66 measurements of the time taken by light to travel a known distance.
+In a famous experiment, Simon Newcomb measured the speed of light using a rotating mirror. He collected 66 measurements of the time taken by light to travel a known distance.
 .center.width-100[![](./figures/lec9/newcomb-data.png)]
 .center[Histogram of Newcomb's measurements of the speed of light<br> (in deviations from 24800 nanoseconds).]
 
@@ -100,7 +96,7 @@ The posterior predictive distribution is the distribution
 $$ p(x^{\text{rep}} \mid x) = \int p(x^{\text{rep}} \mid \theta) p(\theta \mid x) d\theta$$
 of replicated data $x^{\text{rep}}$ given observed data $x$.
 
-.success[If our model is a good fit to the data, then replicated data $x^{\text{rep}}$ drawn from the posterior predictive distribution should resemble the observed data $x$: .bold[posterior predictive checks] involve comparing the observed data to replicated datasets simulated from the posterior predictive distribution.]
+.success[If our model is a good fit to the data, then replicated data $x^{\text{rep}}$ should resemble the observed data $x$: .bold[posterior predictive checks] aim to assess this resemblance or lack thereof.]
 
 ---
 
@@ -121,7 +117,7 @@ class: middle
 
 class: middle
 
-To quantify specific aspects of the model fit, we can also compare .bold[summary statistics] $T(x)$ of the observed data to the distribution $p(T(x^{\text{rep}}))$ of those statistics computed on replicated datasets.
+To quantify specific aspects of the model fit, we can also compare .bold[summary statistics] $T(x)$ of the observed data to the distribution $p(T(x^{\text{rep}}) | x)$ of those statistics computed on replicated datasets.
 
 ---
 
@@ -148,7 +144,7 @@ Beyond visual checks, we can also quantify whether the observed statistics are e
 $$P(T(x^{\text{rep}}) \geq T(x) \mid x) = \int P(T(x^{\text{rep}}) \geq T(x) \mid \theta) p(\theta \mid x) d\theta.$$
 A Bayesian p-value close to 0 or 1 indicates a poor model fit for the statistic $T$.
 
-.alert[Note that Bayesian p-values differ from Frequentist p-values, as they account for uncertainty in parameters via the posterior distribution, whereas Frequentist p-values condition on fixed parameter values.]
+.alert[Note that Bayesian p-values account for uncertainty in parameters via the posterior distribution, whereas Frequentist p-values $$P(T(x^{\text{rep}}) \geq T(x) \mid \theta)$$ condition on a fixed parameter value $\theta$.]
 
 ---
 
@@ -168,9 +164,9 @@ class: middle
 ## Residual analysis
 
 When we have multiple observations $x\_{1:N}$, another way to assess model fit is through .bold[residual analysis].
-Assuming the model is composed of a deterministic function plus additive noise, i.e.,
+Assuming the forward model is defined as a deterministic function plus additive noise, i.e.,
 $$ x\_n = f(\theta) + \sigma\epsilon\_n,$$
-where $\sigma$ is a scale parameter and $\epsilon\_n \sim p(\epsilon)$, (standardized) .bold[residuals] are defined as
+where $\sigma$ is a scale parameter and $\epsilon\_n \sim p(\epsilon)$ is noise, (standardized) .bold[residuals] are computed as
 $$ r\_n = \frac{x\_n - f(\theta)}{\sigma} $$
 for $n=1,\ldots,N$ and $\theta \sim p(\theta \mid x\_{1:N})$.
 
@@ -295,10 +291,10 @@ class: middle
 
 Using this approximation, the marginal likelihood can be approximated as
 $$\begin{aligned}
-p(x \mid \mathcal{M}) &= \int p(x \mid \theta, \mathcal{M}) p(\theta \mid \mathcal{M}) d\theta \\\\
+p(x \mid \mathcal{M}) &= \frac{p(x \mid \hat{\theta}, \mathcal{M}) p(\hat{\theta} \mid \mathcal{M})}{p(\hat{\theta} \mid x, \mathcal{M})} \\\\
 &\approx p(x \mid \hat{\theta}, \mathcal{M}) p(\hat{\theta} \mid \mathcal{M}) (2\pi)^{d/2} |\Sigma|^{1/2}
 \end{aligned}$$
-where $(2\pi)^{d/2} |\Sigma|^{1/2}$ is the volume of the Gaussian approximation and $d$ is the dimension of $\theta$.
+where $(2\pi)^{d/2} |\Sigma|^{1/2}$ is the inverse posterior density at the MAP estimate under the Laplace approximation.
 
 ---
 
@@ -306,7 +302,16 @@ class: middle
 
 .center.width-10[![](./figures/lec9/razor.png)]
 
-Finally, Bayes factors inherently penalize model complexity. More complex models spread prior mass over larger parameter spaces, resulting in lower marginal likelihoods unless the data strongly supports the added complexity. This automatic penalization is the .bold[Bayesian Occam's razor] effect.
+Since the marginal likelihood integrates over all parameter values, using it for model comparison automatically implements a form of Bayesian .bold[Occam's razor]: simpler models with less capacity are favored unless the data strongly supports the need for a more complex model.
+
+---
+
+class: middle
+
+.center.width-70[![](./figures/lec9/polynomial-fit.png)]
+
+Polynomial regression fits of varying degrees to noisy data.
+The marginal likelihood favors the 3-degree model ($\log p(x \mid \mathcal{M}) \approx -26$) over the 7-degree model ($\log p(x \mid \mathcal{M}) \approx -45$), balancing fit and complexity, even if the 7-degree model includes the 3-degree model as a special case.
 
 ---
 
@@ -341,6 +346,12 @@ where $p\_{\text{true}}(x')$ is the true data-generating distribution and $p(x' 
 ELPD ideally combines with cross-validation, as held-out data can be used to estimate the expectation.
 
 .success[For Newcomb's data, using 5-fold cross-validation, we find that the ELPD for the .italic[t]-location-scale model (EPLD=$-48$) is higher than that of the Gaussian model (EPLD=$-68$), confirming its superior predictive performance.]
+
+---
+
+class: middle
+
+Note that approximating the posterior distribution by a point estimate (e.g., MAP) reduces ELPD to the familiar .bold[log-likelihood] evaluated on held-out data.
 
 ---
 
