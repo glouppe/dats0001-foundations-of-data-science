@@ -21,7 +21,8 @@ Materials for DATS0001 Foundations of Data Science, ULiège, Fall 2025.
 | November 3 | Lecture 7: [Expectation-maximization](https://glouppe.github.io/dats0001-foundations-of-data-science/?p=lecture7.md) [[PDF](https://glouppe.github.io/dats0001-foundations-of-data-science/pdf/lec7.pdf)]<br>`nb07`: [Expectation-maximization](./nb07-em.ipynb)<br>Reading: Dempster et al, [Maximum Likelihood from Incomplete Data via EM](https://www.jstor.org/stable/2984875), 1977 |
 | November 10 | Lecture 8: [Variational inference](https://glouppe.github.io/dats0001-foundations-of-data-science/?p=lecture8.md) [[PDF](https://glouppe.github.io/dats0001-foundations-of-data-science/pdf/lec8.pdf)]<br>`nb08a`: [Coordinate ascent variational inference](./nb08a-cavi.ipynb)<br>`nb08b`: [Automatic differentiation variational inference](./nb08b-advi.ipynb)<br>Reading: Kucukelbir et al, [Automatic differentiation variational inference](https://arxiv.org/abs/1603.00788), 2016 |
 | November 17 | Lecture 9: [Model criticism and validation](https://glouppe.github.io/dats0001-foundations-of-data-science/?p=lecture9.md) [[PDF](https://glouppe.github.io/dats0001-foundations-of-data-science/pdf/lec9.pdf)]<br>`nb09a`: [Model checking](./nb09a-model-checking.ipynb)<br>`nb09b`: [Model comparison](./nb09b-model-comparison.ipynb)<br>`nb09c`: [Bayesian Occam's razor](./nb09c-bayesian-occam-razor.ipynb)  |
-| November 24 | Lecture 10: Wrap-up case study [PDF] |
+| November 24 | __No lecture (general strike)__ |
+| December 1 | Lecture 10: Wrap-up case study [PDF] |
 | December 19 | Homework deadline |
 
 ## Homework
