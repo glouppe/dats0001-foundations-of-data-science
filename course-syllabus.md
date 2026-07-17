@@ -8,6 +8,10 @@ Fall 2025
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
+???
+
+Check https://smsharma.io/teaching/ds595-ai4science.html
+
 ---
 
 # Course hub
