@@ -20,7 +20,7 @@ class: middle
 
 .center[Scientific inquiry as an iterative process: build, compute, critique, repeat. ]
 
-.footnote[Credits: [Blei](https://www.cs.columbia.edu/~blei/fogm/2020F/readings/Blei2014.pdf), 2014.]
+.footnote[Credits: [Blei](https://www.cs.columbia.edu/~blei/papers/Blei2014.pdf), 2014.]
 
 ---
 
