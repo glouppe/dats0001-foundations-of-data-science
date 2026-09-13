@@ -2,7 +2,7 @@ class: middle, center, title-slide
 
 # Foundations of Data Science
 
-Lecture 7: Expectation-Maximization
+Lecture 7: Model criticism and comparison
 
 <br><br>
 Prof. Gilles Louppe<br>
@@ -10,380 +10,348 @@ Prof. Gilles Louppe<br>
 
 ---
 
-class: middle
-
-.center.width-10[![](figures/lec7/geyser.png)]
-
-The Old Faithful geyser in Yellowstone National Park (USA) is famous for its frequent and predictable eruptions of hot water and steam.
-
----
-
 class: middle, black-slide
 
 .center[
-<iframe width="640" height="400" src="https://www.youtube.com/embed/Qxf3xzirBrs?cc_load_policy=1&hl=en&version=3" frameborder="0" allowfullscreen></iframe>
+<iframe width="640" height="400" src="https://www.youtube.com/embed/LIxvQMhttq4?cc_load_policy=1&hl=en&version=3" frameborder="0" allowfullscreen></iframe>
 ]
 
----
-
-class: middle
-
-.center.width-70[![](figures/lec7/faithful-data.png)]
+.center[If it (a model) disagrees with experiment, it is wrong.<br> In that simple statement is the key to science. -- Richard Feynman]
 
 ---
 
 class: middle
 
-## 2-component GMM
-
-The observed data $\\{ x\_n \in \mathbb{R}^2 \\}\_{n=1}^N$ can be modeled as being generated from a mixture of two Gaussian distributions, with latents $z\_n \in \\{1, 2\\}$ labeling observation membership and hyper-parameters $\pi, \mu = (\\mu\_1, \\mu\_2), \sigma^2 = (\\sigma\_1^2, \\sigma\_2^2)$ defining the mixture proportions, means and variances of the Gaussian components.
-
-.center[![](figures/lec7/geyser-model.svg)]
+# Model checking 
 
 ---
 
 class: middle
 
-## How to fit the model parameters?
+## Newcomb's experiment (1882)
 
-The marginal log-likelihood of the observed data is
-$$\\begin{aligned}
-\log p(\\{x\_n\\}\_{n=1}^N | \pi, \mu, \sigma^2) &= \log \prod\_{n=1}^N p(x\_n | \pi, \mu, \sigma^2) \\\\
-&= \log \prod\_{n=1}^N \sum\_{z\_n=1}^2 p(x\_n, z\_n | \pi, \mu, \sigma^2) \\\\
-&= \sum\_{n=1}^N \log \sum\_{z\_n=1}^2 p(x\_n | z\_n, \mu, \sigma^2) p(z\_n | \pi),
-\end{aligned}$$
-where
-- $p(x\_n | z\_n = k, \mu, \sigma^2) = \mathcal{N}(x\_n | \mu\_k, \sigma\_k^2 I)$
-- $p(z\_n = k | \pi) = \pi\_k$ for $k = 1, 2$.
+In a famous experiment, Simon Newcomb measured the speed of light using a rotating mirror. He collected 66 measurements of the time taken by light to travel a known distance.
+.center.width-100[![](./figures/lec7/newcomb-data.png)]
+.center[Histogram of Newcomb's measurements of the speed of light<br> (in deviations from 24800 nanoseconds).]
 
 ---
 
 class: middle
 
-.center.width-10[![](figures/lec7/danger.png)]
+We consider a simple Gaussian model for these measurements:
 
-Direct maximization of the marginal log-likelihood w.r.t. parameters $\\theta = (\\pi, \\mu, \\sigma^2)$ is difficult.
-- The objective is non-convex.
-- No closed-form solution.
-- Numerically unstable.
+.center[![](./figures/lec7/newcomb-model.svg)]
 
-.alert[More generally, latent variable models lead to log-likelihoods involving sums or integrals inside the logarithm. As their domain grows, these sums/integrals .bold[become intractable to even just evaluate], let alone optimize.]
-
----
-
-class: middle
-
-## If we knew the latent variables...
-
-If the latent $\\{ z\_n \\}\_{n=1}^N$ were known, the complete-data log-likelihood would be
-$$\\begin{aligned}
-\log p(\\{x\_n, z\_n\\}\_{n=1}^N | \pi, \mu, \sigma^2) &= \log \prod\_{n=1}^N p(x\_n, z\_n | \pi, \mu, \sigma^2) \\\\
-&= \log \prod\_{n=1}^N p(x\_n | \mu\_{z\_n}, \sigma^2\_{z\_n}) p(z\_n | \pi) \\\\
-&= \sum\_{n=1}^N \log p(x\_n | \mu\_{z\_n}, \sigma^2\_{z\_n}) + \sum\_{n=1}^N \log p(z\_n | \pi).
-\end{aligned}$$
-
-The evaluation of the log-likelihood becomes tractable, and so does its optimization.
-
----
-
-class: middle
-
-For the Gaussian mixture model, differentiating the complete-data log-likelihood with respect to the parameters and setting to zero would even yield closed-form expressions for the maximum likelihood estimates:
-
-- $\mu\_k = \frac{1}{N\_k} \sum\_{\\{n: z\_n = k\\}} x\_n$
-- $\sigma\_k^2 = \frac{1}{N\_k} \sum\_{\\{n: z\_n = k\\}} |x\_n - \mu\_k|^2$
-- $\pi\_k = \frac{N\_k}{N}$
-
-where $N\_k = \sum\_{n=1}^N \mathbb{1}(z\_n = k)$.
-
----
-
-class: middle
-
-.center.width-10[![](figures/lec7/light-bulb.png)]
-
-.center[What if we alternate between guessing the latent variables<br> and optimizing the hyperparameters?]
-
----
-
-class: middle
-
-# Expectation-Maximization
-
----
-
-class: middle
-
-.center[![](figures/lec7/lvm.svg)]
-
-Assume a generic latent variable model $p(x, z | \theta)$ where $\theta$ are parameters mediating the joint distribution.
-
----
-
-class: middle
-
-## Evidence lower bound 
-
-The marginal log-likelihood for a single observation $x$ can be rewritten as
-$$\\begin{aligned}
-\log p(x | \theta) &= \log \int p(x, z | \theta) \, dz \\\\
-&= \log \int q(z) \frac{p(x, z | \theta)}{q(z)} \, dz \\\\
-&= \log \mathbb{E}\_{q(z)} \left[\frac{p(x, z | \theta)}{q(z)}\right],
-\end{aligned}$$
-where $q(z)$ is any valid probability distribution over the latent variable $z$.
-
----
-
-class: middle
-
-By Jensen's inequality, the log-likelihood can be lower-bounded as
-$$\\begin{aligned}
-\log p(x | \theta) &\geq \mathbb{E}\_{q(z)} \left[\log \frac{p(x, z | \theta)}{q(z)}\right] = \mathcal{L}(q, \theta),
-\end{aligned}$$
-where $\mathcal{L}(q, \theta)$ is known as the .bold[evidence lower bound objective] (ELBO).
-
----
-
-class: middle
-
-The ELBO can first be rewritten as
-$$\\begin{aligned}
-\mathcal{L}(q, \theta) &= \mathbb{E}\_{q(z)} \left[\log \frac{p(x, z | \theta)}{q(z)}\right] \\\\
-&= \mathbb{E}\_{q(z)} \left[\log \frac{p(x | z, \theta) p(z | \theta)}{q(z)}\right] \\\\
-&= \mathbb{E}\_{q(z)} \left[\log p(x | z, \theta)\right] - \text{KL}(q(z) || p(z | \theta)),
-\end{aligned}$$
-where $\text{KL}(q(z) || p(z | \theta)) = \mathbb{E}\_{q(z)} \left[\log \frac{q(z)}{p(z | \theta)}\right]$ is the Kullback-Leibler divergence between distributions $q(z)$ and $p(z | \theta)$.
-
-This expression highlights the trade-off between fitting the data well (first term) and keeping the variational distribution $q(z)$ close to the prior $p(z | \theta)$ (second term).
-
----
-
-class: middle
-
-By factorizing the joint in the other way, the ELBO can also be rewritten as
-$$\\begin{aligned}
-\mathcal{L}(q, \theta) &= \mathbb{E}\_{q(z)} \left[\log \frac{p(x, z | \theta)}{q(z)}\right] \\\\
-&= \mathbb{E}\_{q(z)} \left[\log \frac{p(z | x, \theta) p(x | \theta)}{q(z)}\right] \\\\
-&= \log p(x | \theta) - \text{KL}(q(z) || p(z | x, \theta)).
-\end{aligned}$$
-Therefore,
-$$\log p(x | \theta) = \mathcal{L}(q, \theta) + \text{KL}(q(z) || p(z | x, \theta)).$$
-
-This decomposition reveals that the ELBO is a lower bound on the log-likelihood, with a gap measured by the KL divergence between the variational distribution $q(z)$ and the posterior distribution $p(z | x, \theta)$.
-
----
-
-class: middle
-
-.center.width-70[![](figures/lec7/em-elbo-gap.png)]
-The KL gap $\text{KL}(q(z) || p(z | x, \theta))$ between the log-likelihood $\log p(x | \theta)$ and the ELBO $\mathcal{L}(q, \theta)$ measures the tightness of the bound. (Sketch.)
-
----
-
-class: middle
-
-.center.width-70[![](figures/lec7/em-elbo-nogap.png)]
-The ELBO is tight when $q(z) = p(z | x, \theta)$. Maximizing the ELBO is then equivalent to maximizing the log-likelihood $\log p(x | \theta)$.
-
----
-
-class: middle
-
-## Expectation-Maximization algorithm
-
-The EM algorithm maintains parameter estimates $\theta^{(t)}$ at iteration $t$ and a variational distribution $q^{(t)}(z)$ over the latent variables. It iteratively maximizes the ELBO by alternating between two steps:
-- E-step: maximize the ELBO $\mathcal{L}(q, \theta^{(t)})$ w.r.t. $q$ while keeping $\theta^{(t)}$ fixed.
-- M-step: maximize the ELBO $\mathcal{L}(q^{(t+1)}, \theta)$ w.r.t. $\theta$ while keeping $q^{(t+1)}(z)$ fixed.
-
----
-
-class: middle
-
-The E-step consists in solving
-$$q^{(t+1)} = \arg\max\_q \mathcal{L}(q, \theta^{(t)})$$
-which is achieved by setting $q$ to the posterior distribution
-$$q^{(t+1)}(z) = p(z | x, \theta^{(t)})$$.
-
-.italic[Proof.] From the decomposition of the log-likelihood, we have
-$$\mathcal{L}(q, \theta^{(t)}) = \log p(x | \theta^{(t)}) - \text{KL}(q(z) || p(z | x, \theta^{(t)})).$$
-Since the log-likelihood term $\log p(x | \theta^{(t)})$ does not depend on $q$, maximizing the ELBO w.r.t. $q$ is equivalent to minimizing the KL divergence $\text{KL}(q(z) || p(z | x, \theta^{(t)}))$. The KL divergence is minimized when $q(z) = p(z | x, \theta^{(t)})$. □
-
----
-
-class: middle
-
-The M-step consists in solving
-$$\theta^{(t+1)} = \arg\max\_\theta \mathcal{L}(q^{(t+1)}, \theta)$$
-which can be rewritten as
-$$
-\begin{aligned}
-\theta^{(t+1)} &= \arg\max\_\theta \mathbb{E}\_{q^{(t+1)}(z)} \left[\log \frac{p(x, z | \theta)}{q^{(t+1)}(z)}\right] \\\\
-&= \arg\max\_\theta \mathbb{E}\_{q^{(t+1)}(z)} \left[\log p(x, z | \theta)\right] - \mathbb{E}\_{q^{(t+1)}(z)} \left[\log q^{(t+1)}(z)\right] \\\\
-&= \arg\max\_\theta \mathbb{E}\_{q^{(t+1)}(z)} \left[\log p(x, z | \theta)\right]
-\end{aligned}
-$$
-since the entropy term $H(q^{(t+1)}(z)) = \mathbb{E}\_{q^{(t+1)}(z)} \left[- \log q^{(t+1)}(z)\right]$ does not depend on $\theta$.
-
-Depending on the model, this maximization can sometimes be done in closed-form. Otherwise, numerical optimization algorithms can be used.
-
----
-
-class: middle
-
-Finally, to initialize the algorithm, we need to set initial parameters $\theta^{(0)}$, which can be done randomly or based on prior knowledge.
-
----
-
-class: middle
-
-.center.width-70[![](figures/lec7/em-elbo-0.png)]
-
----
-
-class: middle
-count: false
-
-.center.width-70[![](figures/lec7/em-elbo-1.png)]
-
----
-
-class: middle
-count: false
-
-.center.width-70[![](figures/lec7/em-elbo-2.png)]
-
----
-
-class: middle
-
-.italic[Proposition.] The EM algorithm monotonically increases the marginal log-likelihood at each iteration, i.e.,
-$$\log p(x | \theta^{(t)}) \leq \log p(x | \theta^{(t+1)})$$
-for all $t \geq 0$.
-
-.italic[Proof.] Assume we have parameter estimates $\theta^{(t)}$ at iteration $t$.
 $$\begin{aligned}
-\log p(x | \theta^{(t)}) &= \mathcal{L}(q^{(t+1)}, \theta^{(t)}) + \text{KL}(q^{(t+1)}(z) || p(z | x, \theta^{(t)})) \\\\
-&= \mathcal{L}(q^{(t+1)}, \theta^{(t)}) \\\\
-&\leq \mathcal{L}(q^{(t+1)}, \theta^{(t+1)}) \\\\
-&\leq \log p(x | \theta^{(t+1)}),
+\mu &\sim \mathcal{U}(-1000, 1000) \\\\
+\sigma &\sim \mathcal{U}(0.1, 1000) \\\\
+x_n &\sim \mathcal{N}(\mu, \sigma^2) \\quad \text{for } n=1,\ldots,66.
 \end{aligned}$$
-where the second equality holds since the E-step sets $q^{(t+1)} = p(z|x,\theta^{(t)})$, making the KL gap zero; the first inequality follows from the M-step optimization; and the last inequality holds because the ELBO is always a lower bound on the log-likelihood. □
 
+---
+
+class: middle
+
+Using MCMC, we obtain samples from the posterior $p(\mu, \sigma \mid x\_{1:N})$:
+.center.width-70[![](./figures/lec7/newcomb-posterior.png)]
 
 
 ---
 
 class: middle
 
-## EM for the Old Faithful Geyser model
+From the samples, we can estimate the speed of light (in deviations from 24800 nanoseconds) as the empirical mean of the posterior samples of $\mu$,
+$$ \hat{\mu} = \frac{1}{M} \sum_{m=1}^M \mu^{(m)} = 26.20949771717204 \text{ nanoseconds}. $$
 
-For the Gaussian mixture model introduced earlier, the E-step consists in computing the posterior distribution over the latent variables:
+.alert[Reporting this many digits is misleading, as it suggests a precision that is not supported by the data or model. Do not report more digits than justified by the uncertainty in the estimate $\hat{\mu}$!]
+
+---
+
+class: middle
+
+## Credible intervals
+
+In the Bayesian framework, .bold[credible intervals] provide a way to quantify uncertainty in parameter estimates. 
+
+Assuming a joint model $p(\theta, x)$ over parameters $\theta$ and data $x$, a credible interval at level $1 - \alpha$ is an interval $[a, b]$ such that
+$$ P(a \leq \theta \leq b \mid x) = 1 - \alpha. $$
+The highest posterior density (HPD) interval is a common choice, defined as the narrowest interval containing $1 - \alpha$ of the posterior probability.
+
+---
+
+class: middle
+
+For our speed of light estimate, a 95% credible interval would be computed from the posterior samples of $\mu$ as the interval between the 2.5th and 97.5th percentiles of the samples, yielding
+$$ [\mu\_{2.5\%}, \mu\_{97.5\%}] = (23.71, 28.89). $$
+
+.alert[Note that credible intervals capture our Bayesian uncertainty about parameter estimates given the data $x$, unlike .bold[Frequentist confidence intervals] which would capture the variability of estimates across hypothetical repeated samples, assuming the parameters are fixed but unknown.]
+
+---
+
+class: middle
+
+## Posterior predictive checks
+
+The posterior predictive distribution is the distribution
+$$ p(x^{\text{rep}} \mid x) = \int p(x^{\text{rep}} \mid \theta) p(\theta \mid x) d\theta$$
+of replicated data $x^{\text{rep}}$ given observed data $x$.
+
+.success[If our model is a good fit to the data, then replicated data $x^{\text{rep}}$ should resemble the observed data $x$: .bold[posterior predictive checks] aim to assess this resemblance or lack thereof.]
+
+---
+
+class: middle
+
+In our example, we generate replicated datasets by 
+- sampling parameters $(\mu^{(m)}, \sigma^{(m)}) \sim p(\mu, \sigma \mid x\_{1:N})$ from the posterior, 
+- and simulating new data points $x_n^{\text{rep}(m)} \sim \mathcal{N}(\mu^{(m)}, \sigma^{2(m)})$ for $n=1,\ldots,N$ and $m=1,\ldots,M$.
+
+---
+
+class: middle
+
+.center.width-70[![](./figures/lec7/newcomb-replicates.png)]
+.center[Histograms of 25 replicated datasets drawn<br> from the posterior predictive distribution.]
+
+---
+
+class: middle
+
+To quantify specific aspects of the model fit, we can also compare .bold[summary statistics] $T(x)$ of the observed data to the distribution $p(T(x^{\text{rep}}) | x)$ of those statistics computed on replicated datasets.
+
+---
+
+class: middle
+
+.center.width-60[![](./figures/lec7/newcomb-replicate-means.png)]
+.center.width-60[![](./figures/lec7/newcomb-replicate-vars.png)]
+
+For our Gaussian model, posterior predictive distributions of the mean and variance of replicated datasets are consistent with the observed statistics, indicating a good fit in terms of location and spread.
+
+---
+
+class: middle
+
+.center.width-60[![](./figures/lec7/newcomb-replicate-mins.png)]
+
+For the minimum statistic, however, the situation is different. The observed statistic is poorly captured, indicating a potential model misfit.
+
+---
+
+class: middle
+
+Beyond visual checks, we can also quantify whether the observed statistics are extreme under the posterior predictive distribution, using .bold[Bayesian p-values] defined as
+$$P(T(x^{\text{rep}}) \geq T(x) \mid x) = \int P(T(x^{\text{rep}}) \geq T(x) \mid \theta) p(\theta \mid x) d\theta.$$
+A Bayesian p-value close to 0 or 1 indicates a poor model fit for the statistic $T$.
+
+.alert[Note that Bayesian p-values account for uncertainty in parameters via the posterior distribution, whereas Frequentist p-values $$P(T(x^{\text{rep}}) \geq T(x) \mid \theta)$$ condition on a fixed parameter value $\theta$.]
+
+---
+
+class: middle
+
+For our example, we find the following Bayesian p-values:
+- Mean: 0.513
+- Variance: 0.528
+- Minimum: 1.0
+
+The extreme p-value for the minimum statistic confirms the poor fit of our Gaussian model to the lower tail of the data. 
+
+---
+
+class: middle
+
+## Residual analysis
+
+When we have multiple observations $x\_{1:N}$, another way to assess model fit is through .bold[residual analysis].
+Assuming the forward model is defined as a deterministic function plus additive noise, i.e.,
+$$ x\_n = f(\theta) + \sigma\epsilon\_n,$$
+where $\sigma$ is a scale parameter and $\epsilon\_n \sim p(\epsilon)$ is noise, (standardized) .bold[residuals] are computed as
+$$ r\_n = \frac{x\_n - f(\theta)}{\sigma} $$
+for $n=1,\ldots,N$ and $\theta \sim p(\theta \mid x\_{1:N})$.
+
+---
+
+class: middle
+
+If the model is appropriate, the distribution of residuals $p(r \mid x\_{1:N})$ for the observed data should match the distribution $p(r \mid x^{\text{rep}})$ of residuals for replicated data.
+
+If the posterior is concentrated, then residuals should approximately follow the noise distribution $p(\epsilon)$.
+
+---
+
+class: middle
+
+For our Gaussian model, standardized residuals are computed as
+$$r\_n = \frac{x\_n - \mu}{\sigma},$$
+for $n=1,\ldots,66$ and $\mu, \sigma \sim p(\mu, \sigma \mid x\_{1:66})$.
+
+.center.width-70[![](./figures/lec7/newcomb-residuals.png)]
+
+---
+
+class: middle
+
+A .bold[quantile-quantile (Q-Q) plot] compares the quantiles of two distributions.
+
+In our context, a Q-Q plot can be used to compare the distribution of residuals for the observed data to the distribution of residuals for replicated data. Systematic deviations from the diagonal line indicate model misfit.
+
+---
+
+class: middle
+
+.center.width-70[![](./figures/lec7/newcomb-qqplot.png)]
+.center[Deviations from the diagonal line indicate model misfit, particularly in the lower tail.]
+
+---
+
+class: middle
+
+.center.width-10[![](./figures/lec7/repair.png)]
+
+In summary, model checking provides a principled way to assess model fit by comparing observed data to data simulated from the model, using both visualizations and summary statistics.
+
+It is meant to reveal .bold[model misspecifications]     and failures, guiding us towards better models.
+
+---
+
+class: middle
+
+# Model comparison
+
+---
+
+class: middle
+
+We now assume an alternative .italic[t]-location-scale model for Newcomb's data to account for the heavy tails observed in the measurements:
+
+.center[![](./figures/lec7/newcomb-model2.svg)]
+
 $$\begin{aligned}
-q^{(t+1)}(z\_n = k) &= p(z\_n = k | x\_n, \pi^{(t)}, \mu^{(t)}, \sigma^{2(t)}) \\\\
-&= \frac{p(x\_n | z\_n = k, \mu^{(t)}, \sigma^{2(t)}) p(z\_n = k | \pi^{(t)})}{\sum\_{j=1}^2 p(x\_n | z\_n = j, \mu^{(t)}, \sigma^{2(t)}) p(z\_n = j | \pi^{(t)})} \\\\
-&= \frac{\pi\_k^{(t)} \mathcal{N}(x\_n | \mu\_k^{(t)}, \sigma\_k^{2(t)} I)}{\sum\_{j=1}^2 \pi\_j^{(t)} \mathcal{N}(x\_n | \mu\_j^{(t)}, \sigma\_j^{2(t)} I)}
+\mu &\sim \mathcal{U}(-1000, 1000) \\\\
+\sigma &\sim \mathcal{U}(0.1, 1000) \\\\
+\nu &\sim \text{Gamma}(2, 0.1) \\\\
+\epsilon\_n &\sim t_{\nu} \\\\
+x\_n &= \mu + \sigma \epsilon\_n \\quad \text{for } n=1,\ldots,66.
 \end{aligned}$$
-for $k = 1, 2$ and $n = 1, \ldots, N$.
 
 ---
 
 class: middle
 
-The M-step consists in updating the parameters as
+Again, we use MCMC to obtain samples from the posterior $p(\mu, \sigma, \nu \mid x\_{1:N})$ under this new model.
+.center.width-70[![](./figures/lec7/newcomb-model2-posterior.png)]
+
+---
+
+class: middle
+
+## Bayes factors
+
+Assume we have two competing models, $\mathcal{M}\_1$ and $\mathcal{M}\_2$. As good Bayesian citizens, we also assign prior probabilities to each model, $p(\mathcal{M}\_1)$ and $p(\mathcal{M}\_2)$.
+
+The Bayesian approach to model comparison then consists in comparing the posterior probabilities of each model given the data $x$,
 $$\begin{aligned}
-\mu\_k^{(t+1)} &= \frac{\sum\_{n=1}^N q^{(t+1)}(z\_n = k) x\_n}{\sum\_{n=1}^N q^{(t+1)}(z\_n = k)} \\\\
-\sigma\_k^{2(t+1)} &= \frac{\sum\_{n=1}^N q^{(t+1)}(z\_n = k) |x\_n - \mu\_k^{(t+1)}|^2}{\sum\_{n=1}^N q^{(t+1)}(z\_n = k)} \\\\
-\pi\_k^{(t+1)} &= \frac{1}{N} \sum\_{n=1}^N q^{(t+1)}(z\_n = k)
+\frac{p(\mathcal{M}\_1 \mid x)}{p(\mathcal{M}\_2 \mid x)} &= \frac{p(x \mid \mathcal{M}\_1)}{p(x \mid \mathcal{M}\_2)} \frac{p(\mathcal{M}\_1)}{p(\mathcal{M}\_2)}
 \end{aligned}$$
-for $k = 1, 2$, which follows differentiating the expected complete-data log-likelihood and setting to zero.
+where the first term on the right-hand side is called the .bold[Bayes factor] $\text{BF}\_{1,2}$.
 
 ---
 
 class: middle
 
-.center.width-70[![](figures/lec7/faithful-gmm-0.png)]
+The Bayes factor quantifies how much more likely the observed data is under one model compared to another.  If $\text{BF}\_{1,2} > 1$, the data favors model $\mathcal{M}\_1$ over $\mathcal{M}\_2$, and vice versa.
 
----
+A common scale for interpreting Bayes factors is:
+- 1 to 3: Weak evidence
+- 3 to 10: Moderate evidence
+- 10+: Strong evidence
 
-class: middle
-count: false
-
-.center.width-70[![](figures/lec7/faithful-gmm-1.png)]
-
----
-
-class: middle
-count: false
-
-.center.width-70[![](figures/lec7/faithful-gmm-2.png)]
-
----
-
-class: middle
-count: false
-
-.center.width-70[![](figures/lec7/faithful-gmm-3.png)]
-
----
-
-class: middle
-count: false
-
-.center.width-70[![](figures/lec7/faithful-gmm-4.png)]
+.success[For Newcomb's data, we find that $\log \text{BF}\_{t, \text{Gaussian}} \approx 30$, indicating strong evidence in favor of the .italic[t]-location-scale model over the Gaussian model.]
 
 ---
 
 class: middle
 
-.center[![](figures/lec7/hierarchical-lvm.svg)]
-
-## Empirical Bayes
-
-In hierarchical Bayesian models, model parameters $\theta$ are treated as random variables with prior distribution $p(\theta | \eta)$, where $\eta$ are hyper-parameters with their own hyper-prior $p(\eta)$.
-
-A full Bayesian treatment to obtain $p(\theta | x)$ would require integrating out both the latent variables $z$ and the hyper-parameters $\eta$, thus computing
-$$p(\theta | x) = \iint p(\theta, z, \eta | x) \, dz \, d\eta.$$
-This is often intractable.
+In practice, evaluating Bayes factors requires computing the .bold[marginal likelihoods] $$p(x \mid \mathcal{M}\_i) = \int p(x \mid \theta, \mathcal{M}\_i) p(\theta \mid \mathcal{M}\_i) d\theta,$$ which is typically challenging, even for simple models.
 
 ---
 
 class: middle
 
-An alternative is to use an .bold[empirical Bayes] approach, which consists in approximating $p(\theta) = \int p(\theta | \eta) p(\eta) \, d\eta$ by a point estimate $p(\theta | \hat{\eta})$, where
-$$\hat{\eta} = \arg\max\_\eta p(x | \eta) = \arg\max\_\eta \iint p(x, z | \theta) p(\theta | \eta) \, dz \, d\theta.$$
-Put otherwise, empirical Bayes consists in estimating the prior $p(\theta)$ over model parameters from the data.
+One practical approach to approximate the marginal likelihood is the .bold[Laplace approximation].
 
-.alert[While empirical Bayes is unorthodox from a fully Bayesian perspective, it can lead to good practical results and is used in many applications.]
-
----
-
-class: middle
-
-The maximization can be performed using the EM algorithm by treating both the latent variables $z$ and the model parameters $\theta$ as unobserved data. 
-- E-step: compute the posterior distribution over both latents and parameters
-$$q^{(t+1)}(z, \theta) = p(z, \theta | x, \eta^{(t)}).$$
-- M-step: update the hyper-parameters as
-$$\eta^{(t+1)} = \arg\max\_\\eta \mathbb{E}\_{q^{(t+1)}(z, \theta)} \left[\log p(x, z | \theta) + \log p(\theta | \eta)\right].$$
+Let $\hat{\theta} = \arg\max\_{\theta} p(\theta \mid x, \mathcal{M})$ be the MAP estimate. The Laplace approximation approximates the posterior as
+$$p(\theta \mid x, \mathcal{M}) \approx \mathcal{N}(\theta \mid \hat{\theta}, \Sigma)$$
+where $\Sigma$ is the inverse Hessian of $-\log p(\theta \mid x, \mathcal{M})$ evaluated at $\hat{\theta}$.
 
 ---
 
 class: middle
 
-## Learning diffusion priors by EM (Rozet et al, 2024)
-
-EM can also be used to learn complex prior distributions parameterized by deep generative models, such as diffusion models, from noisy and incomplete observations only.
-
-.center.width-90[![](figures/lec7/diffusion-prior-cifar10.png)]
-
-.footnote[Credits: [Rozet et al](https://arxiv.org/abs/2405.13712) (arXiv:2405.13712), 2024.]
+Using this approximation, the marginal likelihood can be approximated as
+$$\begin{aligned}
+p(x \mid \mathcal{M}) &= \frac{p(x \mid \hat{\theta}, \mathcal{M}) p(\hat{\theta} \mid \mathcal{M})}{p(\hat{\theta} \mid x, \mathcal{M})} \\\\
+&\approx p(x \mid \hat{\theta}, \mathcal{M}) p(\hat{\theta} \mid \mathcal{M}) (2\pi)^{d/2} |\Sigma|^{1/2}
+\end{aligned}$$
+where $(2\pi)^{d/2} |\Sigma|^{1/2}$ is the inverse posterior density at the MAP estimate under the Laplace approximation.
 
 ---
 
 class: middle
 
-.center.width-90[![](figures/lec7/diffusion-prior-accelerated-mri.png)]
+.center.width-10[![](./figures/lec7/razor.png)]
 
-.footnote[Credits: [Rozet et al](https://arxiv.org/abs/2405.13712) (arXiv:2405.13712), 2024.]
+Since the marginal likelihood integrates over all parameter values, using it for model comparison automatically implements a form of Bayesian .bold[Occam's razor]: simpler models with less capacity are favored unless the data strongly supports the need for a more complex model.
+
+---
+
+class: middle
+
+.center.width-70[![](./figures/lec7/polynomial-fit.png)]
+
+Polynomial regression fits of varying degrees to noisy data.
+The marginal likelihood favors the 3-degree model ($\log p(x \mid \mathcal{M}) \approx -26$) over the 7-degree model ($\log p(x \mid \mathcal{M}) \approx -45$), balancing fit and complexity, even if the 7-degree model includes the 3-degree model as a special case.
+
+---
+
+class: middle
+
+## Cross-validation
+
+An alternative approach to model comparison is .bold[cross-validation], which estimates the predictive performance of models on held-out data.
+
+Assume we have a dataset $x\_{1:N}$ and we want to evaluate how well a model $\mathcal{M}$ predicts unseen data.
+
+---
+
+class: middle
+
+The most common form of cross-validation is .bold[k-fold cross-validation], where the data $x\_{1:N}$ is partitioned into $k$ equally sized folds of $N/k$ observations each. 
+
+Each fold is used once as a validation set while the remaining $k-1$ folds form the training set. The predictive performance is averaged over the $k$ folds.
+
+<br>
+
+.center.width-50[![](./figures/lec7/kfold.png)]
+
+---
+
+class: middle
+
+A built-in performance metric for Bayesian models is the .bold[expected log predictive density (ELPD)], defined as
+$$\mathbb{E}\_{p\_{\text{true}}(x')}[\log p(x' | x)]$$
+where $p\_{\text{true}}(x')$ is the true data-generating distribution and $p(x' | x)$ is the posterior predictive distribution given observed data $x$ (those in the training set).
+
+ELPD ideally combines with cross-validation, as held-out data can be used to estimate the expectation.
+
+.success[For Newcomb's data, using 5-fold cross-validation, we find that the ELPD for the .italic[t]-location-scale model (EPLD=$-48$) is higher than that of the Gaussian model (EPLD=$-68$), confirming its superior predictive performance.]
+
+---
+
+class: middle
+
+Note that approximating the posterior distribution by a point estimate (e.g., MAP) reduces ELPD to the familiar .bold[log-likelihood] evaluated on held-out data.
 
 ---
 

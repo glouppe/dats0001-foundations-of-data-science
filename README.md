@@ -19,12 +19,12 @@ Materials for DATS0001 Foundations of Data Science, ULiège, Fall 2026.
 | October 12 | Lecture 5: State-space models<br>`nb05`: State-space models |
 | October 19 | Lecture 6: Markov chain Monte Carlo<br>`nb06a`: Markov chains <br>`nb06b`: MCMC<br>Reading: Gelman et al, [Bayesian Data Analysis, 3rd](http://www.stat.columbia.edu/~gelman/book/BDA3.pdf), 2021 [Chapter 11] |
 | October 26 | _No lecture (Toussaint break)_ |
-| November 2 | Lecture 7: Expectation-maximization<br>`nb07`: Expectation-maximization<br>Reading: Dempster et al, [Maximum Likelihood from Incomplete Data via EM](https://www.jstor.org/stable/2984875), 1977 |
+| November 2 | Lecture 7: Model criticism and validation<br>`nb07a`: Model checking<br>`nb07b`: Model comparison<br>`nb07c`: Bayesian Occam's razor  |
 | November 9 | _No lecture_ |
-| November 16 | Lecture 8: Variational inference<br>`nb08a`: Coordinate ascent variational inference<br>`nb08b`: Automatic differentiation variational inference<br>Reading: Kucukelbir et al, [Automatic differentiation variational inference](https://arxiv.org/abs/1603.00788), 2016 |
-| November 23 | Lecture 9: Model criticism and validation<br>`nb09a`: Model checking<br>`nb09b`: Model comparison<br>`nb09c`: Bayesian Occam's razor  |
-| November 30 | Lecture 10: Wrap-up case study<br>`nb10`: Estimating air pollution from satellite data |
-| December 7 | _No lecture_ |
+| November 16 | Lecture 8: Expectation-maximization<br>`nb08`: Expectation-maximization<br>Reading: Dempster et al, [Maximum Likelihood from Incomplete Data via EM](https://www.jstor.org/stable/2984875), 1977 |
+| November 23 | Lecture 9: Variational inference<br>`nb09a`: Coordinate ascent variational inference<br>`nb09b`: Automatic differentiation variational inference<br>Reading: Kucukelbir et al, [Automatic differentiation variational inference](https://arxiv.org/abs/1603.00788), 2016 |
+| November 30 | Lecture 10: Simulation-based inference |
+| December 7 | Lecture 11: Wrap-up case study<br>`nb11`: Estimating air pollution from satellite data |
 | December 14 | _No lecture_ |
 
 ## Homework

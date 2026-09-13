@@ -243,12 +243,13 @@ class: middle
 - Lecture 2: Data and exploratory analysis
 - Lecture 3: Visualization 
 - Lecture 4: Latent variable models
-- Lecture 5: Hidden Markov models 
+- Lecture 5: State-space models
 - Lecture 6: Markov Chain Monte Carlo
-- Lecture 7: Expectation-Maximization
-- Lecture 8: Variational Inference
-- Lecture 9: Model criticism and validation
-- Lecture 10: Case study
+- Lecture 7: Model criticism and validation
+- Lecture 8: Expectation-Maximization
+- Lecture 9: Variational Inference
+- Lecture 10: Simulation-based inference
+- Lecture 11: Case study
 
 ---
 

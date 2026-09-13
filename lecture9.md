@@ -2,356 +2,662 @@ class: middle, center, title-slide
 
 # Foundations of Data Science
 
-Lecture 9: Model criticism and comparison
+Lecture 9: Variational inference
 
 <br><br>
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](g.louppe@uliege.be)
 
+???
+
+XXX better motivate each step of the functional derivation of CAVI
+XXX develop sbi a bit more (cavi takes a lot of place in comparison)
+XXX include calibration diagnostics!
+
+---
+
+class: middle
+
+.center[![](figures/lec9/lvm-simplest.svg)]
+
+Without loss of generality, we consider latent variable models $p(z, x) = p(z) p(x|z)$ with observed variables $x$ and latent variables $z$. 
+
+We want to compute the posterior distribution
+$$p(z|x) = \frac{p(z) p(x|z)}{p(x)}$$
+but the marginal likelihood $p(x) = \int p(z) p(x|z) dz$ is intractable.
+
+---
+
+class: middle
+
+# Variational inference
+
+---
+
+class: middle
+
+We previously studied MCMC methods that provide asymptotically exact samples from the posterior distribution when the distribution is known up to a normalizing constant.
+
+An alternative to MCMC methods is to cast posterior inference as .bold[optimization].
+
+<br>
+.center.width-10[![](figures/lec9/climb.png)]
+
+---
+
+class: middle
+
+## Problem statement
+
+We consider a variational family $\mathcal{Q}$ of tractable distributions over the latent variables $z$. We want to find the variational distribution $q \in \mathcal{Q}$ that is closest to the true posterior distribution $p(z|x)$, 
+$$q^* = \arg\min\_{q \in \mathcal{Q}} \text{KL}(p(z|x) || q(z)),$$
+where $\text{KL}(p(z|x) || q(z))$ is the forward Kullback-Leibler divergence.
+
+---
+
+class: middle
+
+Unfortunately, the forward KL divergence $$\text{KL}(p(z|x) || q(z)) = \mathbb{E}_{p(z|x)} \left[ \log \frac{p(z|x)}{q(z)} \right]$$ is not tractable since it requires samples from the true posterior $p(z|x)$ if we want to estimate the expectation.
+
+Instead, we minimize the .bold[reverse KL divergence] $$\text{KL}(q(z) || p(z|x)) = \mathbb{E}_{q(z)} \left[ \log \frac{q(z)}{p(z|x)} \right]$$ where the expectation is taken with respect to the variational distribution $q(z)$, which we can sample from.
+
+---
+
+class: middle
+
+.center.width-100[![](figures/lec9/reverse_forward_kl.png)]
+
+.center[Minimizing the forward KL divergence is mode-covering,<br> while minimizing the reverse KL divergence is mode-seeking.]
+
+---
+
+class: middle
+
+## Evidence lower bound (ELBO)
+
+As for EM, we can re-express the optimization problem in terms of the evidence lower bound as
+$$\begin{aligned}
+\text{KL}(q(z) || p(z|x)) &= \mathbb{E}\_{q(z)} \left[ \log \frac{q(z)}{p(z|x)} \right] \\\\
+&= \mathbb{E}\_{q(z)} \left[ \log q(z) \right] - \mathbb{E}\_{q(z)} \left[ \log p(z | x) \right] \\\\
+&= \mathbb{E}\_{q(z)} \left[ \log q(z) \right] - \mathbb{E}\_{q(z)} \left[ \log p(z, x) \right] + \log p(x) \\\\
+&= \mathbb{E}\_{q(z)} \left[ \log \frac{q(z)}{p(z, x)} \right] + \log p(x) \\\\
+&= -\mathcal{L}(q) + \log p(x),
+\end{aligned}$$
+where $\mathcal{L}(q) = \mathbb{E}_{q(z)} \left[ \log \frac{p(z, x)}{q(z)} \right]$ is the ELBO.
+
+Therefore, minimizing the reverse KL divergence is equivalent to maximizing the ELBO.
+
+---
+
+class: middle
+
+## Mean-field variational inference
+
+The mean-field approximation consists in choosing a variational family where the latent variables $z = (z\_1, \ldots, z\_m)$ are independent under the variational distribution. That is,
+$$q(z) = \prod\_{j=1}^m q\_j(z\_j).$$
+
+.alert[This assumption is often unrealistic, as the target posterior distribution would typically exhibit complex dependencies between the latent variables. However, it can lead to tractable inference algorithms.]
+
+---
+
+class: middle
+
+## Coordinate ascent variational inference (CAVI)
+
+Under the mean-field assumption, we can derive .bold[coordinate ascent updates] for each factor $q\_j(z\_j)$ by maximizing the ELBO with respect to $q\_j(z\_j)$ while keeping the other factors fixed.
+
+.italic[Proposition.] The optimal factor $q^\*\_j(z\_j)$ that maximizes the ELBO is given by
+$$q^\*\_j(z\_j) \propto \exp\left( \mathbb{E}\_{q\_{-j}(z\_{-j})} \left[ \log p(z, x) \right] \right),$$
+where $z\_{-j}$ denotes all latent variables except $z\_j$ and $q\_{-j}(z\_{-j})$ is the product of all factors except $q\_j(z\_j)$, all of which are kept fixed.
+
+---
+
+class: middle
+
+.italic[Proof.] The ELBO can be written as
+$$\begin{aligned}
+\mathcal{L}(q) &= \mathbb{E}\_{q(z)} \left[ \log p(z, x) - \log q(z) \right] \\\\
+&= \mathbb{E}\_{q(z)} \left[ \log p(z, x) \right] - \sum\_{j=1}^m \mathbb{E}\_{q\_j(z\_j)}[\log q\_j(z\_j)].
+\end{aligned}$$
+
+Focusing on the $j$-th factor while keeping the others fixed, we have
+$$\begin{aligned}
+\mathcal{L}(q\_j) &= \mathbb{E}\_{q\_j(z\_j)} \left[ \mathbb{E}\_{q\_{-j}(z\_{-j})} \left[ \log p(z, x) \right] \right] - \mathbb{E}\_{q\_j(z\_j)}[\log q\_j(z\_j)] + \text{const},
+\end{aligned}$$
+which we aim to maximize with respect to $q\_j(z\_j)$.
+
+By the method of Lagrange multipliers, we introduce a multiplier $\lambda$ and consider the functional
+$$\mathcal{L}(q\_j, \lambda) = \mathcal{L}(q\_j) - \lambda \left( \int q\_j(z\_j) dz\_j - 1 \right)$$ where the constraint ensures that $q\_j(z\_j)$ integrates to $1$.
+
+---
+
+class: middle
+
+The functional derivative of $\mathcal{L}(q\_j, \lambda)$ with respect to $q\_j(z\_j)$ is given by
+$$\begin{aligned}
+&\frac{\delta \mathcal{L}(q\_j, \lambda)}{\delta q\_j(z\_j)} \\\\
+&= \frac{\delta \mathcal{L}(q\_j)}{\delta q\_j(z\_j)} - \lambda \frac{\delta}{\delta q\_j(z\_j)} \left( \int q\_j(z\_j) dz\_j - 1 \right) \\\\
+&= \frac{\delta \mathcal{L}(q\_j)}{\delta q\_j(z\_j)} - \lambda \\\\
+&= \frac{\delta}{\delta q\_j(z\_j)} \left( \mathbb{E}\_{q\_j(z\_j)} \left[ \mathbb{E}\_{q\_{-j}(z\_{-j})} \left[ \log p(z, x) \right] \right] - \mathbb{E}\_{q\_j(z\_j)}[\log q\_j(z\_j)] \right) - \lambda \\\\
+&= \frac{\delta}{\delta q\_j(z\_j)} \left( \int q\_j(z\_j) \mathbb{E}\_{q\_{-j}(z\_{-j})} \left[ \log p(z, x) \right] dz\_j - \int q\_j(z\_j) \log q\_j(z\_j) dz\_j \right) - \lambda \\\\
+&= \mathbb{E}\_{q\_{-j}(z\_{-j})} \left[ \log p(z, x) \right] - \log q\_j(z\_j) - 1 - \lambda.
+\end{aligned}$$
+
+Setting this derivative to zero and rearranging terms yields
+$$\log q^\*\_j(z\_j) = \mathbb{E}\_{q\_{-j}(z\_{-j})} \left[ \log p(z, x) \right] -1 -\lambda,$$
+where the value of $\lambda$ is determined by the normalization constraint $\int q^\*\_j(z\_j) dz\_j = 1$ (i.e., from $\frac{\partial \mathcal{L}}{\partial \lambda} = 0$). 
+
+---
+
+class: middle
+
+Finally, taking the exponential of both sides gives
+$$q^\*\_j(z\_j) \propto \exp\left( \mathbb{E}\_{q\_{-j}(z\_{-j})} \left[ \log p(z, x) \right] \right).$$
+
+This optimal factor maximizes the ELBO with respect to $q\_j(z\_j)$ while keeping the other factors fixed. 
+
+Therefore, it can be used in a coordinate ascent algorithm to iteratively update each factor until convergence, leading to the .bold[coordinate ascent variational inference] algorithm.
+
+---
+
+class: middle
+
+.center.width-10[![](figures/lec9/movie.png)]
+
+## Example: Matrix factorization 
+
+We assume we have observed a matrix of movie ratings $R \in \mathbb{R}^{N \times M}$, where $R\_{ij}$ is the rating given by user $i$ to movie $j$, $N$ is the number of users and $M$ is the number of movies. Most entries of $R$ are missing and we want to predict them.
+
+---
+
+class: middle
+
+We model the ratings $R\_{ij}$ using a latent variable model with latent user and movie factors, such that
+$$\begin{aligned}
+u\_i \sim \mathcal{N}(0, \sigma\_u^2 I), \\\\
+v\_j \sim \mathcal{N}(0, \sigma\_v^2 I), \\\\
+R\_{ij} | u\_i, v\_j \sim \mathcal{N}(u\_i^T v\_j, \sigma^2),
+\end{aligned}$$
+where $u\_i \in \mathbb{R}^K$ and $v\_j \in \mathbb{R}^K$ are latent factors for user $i$ and movie $j$, respectively, and $\sigma^2$ is the observation noise variance.
+
+We want to approximate the posterior distribution $p(\\{u\_i\\}, \\{v\_j\\} | R)$ over the latent factors given the observed ratings.
+
+---
+
+class: middle
+
+We choose a mean-field variational family where the latent factors are independent under the variational distribution, i.e.,
+$$q(\\{u\_i\\}, \\{v\_j\\}) = \prod\_{i=1}^N q(u\_i) \prod\_{j=1}^M q(v\_j).$$
+
+Due to Gaussian-Gaussian conjugacy, each optimal factor will be Gaussian:
+$$\begin{aligned}
+q(u\_i) = \mathcal{N}(u\_i | \\mu\_{u\_i}, \Sigma\_{u\_i}), \\\\
+q(v\_j) = \mathcal{N}(v\_j | \\mu\_{v\_j}, \Sigma\_{v\_j}).
+\end{aligned}$$
+
+---
+
+class: middle
+
+Let $q\_{-u\_i}(\\{u\_{i'}\\}, \\{v\_j\\})$ denote the product of all factors except $q(u\_i)$. The coordinate ascent update is
+$$q^*(u\_i) \propto \exp\left( \mathbb{E}\_{q\_{-u\_i}} \left[ \log p(\\{u\_i\\}, \\{v\_j\\}, R) \right] \right).$$
+
+The joint log-probability factorizes as
+$$\begin{aligned}
+\log p(\{u\_i\}, \{v\_j\}, R) &= \sum\_{i=1}^N \log p(u\_i) + \sum\_{j=1}^M \log p(v\_j) + \sum\_{(i,j) \in \mathcal{O}} \log p(R\_{ij} | u\_i, v\_j) \\\\
+&= \log p(u\_i) + \sum\_{j \in \mathcal{O}\_i} \log p(R\_{ij} | u\_i, v\_j) + \text{const w.r.t. } u\_i \\\\
+&= -\frac{1}{2\sigma\_u^2} \|u\_i\|^2 - \frac{1}{2\sigma^2} \sum\_{j \in \mathcal{O}\_i} (R\_{ij} - u\_i^T v\_j)^2 + \text{const}
+\end{aligned}$$
+where $\mathcal{O}$ denotes the set of observed entries $(i,j)$ and $\mathcal{O}\_i = \\{j : (i,j) \in \mathcal{O}\\}$.
+
+---
+
+class: middle
+
+Taking the expectation over $q\_{-u\_i}$, we have
+$$\begin{aligned}
+\mathbb{E}\_{q\_{-u\_i}}[\log p(\{u\_i\}, \{v\_j\}, R)] &= -\frac{1}{2\sigma\_u^2} \|u\_i\|^2 - \frac{1}{2\sigma^2} \sum\_{j \in \mathcal{O}\_i} \mathbb{E}\_{q(v\_j)}\left[(R\_{ij} - u\_i^T v\_j)^2\right] + \text{const}.
+\end{aligned}$$
+
+Expanding the squared term inside the expectation yields
+$$\begin{aligned}
+\mathbb{E}\_{q(v\_j)}\left[(R\_{ij} - u\_i^T v\_j)^2\right] &= R\_{ij}^2 - 2R\_{ij} u\_i^T \mu\_{v\_j} + u\_i^T (\mu\_{v\_j}\mu\_{v\_j}^T + \Sigma\_{v\_j}) u\_i,
+\end{aligned}$$
+where $\mu\_{v\_j}$ and $\Sigma\_{v\_j}$ are the mean and covariance of $q(v\_j)$.
+
+---
+
+class: middle
+
+Substituting back and absorbing $R\_{ij}^2$, we get
+$$\begin{aligned}
+&\mathbb{E}\_{q\_{-u\_i}}[\log p(\{u\_i\}, \{v\_j\}, R)] \\\\
+&= -\frac{1}{2\sigma\_u^2} \|u\_i\|^2 - \frac{1}{2\sigma^2} \sum\_{j \in \mathcal{O}\_i} \left[- 2R\_{ij} u\_i^T \mu\_{v\_j} + u\_i^T (\mu\_{v\_j}\mu\_{v\_j}^T + \Sigma\_{v\_j}) u\_i\right] + \text{const}.
+\end{aligned}$$
+
+Collecting terms quadratic and linear in $u\_i$, we have
+$$\begin{aligned}
+&\mathbb{E}\_{q\_{-u\_i}}[\log p(\{u\_i\}, \{v\_j\}, R)] \\\\
+&= -\frac{1}{2} u\_i^T \left[\frac{1}{\sigma\_u^2}I + \frac{1}{\sigma^2}\sum\_{j \in \mathcal{O}\_i} (\mu\_{v\_j}\mu\_{v\_j}^T + \Sigma\_{v\_j})\right] u\_i + u\_i^T \left[\frac{1}{\sigma^2}\sum\_{j \in \mathcal{O}\_i} R\_{ij} \mu\_{v\_j}\right] + \text{const}.
+\end{aligned}$$
+
+---
+
+class: middle
+
+We can identify this expression as the log of a Gaussian distribution in $u\_i$ with covariance and mean given by
+$$\begin{aligned}
+\Sigma\_{u\_i} &= \left[\frac{1}{\sigma\_u^2}I + \frac{1}{\sigma^2}\sum\_{j \in \mathcal{O}\_i} (\mu\_{v\_j}\mu\_{v\_j}^T + \Sigma\_{v\_j})\right]^{-1}, \\\\
+\mu\_{u\_i} &= \Sigma\_{u\_i} \left[\frac{1}{\sigma^2}\sum\_{j \in \mathcal{O}\_i} R\_{ij} \mu\_{v\_j}\right].
+\end{aligned}$$
+
+By symmetry, the updates for $q(v\_j)$ are similar and defined as
+$$\begin{aligned}
+\Sigma\_{v\_j} &= \left[\frac{1}{\sigma\_v^2}I + \frac{1}{\sigma^2}\sum\_{i \in \mathcal{O}\_j} (\mu\_{u\_i}\mu\_{u\_i}^T + \Sigma\_{u\_i})\right]^{-1}, \\\\
+\mu\_{v\_j} &= \Sigma\_{v\_j} \left[\frac{1}{\sigma^2}\sum\_{i \in \mathcal{O}\_j} R\_{ij} \mu\_{u\_i}\right],
+\end{aligned}$$
+where $\mathcal{O}\_j = \\{i : (i,j) \in \mathcal{O}\\}$.
+
+???
+
+Identifying the Gaussian:
+
+Recall that the log of a Gaussian $\mathcal{N}(x | \mu, \Sigma)$ has the form:
+$$\log \mathcal{N}(x | \mu, \Sigma) = -\frac{1}{2}(x-\mu)^T\Sigma^{-1}(x-\mu) + \text{const}$$
+
+Expanding:
+$$= -\frac{1}{2}x^T\Sigma^{-1}x + x^T\Sigma^{-1}\mu + \text{const}$$
+
+Strategy: Match our expression to this pattern to identify $\Sigma\_{u\_i}$ and $\mu\_{u\_i}$.
+
+We have a quadratic term in $u\_i$ and a linear term in $u\_i$ → it's a Gaussian!
+
+---
+
+class: middle
+
+In summary, CAVI for matrix factorization can be implemented as follows:
+
+- Initialize the variational parameters $\\{\\mu\_{u\_i}, \Sigma\_{u\_i}\\}$ and $\\{\\mu\_{v\_j}, \Sigma\_{v\_j}\\}$ randomly.
+- Repeat until convergence:
+  - For each user $i = 1, \ldots, N$, update $\Sigma\_{u\_i}$ and $\mu\_{u\_i}$ using the derived formulas.
+  - For each movie $j = 1, \ldots, M$, update $\Sigma\_{v\_j}$ and $\mu\_{v\_j}$ using the derived formulas.
+
+---
+
+class: middle, center
+
+(Step-by-step code example in `nb09a-cavi.ipynb`.)
+
+---
+
+class: middle
+
+.center.width-70[![](figures/lec9/cavi-convergence.png)]
+
+---
+
+class: middle
+
+.center.width-70[![](figures/lec9/cavi-predicted-ratings.png)]
+
+.center[Predicted ratings matrix (using biclustering for visualization).]
+
+---
+
+class: middle
+
+.center.width-10[![](figures/lec9/confused.png)]
+
+## Strengths and weaknesses 
+
+- CAVI provides a general framework for variational inference under the mean-field assumption.
+- CAVI requires .bold[closed-form expressions for the coordinate updates]. This is only possible for certain models (e.g., conditionally conjugate models). Their derivation can be .bold[tedious] and .bold[error-prone].
+- CAVI is restricted to mean-field variational families, which may be too simplistic to capture the true posterior distribution.
+
+---
+
+class: middle
+
+## Automatic differentiation variational inference (ADVI)
+
+ADVI is a .bold[black-box variational inference] method that overcomes the limitations of CAVI by leveraging automatic differentiation and stochastic optimization. 
+
+---
+
+class: middle
+
+.center.width-70[![](figures/lec9/advi-T.png)]
+
+Since latent variables may be constrained (e.g., positive or bounded), the first step in ADVI is to transform the latent variables $z$ to an unconstrained space using a differentiable bijection $$T: \text{supp}(z) \to \mathbb{R}^m,$$
+such that $\zeta = T(z)$ are unconstrained variables in $\mathbb{R}^m$.
+
+By the change of variables theorem, the joint distribution in the unconstrained space is given by
+$$p(\zeta, x) = p(T^{-1}(\zeta), x) \left| \det J\_{T^{-1}}(\zeta) \right|,$$
+where $J\_{T^{-1}}(\zeta) = \frac{dT^{-1}(\zeta)}{d\zeta}$ is the Jacobian  of the inverse transformation.
+
+.footnote[Credits: [Kucukelbir et al](https://arxiv.org/abs/1603.00788), 2016.]
+
+---
+
+class: middle
+
+.center.width-40[![](figures/lec9/advi-q.png)]
+
+We then define a variational family $q(\zeta; \phi)$ in the unconstrained space, parameterized by variational parameters $\phi$.
+
+Common choices include:
+- Mean-field Gaussian: $q(\zeta; \phi) = \mathcal{N}(\zeta | \mu, \text{diag}(\sigma^2)) = \prod\_{i=1}^m \mathcal{N}(\zeta\_i | \mu\_i, \sigma\_i^2)$ with $\phi = (\mu \in \mathbb{R}^m, \sigma \in \mathbb{R}^m)$;
+- Full-rank Gaussian: $q(\zeta; \phi) = \mathcal{N}(\zeta | \mu, \Sigma=LL^T)$ with $\phi = (\mu \in \mathbb{R}^m, L \in \mathbb{R}^{m(m+1)/2})$, where $L$ is the Cholesky factor of $\Sigma$.
+
+.footnote[Credits: [Kucukelbir et al](https://arxiv.org/abs/1603.00788), 2016.]
+
+---
+
+class: middle
+
+Finally, ADVI proceeds by maximizing the ELBO with respect to the variational parameters $\phi$ using stochastic gradient ascent. The ELBO in the unconstrained space is given by
+$$\mathcal{L}(\phi) = \mathbb{E}\_{q(\zeta; \phi)} \left[ \log p(T^{-1}(\zeta), x) + \log \left| \det J\_{T^{-1}}(\zeta) \right| - \log q(\zeta; \phi) \right].$$
+
+---
+
+class: middle
+
+To compute gradients of the ELBO with respect to $\phi$, we can use the .bold[reparameterization trick] to express the expectation over $q(\zeta; \phi)$ in terms of a fixed distribution independent of $\phi$.
+
+If $\zeta = g(\epsilon; \phi)$ with $\epsilon \sim p(\epsilon)$, then
+$$\mathcal{L}(\phi) = \mathbb{E}\_{p(\epsilon)} \left[ \log p(T^{-1}(g(\epsilon; \phi)), x) + \log \left| \det J\_{T^{-1}}(g(\epsilon; \phi)) \right| - \log q(g(\epsilon; \phi); \phi) \right].$$
+
+In particular, for a Gaussian variational family, we can write $\zeta = \mu + L \epsilon$ where $L$ is the Cholesky factor of $\Sigma$ and $\epsilon \sim \mathcal{N}(0, I)$.
+
+.center.width-70[![](figures/lec9/advi-reparam.png)]
+
+.footnote[Credits: [Kucukelbir et al](https://arxiv.org/abs/1603.00788), 2016.]
+
+---
+
+class: middle
+
+In this form, we can compute unbiased estimates of the gradient of the ELBO with respect to $\phi$ using Monte Carlo sampling and automatic differentiation,
+$$\begin{aligned}
+&\nabla\_\phi \mathcal{L}(\phi) \\\\
+&\approx \frac{1}{B} \sum\_{i=1}^B \nabla\_\phi \left[ \log p(T^{-1}(g(\epsilon\_i; \phi)), x) + \log \left| \det J\_{T^{-1}}(g(\epsilon\_i; \phi)) \right| - \log q(g(\epsilon\_i; \phi); \phi) \right]
+\end{aligned}$$
+where $\epsilon\_i \sim p(\epsilon)$.
+
+Finally, these gradient estimates can be used in a stochastic optimization algorithm to maximize the ELBO and learn the variational parameters $\phi$.
+
+---
+
+class: middle
+
+## Example: The Pitcher's example (from Lecture 1)
+
+(Step-by-step code example in `nb09b-advi.ipynb`.)
+
+---
+
+class: middle
+
+.center.width-10[![](figures/lec9/muscle.png)]
+
+## Strengths and weaknesses 
+
+- ADVI does not require closed-form updates.
+- ADVI does not require mean-field assumptions.
+- ADVI relies on automatic differentiation and stochastic optimization, which avoids tedious derivations.
+- ADVI is limited by the choice of variational family (e.g., Gaussian), which may not capture complex posterior distributions.
+
+---
+
+class: middle
+
+# Amortized variational inference
+
+---
+
+class: middle
+
+In all previous examples, we considered variational inference for a single observation $x$. In practice, we often have a dataset of $N$ observations $\mathbf{d} = \\{x\_1, \ldots, x\_N\\}$ and want to perform inference for each observation.
+
+A naive approach would be to run variational inference separately for each observation, which can be computationally expensive.
+
+---
+
+class: middle
+
+## Amortized variational inference
+
+Amortized variational inference addresses this issue by learning a shared inference model that maps each observation $x\_i$ to its corresponding variational distribution $q(z | x\_i)$.
+
+Mathematically, this can be done by parameterizing $q(z | x\_i)$ as $$q(z | f(x\_i; \varphi)),$$
+where $f(x; \varphi)$ is a function with shared parameters $\varphi$ that takes an observation $x$ as input and outputs the parameters of the variational distribution for the latent variables $z$.
+
+---
+
+class: middle
+
+The parameters $\varphi$ of the inference model could be learned by maximizing the ELBO averaged over the dataset. 
+
+However, because we want to amortize inference, we can rewrite the objective as the minimization of the expected forward KL divergence over the observations,
+$$\varphi^* = \arg\min\_\varphi \mathbb{E}\_{p(x)} \left[ \text{KL}(p(z|x) || q(z | f(x; \varphi))) \right].$$
+
+---
+
+class: middle
+
+While the forward KL divergence was previously inaccessible due to the lack of samples from the true posterior, in the amortized setting we can use samples from the joint distribution $p(z, x)$ to estimate the expected KL divergence!
+
+$$\begin{aligned}
+\mathbb{E}\_{p(x)} \left[ \text{KL}(p(z|x) || q(z | f(x; \varphi))) \right] &= \mathbb{E}\_{p(x)} \left[ \mathbb{E}\_{p(z|x)} \left[ \log \frac{p(z|x)}{q(z | f(x; \varphi))} \right] \right] \\\\
+&= \mathbb{E}\_{p(x, z)} \left[ \log \frac{p(z|x)}{q(z | f(x; \varphi))} \right] \\\\
+&= -\mathbb{E}\_{p(x, z)} \left[ \log q(z | f(x; \varphi)) \right] + \text{const}.
+\end{aligned}$$
+
+In other words, we can learn the inference model by maximizing the expected posterior log-density under the joint distribution! 
+
+---
+
+class: middle
+
+## Neural posterior estimation (NPE)
+
+Neural posterior estimation is an amortized variational inference method where the inference model is parameterized using neural networks.
+
+.center.width-100[![](figures/lec9/npe-diagram.svg)]
+
+.footnote[Credits: Adapted from [Deistler et al](https://arxiv.org/abs/2508.12939), 2025.]
+
+---
+
+class: middle
+
+The variational distribution can be defined in different ways, such as
+- $q(z | f(x; \varphi))$, using a simple distribution (e.g., Gaussian) and a .bold[neural network]  $f(x; \varphi)$ that outputs the parameters of the variational distribution given an observation $x$,
+- or as $q(z | f(x; \varphi); \phi)$ using a flexible density estimator, such as (conditional) .bold[normalizing flows], with parameters $\phi$, and a neural network $f(x; \varphi)$ that outputs a sufficient statistic of $x$.
+
+---
+
+class: middle
+
+For training, we can generate samples from the joint distribution $p(z, x)$ by first sampling $z \sim p(z)$ from the prior and then sampling $x \sim p(x|z)$ from the likelihood.
+
+The parameters $\varphi$ (and $\phi$ if applicable) can then be learned by maximizing the expected posterior log-density using stochastic gradient ascent,
+$$\begin{aligned}
+\varphi^\*, \phi^\* &= \arg\max\_{\varphi, \phi} \mathbb{E}\_{p(x, z)} \left[ \log q(z | f(x; \varphi); \phi) \right]. 
+\end{aligned}$$
+
+---
+
+class: middle
+
+.center.width-10[![](figures/lec9/lightning.png)]
+
+## Strengths and weaknesses
+
+- NPE leverages neural networks to learn flexible inference models that can capture complex posterior distributions.
+- NPE only requires samples from the joint distribution $p(z, x)$, making it applicable to a large class of models.
+- NPE amortizes inference across multiple observations, making inference as fast as a forward pass through the neural network. However, this comes at the cost of an upfront training phase. 
+
+---
+
+class: middle
+
+## Simulation-based inference
+
+NPE is an example of simulation-based inference (SBI) methods, which are designed for scenarios where the likelihood $p(x|z)$ (resp. $p(x|\theta)$) is intractable but we can still generate samples from the joint distribution $p(z, x)$ (resp. $p(\theta, x)$) using a simulator.
+
+SBI algorithms are a major evolution in Bayesian inference, enabling posterior inference in complex models where traditional methods fail, .bold[without simplifying assumptions].
+
+---
+
+class: middle
+
+Alternative simulation-based inference algorithms include:
+- Neural likelihood estimation (NLE): learns a surrogate likelihood model $q(x | \theta; \phi)$ using samples from $p(\theta, x)$, then performs inference using standard methods (e.g., MCMC, VI) with the surrogate likelihood.
+- Neural ratio estimation (NRE): learns a likelihood-to-evidence ratio model $r(x, \theta; \phi) = \frac{p(x|\theta)}{p(x)}$ using samples from $p(\theta, x)$, then performs inference using standard methods with the learned ratio.
+- Neural score estimation (NSE): learns a score function model $s(\theta | x; \phi) = \nabla_\theta \log p(\theta | x; \phi)$ using samples from $p(\theta, x)$, then performs inference using score-based methods.
+
+These methods are not variational inference methods per se, but they share the same goal of approximating the posterior distribution in complex models.
+
+---
+
+class: middle
+
+# Examples and case studies
+
 ---
 
 class: middle, black-slide
 
-.center[
-<iframe width="640" height="400" src="https://www.youtube.com/embed/LIxvQMhttq4?cc_load_policy=1&hl=en&version=3" frameborder="0" allowfullscreen></iframe>
+.avatars[![](figures/lec9/faces/malavika.jpg)![](figures/lec9/faces/francois.jpg)![](figures/lec9/faces/absil.jpg)]
+
+## Exoplanet atmosphere characterization 
+
+.center.width-80[![](./figures/lec9/exoplanet-probe.jpg)]
+
+.center[What are the atmospheres of exoplanets made of?<br> How do they form and evolve? Do they host life?]
+
+.footnote[Credits: [NSA/JPL-Caltech](https://www.nasa.gov/topics/universe/features/exoplanet20100203-b.html), 2010.]
+
+???
+
+As an example of a low-dimensional inverse problem, let me tell you about some of the work we have done on exoplanet atmosphere characterization.
+
+When an exoplanet transits in front of its star, a tiny fraction of the starlight passes through the planet's atmosphere before reaching us. By analyzing the spectrum of this light, we can infer the composition and properties of the atmosphere.
+
+Understanding the atmosphere of an exoplanet is in turn quite important, as it can tell us about the planet's formation and evolution and its potential for habitability.
+
+---
+
+class: middle, black-slide
+
+.center.width-50[![](./figures/lec9/WISE1738.jpg)]
+
+.center[WISE 1738+2732, a brown dwarf 25 light-years away.]
+
+???
+
+The object we studied is WISE 1738+2732, a brown dwarf located about 25 light-years away.
+
+It was observed with the JWST telescope, which provided us with a high-quality spectrum of its atmosphere.
+
+This brown dwarf is interesting because its temperature is similar to that of some exoplanets, making it a good proxy for studying exoplanet atmospheres. It is also interesting because it is cool enough to have complex molecules like water vapor, methane, or ammonia.
+
+---
+
+class: middle
+
+.avatars[![](figures/lec9/faces/malavika.jpg)![](figures/lec9/faces/francois.jpg)![](figures/lec9/faces/absil.jpg)]
+
+.center.width-90[![](./figures/lec9/exoplanet-npe.png)]
+
+Using .bold[Neural Posterior Estimation] (NPE), we approximate the posterior distribution $p(\theta|x)$ of atmospheric parameters $\theta$ with a .bold[normalizing flow] trained on pairs $(\theta, x)$ simulated from a physical model of exoplanet atmospheres.
+
+.footnote[Credits: [Vasist et al](https://arxiv.org/abs/2301.06575), 2023 (arXiv:2301.06575).]
+
+???
+
+To analyze the JWST spectrum, we used a simulation-based inference method called Neural Posterior Estimation (NPE).
+
+NPE uses a normalizing flow, which is a type of deep generative model, to approximate the posterior distribution $p(\theta|x)$ of atmospheric parameters $\theta$ given the observed spectrum $x$.
+
+The normalizing flow is trained on pairs $(\theta, x)$ simulated from a physical model of exoplanet atmospheres. This allows us to learn a flexible and accurate approximation of the posterior distribution, which we can then use to infer the atmospheric parameters from the observed spectrum.
+.
+---
+
+class: middle
+
+.avatars[![](figures/lec9/faces/malavika.jpg)![](figures/lec9/faces/francois.jpg)![](figures/lec9/faces/absil.jpg)]
+
+.grid[
+.kol-3-5[<br><br>.width-100[![](./figures/lec9/wise-spectra.png)]]
+.kol-2-5[.width-100[![](./figures/lec9/wise-posterior.png)]]
 ]
 
-.center[If it (a model) disagrees with experiment, it is wrong.<br> In that simple statement is the key to science. -- Richard Feynman]
+.center[Panchromatic characterization of WISE 1738+2732 using JWST/MIRI.]
+
+.footnote[Credits: [Vasist et al](https://arxiv.org/abs/2507.12264), 2025 (arXiv:2507.12264).]
+
+???
+
+The results of our analysis are quite interesting.
+
+The left panel shows the observed spectrum of WISE 1738+2732 in black, along with the best-fit in blue. The model fits the data quite well, capturing the main features of the spectrum.
+
+The right panel shows the posterior distribution of the atmospheric parameters $\theta$ inferred from the spectrum. While this posterior plot can look intimidating, it is actually telling us a lot about the physics and chemistry of this world:
+- The atmosphere contains water vapor, methane, ammonia, carbon monoxide, and carbon dioxide
+- The detection of carbon monoxide and carbon dioxide is a surprise, as these molecules were not expected to be present in such a cold atmosphere: this suggests that non-equilibrium chemistry is at play. 
+- In turn, this disequilibrium chemistry tells us about atmospheric mixing and transport processes that shape planetary evolution.
+
+There is much more to say, but I will stop here. If you are interested, please check out our study! The point is: all these scientific insights were made possible by our ability to perform Bayesian inference in a complex, high-dimensional, and non-linear model of exoplanet atmospheres.
 
 ---
 
 class: middle
 
-# Model checking 
+.avatars[![](figures/lec9/faces/fanny.jpg)![](figures/lec9/faces/adrien.jpg)]
+
+## Representation learning for cytometry data
+
+.center.width-100[![](figures/lec9/cytometry-flow.png)]
+
+Flow cytometry is used to measure the chemical characteristics of cells as they flow in a fluid stream through a beam of light. It is used across biology and medicine for immune profiling, disease diagnosis, and drug development.
 
 ---
 
 class: middle
 
-## Newcomb's experiment (1882)
+.avatars[![](figures/lec9/faces/fanny.jpg)![](figures/lec9/faces/adrien.jpg)]
 
-In a famous experiment, Simon Newcomb measured the speed of light using a rotating mirror. He collected 66 measurements of the time taken by light to travel a known distance.
-.center.width-100[![](./figures/lec9/newcomb-data.png)]
-.center[Histogram of Newcomb's measurements of the speed of light<br> (in deviations from 24800 nanoseconds).]
+.center.width-100[![](figures/lec9/cytometry-screening.png)]
+
+However, analyzing flow cytometry data can be challenging due to the high dimensionality and complexity of the data. Traditional methods often rely on manual gating, which is time-consuming and subjective.
 
 ---
 
 class: middle
 
-We consider a simple Gaussian model for these measurements:
+.avatars[![](figures/lec9/faces/fanny.jpg)![](figures/lec9/faces/adrien.jpg)]
 
-.center[![](./figures/lec9/newcomb-model.svg)]
-
+To automate the classification of cells and the discovery of new cell populations, we consider a latent variable model of cell populations
 $$\begin{aligned}
-\mu &\sim \mathcal{U}(-1000, 1000) \\\\
-\sigma &\sim \mathcal{U}(0.1, 1000) \\\\
-x_n &\sim \mathcal{N}(\mu, \sigma^2) \\quad \text{for } n=1,\ldots,66.
+p\_{\theta,\beta,\pi}(x, z, c) &= p\_{\theta}(x | z) p\_{\beta}(z | c) p\_{\pi}(c), \\\\
+p\_{\pi}(c) &= \text{Categorical}(c | \pi), \\\\
+p\_{\beta}(z | c) &= \mathcal{N}(z | \mu\_\beta(c), \text{diag}(\sigma^2\_\beta(c))), \\\\
+p\_{\theta}(x | z) &= \mathcal{N}(x | \mu\_\theta(z), \text{diag}(\sigma^2\_\theta(z))),
 \end{aligned}$$
+where $x$ are the observed cell measurements, $z$ are latent representations of cells, and $c$ are discrete cell population memberships.
+
+We use .bold[deep neural networks] to parameterize the functions $\mu\_\theta(z)$, $\sigma^2\_\theta(z)$, $\mu\_\beta(c)$, and $\sigma^2\_\beta(c)$ and rely on .bold[amortized variational inference] to learn the model parameters and infer the latent variables.
 
 ---
 
 class: middle
 
-Using MCMC, we obtain samples from the posterior $p(\mu, \sigma \mid x\_{1:N})$:
-.center.width-70[![](./figures/lec9/newcomb-posterior.png)]
+.avatars[![](figures/lec9/faces/fanny.jpg)![](figures/lec9/faces/adrien.jpg)]
 
-
----
-
-class: middle
-
-From the samples, we can estimate the speed of light (in deviations from 24800 nanoseconds) as the empirical mean of the posterior samples of $\mu$,
-$$ \hat{\mu} = \frac{1}{M} \sum_{m=1}^M \mu^{(m)} = 26.20949771717204 \text{ nanoseconds}. $$
-
-.alert[Reporting this many digits is misleading, as it suggests a precision that is not supported by the data or model. Do not report more digits than justified by the uncertainty in the estimate $\hat{\mu}$!]
-
----
-
-class: middle
-
-## Credible intervals
-
-In the Bayesian framework, .bold[credible intervals] provide a way to quantify uncertainty in parameter estimates. 
-
-Assuming a joint model $p(\theta, x)$ over parameters $\theta$ and data $x$, a credible interval at level $1 - \alpha$ is an interval $[a, b]$ such that
-$$ P(a \leq \theta \leq b \mid x) = 1 - \alpha. $$
-The highest posterior density (HPD) interval is a common choice, defined as the narrowest interval containing $1 - \alpha$ of the posterior probability.
-
----
-
-class: middle
-
-For our speed of light estimate, a 95% credible interval would be computed from the posterior samples of $\mu$ as the interval between the 2.5th and 97.5th percentiles of the samples, yielding
-$$ [\mu\_{2.5\%}, \mu\_{97.5\%}] = (23.71, 28.89). $$
-
-.alert[Note that credible intervals capture our Bayesian uncertainty about parameter estimates given the data $x$, unlike .bold[Frequentist confidence intervals] which would capture the variability of estimates across hypothetical repeated samples, assuming the parameters are fixed but unknown.]
-
----
-
-class: middle
-
-## Posterior predictive checks
-
-The posterior predictive distribution is the distribution
-$$ p(x^{\text{rep}} \mid x) = \int p(x^{\text{rep}} \mid \theta) p(\theta \mid x) d\theta$$
-of replicated data $x^{\text{rep}}$ given observed data $x$.
-
-.success[If our model is a good fit to the data, then replicated data $x^{\text{rep}}$ should resemble the observed data $x$: .bold[posterior predictive checks] aim to assess this resemblance or lack thereof.]
-
----
-
-class: middle
-
-In our example, we generate replicated datasets by 
-- sampling parameters $(\mu^{(m)}, \sigma^{(m)}) \sim p(\mu, \sigma \mid x\_{1:N})$ from the posterior, 
-- and simulating new data points $x_n^{\text{rep}(m)} \sim \mathcal{N}(\mu^{(m)}, \sigma^{2(m)})$ for $n=1,\ldots,N$ and $m=1,\ldots,M$.
-
----
-
-class: middle
-
-.center.width-70[![](./figures/lec9/newcomb-replicates.png)]
-.center[Histograms of 25 replicated datasets drawn<br> from the posterior predictive distribution.]
-
----
-
-class: middle
-
-To quantify specific aspects of the model fit, we can also compare .bold[summary statistics] $T(x)$ of the observed data to the distribution $p(T(x^{\text{rep}}) | x)$ of those statistics computed on replicated datasets.
-
----
-
-class: middle
-
-.center.width-60[![](./figures/lec9/newcomb-replicate-means.png)]
-.center.width-60[![](./figures/lec9/newcomb-replicate-vars.png)]
-
-For our Gaussian model, posterior predictive distributions of the mean and variance of replicated datasets are consistent with the observed statistics, indicating a good fit in terms of location and spread.
-
----
-
-class: middle
-
-.center.width-60[![](./figures/lec9/newcomb-replicate-mins.png)]
-
-For the minimum statistic, however, the situation is different. The observed statistic is poorly captured, indicating a potential model misfit.
-
----
-
-class: middle
-
-Beyond visual checks, we can also quantify whether the observed statistics are extreme under the posterior predictive distribution, using .bold[Bayesian p-values] defined as
-$$P(T(x^{\text{rep}}) \geq T(x) \mid x) = \int P(T(x^{\text{rep}}) \geq T(x) \mid \theta) p(\theta \mid x) d\theta.$$
-A Bayesian p-value close to 0 or 1 indicates a poor model fit for the statistic $T$.
-
-.alert[Note that Bayesian p-values account for uncertainty in parameters via the posterior distribution, whereas Frequentist p-values $$P(T(x^{\text{rep}}) \geq T(x) \mid \theta)$$ condition on a fixed parameter value $\theta$.]
-
----
-
-class: middle
-
-For our example, we find the following Bayesian p-values:
-- Mean: 0.513
-- Variance: 0.528
-- Minimum: 1.0
-
-The extreme p-value for the minimum statistic confirms the poor fit of our Gaussian model to the lower tail of the data. 
-
----
-
-class: middle
-
-## Residual analysis
-
-When we have multiple observations $x\_{1:N}$, another way to assess model fit is through .bold[residual analysis].
-Assuming the forward model is defined as a deterministic function plus additive noise, i.e.,
-$$ x\_n = f(\theta) + \sigma\epsilon\_n,$$
-where $\sigma$ is a scale parameter and $\epsilon\_n \sim p(\epsilon)$ is noise, (standardized) .bold[residuals] are computed as
-$$ r\_n = \frac{x\_n - f(\theta)}{\sigma} $$
-for $n=1,\ldots,N$ and $\theta \sim p(\theta \mid x\_{1:N})$.
-
----
-
-class: middle
-
-If the model is appropriate, the distribution of residuals $p(r \mid x\_{1:N})$ for the observed data should match the distribution $p(r \mid x^{\text{rep}})$ of residuals for replicated data.
-
-If the posterior is concentrated, then residuals should approximately follow the noise distribution $p(\epsilon)$.
-
----
-
-class: middle
-
-For our Gaussian model, standardized residuals are computed as
-$$r\_n = \frac{x\_n - \mu}{\sigma},$$
-for $n=1,\ldots,66$ and $\mu, \sigma \sim p(\mu, \sigma \mid x\_{1:66})$.
-
-.center.width-70[![](./figures/lec9/newcomb-residuals.png)]
-
----
-
-class: middle
-
-A .bold[quantile-quantile (Q-Q) plot] compares the quantiles of two distributions.
-
-In our context, a Q-Q plot can be used to compare the distribution of residuals for the observed data to the distribution of residuals for replicated data. Systematic deviations from the diagonal line indicate model misfit.
-
----
-
-class: middle
-
-.center.width-70[![](./figures/lec9/newcomb-qqplot.png)]
-.center[Deviations from the diagonal line indicate model misfit, particularly in the lower tail.]
-
----
-
-class: middle
-
-.center.width-10[![](./figures/lec9/repair.png)]
-
-In summary, model checking provides a principled way to assess model fit by comparing observed data to data simulated from the model, using both visualizations and summary statistics.
-
-It is meant to reveal .bold[model misspecifications]     and failures, guiding us towards better models.
-
----
-
-class: middle
-
-# Model comparison
-
----
-
-class: middle
-
-We now assume an alternative .italic[t]-location-scale model for Newcomb's data to account for the heavy tails observed in the measurements:
-
-.center[![](./figures/lec9/newcomb-model2.svg)]
-
-$$\begin{aligned}
-\mu &\sim \mathcal{U}(-1000, 1000) \\\\
-\sigma &\sim \mathcal{U}(0.1, 1000) \\\\
-\nu &\sim \text{Gamma}(2, 0.1) \\\\
-\epsilon\_n &\sim t_{\nu} \\\\
-x\_n &= \mu + \sigma \epsilon\_n \\quad \text{for } n=1,\ldots,66.
-\end{aligned}$$
-
----
-
-class: middle
-
-Again, we use MCMC to obtain samples from the posterior $p(\mu, \sigma, \nu \mid x\_{1:N})$ under this new model.
-.center.width-70[![](./figures/lec9/newcomb-model2-posterior.png)]
-
----
-
-class: middle
-
-## Bayes factors
-
-Assume we have two competing models, $\mathcal{M}\_1$ and $\mathcal{M}\_2$. As good Bayesian citizens, we also assign prior probabilities to each model, $p(\mathcal{M}\_1)$ and $p(\mathcal{M}\_2)$.
-
-The Bayesian approach to model comparison then consists in comparing the posterior probabilities of each model given the data $x$,
-$$\begin{aligned}
-\frac{p(\mathcal{M}\_1 \mid x)}{p(\mathcal{M}\_2 \mid x)} &= \frac{p(x \mid \mathcal{M}\_1)}{p(x \mid \mathcal{M}\_2)} \frac{p(\mathcal{M}\_1)}{p(\mathcal{M}\_2)}
-\end{aligned}$$
-where the first term on the right-hand side is called the .bold[Bayes factor] $\text{BF}\_{1,2}$.
-
----
-
-class: middle
-
-The Bayes factor quantifies how much more likely the observed data is under one model compared to another.  If $\text{BF}\_{1,2} > 1$, the data favors model $\mathcal{M}\_1$ over $\mathcal{M}\_2$, and vice versa.
-
-A common scale for interpreting Bayes factors is:
-- 1 to 3: Weak evidence
-- 3 to 10: Moderate evidence
-- 10+: Strong evidence
-
-.success[For Newcomb's data, we find that $\log \text{BF}\_{t, \text{Gaussian}} \approx 30$, indicating strong evidence in favor of the .italic[t]-location-scale model over the Gaussian model.]
-
----
-
-class: middle
-
-In practice, evaluating Bayes factors requires computing the .bold[marginal likelihoods] $$p(x \mid \mathcal{M}\_i) = \int p(x \mid \theta, \mathcal{M}\_i) p(\theta \mid \mathcal{M}\_i) d\theta,$$ which is typically challenging, even for simple models.
-
----
-
-class: middle
-
-One practical approach to approximate the marginal likelihood is the .bold[Laplace approximation].
-
-Let $\hat{\theta} = \arg\max\_{\theta} p(\theta \mid x, \mathcal{M})$ be the MAP estimate. The Laplace approximation approximates the posterior as
-$$p(\theta \mid x, \mathcal{M}) \approx \mathcal{N}(\theta \mid \hat{\theta}, \Sigma)$$
-where $\Sigma$ is the inverse Hessian of $-\log p(\theta \mid x, \mathcal{M})$ evaluated at $\hat{\theta}$.
-
----
-
-class: middle
-
-Using this approximation, the marginal likelihood can be approximated as
-$$\begin{aligned}
-p(x \mid \mathcal{M}) &= \frac{p(x \mid \hat{\theta}, \mathcal{M}) p(\hat{\theta} \mid \mathcal{M})}{p(\hat{\theta} \mid x, \mathcal{M})} \\\\
-&\approx p(x \mid \hat{\theta}, \mathcal{M}) p(\hat{\theta} \mid \mathcal{M}) (2\pi)^{d/2} |\Sigma|^{1/2}
-\end{aligned}$$
-where $(2\pi)^{d/2} |\Sigma|^{1/2}$ is the inverse posterior density at the MAP estimate under the Laplace approximation.
-
----
-
-class: middle
-
-.center.width-10[![](./figures/lec9/razor.png)]
-
-Since the marginal likelihood integrates over all parameter values, using it for model comparison automatically implements a form of Bayesian .bold[Occam's razor]: simpler models with less capacity are favored unless the data strongly supports the need for a more complex model.
-
----
-
-class: middle
-
-.center.width-70[![](./figures/lec9/polynomial-fit.png)]
-
-Polynomial regression fits of varying degrees to noisy data.
-The marginal likelihood favors the 3-degree model ($\log p(x \mid \mathcal{M}) \approx -26$) over the 7-degree model ($\log p(x \mid \mathcal{M}) \approx -45$), balancing fit and complexity, even if the 7-degree model includes the 3-degree model as a special case.
-
----
-
-class: middle
-
-## Cross-validation
-
-An alternative approach to model comparison is .bold[cross-validation], which estimates the predictive performance of models on held-out data.
-
-Assume we have a dataset $x\_{1:N}$ and we want to evaluate how well a model $\mathcal{M}$ predicts unseen data.
-
----
-
-class: middle
-
-The most common form of cross-validation is .bold[k-fold cross-validation], where the data $x\_{1:N}$ is partitioned into $k$ equally sized folds of $N/k$ observations each. 
-
-Each fold is used once as a validation set while the remaining $k-1$ folds form the training set. The predictive performance is averaged over the $k$ folds.
-
-<br>
-
-.center.width-50[![](./figures/lec9/kfold.png)]
-
----
-
-class: middle
-
-A built-in performance metric for Bayesian models is the .bold[expected log predictive density (ELPD)], defined as
-$$\mathbb{E}\_{p\_{\text{true}}(x')}[\log p(x' | x)]$$
-where $p\_{\text{true}}(x')$ is the true data-generating distribution and $p(x' | x)$ is the posterior predictive distribution given observed data $x$ (those in the training set).
-
-ELPD ideally combines with cross-validation, as held-out data can be used to estimate the expectation.
-
-.success[For Newcomb's data, using 5-fold cross-validation, we find that the ELPD for the .italic[t]-location-scale model (EPLD=$-48$) is higher than that of the Gaussian model (EPLD=$-68$), confirming its superior predictive performance.]
-
----
-
-class: middle
-
-Note that approximating the posterior distribution by a point estimate (e.g., MAP) reduces ELPD to the familiar .bold[log-likelihood] evaluated on held-out data.
+.center.width-100[![](figures/lec9/cytometry-marvin.png)]
 
 ---
 
@@ -359,3 +665,68 @@ class: end-slide, center
 count: false
 
 The end.
+
+---
+
+class: middle 
+
+## Change of variables
+
+.center.width-80[![](figures/lec9/cubes.png)]
+
+Assume $p(\mathbf{z})$ is a uniformly distributed unit cube in $\mathbb{R}^3$ and $\mathbf{x} = f(\mathbf{z}) = 2\mathbf{z}$.
+Since the total probability mass must be conserved, 
+$$p(\mathbf{x})=p(\mathbf{x}=f(\mathbf{z})) = p(\mathbf{z})\frac{V\_\mathbf{z}}{V\_\mathbf{x}}=p(\mathbf{z}) \frac{1}{8},$$
+where $\frac{1}{8} = \left| \det \left( \begin{matrix}
+2 & 0 & 0 \\\\ 
+0 & 2 & 0 \\\\
+0 & 0 & 2
+\end{matrix} \right)\right|^{-1}$ represents the inverse determinant of the Jacobian of the linear transformation $f$.
+
+???
+
+Motivate that picking a parametric family of distributions is not always easy. We want something more flexible.
+
+---
+
+class: middle
+
+What if $f$ is non-linear?
+
+.center.width-70[![](figures/lec9/cov.png)]
+
+.footnote[Image credits: Simon J.D. Prince, [Understanding Deep Learning](https://udlbook.github.io/udlbook/), 2023.]
+
+---
+
+class: middle
+
+## Change of variables theorem
+
+If $f$ is non-linear,
+- the Jacobian $J\_f(\mathbf{z})$ of $\mathbf{x} = f(\mathbf{z})$ represents the infinitesimal linear transformation in the neighborhood of $\mathbf{z}$;
+- if the function is a bijective map, then the mass must be conserved locally.
+
+Therefore, the local change of density yields
+$$p(\mathbf{x}=f(\mathbf{z})) = p(\mathbf{z})\left| \det J\_f(\mathbf{z}) \right|^{-1}.$$
+
+Similarly, for $g = f^{-1}$, we have $$p(\mathbf{x})=p(\mathbf{z}=g(\mathbf{x}))\left| \det J\_g(\mathbf{x}) \right|.$$
+
+???
+
+The Jacobian matrix of a function f: R^n -> R^m at a point z in R^n is an m x n matrix that represents the linear transformation induced by the function at that point. Geometrically, the Jacobian matrix can be thought of as a matrix of partial derivatives that describes how the function locally stretches or shrinks areas and volumes in the vicinity of the point z.
+
+The determinant of the Jacobian matrix of f at z has a geometric interpretation as the factor by which the function locally scales areas or volumes. Specifically, if the determinant is positive, then the function locally expands areas and volumes, while if it is negative, the function locally contracts areas and volumes. The absolute value of the determinant gives the factor by which the function scales the areas or volumes.
+
+---
+
+class: middle
+
+## Normalizing flows
+
+A normalizing flow is a sequence of invertible transformations $f\_k$ that map a simple distribution $p\_0$ to a more complex distribution $p\_K$. Each transformation $f\_k$ is parameterized by an invertible neural network.
+
+.center.width-100[![](./figures/lec9/normalizing-flow.png)]
+
+By the change of variables formula, the log-likelihood of a sample $x$ is given by
+$$\log p(\mathbf{x}) = \log p(\mathbf{z}\_0) - \sum\_{k=1}^K \log \left| \det J\_{f\_k}(\mathbf{z}\_{k-1}) \right|.$$
