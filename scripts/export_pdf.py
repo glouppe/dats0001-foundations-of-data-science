@@ -4,9 +4,10 @@
 
 Each deck is served from the repository root, laid out for printing, and saved once every web
 font has loaded. Plain headless Chrome prints before the KaTeX fonts arrive and leaves formulas
-blank. `lectureN.md` is written to `pdf/lecN.pdf`, any other `name.md` to `pdf/name.pdf`, and
-the output paths are printed to stdout, one per line. The installed Google Chrome is used, or
-Playwright's own Chromium when Chrome is missing.
+blank. If a font cannot be loaded (e.g., Google Fonts while offline), the export fails rather than
+printing with fallback fonts. `lectureN.md` is written to `pdf/lecN.pdf`, any other `name.md` to
+`pdf/name.pdf`, and the output paths are printed to stdout, one per line. The installed Google
+Chrome is used, or Playwright's own Chromium when Chrome is missing.
 """
 
 import functools
@@ -20,9 +21,10 @@ from playwright.sync_api import sync_playwright
 
 ROOT = Path(__file__).resolve().parent.parent
 
-WAIT_FOR_FONTS = """async () => {
+LOAD_FONTS = """async () => {
     await Promise.all([...document.fonts].map(f => f.load().catch(() => null)));
     await document.fonts.ready;
+    return [...new Set([...document.fonts].filter(f => f.status === "error").map(f => f.family))];
 }"""
 
 
@@ -54,7 +56,9 @@ def main(decks):
             page.goto(f"{base}/?p={Path(deck).name}", wait_until="networkidle")
             page.wait_for_selector(".remark-slide-content")
             page.emulate_media(media="print")  # lay out every slide, so that all their fonts get requested
-            page.evaluate(WAIT_FOR_FONTS)
+            failed = page.evaluate(LOAD_FONTS)
+            if failed:
+                sys.exit(f"export_pdf: fonts failed to load for {deck}: {', '.join(failed)}")
             page.pdf(path=ROOT / pdf_path(deck), prefer_css_page_size=True, print_background=True)
             page.close()
             print(pdf_path(deck))
