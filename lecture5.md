@@ -6,7 +6,7 @@ Lecture 5: State-space models
 
 <br><br>
 Prof. Gilles Louppe<br>
-[g.louppe@uliege.be](g.louppe@uliege.be)
+[g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
 ???
 

@@ -6,7 +6,7 @@ Lecture 2: Data and exploratory analysis
 
 <br><br>
 Prof. Gilles Louppe<br>
-[g.louppe@uliege.be](g.louppe@uliege.be)
+[g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
 ---
 
