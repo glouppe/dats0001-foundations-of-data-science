@@ -201,6 +201,19 @@ class: middle
 
 class: middle
 
+.grid[
+.kol-1-2.center[.width-80[![](figures/lec1/santbech.jpg)]]
+.kol-1-2.center[.width-100[![](figures/lec1/galileo-116v.png)]]
+]
+
+.center[Theory without data: the trajectory implied by Aristotelian physics (left)<br> against Galileo's measurements, consistent with a parabola (right).]
+
+.footnote[Credits: [Santbech](https://commons.wikimedia.org/wiki/File:Santbech.JPG), 1561; Galileo's folio 116v data from [Breiland](https://doi.org/10.1088/1361-6404/ac93c6), 2022.]
+
+---
+
+class: middle
+
 The scientific method, as embodied in Box's loop, provides a principled framework for data analysis. It contrasts with .bold[ad-hoc data analysis practices that often lead to unreliable results].
 
 - Throw algorithms at data and see what sticks.
