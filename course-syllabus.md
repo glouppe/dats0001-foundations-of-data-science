@@ -25,10 +25,15 @@ Instructions and materials are all available on GitHub [github.com/glouppe/dats0
 
 # Main reference
 
+.grid[
+.kol-2-3[
 Gelman, Vehtari, McElreath et al., [Bayesian Workflow](https://avehtari.github.io/Bayesian-Workflow/), Chapman & Hall/CRC, 2026.
 - Electronic edition freely available for non-commercial use.
 - Relevant chapters are pointed to from the lectures.
 - Case studies are in R and Stan; the course uses Python.
+]
+.kol-1-3[.width-100[![](figures/course-syllabus/bayesian-workflow.jpg)]]
+]
 
 ---
 
