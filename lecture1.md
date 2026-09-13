@@ -135,7 +135,7 @@ class: middle
 The next step is to .bold[compute] what the data tells you about the phenomenon of interest under the assumptions of your model.
 
 - Fitting the model to data involves solving an optimization problem.
-- Inference is used to answer questions about unobserved quantities.
+- Inference runs the model backward, from observed data to the unobserved quantities that could have produced them.
 - Prediction is used to answer questions about future or unseen data.
 
 ---
