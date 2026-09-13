@@ -17,6 +17,8 @@ Instructions and materials are all available on GitHub [github.com/glouppe/dats0
 - Slides and notebooks
 - Project
 
+Official course description: [engagements pédagogiques](https://www.programmes.uliege.be/cocoon/20262027/cours/DATS0001-1.html).
+
 ---
 
 # Main reference
