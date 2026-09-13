@@ -170,6 +170,18 @@ What you learn from the critique step informs how to .bold[repeat] the process.
 
 class: middle
 
+## The loop, in practice
+
+.center.width-55[![](figures/lec1/bayesian-workflow.png)]
+
+.center[Bayesian workflow: the steps and paths an analysis may go through.]
+
+.footnote[Credits: [Gelman, Vehtari, McElreath et al.](https://avehtari.github.io/Bayesian-Workflow/), Bayesian Workflow, 2026 (Figure 2.1).]
+
+---
+
+class: middle
+
 ## Why this approach matters?
 
 The Fourth paradigm (Hey et al, 2009) of science emphasizes the importance of data-intensive scientific discovery. However, data alone is not enough.
