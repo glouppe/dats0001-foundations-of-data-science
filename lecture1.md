@@ -206,7 +206,7 @@ class: middle
 .kol-1-2.center[.width-100[![](figures/lec1/galileo-116v.png)]]
 ]
 
-.center[Theory without data: the trajectory implied by Aristotelian physics (left)<br> against Galileo's measurements, consistent with a parabola (right).]
+.center[Theory without data: the trajectory implied by Aristotelian physics (left),  against Galileo's measurements, consistent with a parabola (right).]
 
 .footnote[Credits: [Santbech](https://commons.wikimedia.org/wiki/File:Santbech.JPG), 1561; Galileo's folio 116v data from [Breiland](https://doi.org/10.1088/1361-6404/ac93c6), 2022.]
 
