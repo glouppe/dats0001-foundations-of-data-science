@@ -19,55 +19,61 @@ Prof. Gilles Louppe<br>
 
 class: middle
 
-## COVID-19 epidemiological models
+## COVID-19 in Belgium
 
-.center.width-75[![](figures/lec1/covid19-be.png)]
+.center.width-60[![](figures/lec1/covid-belgium.jpg)]
 
-.center[Predictions of the first wave of COVID-19 in Belgium, 2020.<br> Many models failed to predict the peak and duration of the wave.]
+.center[Belgian hospital admissions in 2020 (dots) and a model with lockdown (green).<br> Without the lockdown, the model projects exponential growth (red).]
+
+.footnote[Credits: [Coletti et al.](https://doi.org/10.1186/s12879-021-06092-w), 2021 (CC BY 4.0).]
 
 ???
 
-- Build: Compartmental models (SIR, SEIR).
-- Compute: Infection rate, peak and duration of the wave.
-- Critique: Models failed to predict waves accurately.
-- Repeat: Added behavioral changes, vaccination dynamics, variants.
-- Impact: Informed public health policy worldwide.
+- Build: a model of the Belgian population, with age groups, social contacts and mobility, calibrated on daily hospital admissions.
+- Compute: the first wave with the lockdown (green), and the exponential growth without it (red).
+- Critique: after the gradual reopening from May 4, 2020, the model expected hospitalizations to rise again. They did not.
+- Repeat: people had changed how they met (distance, masks, outdoor contacts). Models had to account for behaviour.
+- Impact: Belgian modellers directly supported national and regional decisions throughout the pandemic.
 
 ---
 
-class: middle 
+class: middle
 
-## Gravitational wave detection 
+## Floods in the Vesdre valley
 
-.center.width-75[![](figures/lec1/ligo.png)]
+.center.width-70[![](figures/lec1/floods-pepinster.jpg)]
 
-.center[First direct detection of gravitational waves, LIGO, 2015.<br> Many false alarms before the first confirmed detection.]
+.center[Pepinster after the floods of July 2021, which killed 38 people in Belgium.<br> Climate change made such rainfall 1.2 to 9 times more likely.]
+
+.footnote[Credits: Christophe Licoppe, [European Commission](https://commons.wikimedia.org/wiki/File:Visit_of_Ursula_von_der_Leyen,_President_of_the_European_Commission,_to_Rochefort_and_Pepinster_in_Belgium_12.jpg) (CC BY 4.0); [Tradowsky et al.](https://doi.org/10.1007/s10584-023-03502-7), 2023.]
 
 ???
 
-- Build: General relativity model describing gravitational waves as ripples in spacetime. Initial LIGO (2002-2010). 
-- Compute: Searched for signals but found none due to noise / lack of sensitivity.
-- Critique: Sensitivity insufficient, noise poorly characterized.
-- Repeat: Advanced LIGO (2015-now), upgraded detectors, improved noise modeling.
-- Impact: Nobel Prize 2017, opened new field of astronomy.
+- Build: statistical models of extreme rainfall, and climate models of today's world and of a world 1.2°C cooler.
+- Compute: how likely and how intense such rainfall is in each world.
+- Critique: models are first checked against observed rainfall; only those that pass are kept.
+- Repeat: a rapid study within weeks of the floods, refined into a peer-reviewed analysis in 2023.
+- Impact: over 200 deaths across Western Europe; such events will become more frequent with further warming.
 
 ---
 
-class: middle 
+class: middle
 
-## Equilibrium climate sensitivity
+## Gravitational wave detection
 
-.center.width-90[![](figures/lec1/ecs.png)]
+.center.width-65[![](figures/lec1/ligo.png)]
 
-.center[What is the Earth's temperature increase if we double atmospheric CO2?<br> Over 40 years, uncertainty narrowed from 3°C range to 1.5°C range.]
+.center[First direct detection of gravitational waves, LIGO, 2015.<br> The measured signal matches the waveform predicted by general relativity.]
+
+.footnote[Credits: [Abbott et al.](https://doi.org/10.1103/PhysRevLett.116.061102), 2016 (CC BY 3.0).]
 
 ???
 
-- Build: Each IPCC report builds a model of equilibrium climate sensitivity (average global temperature increase if CO2 doubles).
-- Compute: Estimate sensitivity from climate models and observations.
-- Critique Each assessment identified limitations in previous estimates.
-- Repeat: AR6 (assessment report 6, 2021) reduced uncertainty to 2.5-4°C from the long standing 1.5-4.5°C range.
-- Impact: Informs climate policy worldwide.
+- Build: general relativity predicts the waveform of two merging black holes; detector noise is modelled too.
+- Compute: match the data against predicted waveforms and infer the masses (36 and 29 solar masses) and distance (about 1.3 billion light-years).
+- Critique: initial LIGO (2002-2010) detected nothing; fake signals were secretly injected to test the analysis.
+- Repeat: Advanced LIGO, with more sensitive detectors and better noise models, detected the first signal on 14 September 2015.
+- Impact: Nobel Prize 2017, and a new way to observe the universe.
 
 ---
 
