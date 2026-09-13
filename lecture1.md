@@ -10,9 +10,9 @@ Prof. Gilles Louppe<br>
 
 ???
 
-- Hands up: who remembers March 2020?
-- Every curve on the news was a model: built, fit, proven wrong, rebuilt.
-- That loop is the course. Three stories.
+- Ask who remembers March 2020.
+- The curves shown on the news every day came from models, which were built, fit to data, proven wrong and rebuilt.
+- This loop is what the course is about; the next three slides are three stories of it.
 
 ---
 
@@ -28,12 +28,12 @@ class: middle
 
 ???
 
-- Build: Belgium by age, contacts and mobility, fit to daily hospital admissions.
-- Compute: with lockdown (green) vs without (red, exponential).
-- Critique: reopening from May 4, 2020; the model predicted a second rise. None came.
-- Repeat: behaviour had changed (distance, masks, outdoors); models had to include it.
-- Impact: Belgian modellers advised decisions throughout the pandemic.
-- Takeaway: a failed prediction is the loop working.
+- Build: a model of the Belgian population by age group, social contacts and mobility, fit to daily hospital admissions.
+- Compute: the model reproduces the first wave with the lockdown (green) and projects exponential growth without it (red).
+- Critique: after the gradual reopening from May 4, 2020, the model predicted a second rise in admissions, which never came.
+- Repeat: people had changed how they met (distance, masks, meeting outdoors), so the models had to account for behaviour.
+- Impact: Belgian modellers advised national and regional decisions throughout the pandemic.
+- The wrong prediction was not a failure: it revealed what the model was missing.
 
 ---
 
@@ -52,14 +52,14 @@ class: middle
 
 ???
 
-- Less than 20 km from here. Over 200 dead across Western Europe.
-- Was it climate change? Data alone cannot say: there is only one July 2021.
-- Build: extreme-rainfall statistics; climate models of today vs a world 1.2°C cooler.
+- Pepinster is less than 20 km from Liège; the floods killed over 200 people across Western Europe.
+- Whether climate change played a role cannot be read from the data alone, since July 2021 happened only once.
+- Build: statistical models of extreme rainfall, and climate models of today's world and of a world 1.2°C cooler.
 - Compute: how likely such rainfall is in each world.
-- Plot: likelihood ratio from observations (blue), each model (red), synthesis (bottom).
-- Critique: models that fail to reproduce observed rainfall are discarded.
-- Repeat: rapid study within weeks, peer-reviewed in 2023.
-- Takeaway: history cannot be rerun; only a model answers "what if?"
+- The plot shows how many times more likely the event is today, according to observations (blue), each climate model (red), and their synthesis (bottom).
+- Critique: climate models are first checked against observed rainfall, and those that fail are discarded.
+- Repeat: a rapid study came out within weeks of the floods and was refined into a peer-reviewed paper in 2023.
+- History cannot be rerun, so only a model can answer "what if the climate had not warmed?"
 
 ---
 
@@ -75,14 +75,14 @@ class: middle
 
 ???
 
-- 14 September 2015: eleven years ago today.
-- Einstein (1916) thought them unmeasurable: the 4 km arms moved by a few thousandths of a proton's width.
-- Build: general relativity predicts the waveform of two merging black holes; noise is modelled too.
-- Compute: match data to waveforms: 36 and 29 solar masses, 1.3 billion light-years.
-- Critique: initial LIGO (2002–2010) saw nothing; fake signals were secretly injected to test the analysis.
-- Repeat: Advanced LIGO, four days before official observing began; checked, not an injection.
-- Impact: 3 solar masses radiated in a fraction of a second; Nobel Prize 2017.
-- Next: three stories, one pattern.
+- The first detection happened on 14 September 2015, eleven years ago to the day.
+- Einstein predicted gravitational waves in 1916 but thought them too weak to measure: this signal moved LIGO's 4 km arms by a few thousandths of the width of a proton.
+- Build: general relativity predicts the waveform of two merging black holes, and the detector noise is modelled too.
+- Compute: matching the data against predicted waveforms gives black holes of 36 and 29 solar masses, about 1.3 billion light-years away.
+- Critique: initial LIGO (2002–2010) detected nothing, and fake signals were secretly injected into the data to test the analysis.
+- Repeat: Advanced LIGO recorded the signal four days before its first observing run officially began; the team checked that it was not an injected fake.
+- Impact: the merger radiated the energy of 3 solar masses in a fraction of a second, and the discovery earned the 2017 Nobel Prize.
+- The three stories share one pattern, which the next slides name.
 
 ---
 
