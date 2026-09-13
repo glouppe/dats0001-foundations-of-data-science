@@ -10,10 +10,9 @@ Prof. Gilles Louppe<br>
 
 ???
 
-- Raise your hand if you remember March 2020.
-- You witnessed one of the largest real-time demonstrations of scientific modeling in human history. 
-- Epidemiologists built models, made predictions, watched them fail, rebuilt them, and repeated. 
-- That process you witnessed? That's what this entire course is about.
+- Hands up: who remembers March 2020?
+- Every curve on the news was a model: built, fit, proven wrong, rebuilt.
+- That loop is the course. Three stories.
 
 ---
 
@@ -29,11 +28,12 @@ class: middle
 
 ???
 
-- Build: a model of the Belgian population, with age groups, social contacts and mobility, calibrated on daily hospital admissions.
-- Compute: the first wave with the lockdown (green), and the exponential growth without it (red).
-- Critique: after the gradual reopening from May 4, 2020, the model expected hospitalizations to rise again. They did not.
-- Repeat: people had changed how they met (distance, masks, outdoor contacts). Models had to account for behaviour.
-- Impact: Belgian modellers directly supported national and regional decisions throughout the pandemic.
+- Build: Belgium by age, contacts and mobility, fit to daily hospital admissions.
+- Compute: with lockdown (green) vs without (red, exponential).
+- Critique: reopening from May 4, 2020; the model predicted a second rise. None came.
+- Repeat: behaviour had changed (distance, masks, outdoors); models had to include it.
+- Impact: Belgian modellers advised decisions throughout the pandemic.
+- Takeaway: a failed prediction is the loop working.
 
 ---
 
@@ -52,12 +52,14 @@ class: middle
 
 ???
 
-- Build: statistical models of extreme rainfall, and climate models of today's world and of a world 1.2°C cooler.
-- Compute: how likely and how intense such rainfall is in each world.
-- The plot: how many times more likely the event is today than in a 1.2°C cooler climate, for the wider region, according to observations (blue), each climate model (red), and their synthesis (bottom).
-- Critique: models are first checked against observed rainfall; only those that pass are kept.
-- Repeat: a rapid study within weeks of the floods, refined into a peer-reviewed analysis in 2023.
-- Impact: over 200 deaths across Western Europe; such events will become more frequent with further warming.
+- Less than 20 km from here. Over 200 dead across Western Europe.
+- Was it climate change? Data alone cannot say: there is only one July 2021.
+- Build: extreme-rainfall statistics; climate models of today vs a world 1.2°C cooler.
+- Compute: how likely such rainfall is in each world.
+- Plot: likelihood ratio from observations (blue), each model (red), synthesis (bottom).
+- Critique: models that fail to reproduce observed rainfall are discarded.
+- Repeat: rapid study within weeks, peer-reviewed in 2023.
+- Takeaway: history cannot be rerun; only a model answers "what if?"
 
 ---
 
@@ -73,11 +75,14 @@ class: middle
 
 ???
 
-- Build: general relativity predicts the waveform of two merging black holes; detector noise is modelled too.
-- Compute: match the data against predicted waveforms and infer the masses (36 and 29 solar masses) and distance (about 1.3 billion light-years).
-- Critique: initial LIGO (2002-2010) detected nothing; fake signals were secretly injected to test the analysis.
-- Repeat: Advanced LIGO, with more sensitive detectors and better noise models, detected the first signal on 14 September 2015.
-- Impact: Nobel Prize 2017, and a new way to observe the universe.
+- 14 September 2015: eleven years ago today.
+- Einstein (1916) thought them unmeasurable: the 4 km arms moved by a few thousandths of a proton's width.
+- Build: general relativity predicts the waveform of two merging black holes; noise is modelled too.
+- Compute: match data to waveforms: 36 and 29 solar masses, 1.3 billion light-years.
+- Critique: initial LIGO (2002–2010) saw nothing; fake signals were secretly injected to test the analysis.
+- Repeat: Advanced LIGO, four days before official observing began; checked, not an injection.
+- Impact: 3 solar masses radiated in a fraction of a second; Nobel Prize 2017.
+- Next: three stories, one pattern.
 
 ---
 
