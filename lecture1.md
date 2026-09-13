@@ -208,6 +208,10 @@ The Fourth paradigm (Hey et al, 2009) of science emphasizes the importance of da
 - Theory without data leads to ungrounded speculation.
 - Together, they enable .bold[robust scientific inquiry].
 
+.center[It is frequently assumed that big data can alleviate the need for careful modeling.<br> We do not believe this is the case. -- Gelman et al.]
+
+.footnote[Credits: [Gelman, Vehtari, McElreath et al.](https://avehtari.github.io/Bayesian-Workflow/), Bayesian Workflow, 2026 (Section 9.1).]
+
 ---
 
 class: middle
