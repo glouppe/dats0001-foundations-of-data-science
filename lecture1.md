@@ -162,6 +162,14 @@ The third step is to .bold[critique] the model and its predictions, to assess wh
 - Identify model limitations and mismatches.
 - Reject the model if it fails to capture key aspects of the data.
 
+.center[Whenever you are fitting a model, we recommend<br> constructing a scenario where it will fail. -- Gelman et al.]
+
+.footnote[Credits: [Gelman, Vehtari, McElreath et al.](https://avehtari.github.io/Bayesian-Workflow/), Bayesian Workflow, 2026 (Figure 4.16).]
+
+???
+
+In some fields, critique is the goal itself. In physics, much of research is a search for evidence that a model fails: tests of general relativity (including with the gravitational waves of the opening slides), or searches for physics beyond the Standard Model. A model earns trust by surviving serious attempts to break it.
+
 ---
 
 class: middle
