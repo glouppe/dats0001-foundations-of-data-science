@@ -41,16 +41,20 @@ class: middle
 
 ## Floods in the Vesdre valley
 
-.center.width-70[![](figures/lec1/floods-pepinster.jpg)]
+.grid[
+.kol-1-2[.center.width-100[![](figures/lec1/floods-pepinster.jpg)]]
+.kol-1-2[.center.width-100[![](figures/lec1/floods-attribution.png)]]
+]
 
-.center[Pepinster after the floods of July 2021, which killed 38 people in Belgium.<br> Climate change made such rainfall 1.2 to 9 times more likely.]
+.center[Pepinster after the floods of July 2021, which killed 38 people in Belgium.<br> Climate change made such rainfall 1.2 to 9 times more likely (right).]
 
-.footnote[Credits: Christophe Licoppe, [European Commission](https://commons.wikimedia.org/wiki/File:Visit_of_Ursula_von_der_Leyen,_President_of_the_European_Commission,_to_Rochefort_and_Pepinster_in_Belgium_12.jpg) (CC BY 4.0); [Tradowsky et al.](https://doi.org/10.1007/s10584-023-03502-7), 2023.]
+.footnote[Credits: Christophe Licoppe, [European Commission](https://commons.wikimedia.org/wiki/File:Visit_of_Ursula_von_der_Leyen,_President_of_the_European_Commission,_to_Rochefort_and_Pepinster_in_Belgium_12.jpg) (CC BY 4.0); [Tradowsky et al.](https://doi.org/10.1007/s10584-023-03502-7), 2023, Fig. 8a, cropped (CC BY 4.0).]
 
 ???
 
 - Build: statistical models of extreme rainfall, and climate models of today's world and of a world 1.2°C cooler.
 - Compute: how likely and how intense such rainfall is in each world.
+- The plot: how many times more likely the event is today than in a 1.2°C cooler climate, for the wider region, according to observations (blue), each climate model (red), and their synthesis (bottom).
 - Critique: models are first checked against observed rainfall; only those that pass are kept.
 - Repeat: a rapid study within weeks of the floods, refined into a peer-reviewed analysis in 2023.
 - Impact: over 200 deaths across Western Europe; such events will become more frequent with further warming.
