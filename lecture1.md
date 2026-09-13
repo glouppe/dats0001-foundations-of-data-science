@@ -92,7 +92,7 @@ class: middle
 
 # Box's loop
 
-All models are wrong, but some are useful. -- George Box.
+.quote[All models are wrong, but some are useful. .author[George Box]]
 
 ---
 
@@ -167,7 +167,7 @@ The third step is to .bold[critique] the model and its predictions, to assess wh
 - Identify model limitations and mismatches.
 - Reject the model if it fails to capture key aspects of the data.
 
-.center[Whenever you are fitting a model, we recommend<br> constructing a scenario where it will fail. -- Gelman et al.]
+.quote[Whenever you are fitting a model, we recommend constructing a scenario where it will fail. .author[Gelman et al.]]
 
 .footnote[Credits: [Gelman, Vehtari, McElreath et al.](https://avehtari.github.io/Bayesian-Workflow/), Bayesian Workflow, 2026 (Figure 4.16).]
 
@@ -213,7 +213,7 @@ The Fourth paradigm (Hey et al, 2009) of science emphasizes the importance of da
 - Theory without data leads to ungrounded speculation.
 - Together, they enable .bold[robust scientific inquiry].
 
-.center[It is frequently assumed that big data can alleviate the need for careful modeling.<br> We do not believe this is the case. -- Gelman et al.]
+.quote[It is frequently assumed that big data can alleviate the need for careful modeling. We do not believe this is the case. .author[Gelman et al.]]
 
 .footnote[Credits: [Gelman, Vehtari, McElreath et al.](https://avehtari.github.io/Bayesian-Workflow/), Bayesian Workflow, 2026 (Section 9.1).]
 

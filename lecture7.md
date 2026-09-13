@@ -16,7 +16,7 @@ class: middle, black-slide
 <iframe width="640" height="400" src="https://www.youtube.com/embed/LIxvQMhttq4?cc_load_policy=1&hl=en&version=3" frameborder="0" allowfullscreen></iframe>
 ]
 
-.center[If it (a model) disagrees with experiment, it is wrong.<br> In that simple statement is the key to science. -- Richard Feynman]
+.quote[If it (a model) disagrees with experiment, it is wrong. In that simple statement is the key to science. .author[Richard Feynman]]
 
 ---
 
