@@ -28,8 +28,9 @@ class: middle
 .grid[
 .kol-2-3[
 Gelman, Vehtari, McElreath et al., [Bayesian Workflow](https://avehtari.github.io/Bayesian-Workflow/), Chapman & Hall/CRC, 2026.
+- The book covers the principles and practices of Bayesian workflow.
+- It is recommended for further reading and deeper understanding of Bayesian workflow.
 - Electronic edition freely available for non-commercial use.
-- Relevant chapters are listed in the readings of each lecture.
 ]
 .kol-1-3[.width-100[![](figures/course-syllabus/bayesian-workflow.jpg)]]
 ]
@@ -59,7 +60,7 @@ Oral exam on theory covered in class.
 # Evaluation
 
 - Case study (40%)
-- Oral exam (60%)
+- Oral exam on theory (60%)
 
 .alert[A minimum of 8/20 is required for each component. Below that, the lowest of the two grades becomes the final grade.]
 
