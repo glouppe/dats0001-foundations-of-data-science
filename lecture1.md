@@ -18,21 +18,34 @@ Prof. Gilles Louppe<br>
 
 class: middle
 
+## Three stories
+
+Before any theory, three stories from the last few years.
+
+Each one follows the same four steps: .bold[build] a model of how the data came to be, .bold[compute] what the data say, .bold[critique] the answer, and .bold[repeat].
+
+---
+
+class: middle
+
 ## COVID-19 in Belgium
 
-.center.width-60[![](figures/lec1/covid-belgium.jpg)]
+.center.width-40[![](figures/lec1/covid-belgium.jpg)]
 
-.center[Belgian hospital admissions in 2020 (dots) and a model with lockdown (green).<br> Without the lockdown, the model projects exponential growth (red).]
+.center[Belgian hospital admissions in 2020 (dots), with and without lockdown.]
+
+- .bold[Build]: the Belgian population, its age groups, contacts and mobility.
+- .bold[Compute]: the first wave with the lockdown (green), and without it (red).
+- .bold[Critique]: after the May 2020 reopening, the second rise never came.
+- .bold[Repeat]: behaviour had changed; the models had to include it.
 
 .footnote[Credits: [Coletti et al.](https://doi.org/10.1186/s12879-021-06092-w), 2021 (CC BY 4.0).]
 
 ???
 
-- Build: a model of the Belgian population by age group, social contacts and mobility, fit to daily hospital admissions.
-- Compute: the model reproduces the first wave with the lockdown (green) and projects exponential growth without it (red).
-- Critique: after the gradual reopening from May 4, 2020, the model predicted a second rise in admissions, which never came.
-- Repeat: people had changed how they met (distance, masks, meeting outdoors), so the models had to account for behaviour.
-- Impact: Belgian modellers advised national and regional decisions throughout the pandemic.
+- The model was fit to daily hospital admissions; the red curve is the counterfactual, what would have happened without the lockdown.
+- The reopening was gradual, from May 4, 2020. What had changed was behaviour: distance, masks, meeting outdoors.
+- Belgian modellers advised national and regional decisions throughout the pandemic.
 - The wrong prediction was not a failure: it revealed what the model was missing.
 
 ---
@@ -42,11 +55,16 @@ class: middle
 ## Floods in the Vesdre valley
 
 .grid[
-.kol-1-2[.center.width-100[![](figures/lec1/floods-pepinster.jpg)]]
-.kol-1-2[.center.width-100[![](figures/lec1/floods-attribution.png)]]
+.kol-1-2[.center.width-85[![](figures/lec1/floods-pepinster.jpg)]]
+.kol-1-2[.center.width-85[![](figures/lec1/floods-attribution.png)]]
 ]
 
-.center[Pepinster after the floods of July 2021, which killed 38 people in Belgium.<br> Climate change made such rainfall 1.2 to 9 times more likely (right).]
+.center[Pepinster after the floods of July 2021, which killed 38 people in Belgium.]
+
+- .bold[Build]: rainfall statistics, and climate models of two possible worlds.
+- .bold[Compute]: such rainfall is 1.2 to 9 times more likely today (right).
+- .bold[Critique]: keep only the models that reproduce observed rainfall.
+- .bold[Repeat]: a rapid study within weeks, a peer-reviewed analysis in 2023.
 
 .footnote[Credits: Christophe Licoppe, [European Commission](https://commons.wikimedia.org/wiki/File:Visit_of_Ursula_von_der_Leyen,_President_of_the_European_Commission,_to_Rochefort_and_Pepinster_in_Belgium_12.jpg) (CC BY 4.0); [Tradowsky et al.](https://doi.org/10.1007/s10584-023-03502-7), 2023, Fig. 8a, cropped (CC BY 4.0).]
 
@@ -54,11 +72,7 @@ class: middle
 
 - Pepinster is less than 20 km from Liège; the floods killed over 200 people across Western Europe.
 - Whether climate change played a role cannot be read from the data alone, since July 2021 happened only once.
-- Build: statistical models of extreme rainfall, and climate models of today's world and of a world 1.2°C cooler.
-- Compute: how likely such rainfall is in each world.
-- The plot shows how many times more likely the event is today, according to observations (blue), each climate model (red), and their synthesis (bottom).
-- Critique: climate models are first checked against observed rainfall, and those that fail are discarded.
-- Repeat: a rapid study came out within weeks of the floods and was refined into a peer-reviewed paper in 2023.
+- The two worlds are today's climate and one 1.2°C cooler. The plot compares them: observations (blue), each climate model (red), and their synthesis (bottom).
 - History cannot be rerun, so only a model can answer "what if the climate had not warmed?"
 
 ---
@@ -67,9 +81,14 @@ class: middle
 
 ## Gravitational wave detection
 
-.center.width-65[![](figures/lec1/ligo.png)]
+.center.width-40[![](figures/lec1/ligo.png)]
 
-.center[First direct detection of gravitational waves, LIGO, 2015.<br> The measured signal matches the waveform predicted by general relativity.]
+.center[First direct detection of gravitational waves, LIGO, 2015.]
+
+- .bold[Build]: general relativity predicts the waveform of merging black holes.
+- .bold[Compute]: match the data to the waveforms, and infer masses and distance.
+- .bold[Critique]: years without a detection, and fake signals to test the analysis.
+- .bold[Repeat]: better detectors and noise models, until the signal of 2015.
 
 .footnote[Credits: [Abbott et al.](https://doi.org/10.1103/PhysRevLett.116.061102), 2016 (CC BY 3.0).]
 
@@ -77,11 +96,10 @@ class: middle
 
 - The first detection happened on 14 September 2015, eleven years ago to the day.
 - Einstein predicted gravitational waves in 1916 but thought them too weak to measure: this signal moved LIGO's 4 km arms by a few thousandths of the width of a proton.
-- Build: general relativity predicts the waveform of two merging black holes, and the detector noise is modelled too.
-- Compute: matching the data against predicted waveforms gives black holes of 36 and 29 solar masses, about 1.3 billion light-years away.
-- Critique: initial LIGO (2002–2010) detected nothing, and fake signals were secretly injected into the data to test the analysis.
-- Repeat: Advanced LIGO recorded the signal four days before its first observing run officially began; the team checked that it was not an injected fake.
-- Impact: the merger radiated the energy of 3 solar masses in a fraction of a second, and the discovery earned the 2017 Nobel Prize.
+- The detector noise is modelled too; the black holes weigh 36 and 29 solar masses and lie about 1.3 billion light-years away.
+- Initial LIGO detected nothing from 2002 to 2010, and the injected fake signals were secret, to test whether the analysis could be fooled.
+- Advanced LIGO recorded the signal four days before its first observing run officially began; the team checked that it was not an injected fake.
+- The merger radiated the energy of 3 solar masses in a fraction of a second, and the discovery earned the 2017 Nobel Prize.
 - The three stories share one pattern, which the next slides name.
 
 ---
