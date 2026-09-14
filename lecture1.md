@@ -8,12 +8,6 @@ Lecture 1: Build, compute, critique, repeat
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
-???
-
-- Ask who remembers March 2020.
-- The curves shown on the news every day came from models, which were built, fit to data, proven wrong and rebuilt.
-- This loop is what the course is about; the next three slides are three stories of it.
-
 ---
 
 class: middle
@@ -23,6 +17,12 @@ class: middle
 Before any theory, three stories from the last few years.
 
 Each one follows the same four steps: .bold[build] a model of how the data came to be, .bold[compute] what the data say, .bold[critique] the answer, and .bold[repeat].
+
+???
+
+- Ask who remembers March 2020.
+- The curves shown on the news every day came from models, which were built, fit to data, proven wrong and rebuilt.
+- This loop is what the course is about; the next three slides are three stories of it.
 
 ---
 
@@ -34,17 +34,23 @@ class: middle
 
 .center[Belgian hospital admissions in 2020 (dots), with and without lockdown.]
 
-- .bold[Build]: the Belgian population, its age groups, contacts and mobility.
-- .bold[Compute]: the first wave with the lockdown (green), and without it (red).
-- .bold[Critique]: after the May 2020 reopening, the second rise never came.
-- .bold[Repeat]: behaviour had changed; the models had to include it.
+① .bold[Build]: a model of how the virus spreads, by age group, contacts and mobility.
+
+② .bold[Compute]: fit to daily admissions, then predict with and without lockdown.
+
+③ .bold[Critique]: the model over-predicts after reopening: no second rise came.
+
+④ .bold[Repeat]: add the change in behaviour to the contact model, and refit.
 
 .footnote[Credits: [Coletti et al.](https://doi.org/10.1186/s12879-021-06092-w), 2021 (CC BY 4.0).]
 
 ???
 
-- The model was fit to daily hospital admissions; the red curve is the counterfactual, what would have happened without the lockdown.
-- The reopening was gradual, from May 4, 2020. What had changed was behaviour: distance, masks, meeting outdoors.
+- Stakes: hospitals were filling, and decisions were taken on the strength of curves like this one.
+- Build: the population is split by age group, with contact rates from surveys and mobility data.
+- Compute: the red curve is a counterfactual, what would have happened without the lockdown.
+- Critique: the reopening was gradual, from May 4, 2020, and the model expected admissions to rise again.
+- Repeat: what had changed was behaviour: distance, masks, meeting outdoors.
 - Belgian modellers advised national and regional decisions throughout the pandemic.
 - The wrong prediction was not a failure: it revealed what the model was missing.
 
@@ -61,18 +67,24 @@ class: middle
 
 .center[Pepinster after the floods of July 2021, which killed 38 people in Belgium.]
 
-- .bold[Build]: rainfall statistics, and climate models of two possible worlds.
-- .bold[Compute]: such rainfall is 1.2 to 9 times more likely today (right).
-- .bold[Critique]: keep only the models that reproduce observed rainfall.
-- .bold[Repeat]: a rapid study within weeks, a peer-reviewed analysis in 2023.
+① .bold[Build]: a statistical model of extreme rainfall, and climate models of two worlds.
+
+② .bold[Compute]: the probability in each world: 1.2 to 9 times likelier today (right).
+
+③ .bold[Critique]: some climate models do not reproduce the observed rainfall.
+
+④ .bold[Repeat]: discard those models and redo the analysis, published in 2023.
 
 .footnote[Credits: Christophe Licoppe, [European Commission](https://commons.wikimedia.org/wiki/File:Visit_of_Ursula_von_der_Leyen,_President_of_the_European_Commission,_to_Rochefort_and_Pepinster_in_Belgium_12.jpg) (CC BY 4.0); [Tradowsky et al.](https://doi.org/10.1007/s10584-023-03502-7), 2023, Fig. 8a, cropped (CC BY 4.0).]
 
 ???
 
-- Pepinster is less than 20 km from Liège; the floods killed over 200 people across Western Europe.
-- Whether climate change played a role cannot be read from the data alone, since July 2021 happened only once.
-- The two worlds are today's climate and one 1.2°C cooler. The plot compares them: observations (blue), each climate model (red), and their synthesis (bottom).
+- Stakes: Pepinster is less than 20 km from Liège, and the floods killed over 200 people across Western Europe.
+- The question everyone asked was whether climate change played a role. The data alone cannot say, since July 2021 happened only once.
+- Build: the two worlds are today's climate, and one 1.2°C cooler, before human warming.
+- Compute: the plot compares them, according to observations (blue), each climate model (red), and their synthesis (bottom).
+- Critique: a model is kept only if it reproduces the rainfall actually observed in the region.
+- Repeat: a rapid study came out within weeks of the floods, and the peer-reviewed analysis followed in 2023.
 - History cannot be rerun, so only a model can answer "what if the climate had not warmed?"
 
 ---
@@ -85,20 +97,24 @@ class: middle
 
 .center[First direct detection of gravitational waves, LIGO, 2015.]
 
-- .bold[Build]: general relativity predicts the waveform of merging black holes.
-- .bold[Compute]: match the data to the waveforms, and infer masses and distance.
-- .bold[Critique]: years without a detection, and fake signals to test the analysis.
-- .bold[Repeat]: better detectors and noise models, until the signal of 2015.
+① .bold[Build]: a waveform model of two merging black holes, from general relativity.
+
+② .bold[Compute]: fit the waveforms to the data, and infer the masses and distance.
+
+③ .bold[Critique]: no detection in eight years: the detectors were too insensitive.
+
+④ .bold[Repeat]: rebuild the detectors and the noise model; detection in 2015.
 
 .footnote[Credits: [Abbott et al.](https://doi.org/10.1103/PhysRevLett.116.061102), 2016 (CC BY 3.0).]
 
 ???
 
-- The first detection happened on 14 September 2015, eleven years ago to the day.
-- Einstein predicted gravitational waves in 1916 but thought them too weak to measure: this signal moved LIGO's 4 km arms by a few thousandths of the width of a proton.
-- The detector noise is modelled too; the black holes weigh 36 and 29 solar masses and lie about 1.3 billion light-years away.
-- Initial LIGO detected nothing from 2002 to 2010, and the injected fake signals were secret, to test whether the analysis could be fooled.
-- Advanced LIGO recorded the signal four days before its first observing run officially began; the team checked that it was not an injected fake.
+- Stakes: the detection happened on 14 September 2015, eleven years ago to the day.
+- Einstein predicted gravitational waves in 1916 but thought them too weak to measure: this signal moved the 4 km arms by a few thousandths of the width of a proton.
+- Build: the detector noise is modelled too, since the signal sits far below it.
+- Compute: the black holes weigh 36 and 29 solar masses and lie about 1.3 billion light-years away.
+- Critique: fake signals were secretly injected into the data, to test whether the analysis could be fooled.
+- Repeat: Advanced LIGO recorded the signal four days before its first observing run officially began; the team checked that it was not an injected fake.
 - The merger radiated the energy of 3 solar masses in a fraction of a second, and the discovery earned the 2017 Nobel Prize.
 - The three stories share one pattern, which the next slides name.
 
