@@ -65,7 +65,9 @@ Oral exam on theory covered in class.
 
 ---
 
-# Use of AI tools
+class: middle
+
+## Use of AI tools
 
 .success[AI assistants are .bold[allowed], without restriction.]
 
