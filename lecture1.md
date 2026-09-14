@@ -30,9 +30,7 @@ class: middle
 
 ## COVID-19 in Belgium
 
-.center.width-40[![](figures/lec1/covid-belgium.jpg)]
-
-.center[Belgian hospital admissions in 2020 (dots), with and without lockdown.]
+.center.width-50[![](figures/lec1/covid-belgium.jpg)]
 
 ① .bold[Build]: a model of how the virus spreads, by age group, contacts and mobility.
 
@@ -46,7 +44,7 @@ class: middle
 
 ???
 
-- Stakes: hospitals were filling, and decisions were taken on the strength of curves like this one.
+- Stakes: hospitals were filling, and decisions were taken on the strength of curves like this one: Belgian admissions in 2020, day by day.
 - Build: the population is split by age group, with contact rates from surveys and mobility data.
 - Compute: the red curve is a counterfactual, what would have happened without the lockdown.
 - Critique: the reopening was gradual, from May 4, 2020, and the model expected admissions to rise again.
@@ -61,11 +59,9 @@ class: middle
 ## Floods in the Vesdre valley
 
 .grid[
-.kol-1-2[.center.width-85[![](figures/lec1/floods-pepinster.jpg)]]
-.kol-1-2[.center.width-85[![](figures/lec1/floods-attribution.png)]]
+.kol-1-2[.center.width-100[![](figures/lec1/floods-pepinster.jpg)]]
+.kol-1-2[.center.width-100[![](figures/lec1/floods-attribution.png)]]
 ]
-
-.center[Pepinster after the floods of July 2021, which killed 38 people in Belgium.]
 
 ① .bold[Build]: a statistical model of extreme rainfall, and climate models of two worlds.
 
@@ -79,7 +75,7 @@ class: middle
 
 ???
 
-- Stakes: Pepinster is less than 20 km from Liège, and the floods killed over 200 people across Western Europe.
+- Stakes: this is Pepinster, less than 20 km from Liège. The floods killed 38 people in Belgium, and over 200 across Western Europe.
 - The question everyone asked was whether climate change played a role. The data alone cannot say, since July 2021 happened only once.
 - Build: the two worlds are today's climate, and one 1.2°C cooler, before human warming.
 - Compute: the plot compares them, according to observations (blue), each climate model (red), and their synthesis (bottom).
@@ -93,9 +89,7 @@ class: middle
 
 ## Gravitational wave detection
 
-.center.width-40[![](figures/lec1/ligo.png)]
-
-.center[First direct detection of gravitational waves, LIGO, 2015.]
+.center.width-50[![](figures/lec1/ligo.png)]
 
 ① .bold[Build]: a waveform model of two merging black holes, from general relativity.
 
@@ -109,7 +103,7 @@ class: middle
 
 ???
 
-- Stakes: the detection happened on 14 September 2015, eleven years ago to the day.
+- Stakes: this is the first direct detection of gravitational waves, on 14 September 2015, eleven years ago to the day.
 - Einstein predicted gravitational waves in 1916 but thought them too weak to measure: this signal moved the 4 km arms by a few thousandths of the width of a proton.
 - Build: the detector noise is modelled too, since the signal sits far below it.
 - Compute: the black holes weigh 36 and 29 solar masses and lie about 1.3 billion light-years away.
@@ -270,6 +264,13 @@ class: middle
 .center[Theory without data: the trajectory implied by Aristotelian physics (left),  against Galileo's measurements, consistent with a parabola (right).]
 
 .footnote[Credits: [Santbech](https://commons.wikimedia.org/wiki/File:Santbech.JPG), 1561; Galileo's folio 116v data from [Breiland](https://doi.org/10.1088/1361-6404/ac93c6), 2022.]
+
+???
+
+- Aristotelian physics: a cannonball flies straight while its impetus lasts, then falls vertically. Santbech's 1561 woodcut draws exactly that, from theory alone.
+- Galileo measured instead: a ball rolled down a ramp and off a table, recording the release height and the landing distance (folio 116v, around 1608).
+- Heights of 300, 600, 800 and 1000 gave distances of 800, 1172, 1328 and 1500: the distance grows like the square root of the height, as a parabola requires.
+- The Aristotelian account had stood for almost two thousand years without anyone measuring a trajectory.
 
 ---
 
