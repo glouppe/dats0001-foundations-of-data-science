@@ -509,12 +509,14 @@ class: middle
 
 ## Multivariate analysis
 
-Multivariate analysis explores relationships among three or more variables at once. Dimensionality reduction and clustering work on the numerical columns of $\mathbf{X}$.
+Multivariate analysis explores relationships among three or more variables at once.
 
 Common techniques include:
 - The same as bivariate analysis, but conditioning on a third variable (e.g., pair plots colored by species).
 - Dimensionality reduction methods (e.g., PCA, t-SNE) to visualize high-dimensional data.
 - Clustering algorithms (e.g., k-means, hierarchical clustering) to identify groups of similar records.
+
+The last two work on the numerical columns of $\mathbf{X}$.
 
 ---
 
