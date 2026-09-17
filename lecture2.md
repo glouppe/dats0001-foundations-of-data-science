@@ -374,8 +374,8 @@ class: middle
 
 ## What we are looking at
 
-All we hold is $n$ records. Their .bold[empirical distribution] puts equal mass on each of them,
-$$\hat{p}\_n(x) = \frac{1}{n} \sum\_{i=1}^n \delta(x - x\_i).$$
+All we hold is $n$ records, the rows $\mathbf{x}\_i = (x\_{i1}, \ldots, x\_{id})$ of the data frame. Their .bold[empirical distribution] puts equal mass on each of them,
+$$\hat{p}\_n(x) = \frac{1}{n} \sum\_{i=1}^n \delta(x - \mathbf{x}\_i).$$
 
 Every plot and every statistic that follows is a functional of $\hat{p}\_n$: a histogram is a marginal, a scatter plot a joint, body mass by species a conditional, correlation and mutual information measure dependence, and PCA is a projection.
 
@@ -397,7 +397,7 @@ class: middle
 
 ## Univariate analysis
 
-Let us consider a variable $j$ from a data frame $\mathbf{X} \in \mathbb{R}^{n \times d}$, represented as the vector $\mathbf{x}\_j = (x\_{1j}, x\_{2j}, ..., x\_{nj})^T$.
+Let us consider a variable $j$ of the data frame. We write $x\_j$ for that variable as a random quantity, distributed under $p\_r$, and $\mathbf{x}\_j = (x\_{1j}, x\_{2j}, ..., x\_{nj})^T$ for the column of values actually recorded.
 
 Univariate analysis focuses on understanding the distribution and characteristics of this single variable.
 
@@ -437,7 +437,7 @@ class: middle
 
 ## Bivariate analysis
 
-Bivariate analysis examines the relationship between two variables $j$ and $k$ from a data frame $\mathbf{X} \in \mathbb{R}^{n \times d}$, represented as the vectors $\mathbf{x}\_j$ and $\mathbf{x}\_k$.
+Bivariate analysis examines the relationship between two variables $j$ and $k$, from their recorded columns $\mathbf{x}\_j$ and $\mathbf{x}\_k$.
 
 Depending on the types of variables, different techniques are used:
 - Pair plots for two numerical variables (scatter or 2d histogram).
@@ -485,7 +485,7 @@ class: middle
 
 - Pearson correlation measures linear relationships. Its empirical version reads
 $$\hat{\rho}\_{jk} = \frac{\sum\_{i=1}^n (x\_{ij} - \bar{x}\_j)(x\_{ik} - \bar{x}\_k)}{\sqrt{\sum\_{i=1}^n (x\_{ij} - \bar{x}\_j)^2} \sqrt{\sum\_{i=1}^n (x\_{ik} - \bar{x}\_k)^2}},$$
-an estimate of $\rho\_{jk} = \text{cov}(x\_j, x\_k) / (\sigma\_j \sigma\_k)$. It ignores non-linear dependencies.
+an estimate of $\rho\_{jk} = \text{cov}(x\_j, x\_k) / (\sigma\_j \sigma\_k)$ under $p\_r$. It ignores non-linear dependencies.
 - Spearman correlation is the Pearson correlation of the rank-transformed variables. It captures monotonic relationships.
 - Correlation does not imply causation and can be affected by outliers.
 
@@ -498,10 +498,10 @@ Intuition behind Pearson: the ratio of the covariance to the product of standard
 class: middle
 
 The .bold[mutual information] between two variables $x\_j$ and $x\_k$ measures the reduction in uncertainty about one given knowledge of the other. For discrete variables,
-$$I(x\_j; x\_k) = \sum\_{x\_j} \sum\_{x\_k} p(x\_j, x\_k) \log \frac{p(x\_j, x\_k)}{p(x\_j)p(x\_k)},$$
+$$I(x\_j; x\_k) = \sum\_{x\_j} \sum\_{x\_k} p\_r(x\_j, x\_k) \log \frac{p\_r(x\_j, x\_k)}{p\_r(x\_j)p\_r(x\_k)},$$
 with integrals in place of the sums for continuous ones.
 
-Mutual information captures any statistical relationship, not just linear or monotonic ones. It is defined on the distributions, however, which must themselves be estimated from the $n$ records, and that is hard.
+Mutual information captures any statistical relationship, not just linear or monotonic ones. It is a property of $p\_r$, however, which must itself be estimated from the $n$ records, and that is hard.
 
 ---
 
@@ -509,7 +509,7 @@ class: middle
 
 ## Multivariate analysis
 
-Multivariate analysis explores relationships among three or more variables in a data frame $\mathbf{X} \in \mathbb{R}^{n \times d}$.
+Multivariate analysis explores relationships among three or more variables at once. Dimensionality reduction and clustering work on the numerical columns of $\mathbf{X}$.
 
 Common techniques include:
 - The same as bivariate analysis, but conditioning on a third variable (e.g., pair plots colored by species).
