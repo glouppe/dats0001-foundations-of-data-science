@@ -16,6 +16,14 @@ https://badriadhikari.github.io/data-viz-workshop-2021/
 
 class: middle
 
+.center.width-55[![](figures/lec2/pairplot_by_species.png)]
+
+Last lecture produced plots like this one. This lecture is about drawing them well.
+
+---
+
+class: middle
+
 # Encoding data with visual cues
 
 ---
@@ -26,7 +34,7 @@ class: middle
 
 <br>
 
-.question[In pairs, try to come up with as many representations/encodings of this "data".]
+.question[In pairs, try to come up with as many representations/encodings of this "data" as possible.]
 
 ---
 
@@ -121,7 +129,7 @@ class: middle
 Sometimes, data spans several orders of magnitude or has a skewed distribution. In such cases, applying a transformation or using a different scale can improve the interpretability of the visualization.
 - .bold[Linear scale]: preserves the original data values.
 - .bold[Logarithmic scale]: useful for data spanning several orders of magnitude.
-- .bold[Quantile scale]: divides data into equal-sized bins, useful for skewed distributions.
+- .bold[Quantile scale]: divides data into bins holding equal numbers of records, useful for skewed distributions.
 
 ---
 
@@ -162,9 +170,7 @@ The primary representation system is the Hue, Saturation, Value (HSV) model:
 
 class: middle
 
-.center.width-100[![](figures/lec3/hue-saturation-lightness.png)]
-
-.footnote[Data source: [Effective data visualization](https://badriadhikari.github.io/data-viz-workshop-2021/colors/), USML, 2021.]
+.center.width-100[![](figures/lec3/hsv.png)]
 
 ---
 
@@ -179,12 +185,14 @@ A colormap specifies a mapping between data values and colors. There are three m
 
 class: middle
 
-.center[.
+.center[
 .width-45[![](figures/lec3/sphx_glr_colormaps_002.png)]
 
 .width-45[![](figures/lec3/sphx_glr_colormaps_004.png)]
 .width-45[![](figures/lec3/sphx_glr_colormaps_006.png)]
 ]
+
+.footnote[Credits: [Choosing colormaps in Matplotlib](https://matplotlib.org/stable/users/explain/colors/colormaps.html).]
 
 ---
 
@@ -201,6 +209,8 @@ class: middle
 .center.width-75[![](figures/lec3/sphx_glr_colormaps_001.png)]
 
 Perceptually uniform colormaps ensure that equal steps in data are perceived as equal steps in color.
+
+.footnote[Credits: [Choosing colormaps in Matplotlib](https://matplotlib.org/stable/users/explain/colors/colormaps.html).]
 
 ???
 
@@ -325,7 +335,9 @@ wide_lines 54.26692 47.83160 16.77000 26.93790 -0.06657523
 ```
 ]
 
-.center[.bold[Do not summarize the data without visualizing it.]<br> The Datasaurus dozen: 13 datasets with identical summary statistic.]
+.center[.bold[Do not summarize the data without visualizing it.]<br> The Datasaurus dozen: 13 datasets with identical summary statistics.]
+
+.footnote[Credits: [Matejka & Fitzmaurice](https://www.research.autodesk.com/publications/same-stats-different-graphs/), 2017.]
 
 ---
 
@@ -334,6 +346,8 @@ class: middle
 .center.width-90[![](figures/lec3/datasaurus.png)]
 
 .center[Summary statistics can be misleading. .bold[Always visualize the rawest data]!]
+
+.footnote[Credits: [Matejka & Fitzmaurice](https://www.research.autodesk.com/publications/same-stats-different-graphs/), 2017.]
 
 ---
 
