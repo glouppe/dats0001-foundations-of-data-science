@@ -30,15 +30,15 @@ They can take many forms, including numbers, text, images, and more.
 
 class: middle
 
-.center.width-10[![](figures/lec2/penguin.png)]
-
 ## A running example
 
-We will follow one dataset through this lecture: the .bold[Palmer Archipelago penguins], 344 birds of three species (Adelie, Chinstrap, Gentoo), measured on three islands between 2007 and 2009.
+.center.width-60[![](figures/lec2/lter-penguins.png)]
+
+We will follow one dataset through this lecture: the .bold[Palmer Archipelago penguins], 344 birds of three species measured on three islands between 2007 and 2009.
 
 Someone stood in the cold, caught a penguin, measured its bill with a caliper and put it on a scale. What follows is about what such records are, and what they are not.
 
-.footnote[Credits: [Horst et al.](https://allisonhorst.github.io/palmerpenguins/), 2020.]
+.footnote[Credits: [Horst et al.](https://allisonhorst.github.io/palmerpenguins/), 2020; artwork by @allison\_horst.]
 
 ---
 
