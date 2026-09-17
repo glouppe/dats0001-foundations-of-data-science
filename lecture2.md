@@ -320,7 +320,7 @@ Treating outliers requires a model of the measurement process that either descri
 
 Two models make this explicit&#58; a contamination mixture
 $$p(x) = (1 - \varepsilon) p\_\text{model}(x) + \varepsilon p\_\text{bad}(x),$$
-which gives bad measurements their own distribution, or a heavy-tailed data model, which allows rare large deviations without special-casing them. We fit the second to Newcomb's speed-of-light measurements in Lecture 7.
+which gives bad measurements their own distribution, or a heavy-tailed data model, which allows rare large deviations without special-casing them.
 
 .alert[.bold[Outliers should not be removed blindly] unless explicitly justified by the measurement model or domain knowledge.]
 
