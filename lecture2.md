@@ -169,7 +169,7 @@ class: middle
 .grid[
 .kol-1-2.center[Sequences
 
-`['F', 'l', 'o', 'w', 'e', 'r']`]
+`['P', 'e', 'n', 'g', 'u', 'i', 'n']`]
 .kol-1-2.center[Networks and graphs<br>.width-70[![](figures/lec2/graph.png)]]
 ]
 
