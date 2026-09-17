@@ -370,7 +370,20 @@ The goal is to generate hypotheses and inform modeling decisions, not to confirm
 
 ---
 
-class: middle, smaller
+class: middle
+
+## What we are looking at
+
+All we hold is $n$ records. Their .bold[empirical distribution] puts equal mass on each of them,
+$$\hat{p}\_n(x) = \frac{1}{n} \sum\_{i=1}^n \delta(x - x\_i).$$
+
+Every plot and every statistic that follows is a functional of $\hat{p}\_n$: a histogram is a marginal, a scatter plot a joint, body mass by species a conditional, correlation and mutual information measure dependence, and PCA is a projection.
+
+.alert[$\hat{p}\_n$ is not $p\_r$. It is what $n$ records show of it, and that gap is what the rest of the course is about.]
+
+---
+
+class: middle
 
 .center.width-10[![](figures/lec2/penguin.png)]
 
@@ -404,7 +417,8 @@ class: middle
 .width-80[![](figures/lec2/body_mass_histogram.png)]
 ]
 
-.center[Numerical: Histograms of body mass for all penguins.]
+.center[Numerical: Histogram of body mass for all penguins.<br>
+.italic[One broad mode with a long right tail: perhaps not a single population.]]
 
 ---
 
@@ -414,7 +428,8 @@ class: middle
 .width-80[![](figures/lec2/species_counts.png)]
 ]
 
-.center[Categorical: Bar plot of species counts for all penguins.]
+.center[Categorical: Bar plot of species counts for all penguins.<br>
+.italic[Unbalanced groups: 152 Adelie, 124 Gentoo, 68 Chinstrap.]]
 
 ---
 
@@ -435,28 +450,32 @@ Depending on the types of variables, different techniques are used:
 class: middle
 
 .center.width-80[![](figures/lec2/body_mass_vs_flipper_length.png)]
-.center[Numerical vs. numerical: Scatter plot of body mass vs flipper length.]
+.center[Numerical vs. numerical: Scatter plot of body mass vs flipper length.<br>
+.italic[Mass grows with flipper length, close to linearly.]]
 
 ---
 
 class: middle
 
 .center.width-75[![](figures/lec2/pairplot.png)]
-.center[Pair plots of all numerical variables.]
+.center[Pair plots of all numerical variables.<br>
+.italic[Most panels show two or three clouds rather than one.]]
 
 ---
 
 class: middle
 
 .center.width-80[![](figures/lec2/body_mass_by_species.png)]
-.center[Categorical vs. numerical: Histograms of body mass by species.]
+.center[Categorical vs. numerical: Histograms of body mass by species.<br>
+.italic[The right tail was Gentoo, at 5076 g on average against about 3700 g for the others.]]
 
 ---
 
 class: middle
 
 .center[![](figures/lec2/contingency.png)]
-.center[Categorical vs. categorical: Contingency table of species and island.]
+.center[Categorical vs. categorical: Contingency table of species and island.<br>
+.italic[Gentoo live only on Biscoe, Chinstrap only on Dream: species and island are dependent.]]
 
 ---
 
@@ -502,36 +521,42 @@ Common techniques include:
 class: middle
 
 .center.width-80[![](figures/lec2/pairplot_by_species.png)]
-.center[Pair plots of all numerical variables, colored by species.]
+.center[Pair plots of all numerical variables, colored by species.<br>
+.italic[Colour by species and the clouds line up.]]
 
 ---
 
 class: middle
 
 .center.width-70[![](figures/lec2/pca_penguins.png)]
-.center[PCA projection of all numerical variables, colored by species.]
+.center[PCA projection of all numerical variables, colored by species.<br>
+.italic[Two components are enough to separate the species.]]
 
 ---
 
 class: middle
 
-## EDA within Box's loop
+## What the penguins leave us
 
-EDA is a crucial step in Box's loop for data analysis. It helps to understand the data, generate hypotheses, and .bold[inform modeling decisions].
+Four hypotheses, none of them a result:
+- body mass is not one population, but a .bold[mixture] of groups,
+- flipper length and body mass move together, as in a .bold[regression],
+- species and island are dependent, which is .bold[group structure],
+- four measurements carry much the same information, suggesting a .bold[low-dimensional] description.
 
-- Distribution shapes can suggest appropriate model families.
-- Relationships between variables can guide model structure.
-- Insights about scale and variance can inform data transformations.
+Each is built as a model later: mixtures and latent variables in Lecture 4, regression in Lecture 6.
 
 ---
 
 class: middle
 
-After building a model and computing initial results, EDA can be used to critique the model fit and identify areas for improvement.
+EDA does not stop once a model is built. In the critique step, the same plots come back on what the model gets wrong.
 
-- Residual analysis can reveal patterns not captured by the model.
-- Prediction errors may point to specific data subsets that are problematic.
-- Unexpected patterns in the data can suggest new features or model revisions.
+- Residuals reveal patterns the model does not capture.
+- Prediction errors point to subsets of the data that are problematic.
+- Unexpected patterns suggest new variables or a revised model.
+
+Next lecture: how to draw all of these plots well.
 
 ---
 
