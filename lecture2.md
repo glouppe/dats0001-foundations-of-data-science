@@ -457,7 +457,7 @@ class: middle
 
 class: middle
 
-.center.width-75[![](figures/lec2/pairplot.png)]
+.center.width-70[![](figures/lec2/pairplot.png)]
 .center[Pair plots of all numerical variables.<br>
 .italic[Most panels show two or three clouds rather than one.]]
 
