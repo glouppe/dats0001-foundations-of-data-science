@@ -30,6 +30,20 @@ They can take many forms, including numbers, text, images, and more.
 
 class: middle
 
+.center.width-10[![](figures/lec2/penguin.png)]
+
+## A running example
+
+We will follow one dataset through this lecture: the .bold[Palmer Archipelago penguins], 344 birds of three species (Adelie, Chinstrap, Gentoo), measured on three islands between 2007 and 2009.
+
+Someone stood in the cold, caught a penguin, measured its bill with a caliper and put it on a scale. What follows is about what such records are, and what they are not.
+
+.footnote[Credits: [Horst et al.](https://allisonhorst.github.io/palmerpenguins/), 2020.]
+
+---
+
+class: middle
+
 Mathematically, data can be viewed as a function $f$ that maps real-world entities $\omega$ to measurable values $x$,
 $$f : \Omega \to \mathcal{X},$$
 where
@@ -41,7 +55,7 @@ where
 class: middle
 
 Examples&#58;
-- Person's height: $\omega \in \\{ \text{all humans} \\} \to x \in \mathbb{R}^+$ (cm)
+- Penguin body mass: $\omega \in \\{ \text{penguins} \\} \to x \in \mathbb{R}^+$ (g)
 - Stock price: $\omega \in \\{ \text{market states} \\} \to x \in \mathbb{R}^+$ (USD)
 - Pixel colour: $\omega \in \\{ \text{scenes} \\} \to x \in \\{0, \ldots, 255\\}^3$ (RGB values)
 
@@ -62,7 +76,7 @@ class: middle
 The .bold[measurement process] is part of the data generation mechanism. We make it explicit by adding the measurement conditions $\theta$ (instrument settings, environmental conditions, observer effects) to the map,
 $$f : \Omega \times \Theta \to \mathcal{X}.$$
 
-Measurements can introduce quantization (continuous to discrete), noise (random perturbations), and bias (systematic deviations). If $\Omega \times \Theta$ carries a joint distribution $p(\omega, \theta)$, then
+Measurements can introduce quantization (continuous to discrete), noise (random perturbations), and bias (systematic deviations). For the penguins, $\theta$ covers which caliper and scale were used, by which observer, in which conditions. If $\Omega \times \Theta$ carries a joint distribution $p(\omega, \theta)$, then
 $$p\_r(x) = \iint\_{\omega \in \Omega, \theta \in \Theta} p(\omega, \theta) \delta(x - f(\omega, \theta)) d\omega d\theta,$$
 which captures the variability of both the phenomenon and its measurement.
 
@@ -97,17 +111,18 @@ Categorical data
 
 class: middle 
 
-.center.width-10[![](figures/lec2/health-report.png)]
+.center.width-10[![](figures/lec2/penguin.png)]
 
-Example: medical records
+Example: one penguin record
 ```
-Patient ID: 10847        # Categorical, Nominal 
-Age: 34                  # Numerical, Discrete  
-Height: 175.2 cm         # Numerical, Continuous
-Blood type: O+           # Categorical, Nominal
-Pain level: 7/10         # Categorical, Ordinal
-Temperature: 38.1°C      # Numerical, Continuous
+species: Adelie          # Categorical, nominal
+island: Torgersen        # Categorical, nominal
+bill length: 39.1 mm     # Numerical, continuous
+body mass: 3750 g        # Numerical, continuous
+sex: male                # Categorical, nominal
+year: 2007               # Numerical, discrete
 ```
+No variable here is ordinal; a rating from 1 to 5, or a grade, would be.
 
 ---
 
@@ -126,8 +141,8 @@ A measurement $x$ can be a single atomic value or a composite structure made of 
 class: middle
 
 .grid[
-.kol-1-2.center[Tabular data<br>.width-100[![](figures/lec2/iris-tabular.png)]]
-.kol-1-2.center[Arrays and tensors<br>.width-60[![](figures/lec2/iris-image.jpg)]]
+.kol-1-2.center[Tabular data<br>.width-100[![](figures/lec2/penguins-tabular.png)]]
+.kol-1-2.center[Arrays and tensors<br>.width-60[![](figures/lec2/penguin-photo.jpg)]]
 ]
 
 <br>
@@ -139,7 +154,7 @@ class: middle
 .kol-1-2.center[Networks and graphs<br>.width-70[![](figures/lec2/graph.png)]]
 ]
 
-.footnote[Credits: Danielle Langlois, [Iris versicolor](https://commons.wikimedia.org/wiki/File:Iris_versicolor_3.jpg) (CC BY-SA 3.0), cropped.]
+.footnote[Credits: Hannes Grobe, [Adelie penguin](https://commons.wikimedia.org/wiki/File:Pygoscelis_adeliae_hg.jpg) (CC BY-SA 2.5), cropped.]
 
 ---
 
@@ -156,12 +171,14 @@ Each entry $x\_{ij}$ corresponds to the value of variable $j$ for record $i$.
 
 Variables are often heterogeneous (mixing numerical and categorical types). When all variables are numerical, the data frame can be viewed as a matrix $\mathbf{X} \in \mathbb{R}^{n \times d}$.
 
+For the penguins, $n = 344$ records over $d = 8$ variables, four of them numerical.
+
 ---
 
 class: middle
 
 Collections of homogeneous measurements can be represented as .bold[arrays] or .bold[tensors] $\mathbf{X} \in \mathbb{R}^{d\_1 \times d\_2 \times \cdots \times d\_k}$, where the position of each atomic value in the array is usually associated to a spatial or temporal location.
-- Images: 3d arrays $\mathbf{X} \in [0, 255]^{h \times w \times c}$ (height, width, channels).
+- Images: 3d arrays $\mathbf{X} \in \\{0, \ldots, 255\\}^{h \times w \times c}$ (height, width, channels). The photo on the previous slide is such an array.
 - Videos: 4d arrays $\mathbf{X} \in [0, 255]^{t \times h \times w \times c}$ (time, height, width, channels).
 
 ---
@@ -208,6 +225,8 @@ class: middle
 Let $\mathbf{X}\_\text{full}$ be the complete data and $\mathbf{M} \in \\{0, 1\\}^{n \times d}$ the missingness pattern, with $m\_{ij} = 1$ when entry $ij$ is observed and $m\_{ij} = 0$ when it is missing$^1$.
 
 What we actually hold is the pair $(\mathbf{X}\_\text{obs}, \mathbf{M})$, where $\mathbf{X}\_\text{obs} = \\{ x\_{ij} : m\_{ij} = 1 \\}$ are the observed entries and $\mathbf{X}\_\text{mis} = \\{ x\_{ij} : m\_{ij} = 0 \\}$ the missing ones. A missing entry is not a zero, and no arithmetic can recover it.
+
+Two penguins were never measured, and eleven have no recorded sex.
 
 .footnote[1: Rubin's convention is the opposite, 1 for missing.]
 
@@ -298,6 +317,22 @@ The 37.8 value is a rare but plausible measurement on a hot day.
 
 class: middle
 
+## Where this leaves us
+
+Everything in this part is one picture of how the data came to be:
+- the map $f$ from states of the world to measurements,
+- the conditions $\theta$ under which measurements are taken,
+- the pattern $\mathbf{M}$ of what ends up recorded,
+- the data distribution $p\_r(x)$ that all of this induces.
+
+In `nb01`, `simulate()` was such a map $f$, its Gaussian noise played the role of $\theta$, and the landing distance was $x$. The generative model ran forward, and inference ran it backward.
+
+From Lecture 4 onwards, we build parametric models of $p\_r(x)$ and fit them to data. Before that, we look at what the data themselves show.
+
+---
+
+class: middle
+
 # Exploratory data analysis 
 
 ---
@@ -314,11 +349,9 @@ class: middle, smaller
 
 .center.width-10[![](figures/lec2/penguin.png)]
 
-As a guiding example, we consider the .bold[Palmer Archipelago penguins dataset], which contains measurements for three penguin species (Adelie, Chinstrap, Gentoo) across three islands (Biscoe, Dream, Torgersen). 
+Back to the penguins, with the whole table in hand: 344 records, four numerical measurements, three species and three islands.
 
 Switch to `nb02d-eda.ipynb` to follow along.
-
-.footnote[Credits: [Horst et al.](https://allisonhorst.github.io/palmerpenguins/), 2020.]
 
 ---
 
