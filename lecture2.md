@@ -71,7 +71,7 @@ class: middle
 
 ## Data types
 
-Atomic data are the indivisible units of information collected through measurements. It is often categorized based on its nature and the operations that can be performed on it.
+Atomic data are the indivisible units of information collected through measurements. They are often categorized based on their nature and the operations that can be performed on it.
 
 - Numerical (continuous, discrete)
 - Categorical (nominal, ordinal)
@@ -134,7 +134,7 @@ class: middle
 .grid[
 .kol-1-2.center[Sequences
 
-`['F', 'l''o', 'w', 'e', 'r']`]
+`['F', 'l', 'o', 'w', 'e', 'r']`]
 .kol-1-2.center[Networks and graphs<br>.width-70[![](figures/lec2/graph.png)]]
 ]
 
@@ -142,7 +142,7 @@ class: middle
 
 class: middle
 
-Data frames $\mathbf{X}$ represents .bold[tabular collections] of $n$ records (rows) over $d$ variables/atomic measurements (columns),
+A data frame $\mathbf{X}$ represents a .bold[tabular collection] of $n$ records (rows) over $d$ variables/atomic measurements (columns),
 $$\mathbf{X} = \begin{pmatrix}
 x\_{11} & x\_{12} & \cdots & x\_{1d} \\\\
 x\_{21} & x\_{22} & \cdots & x\_{2d} \\\\
@@ -226,7 +226,7 @@ Survey of $n=1000$ respondents, 30% do not answer the income question.
 - MAR: Younger respondents are less likely to answer.
 - MNAR: High earners refuse to answer.
 
-.alert[.bold[Imputing or discarding missing values] without expliciting the assumptions about the missingness mechanism can lead to biased results.]
+.alert[.bold[Imputing or discarding missing values] without making explicit the assumptions about the missingness mechanism can lead to biased results.]
 
 ---
 
@@ -252,7 +252,7 @@ Here powerline glitches are visible at 60 Hz, due to electromagnetic interferenc
 
 class: middle
 
-Treating outliers requires a model of the measurement process that either describe measurements under normal conditions or explicitly accounts for anomalies. 
+Treating outliers requires a model of the measurement process that either describes measurements under normal conditions or explicitly accounts for anomalies. 
 
 .alert[.bold[Outliers should not be removed blindly] unless explicitly justified by the measurement model or domain knowledge.]
 
@@ -306,7 +306,7 @@ class: middle
 
 ## Univariate analysis
 
-Let consider a variable $j$ from a data frame $\mathbf{X} \in \mathbb{R}^{n \times d}$, represented as the vector $\mathbf{x}\_j = (x\_{1j}, x\_{2j}, ..., x\_{nj})^T$.
+Let us consider a variable $j$ from a data frame $\mathbf{X} \in \mathbb{R}^{n \times d}$, represented as the vector $\mathbf{x}\_j = (x\_{1j}, x\_{2j}, ..., x\_{nj})^T$.
 
 Univariate analysis focuses on understanding the distribution and characteristics of this single variable.
 
