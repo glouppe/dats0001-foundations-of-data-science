@@ -65,9 +65,11 @@ class: middle
 
 If the sample space $\Omega$ carries a probability distribution $p(\omega)$, then $f$ turns a random state of the world into a random observation $x = f(\omega)$. Its distribution is the one $f$ induces from $p$, called the .bold[data distribution] $p\_r(x)$, where $r$ stands for "real".
 
-When densities exist, it can be written as
+For continuous measurements, it can be written as
 $$p\_r(x) = \int\_{\omega \in \Omega} p(\omega) \delta(x - f(\omega)) d\omega,$$
 where $\delta$ is the Dirac delta function.
+
+Discrete or quantized measurements have probabilities instead of a density: a recorded body mass is always a multiple of 25 g.
 
 ---
 
