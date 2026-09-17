@@ -245,9 +245,19 @@ Let $\mathbf{X}\_\text{full}$ be the complete data and $\mathbf{M} \in \\{0, 1\\
 
 What we actually hold is the pair $(\mathbf{X}\_\text{obs}, \mathbf{M})$, where $\mathbf{X}\_\text{obs} = \\{ x\_{ij} : m\_{ij} = 1 \\}$ are the observed entries and $\mathbf{X}\_\text{mis} = \\{ x\_{ij} : m\_{ij} = 0 \\}$ the missing ones. A missing entry is not a zero, and no arithmetic can recover it.
 
-Two penguins were never measured, and eleven have no recorded sex.
-
 .footnote[1: Rubin's convention is the opposite, 1 for missing.]
+
+---
+
+class: middle
+
+.center.width-100[![](figures/lec2/penguins-missing.png)]
+
+.center[The 11 penguin records with missing entries&#58; two birds were never measured,<br> nine have no recorded sex.]
+
+???
+
+Whether these holes matter depends on the mechanism: a bird that escaped before being weighed is plausibly missing completely at random, but if the largest and strongest escaped most often, the same holes would be missing not at random.
 
 ---
 
