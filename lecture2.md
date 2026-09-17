@@ -43,27 +43,28 @@ class: middle
 Examples&#58;
 - Person's height: $\omega \in \\{ \text{all humans} \\} \to x \in \mathbb{R}^+$ (cm)
 - Stock price: $\omega \in \\{ \text{market states} \\} \to x \in \mathbb{R}^+$ (USD)
-- Image pixels: $\omega \in \\{ \text{light intensities} \\} \to x \in [0, 255]^3$ (RGB values)
+- Pixel colour: $\omega \in \\{ \text{scenes} \\} \to x \in \\{0, \ldots, 255\\}^3$ (RGB values)
 
 ---
 
 class: middle
 
-If the sample space $\Omega$ is equipped with a probability function $p$, then the data $x = f(\omega)$ can be viewed as a random variable with distribution induced by $p$, $$x \sim p(x) = \int_{\omega \in \Omega} p(\omega) \delta(x - f(\omega)) d\omega,$$ where $\delta$ is the Dirac delta function.
+If the sample space $\Omega$ carries a probability distribution $p(\omega)$, then $f$ turns a random state of the world into a random observation $x = f(\omega)$. Its distribution is the one $f$ induces from $p$, called the .bold[data distribution] $p\_r(x)$, where $r$ stands for "real".
+
+When densities exist, it can be written as
+$$p\_r(x) = \int\_{\omega \in \Omega} p(\omega) \delta(x - f(\omega)) d\omega,$$
+where $\delta$ is the Dirac delta function.
 
 ---
 
 class: middle
 
-The .bold[measurement process] is part of the data generation mechanism and can be modeled by extending the sample space to include measurement conditions $\theta$, $$f : \Omega \times \Theta \to \mathcal{X},$$ where $\Theta$ represents factors like instrument settings, environmental conditions, and observer effects. 
+The .bold[measurement process] is part of the data generation mechanism. We make it explicit by adding the measurement conditions $\theta$ (instrument settings, environmental conditions, observer effects) to the map,
+$$f : \Omega \times \Theta \to \mathcal{X}.$$
 
-Measurements can introduce quantization (continuous to discrete), noise (random perturbations), and bias (systematic deviations).
-
----
-
-class: middle
-
-As before, if both $\Omega$ and $\Theta$ are equipped with a joint probability function $p$, then the data $x = f(\omega, \theta)$ can be viewed as a random variable with distribution induced by $p$, $$x \sim p(x) = \iint\_{\omega \in \Omega, \theta \in \Theta} p(\omega, \theta) \delta(x - f(\omega, \theta)) d\omega d\theta,$$ which now captures the variability introduced by both the underlying phenomena and the measurement process.
+Measurements can introduce quantization (continuous to discrete), noise (random perturbations), and bias (systematic deviations). If $\Omega \times \Theta$ carries a joint distribution $p(\omega, \theta)$, then
+$$p\_r(x) = \iint\_{\omega \in \Omega, \theta \in \Theta} p(\omega, \theta) \delta(x - f(\omega, \theta)) d\omega d\theta,$$
+which captures the variability of both the phenomenon and its measurement.
 
 ---
 
@@ -82,7 +83,7 @@ class: middle
 
 Numerical data
 - Continuous: $x \in \mathbb{R}$ (e.g., temperature), $x \in \mathbb{R}^+$ (e.g., height, weight)
-- Discrete: $x \in \mathbb{Z}$ (e.g., counts)
+- Discrete: $x \in \mathbb{N}$ (e.g., counts), $x \in \mathbb{Z}$ (e.g., differences)
 
 ---
 
@@ -204,18 +205,29 @@ class: middle
 
 .bold[Missing values] are common in real-world datasets and can arise from various factors such as non-response in surveys, sensor malfunctions, or data corruption. 
 
-Let $\mathbf{X}\_\text{full} \in \mathbb{R}^{n \times d}$ be a complete data matrix and $\mathbf{M} \in \\{0, 1\\}^{n \times d}$ be the missing data indicator matrix, where $m\_{ij} = 1$ if entry $ij$ is observed and $m\_{ij} = 0$ if it is missing. The observed data can be represented as $\mathbf{X} = \mathbf{X}\_\text{full} \odot \mathbf{M}$, where $\odot$ denotes the element-wise product.
+Let $\mathbf{X}\_\text{full}$ be the complete data and $\mathbf{M} \in \\{0, 1\\}^{n \times d}$ the missingness pattern, with $m\_{ij} = 1$ when entry $ij$ is observed and $m\_{ij} = 0$ when it is missing$^1$.
+
+What we actually hold is the pair $(\mathbf{X}\_\text{obs}, \mathbf{M})$, where $\mathbf{X}\_\text{obs} = \\{ x\_{ij} : m\_{ij} = 1 \\}$ are the observed entries and $\mathbf{X}\_\text{mis} = \\{ x\_{ij} : m\_{ij} = 0 \\}$ the missing ones. A missing entry is not a zero, and no arithmetic can recover it.
+
+.footnote[1: Rubin's convention is the opposite, 1 for missing.]
 
 ---
 
 class: middle
 
-The patterns of missingness can be modeled as part of the measurement process:
-- Missing Completely at Random (MCAR): The probability of missingness is independent of both observed and masked data, $p(m\_{ij} = 0 | \mathbf{X}\_\text{full}) = p(m\_{ij} = 0)$.
-- Missing at Random (MAR): The probability of missingness may depend on observed data but not on masked data, $p(m\_{ij} = 0 | \mathbf{X}\_\text{full}) = p(m\_{ij} = 0 | \mathbf{X})$. 
-- Missing Not at Random (MNAR): The probability of missingness depends on masked data as well.
+The pattern $\mathbf{M}$ is itself produced by the measurement process, and is modeled as such:
+- Missing completely at random (MCAR): the pattern is independent of the data, $p(\mathbf{M} \mid \mathbf{X}\_\text{full}) = p(\mathbf{M})$.
+- Missing at random (MAR): the pattern may depend on what is observed, but not on what is missing, $p(\mathbf{M} \mid \mathbf{X}\_\text{full}) = p(\mathbf{M} \mid \mathbf{X}\_\text{obs})$.
+- Missing not at random (MNAR): the pattern depends on the missing entries themselves.
 
-Each mechanism or assumption has implications for how to handle missing data during analysis.
+---
+
+class: middle
+
+Why the distinction matters&#58; what we can compute is
+$$p(\mathbf{X}\_\text{obs}, \mathbf{M}) = \int p(\mathbf{X}\_\text{full}) p(\mathbf{M} \mid \mathbf{X}\_\text{full}) d\mathbf{X}\_\text{mis}.$$
+
+Under MCAR or MAR, the second factor does not depend on the missing entries and, provided it shares no parameters with the first, it can be ignored: modelling the observed data is enough. Under MNAR it cannot be ignored, and the mechanism must be modeled jointly with the data.
 
 ---
 
@@ -257,6 +269,10 @@ Here powerline glitches are visible at 60 Hz, due to electromagnetic interferenc
 class: middle
 
 Treating outliers requires a model of the measurement process that either describes measurements under normal conditions or explicitly accounts for anomalies. 
+
+Two models make this explicit&#58; a contamination mixture
+$$p(x) = (1 - \varepsilon) p\_\text{model}(x) + \varepsilon p\_\text{bad}(x),$$
+which gives bad measurements their own distribution, or a heavy-tailed data model, which allows rare large deviations without special-casing them. We fit the second to Newcomb's speed-of-light measurements in Lecture 7.
 
 .alert[.bold[Outliers should not be removed blindly] unless explicitly justified by the measurement model or domain knowledge.]
 
@@ -348,7 +364,7 @@ class: middle
 
 ## Bivariate analysis
 
-Bivariate analysis examines the relationship between two variables $i$ and $j$ from a data frame $\mathbf{X} \in \mathbb{R}^{n \times d}$, represented as vectors $\mathbf{x}\_i$ and $\mathbf{x}\_j$.
+Bivariate analysis examines the relationship between two variables $j$ and $k$ from a data frame $\mathbf{X} \in \mathbb{R}^{n \times d}$, represented as the vectors $\mathbf{x}\_j$ and $\mathbf{x}\_k$.
 
 Depending on the types of variables, different techniques are used:
 - Pair plots for two numerical variables (scatter or 2d histogram).
@@ -390,7 +406,9 @@ class: middle
 
 .bold[Correlation coefficients] can quantify the dependency between two numerical variables. They are useful but come with assumptions and limitations.
 
-- Pearson correlation $$\rho\_{ij} = \frac{\text{cov}(\mathbf{x}\_i, \mathbf{x}\_j)}{\sigma\_{\mathbf{x}\_i} \sigma\_{\mathbf{x}\_j}}$$ measures linear relationships. It ignores non-linear dependencies.
+- Pearson correlation measures linear relationships. Its empirical version reads
+$$\hat{\rho}\_{jk} = \frac{\sum\_{i=1}^n (x\_{ij} - \bar{x}\_j)(x\_{ik} - \bar{x}\_k)}{\sqrt{\sum\_{i=1}^n (x\_{ij} - \bar{x}\_j)^2} \sqrt{\sum\_{i=1}^n (x\_{ik} - \bar{x}\_k)^2}},$$
+an estimate of $\rho\_{jk} = \text{cov}(x\_j, x\_k) / (\sigma\_j \sigma\_k)$. It ignores non-linear dependencies.
 - Spearman correlation is the Pearson correlation of the rank-transformed variables. It captures monotonic relationships.
 - Correlation does not imply causation and can be affected by outliers.
 
@@ -402,9 +420,11 @@ Intuition behind Pearson: the ratio of the covariance to the product of standard
 
 class: middle
 
-The .bold[mutual information] between two variables $\mathbf{x}\_i$ and $\mathbf{x}\_j$ measures the reduction in uncertainty about one variable given knowledge of the other, $$I(\mathbf{x}\_i; \mathbf{x}\_j) = \sum\_{x\_i} \sum\_{x\_j} p(x\_i, x\_j) \log \frac{p(x\_i, x\_j)}{p(x\_i)p(x\_j)},$$ where $p(x\_i, x\_j)$ is the joint probability distribution and $p(x\_i)$, $p(x\_j)$ are the marginal distributions.
+The .bold[mutual information] between two variables $x\_j$ and $x\_k$ measures the reduction in uncertainty about one given knowledge of the other. For discrete variables,
+$$I(x\_j; x\_k) = \sum\_{x\_j} \sum\_{x\_k} p(x\_j, x\_k) \log \frac{p(x\_j, x\_k)}{p(x\_j)p(x\_k)},$$
+with integrals in place of the sums for continuous ones.
 
-Mutual information is a more general measure of dependency that captures any statistical relationship, not just linear or monotonic ones. However, it is harder to estimate accurately from finite samples.
+Mutual information captures any statistical relationship, not just linear or monotonic ones. It is defined on the distributions, however, which must themselves be estimated from the $n$ records, and that is hard.
 
 ---
 
