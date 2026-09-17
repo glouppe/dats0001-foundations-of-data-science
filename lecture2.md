@@ -354,10 +354,6 @@ Everything in this part is one picture of how the data came to be:
 - the pattern $\mathbf{M}$ of what ends up recorded,
 - the data distribution $p\_r(x)$ that all of this induces.
 
-In `nb01`, `simulate()` was such a map $f$, its Gaussian noise played the role of $\theta$, and the landing distance was $x$. The generative model ran forward, and inference ran it backward.
-
-From Lecture 4 onwards, we build parametric models of $p\_r(x)$ and fit them to data. Before that, we look at what the data themselves show.
-
 ---
 
 class: middle
