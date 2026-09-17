@@ -73,11 +73,11 @@ where $\delta$ is the Dirac delta function.
 
 class: middle
 
-The .bold[measurement process] is part of the data generation mechanism. We make it explicit by adding the measurement conditions $\theta$ (instrument settings, environmental conditions, observer effects) to the map,
-$$f : \Omega \times \Theta \to \mathcal{X}.$$
+The .bold[measurement process] is part of the data generation mechanism. We make it explicit by adding the measurement conditions $\xi \in \Xi$ (instrument settings, environmental conditions, observer effects) to the map,
+$$f : \Omega \times \Xi \to \mathcal{X}.$$
 
-Measurements can introduce quantization (continuous to discrete), noise (random perturbations), and bias (systematic deviations). If $\Omega \times \Theta$ carries a joint distribution $p(\omega, \theta)$, then
-$$p\_r(x) = \iint\_{\omega \in \Omega, \theta \in \Theta} p(\omega, \theta) \delta(x - f(\omega, \theta)) d\omega d\theta,$$
+Measurements can introduce quantization (continuous to discrete), noise (random perturbations), and bias (systematic deviations). If $\Omega \times \Xi$ carries a joint distribution $p(\omega, \xi)$, then
+$$p\_r(x) = \iint\_{\omega \in \Omega, \xi \in \Xi} p(\omega, \xi) \delta(x - f(\omega, \xi)) d\omega d\xi,$$
 which captures the variability of both the phenomenon and its measurement.
 
 ---
@@ -93,7 +93,7 @@ Example: how a penguin record is made.
 - Body mass: Pesola spring scale and a weigh bag, to 25 g.
 - Sex: not measured at all, but inferred in the lab from a blood sample.
 
-Nests are found at the one-egg stage, both adults are caught, measured, sampled and released. All of this is $\theta$.
+Nests are found at the one-egg stage, both adults are caught, measured, sampled and released. All of this is $\xi$.
 
 .success[The instruments are visible in the data: every body mass is a multiple of 25 g, every bill length has one decimal, every flipper length is a whole millimetre.]
 
@@ -350,7 +350,7 @@ class: middle
 
 Everything in this part is one picture of how the data came to be:
 - the map $f$ from states of the world to measurements,
-- the conditions $\theta$ under which measurements are taken,
+- the conditions $\xi$ under which measurements are taken,
 - the pattern $\mathbf{M}$ of what ends up recorded,
 - the data distribution $p\_r(x)$ that all of this induces.
 
