@@ -69,7 +69,7 @@ For continuous measurements, it can be written as
 $$p\_r(x) = \int\_{\omega \in \Omega} p(\omega) \delta(x - f(\omega)) d\omega,$$
 where $\delta$ is the Dirac delta function.
 
-Discrete or quantized measurements have probabilities instead of a density: a recorded body mass is always a multiple of 25 g.
+Discrete or quantized measurements have probabilities instead of a density.
 
 ---
 
