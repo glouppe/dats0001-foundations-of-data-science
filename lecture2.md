@@ -138,6 +138,8 @@ class: middle
 .kol-1-2.center[Networks and graphs<br>.width-70[![](figures/lec2/graph.png)]]
 ]
 
+.footnote[Credits: Danielle Langlois, [Iris versicolor](https://commons.wikimedia.org/wiki/File:Iris_versicolor_3.jpg) (CC BY-SA 3.0), cropped.]
+
 ---
 
 class: middle
@@ -239,6 +241,8 @@ The measurement process can also introduce acquisition errors and produce observ
 class: middle
 
 .center.width-50[![](figures/lec2/gw-glitch-powerline6.png)]
+
+.footnote[Credits: Omega scan of a power-line glitch at LIGO Livingston (O4), [Gravity Spy](https://gravityspy.org); data from [GWOSC](https://gwosc.org) (CC BY 4.0).]
 
 Example&#58;
 
