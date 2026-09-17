@@ -76,9 +76,28 @@ class: middle
 The .bold[measurement process] is part of the data generation mechanism. We make it explicit by adding the measurement conditions $\theta$ (instrument settings, environmental conditions, observer effects) to the map,
 $$f : \Omega \times \Theta \to \mathcal{X}.$$
 
-Measurements can introduce quantization (continuous to discrete), noise (random perturbations), and bias (systematic deviations). For the penguins, $\theta$ covers which caliper and scale were used, by which observer, in which conditions. If $\Omega \times \Theta$ carries a joint distribution $p(\omega, \theta)$, then
+Measurements can introduce quantization (continuous to discrete), noise (random perturbations), and bias (systematic deviations). If $\Omega \times \Theta$ carries a joint distribution $p(\omega, \theta)$, then
 $$p\_r(x) = \iint\_{\omega \in \Omega, \theta \in \Theta} p(\omega, \theta) \delta(x - f(\omega, \theta)) d\omega d\theta,$$
 which captures the variability of both the phenomenon and its measurement.
+
+---
+
+class: middle
+
+.center.width-10[![](figures/lec2/penguin.png)]
+
+Example: how a penguin record is made.
+
+- Bill length and depth: dial calipers, to 0.1 mm.
+- Flipper length: ruler, to 1 mm.
+- Body mass: Pesola spring scale and a weigh bag, to 25 g.
+- Sex: not measured at all, but inferred in the lab from a blood sample.
+
+Nests are found at the one-egg stage, both adults are caught, measured, sampled and released. All of this is $\theta$.
+
+.success[The instruments are visible in the data: every body mass is a multiple of 25 g, every bill length has one decimal, every flipper length is a whole millimetre.]
+
+.footnote[Credits: [Gorman et al.](https://doi.org/10.1371/journal.pone.0090081), 2014.]
 
 ---
 
