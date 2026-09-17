@@ -522,7 +522,7 @@ The last two work on the numerical columns of $\mathbf{X}$.
 
 class: middle
 
-.center.width-80[![](figures/lec2/pairplot_by_species.png)]
+.center.width-70[![](figures/lec2/pairplot_by_species.png)]
 .center[Pair plots of all numerical variables, colored by species.<br>
 .italic[Colour by species and the clouds line up.]]
 
@@ -538,15 +538,15 @@ class: middle
 
 class: middle
 
-## What the penguins leave us
+## From observations to hypotheses
 
-Four hypotheses, none of them a result:
-- body mass is not one population, but a .bold[mixture] of groups,
-- flipper length and body mass move together, as in a .bold[regression],
-- species and island are dependent, which is .bold[group structure],
-- four measurements carry much the same information, suggesting a .bold[low-dimensional] description.
+The analysis of the penguins suggests four models:
+- Body mass is not a single population, since the sample mixes three species (mixture models, Lecture 4).
+- Body mass increases with flipper length (regression, Lecture 6).
+- Species and island are dependent, and measurements differ from group to group (hierarchical models, Lecture 4).
+- The four measurements are strongly correlated, so fewer dimensions may be enough to describe them (latent variable models, Lecture 4).
 
-Each is built as a model later: mixtures and latent variables in Lecture 4, regression in Lecture 6.
+The plots establish none of this. They suggest models, which then have to be built, fitted and criticized.
 
 ---
 
