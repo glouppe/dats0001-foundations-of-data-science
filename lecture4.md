@@ -565,6 +565,7 @@ which is why a measured parallax can be negative while a distance cannot.
 
 .bold[The Galaxy.] Stars are not spread evenly: a shell at distance $r$ has a volume growing like $r^2$, and their density thins out with distance, modelled as an exponential of scale length $L$,
 $$p(r\_i \mid L) = \frac{r\_i^2}{2L^3} \exp(-r\_i / L), \qquad r\_i > 0.$$
+That scale length is unknown too, and belongs to the Galaxy rather than to any star, so it gets a vague prior of its own, $p(L) = \text{Uniform}(L \mid 0, 5)$.
 
 ???
 
@@ -573,76 +574,64 @@ The real instrument is messier still: Gaia's parallaxes carry a small systematic
 The $2L^3$ normalizes the prior. This exponentially decreasing space density prior is from Bailer-Jones (2015).
 
 ---
-
 class: middle
 
 .center.width-50[![](figures/lec4/gaia-model.svg)]
 
-.center[A distance $r\_i$ drawn from the Galaxy, then a parallax $\varpi\_i$ measured<br> with a known uncertainty $\sigma\_i$: the latent variable, the observation<br> and the parameter of this lecture.]
+.center[One $L$ for the whole catalogue, one $r\_i$ per star: the .bold[global] and .bold[local]<br> latent variables of this lecture, with $\varpi\_i$ observed and $\sigma\_i$ known.]
 
-Bayes' rule inverts it, star by star,
-$$p(r\_i \mid \varpi\_i, \sigma\_i, L) \propto \mathcal{N}(\varpi\_i \mid 1/r\_i, \sigma\_i^2) \\, \frac{r\_i^2}{2L^3} \exp(-r\_i/L),$$
-with no closed form, but in one dimension: a grid is enough.
+Everything unobserved is inferred at once,
+$$p(r\_{1:N}, L \mid \varpi\_{1:N}, \sigma\_{1:N}) \propto p(L) \prod\_{i=1}^N p(\varpi\_i \mid r\_i, \sigma\_i) \, p(r\_i \mid L),$$
+a posterior over $N+1$ unknowns. Two questions are worth asking of it.
 
 ???
 
 Nothing here is specific to astronomy. A noisy sensor measuring a quantity you want, plus what you know about where that quantity usually lies, is the same model: a GPS fix against a map, a delivery time against the times of every other delivery, a rating against the ratings of everyone else.
-
 ---
-
 class: middle
 
-.center.width-65[![](figures/lec4/gaia-posteriors.svg)]
+.bold[What do the stars say about the Galaxy?] Integrating out every distance leaves the length scale alone,
+$$p(L \mid \varpi\_{1:N}, \sigma\_{1:N}) \propto p(L) \prod\_{i=1}^N \int p(\varpi\_i \mid r\_i, \sigma\_i) \, p(r\_i \mid L) \, dr\_i,$$
+the marginal likelihood of the catalogue, times the prior.
 
-.center[Three stars of the sample: the parallax speaks when it is precise,<br> the Galaxy when it is not.]
+No single star says anything useful about $L$: one parallax is consistent with almost any Galaxy. Five thousand of them are not.
 
 ???
 
-Top: the parallax is precise, the posterior sits on $1/\varpi$ and the prior is irrelevant. Middle: the parallax is noisy, and the posterior is pulled towards the larger distances the Galaxy makes more likely, past $1/\varpi$. Bottom: the parallax is negative, there is nothing to invert, and what is left is the prior, trimmed by the measurement.
-
+The integral is the one written earlier in the lecture, now read as a function of the unknown it depends on. Each factor is one-dimensional, so a grid per star is enough, and the product runs over the catalogue.
 ---
-
-class: middle
-
-.question[Where does $L$ come from?]
-
-Fixing it makes it a hyperparameter. Letting the stars speak about it makes it a parameter shared by all of them, and the model .bold[hierarchical]: in the diagram, the small square becomes a circle outside the plate, with the local distances $r\_i$ inside.
-
-Its estimate maximizes the marginal likelihood of the catalogue,
-$$p(\varpi\_{1:N} \mid \sigma\_{1:N}, L) = \prod\_{i=1}^N \int p(\varpi\_i \mid r\_i, \sigma\_i) \\, p(r\_i \mid L) \\, dr\_i,$$
-the same integral as before, now read as a function of $L$.
-
-Nothing stops us from putting a prior $p(L)$ on it and keeping a posterior instead, $p(L \mid \varpi\_{1:N}, \sigma\_{1:N}) \propto p(\varpi\_{1:N} \mid \sigma\_{1:N}, L) \, p(L)$. With 5000 stars it would change little, since that posterior is a spike; with fifty it would.
-
-???
-
-Under a flat prior, the curve on the next slide is that posterior on a log scale. Its maximum sits at 1.02 kpc and its width is about 0.014 kpc, an uncertainty of 1.4%, so plugging the maximum into each star's posterior is indistinguishable from integrating over it. Take 50 stars instead of 5000 and the width grows to 0.11 kpc, 12%: there, a single value would hide what we do not know, and $L$ would be sampled along with the distances, as in Lecture 6.
-
----
-
 class: middle
 
 .center.width-65[![](figures/lec4/gaia-length-scale.svg)]
 
-.center[The 5000 stars of the sample, taken together, put the length scale at about 1 kpc.]
-
----
-
-class: middle
-
-One model, and questions at both levels:
-- about a single star, $p(r\_i \mid \varpi\_i, \sigma\_i, L)$ is its distance, with the uncertainty that everything downstream inherits,
-- about the Galaxy, $L$ says how the density of stars thins out along the line of sight, so fitting it direction by direction measures how the Galaxy is shaped around us,
-- about the data still to come, the posterior predictive says which parallaxes the model expects, which is how it gets criticized.
-
-.success[And the two levels feed each other: the 82% of stars whose parallax alone says nothing still get a distance, and still have their say about the Galaxy.]
+.center[The stellar density thins out along these lines of sight with a scale length<br> of $1.03 \pm 0.014$ kpc: a measurement of the shape of the Galaxy.]
 
 ???
 
-No star on its own says anything about $L$; the catalogue does. This is the shape of every hierarchical model: each observation is weak, the population is not.
+This is what makes $L$ worth inferring rather than fixing: it is not a knob, it is a number about the Galaxy, and the posterior says how well 5000 stars pin it down, to about 1.4%.
 
-The value is close to the 1.35 kpc used by Bailer-Jones (2015), which is reassuring, but it is also the answer to a caricature: one length scale for the whole sky, and no correction for the fact that Gaia only sees the stars bright enough to be detected.
+Fitted direction by direction rather than over the whole sky, the same posterior maps how the disk thins out around us, which is what the published catalogue does.
 
+The value sits near the 1.35 kpc used by Bailer-Jones (2015), which is reassuring, but it is also the answer to a caricature: one length scale for the whole sky, and no correction for the fact that Gaia only sees the stars bright enough to be detected. With 50 stars instead of 5000 the posterior would be 0.11 kpc wide, and no one would call it a measurement.
+---
+class: middle
+
+.bold[And where is each star?] The distance of star $i$ comes from the same posterior, with $L$ and the other distances integrated out,
+$$p(r\_i \mid \varpi\_{1:N}, \sigma\_{1:N}) \propto \int p(\varpi\_i \mid r\_i, \sigma\_i) \, p(r\_i \mid L) \, p(L \mid \varpi\_{1:N}, \sigma\_{1:N}) \, dL.$$
+
+Its own parallax speaks when it is precise, and what the catalogue knows about the Galaxy speaks when it is not.
+---
+class: middle
+
+.center.width-65[![](figures/lec4/gaia-posteriors.svg)]
+
+.center[Three stars of the sample, against what the Galaxy alone would say.]
+
+.success[The 82% of stars whose parallax alone says nothing still get a distance, and still have their say about the Galaxy.]
+
+???
+
+Top: the parallax is precise, the posterior sits on $1/\varpi$ and the Galaxy is irrelevant. Middle: the parallax is noisy, and the posterior is pulled towards the larger distances the Galaxy makes more likely, past $1/\varpi$. Bottom: the parallax is negative, there is nothing to invert, and what is left is the Galaxy, trimmed by the measurement.
 ---
 
 class: middle

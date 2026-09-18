@@ -21,7 +21,7 @@ GREY = "#354046"
 LIGHT = "#b8c0c6"
 BLUE = "#0173b2"
 RED = "#c0392b"
-L = 1.35          # length scale of the prior, in kpc
+L_MAX = 5.0       # the prior on the length scale is flat on (0, L_MAX], in kpc
 
 plt.rcParams.update({"font.size": 12, "text.color": GREY, "axes.labelcolor": GREY,
                      "xtick.color": GREY, "ytick.color": GREY, "axes.edgecolor": LIGHT,
@@ -97,28 +97,50 @@ def pick(df, error, snr=None, negative=False):
     return d.iloc[0]
 
 
-def posterior(r, varpi, sigma):
-    """p(r | varpi, sigma) up to a constant, for the exponential prior."""
-    return prior(r) * np.exp(-.5 * ((varpi - 1 / r) / sigma) ** 2)
-
-
-def prior(r, length=L):
+def prior(r, length):
     """An exponentially decreasing space density, with length scale L."""
     return r ** 2 * np.exp(-r / length) / (2 * length ** 3)
 
 
-def posteriors(df):
-    """Three stars of the sample: the parallax speaks, or the prior does."""
+def likelihood(r, varpi, sigma):
+    """p(varpi | r, sigma), the measurement model, as a function of r."""
+    return np.exp(-.5 * ((varpi - 1 / r) / sigma) ** 2) / (sigma * np.sqrt(2 * np.pi))
+
+
+def posterior_length(df, lengths, r=np.geomspace(1e-2, 40, 2000)):
+    """p(L | varpi_1:N, sigma_1:N), up to a constant, under a flat prior on L."""
+    varpi = df.parallax.to_numpy()[:, None]
+    sigma = df.parallax_error.to_numpy()[:, None]
+    like = likelihood(r, varpi, sigma)
+    log = np.array([np.log(np.maximum(np.trapezoid(like * prior(r, length), r, axis=1),
+                                      1e-300)).sum() for length in lengths])
+    density = np.exp(log - log.max())
+    return density / np.trapezoid(density, lengths)
+
+
+def summarize(lengths, density):
+    """The mode and the standard deviation of a posterior on a grid."""
+    mean = np.trapezoid(lengths * density, lengths)
+    var = np.trapezoid((lengths - mean) ** 2 * density, lengths)
+    return lengths[density.argmax()], var ** .5
+
+
+def posteriors(df, lengths, density):
+    """Three stars of the sample: the parallax speaks, or the Galaxy does."""
     stars = [pick(df, error=.02, snr=40), pick(df, error=.3, snr=2),
              pick(df, error=.4, negative=True)]
     titles = ["a well measured parallax", "a noisy parallax",
               "a negative parallax, nothing to invert"]
 
     r = np.linspace(.02, 8, 2000)
+    # p(r_i | everything) integrates the Galaxy model over the posterior of L
+    population = np.trapezoid(prior(r[None, :], lengths[:, None]) * density[:, None],
+                              lengths, axis=0)
     fig, axes = plt.subplots(3, 1, figsize=(5.8, 5.1), dpi=200, sharex=True)
     for ax, star, title in zip(axes, stars, titles):
-        p = posterior(r, star.parallax, star.parallax_error)
-        ax.plot(r, prior(r) / prior(r).max(), color=LIGHT, lw=1.4, label="prior")
+        p = likelihood(r, star.parallax, star.parallax_error) * population
+        ax.plot(r, population / population.max(), color=LIGHT, lw=1.4,
+                label="the Galaxy alone")
         ax.fill_between(r, p / p.max(), color=BLUE, alpha=.25)
         ax.plot(r, p / p.max(), color=BLUE, lw=1.6, label="posterior")
         if star.parallax > 0:
@@ -135,34 +157,23 @@ def posteriors(df):
     save(fig, "figures/lec4/gaia-posteriors.svg")
 
 
-def log_marginal(df, lengths, r=np.linspace(1e-3, 40, 3000)):
-    """log p(varpi_1:N | sigma_1:N, L), the latent distances integrated out."""
-    varpi = df.parallax.to_numpy()[:, None]
-    sigma = df.parallax_error.to_numpy()[:, None]
-    likelihood = np.exp(-.5 * ((varpi - 1 / r) / sigma) ** 2) / (sigma * np.sqrt(2 * np.pi))
-    out = []
-    for length in lengths:
-        marginal = np.trapezoid(likelihood * prior(r, length), r, axis=1)
-        out.append(np.log(np.maximum(marginal, 1e-300)).sum())
-    return np.array(out)
-
-
-def length_scale(df):
-    """The upper level: what the 5000 stars together say about the Galaxy."""
-    lengths = np.linspace(.4, 2.6, 60)
-    curve = log_marginal(df, lengths)
-    best = lengths[curve.argmax()]
-
+def length_scale(lengths, density):
+    """What the 5000 stars together say about the length scale of the Galaxy."""
+    mode, sd = summarize(lengths, density)
     fig, ax = plt.subplots(figsize=(5.8, 3.1), dpi=200)
-    ax.plot(lengths, curve - curve.max(), color=BLUE, lw=1.8)
-    ax.axvline(best, color=RED, lw=1.2, ls=(0, (4, 3)))
-    ax.text(best + .06, -180, r"$\hat{L} = %.2f$ kpc" % best, color=RED, fontsize=11)
+    ax.plot(lengths, density, color=BLUE, lw=1.8)
+    ax.fill_between(lengths, density, color=BLUE, alpha=.2)
+    ax.axvline(mode, color=RED, lw=1.2, ls=(0, (4, 3)))
+    ax.annotate(r"$%.2f \pm %.3f$ kpc" % (mode, sd), (mode, density.max()),
+                (mode + .18, density.max() * .82), color=RED, fontsize=11,
+                arrowprops=dict(arrowstyle="-", color=RED, lw=.8))
     ax.set_xlabel("Length scale $L$ (kpc)")
-    ax.set_ylabel(r"$\log p(\varpi_{1:N} \mid \sigma_{1:N}, L)$, relative")
-    ax.set_ylim(-1200, 60)
+    ax.set_ylabel(r"$p(L \mid \varpi_{1:N}, \sigma_{1:N})$")
+    ax.set_yticks([])
+    ax.set_xlim(lengths[0], lengths[-1])
     fig.tight_layout()
     save(fig, "figures/lec4/gaia-length-scale.svg")
-    print("  maximum marginal likelihood at L = %.2f kpc" % best)
+    print("  L = %.3f +- %.3f kpc, from a prior flat on (0, %.0f]" % (mode, sd, L_MAX))
 
 
 if __name__ == "__main__":
@@ -172,5 +183,8 @@ if __name__ == "__main__":
           % (len(df), 100 * (df.parallax < 0).mean(), 100 * (snr < 5).mean()))
     geometry()
     measurements(df)
-    posteriors(df)
-    length_scale(df)
+    lengths = np.unique(np.concatenate([np.linspace(.4, 2.6, 90),
+                                        np.linspace(.90, 1.15, 260)]))
+    density = posterior_length(df, lengths)
+    posteriors(df, lengths, density)
+    length_scale(lengths, density)

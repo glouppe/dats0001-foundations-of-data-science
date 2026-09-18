@@ -206,7 +206,7 @@ def lda():
 
 
 def gaia():
-    """Distances to stars: a noisy parallax per star, a prior from the Galaxy."""
+    """Distances to stars: a noisy parallax per star, a length scale shared by all."""
     fig, ax = figure()
     node(ax, (0, STEP), r"$r_i$")
     node(ax, (0, 0), r"$\varpi_i$", observed=True)
@@ -214,7 +214,9 @@ def gaia():
     noise = R + GAP + R_SQ                       # the known uncertainty of star i
     stars = plate(ax, [box((0, STEP)), box((0, 0)), box((noise + .35, 0), r=.40)], "$N$")
     hyper(ax, (0, 0), r"$\sigma_i$", R)
-    hyper(ax, (0, STEP), "$L$", stars[2])
+    length = above(stars)
+    node(ax, length, "$L$")
+    arrow(ax, length, (0, STEP))
     return fig, ax, "figures/lec4/gaia-model.svg"
 
 
