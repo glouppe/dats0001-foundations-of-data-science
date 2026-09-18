@@ -522,6 +522,19 @@ Gaia is an ESA satellite that scanned the whole sky repeatedly from 2014 to 2025
 
 class: middle
 
+Distances are what turn a catalogue of angles and brightnesses into physics:
+- an apparent magnitude becomes a luminosity, $M = m - 5 \log\_{10}(r\_i / 10\\,\text{pc})$, which places the star in the Hertzsprung-Russell diagram and so speaks of its mass and its age,
+- a proper motion in milliarcseconds per year becomes a velocity in kilometres per second, from which the mass of the Galaxy, dark matter included, is weighed,
+- the catalogue becomes a three-dimensional map: spiral arms, clusters, streams.
+
+???
+
+Everything downstream inherits the uncertainty on $r\_i$, which is the reason to want a posterior rather than a number.
+
+---
+
+class: middle
+
 .center.width-65[![](figures/lec4/gaia-parallaxes.png)]
 
 .center[A random sample of 5000 stars from Gaia DR3.<br> 17% of the parallaxes are negative, and 82% have $\varpi\_i / \sigma\_i < 5$.]
@@ -615,6 +628,16 @@ class: middle
 .center.width-65[![](figures/lec4/gaia-length-scale.svg)]
 
 .center[The 5000 stars of the sample, taken together, put the length scale at about 1 kpc.]
+
+---
+
+class: middle
+
+$L$ is not a nuisance to be tolerated: it says how the density of stars falls off along the line of sight, so fitting it direction by direction is a measurement of the shape of the Galaxy.
+
+The two levels then feed each other: the catalogue tells each star where stars in general are, and each star, however noisy, contributes to that picture.
+
+.success[This is what a hierarchical model buys: the 82% of stars whose parallax alone says nothing still get a distance, and still have their say about the Galaxy.]
 
 ???
 
