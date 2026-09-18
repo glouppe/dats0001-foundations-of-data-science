@@ -140,9 +140,9 @@ def posteriors(df, lengths, density):
     for ax, star, title in zip(axes, stars, titles):
         p = likelihood(r, star.parallax, star.parallax_error) * population
         ax.plot(r, population / population.max(), color=LIGHT, lw=1.4,
-                label="the Galaxy alone")
+                label="before the parallax")
         ax.fill_between(r, p / p.max(), color=BLUE, alpha=.25)
-        ax.plot(r, p / p.max(), color=BLUE, lw=1.6, label="posterior")
+        ax.plot(r, p / p.max(), color=BLUE, lw=1.6, label="after the parallax")
         if star.parallax > 0:
             ax.axvline(1 / star.parallax, color=RED, lw=1.2, ls=(0, (4, 3)),
                        label=r"$1/\varpi$")
@@ -150,7 +150,7 @@ def posteriors(df, lengths, density):
         ax.set_title(r"%s: $\varpi = %.2f \pm %.2f$ mas"
                      % (title, star.parallax, star.parallax_error),
                      loc="left", fontsize=11, pad=4)
-    axes[0].legend(loc="upper right", fontsize=10, frameon=False, ncols=3)
+    axes[1].legend(loc="upper right", fontsize=10, frameon=False)
     axes[1].set_ylabel("density")
     axes[-1].set_xlabel("Distance $r$ (kpc)")
     fig.tight_layout()

@@ -594,7 +594,7 @@ class: middle
 $$p(L \mid \varpi\_{1:N}, \sigma\_{1:N}) \propto p(L) \prod\_{i=1}^N \int p(\varpi\_i \mid r\_i, \sigma\_i) \, p(r\_i \mid L) \, dr\_i,$$
 the marginal likelihood of the catalogue, times the prior.
 
-No single star says anything useful about $L$: one parallax is consistent with almost any Galaxy. Five thousand of them are not.
+One parallax constrains $L$ almost not at all: a single noisy angle is compatible with nearly any value. Five thousand of them together are not.
 
 ???
 
@@ -619,19 +619,19 @@ class: middle
 .bold[And where is each star?] The distance of star $i$ comes from the same posterior, with $L$ and the other distances integrated out,
 $$p(r\_i \mid \varpi\_{1:N}, \sigma\_{1:N}) \propto \int p(\varpi\_i \mid r\_i, \sigma\_i) \, p(r\_i \mid L) \, p(L \mid \varpi\_{1:N}, \sigma\_{1:N}) \, dL.$$
 
-Its own parallax speaks when it is precise, and what the catalogue knows about the Galaxy speaks when it is not.
+When that parallax is precise, it decides the answer on its own. When it is not, the distance comes mostly from what the whole catalogue has established about where stars sit.
 ---
 class: middle
 
 .center.width-65[![](figures/lec4/gaia-posteriors.svg)]
 
-.center[Three stars of the sample, against what the Galaxy alone would say.]
+.center[Three stars: where each could be knowing only that stars thin out with<br> distance (grey), and where it is once its own parallax is used (blue).]
 
-.success[The 82% of stars whose parallax alone says nothing still get a distance, and still have their say about the Galaxy.]
+.success[Even the 82% of stars whose parallax is too noisy to invert come out with a distance, and still contribute to the estimate of $L$.]
 
 ???
 
-Top: the parallax is precise, the posterior sits on $1/\varpi$ and the Galaxy is irrelevant. Middle: the parallax is noisy, and the posterior is pulled towards the larger distances the Galaxy makes more likely, past $1/\varpi$. Bottom: the parallax is negative, there is nothing to invert, and what is left is the Galaxy, trimmed by the measurement.
+Top: the parallax is precise, so the posterior collapses onto $1/\varpi$ and the grey curve makes no difference. Middle: the parallax is noisy, and the posterior sits between $1/\varpi$ and the larger distances where most stars are. Bottom: the parallax is negative, so there is nothing to invert; what remains is the grey curve, cut back by the little the measurement does rule out.
 ---
 
 class: middle
