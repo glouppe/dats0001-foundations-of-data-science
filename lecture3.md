@@ -275,7 +275,7 @@ class: middle
 
 .center.width-10[![](figures/lec3/ishihara-test.png)]
 
-.alert[Color vision deficiency affects approximately .bold[1 in 12 men] and .bold[1 in 200 women] worldwide. .bold[Color is not a reliable channel for encoding information].] 
+.alert[Color vision deficiency affects approximately .bold[1 in 12 men] and .bold[1 in 200 women] worldwide. .bold[Never let colour alone carry what the reader must not miss]: keep the categories few, pick a colourblind-safe palette, and repeat the distinction with position, shape or a label.] 
 
 ---
 
@@ -341,6 +341,8 @@ class: middle
 .center.width-80[![](figures/lec3/scale-log.png)]
 
 .center[Showing data on a logarithmic scale can prevent large values from dominating the visualization and reveal patterns among smaller values.]
+
+.center[It also hides absolute differences, cannot show zero or negative values,<br> and is read as linear by an audience that does not expect it.]
 
 .footnote[Data: `data/countries.csv`.]
 
@@ -425,6 +427,8 @@ class: middle
 
 .center[Same data! .bold[Lengths and positions are easier to compare] than angles and areas.]
 
+.center[A pie is readable for two or three slices adding up to a whole.<br> Beyond that, it asks the reader to compare angles.]
+
 ---
 
 
@@ -448,6 +452,10 @@ class: middle
 
 .center[.bold[Do not exaggerate reality] by truncating axes or using misleading aspect ratios.]
 
+???
+
+The rule follows from the encoding: a bar encodes a value as a length, so cutting its baseline lies. The next slide makes the distinction.
+
 .footnote[Credits: John Muyskens, [Most of Trump's charts skew the data](https://www.washingtonpost.com/graphics/politics/2016-election/trump-charts/), The Washington Post, 2016.]
 
 ---
@@ -460,6 +468,16 @@ class: middle
 ]
 
 .footnote[Credits: John Muyskens, [Most of Trump's charts skew the data](https://www.washingtonpost.com/graphics/politics/2016-election/trump-charts/), The Washington Post, 2016.]
+
+---
+
+class: middle
+
+## Zero belongs under bars
+
+.center.width-95[![](figures/lec3/axis-zero.png)]
+
+A bar encodes a value as a length, so its baseline must be zero. A dot or a line encodes a position, and may show a narrow range: temperature anomalies of a degree do not need an axis starting at zero.
 
 ---
 
@@ -482,6 +500,8 @@ class: middle
 </video>]
 
 .center[.bold[Maximize the data-ink ratio] by removing unnecessary elements.]
+
+.center[Up to a point: grid lines help read values off a scale,<br> and a memorable chart is sometimes worth more ink (Bateman et al., 2010).]
 
 .footnote[Credits: Joey Cherdarchuk, [Data looks better naked](https://www.darkhorseanalytics.com/blog/data-looks-better-naked).]
 
