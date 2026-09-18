@@ -2,3 +2,4 @@ TODO.md
 CLAUDE.md
 .venv/
 .ipynb_checkpoints/
+__pycache__/
