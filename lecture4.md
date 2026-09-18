@@ -190,7 +190,7 @@ The graphical model illustrates the structure of the factorization of the joint 
 
 class: middle
 
-.center[![](figures/lec4/fig3a.svg)]
+.center.width-45[![](figures/lec4/lvm-unrolled.png)]
 
 $$p(\mathbf{x}\_{1:3}, \mathbf{z}\_{1:3}, \theta) = \left( \prod\_{i=1}^3 p(\mathbf{x}\_i \mid \mathbf{z}\_i) p(\mathbf{z}\_i \mid \theta) \right) p(\theta)$$
 
@@ -202,7 +202,7 @@ Here $\mathbf{x}\_i$ depends on $\theta$ only through $\mathbf{z}\_i$. In genera
 
 class: middle
 
-.center[![](figures/lec4/fig3b.svg)]
+.center.width-25[![](figures/lec4/lvm-plate.png)]
 
 .center[Plate notation can be used to compactly represent<br> repeated structures in the graphical model.] 
 
@@ -229,7 +229,7 @@ $$p(\mathbf{z} \mid \theta, \beta).$$
 
 class: middle
 
-.center[![](figures/lec4/fig3b-hyperparams.svg)]
+.center.width-35[![](figures/lec4/lvm-plate-hyper.png)]
 
 .center[Small squares denote fixed hyperparameters.]
 
@@ -257,7 +257,7 @@ class: middle
 
 In probabilistic PCA, each observation $\mathbf{x}\_i \in \mathbb{R}^d$ is assumed to be generated from a lower-dimensional latent variable $\mathbf{z}\_i \in \mathbb{R}^m$ through a linear transformation plus Gaussian noise.
 
-.center[![](figures/lec4/pca.svg)]
+.center.width-55[![](figures/lec4/ppca-model.png)]
 
 ---
 
@@ -354,7 +354,7 @@ class: middle
 
 Mixture models assume that data are generated from a mixture of several underlying distributions, each corresponding to a different cluster or component.
 
-.center[![](figures/lec4/mixture.svg)]
+.center.width-50[![](figures/lec4/mixture-model.png)]
 
 ---
 
