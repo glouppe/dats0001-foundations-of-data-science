@@ -168,6 +168,82 @@ def colormap_types(df):
     save(fig, "figures/lec3/colormap-types.png")
 
 
+def encoding_examples(df):
+    """The same data encoded with more and more channels."""
+    fig, axes = plt.subplots(1, 4, figsize=(15, 3.6), dpi=200)
+    means = df.groupby("species").body_mass_g.mean().reindex(SPECIES)
+    axes[0].bar(SPECIES, means.values, color="#8c9196")
+    axes[0].set_ylabel("Mean body mass [g]")
+    axes[0].set_title("(a) bar chart", fontsize=12, loc="left")
+    axes[0].tick_params(axis="x", labelrotation=20)
+
+    axes[1].scatter(df.flipper_length_mm, df.body_mass_g, s=14, color="#8c9196")
+    axes[1].set_title("(b) scatter plot", fontsize=12, loc="left")
+
+    for species in SPECIES:
+        d = df[df.species == species]
+        axes[2].scatter(d.flipper_length_mm, d.body_mass_g, s=14, alpha=.8, color=COLOR[species])
+        axes[3].scatter(d.flipper_length_mm, d.body_mass_g, alpha=.6, color=COLOR[species],
+                        s=(d.bill_length_mm - 30) ** 1.6 / 4)
+    axes[2].set_title("(c) + colour", fontsize=12, loc="left")
+    axes[3].set_title("(d) + size", fontsize=12, loc="left")
+
+    for ax in axes[1:]:
+        ax.set_xlabel("Flipper length [mm]")
+        ax.set_ylabel("Body mass [g]")
+    for ax in axes:
+        ax.spines[["top", "right"]].set_visible(False)
+    save(fig, "figures/lec3/encoding-examples.png")
+
+
+def popout(seed=3):
+    """Colour pops out; a conjunction of colour and shape does not."""
+    rng = np.random.default_rng(seed)
+    xy = rng.uniform(0, 1, size=(80, 2))
+    target, others = xy[0], xy[1:]
+    fig, (single, conj) = plt.subplots(1, 2, figsize=(10, 4.4), dpi=200)
+
+    single.scatter(others[:, 0], others[:, 1], s=90, color="#b8c0c6")
+    single.scatter(*target, s=90, color=RED)
+    single.set_title("One channel: the red point pops out", fontsize=12, loc="left")
+
+    half = len(others) // 2
+    conj.scatter(others[:half, 0], others[:half, 1], s=90, color="#b8c0c6", marker="s")
+    conj.scatter(others[half:, 0], others[half:, 1], s=90, color=RED, marker="o")
+    conj.scatter(*target, s=90, color=RED, marker="s")
+    conj.set_title("Two channels at once: the red square must be searched", fontsize=12, loc="left")
+
+    for ax in (single, conj):
+        ax.set_xticks([])
+        ax.set_yticks([])
+        ax.set_xlim(-.08, 1.08)
+        ax.set_ylim(-.08, 1.08)
+        for spine in ax.spines.values():
+            spine.set_visible(False)
+    save(fig, "figures/lec3/popout.png")
+
+
+def scales(countries):
+    """The same populations on a linear and on a logarithmic scale."""
+    names = ["China", "India", "United States", "Brazil", "Germany", "Belgium",
+             "Luxembourg", "Iceland", "Malta"]
+    df = countries.assign(Country=countries.Country.str.strip())
+    df = df[df.Country.isin(names)].sort_values("Population")
+    assert len(df) == len(names), sorted(set(names) - set(df.Country))
+
+    for kind, path, note in [("linear", "figures/lec3/scale-linear.png", None),
+                             ("log", "figures/lec3/scale-log.png", None)]:
+        fig, ax = plt.subplots(figsize=(8.5, 4.2), dpi=200)
+        ax.scatter(df.Population, df.Country, s=70, color="#0173b2", zorder=3)
+        ax.set_xscale(kind)
+        ax.set_xlabel("Population")
+        ax.grid(axis="x", alpha=.3)
+        ax.spines[["top", "right", "left"]].set_visible(False)
+        ax.tick_params(axis="y", length=0)
+        ax.set_title(f"{kind.capitalize()} scale", fontsize=12, loc="left")
+        save(fig, path)
+
+
 if __name__ == "__main__":
     penguins = pd.read_csv("data/penguins.csv").dropna(subset=["flipper_length_mm", "body_mass_g"])
     hsv_model()
@@ -175,3 +251,6 @@ if __name__ == "__main__":
     four_questions(penguins)
     anatomy(penguins)
     colormap_types(penguins)
+    encoding_examples(penguins)
+    popout()
+    scales(pd.read_csv("data/countries.csv"))

@@ -174,14 +174,12 @@ class: middle
 
 class: middle
 
-.center.width-100[![](figures/lec3/plots.png)]
+.center.width-100[![](figures/lec3/encoding-examples.png)]
 
 (a) Bar charts encode data using line marks, controlled by a vertical position channel (height) and a horizontal position channel (category).
 (b) Scatterplots encode data using point marks, controlled by two position channels (x and y).
 (c) A third variable can be encoded using a color channel.
 (d) A fourth variable can be encoded using a size channel (area of the point).
-
-.footnote[Credits: T. Munzner, "Visualization Analysis and Design", 2014.]
 
 ---
 
@@ -289,9 +287,9 @@ class: middle
 
 Finally, colors can also be used to .bold[draw attention] to specific elements in a visualization, such as highlighting important data points or trends.
 
-.center.width-60[![](figures/lec3/popout.png)]
+.center.width-90[![](figures/lec3/popout.png)]
 
-.footnote[Credits: T. Munzner, "Visualization Analysis and Design", 2014.]
+.center[A single channel pops out at a glance; two channels at once must be searched.]
 
 ---
 
@@ -310,21 +308,21 @@ Sometimes, data spans several orders of magnitude or has a skewed distribution. 
 
 class: middle
 
-.center.width-70[![](figures/lec3/distance-from-boston-linear.png)]
+.center.width-80[![](figures/lec3/scale-linear.png)]
 
 .center[Linear scales can be dominated by large values, dwarfing smaller values and making it hard to see small variations.]
 
-.footnote[Data source: [Effective data visualization](https://badriadhikari.github.io/data-viz-workshop-2021/log/), USML, 2021.]
+.footnote[Data: `data/countries.csv`.]
 
 ---
 
 class: middle
 
-.center.width-70[![](figures/lec3/distance-from-boston-log.png)]
+.center.width-80[![](figures/lec3/scale-log.png)]
 
 .center[Showing data on a logarithmic scale can prevent large values from dominating the visualization and reveal patterns among smaller values.]
 
-.footnote[Data source: [Effective data visualization](https://badriadhikari.github.io/data-viz-workshop-2021/log/), USML, 2021.]
+.footnote[Data: `data/countries.csv`.]
 
 ---
 
