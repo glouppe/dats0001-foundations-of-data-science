@@ -200,10 +200,11 @@ class: middle
 
 .success[Bold marks an object holding more than one number. Plain marks a single one.]
 
+- $\mathbf{x}$ is a measurement, $\mathcal{X}$ the space it lives in.
 - $\mathbf{X} \in \mathbb{R}^{N \times d}$ is the data frame, with $N$ records indexed by $i$ and $d$ variables indexed by $j$.
-- $\mathbf{x}\_i$ is a record, the $i$-th row; $\mathbf{x}\_j$ is the column of variable $j$; the index letter says which.
-- $x\_{ij}$ is a single entry, $x\_j$ a single variable seen as a random quantity.
-- $\mathbf{x}$ is a generic measurement, $\mathcal{X}$ the space it lives in.
+- $\mathbf{x}\_i$ is a record, the $i$-th row of $\mathbf{X}$; $x\_{ij}$ is a single entry.
+
+Later in the lecture, $\mathbf{x}\_j$ denotes the column of variable $j$: the index letter says whether a row or a column is meant.
 
 ---
 
