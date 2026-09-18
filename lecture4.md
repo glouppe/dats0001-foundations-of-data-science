@@ -555,26 +555,18 @@ A negative parallax is not a broken measurement: it is a noisy measurement of a 
 
 class: middle
 
-.bold[Geometry.] The parallax of a star at distance $r\_i$ is exactly $1/r\_i$. There is no modelling freedom here: it is what a parallax is.
+.bold[Geometry.] The parallax of a star at distance $r\_i$ is exactly $1/r\_i$. No modelling freedom here: it is what a parallax is.
 
-.bold[The instrument.] Gaia does not report the angle, but an estimate of it, with an uncertainty $\sigma\_i$ computed star by star. Modelling those errors as unbiased and Gaussian gives
+.bold[The instrument.] Gaia reports an estimate of that angle, with an uncertainty $\sigma\_i$ computed star by star. Modelling its errors as unbiased and Gaussian gives
 $$p(\varpi\_i \mid r\_i, \sigma\_i) = \mathcal{N}(\varpi\_i \mid 1/r\_i, \sigma\_i^2),$$
 which is why a measured parallax can be negative while a distance cannot.
+
+.bold[The Galaxy.] Stars are not spread evenly: a shell at distance $r$ has a volume growing like $r^2$, and their density thins out with distance, modelled as an exponential of scale length $L$,
+$$p(r\_i \mid L) = \frac{r\_i^2}{2L^3} \exp(-r\_i / L), \qquad r\_i > 0.$$
 
 ???
 
 The real instrument is messier still: Gaia's parallaxes carry a small systematic offset, of the order of $-17$ microarcseconds, which careful work corrects for before anything else. Another piece of domain knowledge, and another term in the model.
-
----
-
-class: middle
-
-.bold[The Galaxy.] Stars are not spread evenly through space. Geometry gives a shell at distance $r$ a volume growing like $r^2$, and the density of stars thins out with distance, which we model as an exponential of scale length $L$. Together,
-$$p(r\_i \mid L) = \frac{r\_i^2}{2L^3} \exp(-r\_i / L), \qquad r\_i > 0.$$
-
-.success[Each piece comes from somewhere: the definition of a parallax, the error model of the instrument, the way stars fill the Galaxy.]
-
-???
 
 The $2L^3$ normalizes the prior. This exponentially decreasing space density prior is from Bailer-Jones (2015).
 
@@ -584,18 +576,11 @@ class: middle
 
 .center.width-50[![](figures/lec4/gaia-model.svg)]
 
-.center[For each star, a distance $r\_i$ drawn from the Galaxy,<br> then a parallax $\varpi\_i$ measured with a known uncertainty $\sigma\_i$.]
+.center[A distance $r\_i$ drawn from the Galaxy, then a parallax $\varpi\_i$ measured<br> with a known uncertainty $\sigma\_i$: the latent variable, the observation<br> and the parameter of this lecture.]
 
-.success[$r\_i$ is the latent variable of the lecture, $\varpi\_i$ the observation, $L$ the parameter. Each is a single number here, hence no bold.]
-
----
-
-class: middle
-
-For each star, Bayes' rule gives
-$$p(r\_i \mid \varpi\_i, \sigma\_i, L) \propto \mathcal{N}(\varpi\_i \mid 1/r\_i, \sigma\_i^2) \\, \frac{r\_i^2}{2L^3} \exp(-r\_i/L).$$
-
-There is no closed form, but the posterior is one-dimensional: a grid is enough.
+Bayes' rule inverts it, star by star,
+$$p(r\_i \mid \varpi\_i, \sigma\_i, L) \propto \mathcal{N}(\varpi\_i \mid 1/r\_i, \sigma\_i^2) \\, \frac{r\_i^2}{2L^3} \exp(-r\_i/L),$$
+with no closed form, but in one dimension: a grid is enough.
 
 ---
 
@@ -615,19 +600,11 @@ class: middle
 
 .question[Where does $L$ come from?]
 
-Fixing it makes it a hyperparameter. Letting the stars speak about it makes it a parameter shared by all of them, and the model .bold[hierarchical]: local distances $r\_i$ inside the plate, a global $L$ outside.
+Fixing it makes it a hyperparameter. Letting the stars speak about it makes it a parameter shared by all of them, and the model .bold[hierarchical]: in the diagram, the small square becomes a circle outside the plate, with the local distances $r\_i$ inside.
 
 Its estimate maximizes the marginal likelihood of the catalogue,
 $$p(\varpi\_{1:N} \mid \sigma\_{1:N}, L) = \prod\_{i=1}^N \int p(\varpi\_i \mid r\_i, \sigma\_i) \\, p(r\_i \mid L) \\, dr\_i,$$
 the same integral as before, now read as a function of $L$. Estimating a hyperparameter this way is .bold[empirical Bayes], promised in the footnote of the hyperparameters slide.
-
----
-
-class: middle
-
-.center.width-50[![](figures/lec4/gaia-model-learned.svg)]
-
-.center[The square becomes a circle: what was fixed is now inferred,<br> from all the stars at once.]
 
 ---
 

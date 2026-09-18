@@ -205,12 +205,8 @@ def lda():
     return fig, ax, "figures/lec4/lda-model.svg"
 
 
-def gaia(learned=False):
-    """Distances to stars: a noisy parallax per star, a prior from the Galaxy.
-
-    With `learned`, the length scale of that prior becomes a parameter shared by
-    all the stars, which is what makes the model hierarchical.
-    """
+def gaia():
+    """Distances to stars: a noisy parallax per star, a prior from the Galaxy."""
     fig, ax = figure()
     node(ax, (0, STEP), r"$r_i$")
     node(ax, (0, 0), r"$\varpi_i$", observed=True)
@@ -218,18 +214,13 @@ def gaia(learned=False):
     noise = R + GAP + R_SQ                       # the known uncertainty of star i
     stars = plate(ax, [box((0, STEP)), box((0, 0)), box((noise + .35, 0), r=.40)], "$N$")
     hyper(ax, (0, 0), r"$\sigma_i$", R)
-    if learned:
-        length = (0, stars[3] + GAP + R)
-        node(ax, length, "$L$")
-        arrow(ax, length, (0, STEP))
-    else:
-        hyper(ax, (0, STEP), "$L$", stars[2])
-    return fig, ax, "figures/lec4/gaia-model%s.svg" % ("-learned" if learned else "")
+    hyper(ax, (0, STEP), "$L$", stars[2])
+    return fig, ax, "figures/lec4/gaia-model.svg"
 
 
 if __name__ == "__main__":
     drawings = [unrolled(), plated(), plated(with_hyper=True), ppca(), mixture(), lda(),
-                gaia(), gaia(learned=True)]
+                gaia()]
     boxes = [measure(fig, ax) for fig, ax, _ in drawings]
     width = max(x1 - x0 for x0, _, x1, _ in boxes) + 2 * MARGIN
     for (fig, ax, path), (x0, y0, x1, y1) in zip(drawings, boxes):
