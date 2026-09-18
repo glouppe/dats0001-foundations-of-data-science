@@ -401,12 +401,15 @@ For instance, in mixed membership models of text documents (.bold[latent dirichl
 
 ???
 
-- K is the number of topics,
-- M is the number of documents,
-- N is the number of words in a document,
-- $\theta\_m$ are the topic proportions for document $m$,
+This example keeps the classic LDA notation of the literature, which does not match the rest of the deck: here $M$ counts documents and $N$ words within a document, and $\theta\_m$ is a per-document latent variable, not the global parameters.
+
+- $K$ is the number of topics,
+- $M$ is the number of documents,
+- $N$ is the number of words in a document,
+- $\theta\_m$ are the topic proportions for document $m$, drawn once per document,
 - $z\_{m,n}$ is the topic assignment for word $n$ in document $m$,
-- $x\_{m,n}$ is the observed word.
+- $x\_{m,n}$ is the observed word,
+- $\mu\_k$ is the distribution over words of topic $k$.
 
 ---
 
