@@ -510,9 +510,9 @@ class: middle
 
 ## Example 4: How far are the stars?
 
-Gaia measured the .bold[parallax] of 1.47 billion stars: the angle that the radius of Earth's orbit subtends at the star. Geometry ties it to the distance,
-$$\varpi = \frac{1}{r},$$
-with $\varpi$ in milliarcseconds and $r$ in kiloparsecs.
+Gaia measured the .bold[parallax] of 1.47 billion stars: the angle that the radius of Earth's orbit subtends at the star, which shrinks as the star gets further away,
+$$\varpi = \frac{1}{r}.$$
+The units make it exact: $\varpi$ in milliarcseconds (a thousandth of an arcsecond) and $r$ in kiloparsecs (about 3260 light-years).
 
 .center.width-65[![](figures/lec4/parallax-geometry.svg)]
 
@@ -520,7 +520,7 @@ with $\varpi$ in milliarcseconds and $r$ in kiloparsecs.
 
 ???
 
-At 1 kpc, the angle is one milliarcsecond: a two-euro coin seen from 5000 km.
+An arcsecond is 1/3600 of a degree, so a milliarcsecond is a very small angle: at 1 kpc it is what a two-euro coin subtends from 5000 km away.
 
 Gaia is an ESA satellite that scanned the whole sky repeatedly from 2014 to 2025. Its distances underpin much of what we now know about the Galaxy.
 
@@ -529,11 +529,13 @@ Gaia is an ESA satellite that scanned the whole sky repeatedly from 2014 to 2025
 class: middle
 
 Distances are what turn a catalogue of angles and brightnesses into physics:
-- an apparent magnitude becomes a luminosity, $M = m - 5 \log\_{10}(r\_i / 10\\,\text{pc})$, which places the star in the Hertzsprung-Russell diagram and so speaks of its mass and its age,
-- a proper motion in milliarcseconds per year becomes a velocity in kilometres per second, from which the mass of the Galaxy, dark matter included, is weighed,
+- how bright a star looks depends both on how bright it is and on how far it sits; the distance separates the two, and the intrinsic brightness is what tells the star's mass and age,
+- how fast it drifts across the sky, an angle per year, becomes a speed in kilometres per second, from which the mass of the Galaxy, dark matter included, is weighed,
 - the catalogue becomes a three-dimensional map: spiral arms, clusters, streams.
 
 ???
+
+The first one is the distance modulus, $M = m - 5 \log\_{10}(r / 10\\,\text{pc})$, and the diagram it feeds is the Hertzsprung-Russell diagram, the workhorse of stellar physics.
 
 Everything downstream inherits the uncertainty on $r\_i$, which is the reason to want a posterior rather than a number.
 
@@ -582,6 +584,10 @@ Bayes' rule inverts it, star by star,
 $$p(r\_i \mid \varpi\_i, \sigma\_i, L) \propto \mathcal{N}(\varpi\_i \mid 1/r\_i, \sigma\_i^2) \\, \frac{r\_i^2}{2L^3} \exp(-r\_i/L),$$
 with no closed form, but in one dimension: a grid is enough.
 
+???
+
+Nothing here is specific to astronomy. A noisy sensor measuring a quantity you want, plus what you know about where that quantity usually lies, is the same model: a GPS fix against a map, a delivery time against the times of every other delivery, a rating against the ratings of everyone else.
+
 ---
 
 class: middle
@@ -620,7 +626,7 @@ class: middle
 
 One model, and questions at both levels:
 - about a single star, $p(r\_i \mid \varpi\_i, \sigma\_i, L)$ is its distance, with the uncertainty that everything downstream inherits,
-- about the Galaxy, $L$ says how the density of stars thins out along the line of sight, so fitting it direction by direction measures the shape of the disk,
+- about the Galaxy, $L$ says how the density of stars thins out along the line of sight, so fitting it direction by direction measures how the Galaxy is shaped around us,
 - about the data still to come, the posterior predictive says which parallaxes the model expects, which is how it gets criticized.
 
 .success[And the two levels feed each other: the 82% of stars whose parallax alone says nothing still get a distance, and still have their say about the Galaxy.]
