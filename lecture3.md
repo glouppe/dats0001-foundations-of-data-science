@@ -280,6 +280,20 @@ Perceptually uniform colormaps ensure that equal steps in data are perceived as 
 
 .footnote[Credits: [Choosing colormaps in Matplotlib](https://matplotlib.org/stable/users/explain/colors/colormaps.html).]
 
+---
+
+class: middle
+
+.center.width-95[![](figures/lec3/rainbow-crameri.png)]
+
+.center[.bold[Rainbow colormaps invent structure.] The same three images: as they are (a), in jet (b), and in a perceptually uniform map (c).<br> Jet adds edges and bands that are not in the data, and hides variation elsewhere.]
+
+.footnote[Credits: [Crameri, Shephard & Heron](https://doi.org/10.1038/s41467-020-19160-7), Nature Communications, 2020, Fig. 1 (CC BY 4.0).]
+
+???
+
+The trick of the figure: you already know what a face, the Earth and an apple look like, so the distortion is obvious. On data you have never seen, the same distortion passes unnoticed.
+
 ???
 
 They should be preferred over non-uniform colormaps (jet, rainbow) that can mislead interpretation.
@@ -393,6 +407,16 @@ A bar with an error bar shows a mean and a width, and hides everything else. Sho
 
 .alert[An error bar means nothing until the caption says what it is: here the same Adelie mean carries ±459 g, ±37 g or ±73 g, depending on whether the bar is a standard deviation, a standard error or a 95% interval.]
 
+---
+
+class: middle
+
+.center.width-65[![](figures/lec3/spaghetti-ensemble.png)]
+
+.center[Ten forecasts of the same contour, three days ahead. Too many lines, deliberately&#58;<br> the message is the spread, and the annotation says where it matters.]
+
+.footnote[Credits: NOAA/NCEP [Environmental Modeling Center](https://www.emc.ncep.noaa.gov/), 500 hPa ensemble forecast, 19 November 2001 (public domain).]
+
 ???
 
 From Lecture 7 on, the same holds for what a model predicts.
@@ -403,6 +427,20 @@ From Lecture 7 on, the same holds for what a model predicts.
 class: middle
 
 # Anti-patterns 
+
+---
+
+class: middle
+
+.center.width-45[![](figures/lec3/challenger-oring.jpg)]
+
+.center[.bold[Do not plot a subset.] Above, the flights with O-ring damage, the chart used the night before the launch.<br> Below, the same plot with the flights without damage added back.]
+
+.footnote[Credits: [Report of the Presidential Commission on the Space Shuttle Challenger Accident](https://www.nasa.gov/history/rogersrep/v1ch6.htm), 1986, Vol. 1, p. 146.]
+
+???
+
+Challenger launched at 31°F, far colder than any flight on this chart. In the upper panel there is no pattern to see; in the lower one, every flight below 65°F had damage. The data existed, and the plot that showed it was made after the accident.
 
 ---
 
