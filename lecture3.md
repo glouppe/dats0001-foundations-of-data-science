@@ -436,20 +436,6 @@ class: middle
 
 class: middle
 
-.center.width-45[![](figures/lec3/challenger-oring.jpg)]
-
-.center[.bold[Do not plot a subset.] Above, only the flights that had damage; below, all of them.]
-
-.footnote[Credits: [Report of the Presidential Commission on the Space Shuttle Challenger Accident](https://www.nasa.gov/history/rogersrep/v1ch6.htm), 1986, Vol. 1, p. 146.]
-
-???
-
-Challenger launched at 31°F, far colder than any flight on this chart. In the upper panel there is no pattern to see; in the lower one, every flight below 65°F had damage. The data existed, and the plot that showed it was made after the accident.
-
----
-
-class: middle
-
 .center.width-60[![](figures/lec3/pie-chart.png)]
 
 .center[What category is the largest?]
@@ -536,6 +522,20 @@ class: middle
 Antoine de Saint-Exupéry: "Perfection is achieved, not when there is nothing more to add, but when there is nothing left to take away."
 
 Up to a point: grid lines help read values off a scale, and a memorable chart is sometimes worth more ink (Bateman et al., 2010).
+
+---
+
+class: middle
+
+.center.width-45[![](figures/lec3/challenger-oring.jpg)]
+
+.center[.bold[Do not plot a subset.] Above, only the flights that had damage; below, all of them.]
+
+.footnote[Credits: [Report of the Presidential Commission on the Space Shuttle Challenger Accident](https://www.nasa.gov/history/rogersrep/v1ch6.htm), 1986, Vol. 1, p. 146.]
+
+???
+
+Challenger launched at 31°F, far colder than any flight on this chart. In the upper panel there is no pattern to see; in the lower one, every flight below 65°F had damage. The data existed, and the plot that showed it was made after the accident.
 
 ---
 
