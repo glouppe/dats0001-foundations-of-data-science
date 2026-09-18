@@ -127,7 +127,15 @@ class: middle
 Fitting a Bayesian model to observed data $\mathbf{x}\_\text{obs}$ consists in computing the posterior distribution of the parameters given the data. Using Bayes' rule,
 $$p(\theta \mid \mathbf{x}\_\text{obs}) = \frac{p(\mathbf{x}\_\text{obs} \mid \theta) p(\theta)}{p(\mathbf{x}\_\text{obs})}.$$
 
+Where the Frequentist framework estimates a single value $\hat{\theta}$, the Bayesian framework infers a distribution over $\Theta$: how plausible each member of $\mathcal{P}$ is, in light of the data and of the prior.
+
 Depending on the structure of the model, this computation may be easy, difficult, or even intractable.
+
+???
+
+The posterior lives inside the model just as $\theta^\*$ does: it is conditional on the family $\mathcal{P}$ and on the prior, and says nothing about what lies outside them. As the data grow, it concentrates on the member of $\mathcal{P}$ closest to $p\_r$, the same limit the maximum likelihood estimate reaches, and on $\theta^\*$ when the family contains $p\_r$.
+
+Note also what each framework is uncertain about. A confidence region is a statement about the procedure, over repeated data sets; the posterior is a statement about $\theta$, for the data set at hand.
 
 ---
 
