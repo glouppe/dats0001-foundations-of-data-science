@@ -241,7 +241,9 @@ Fitting a latent variable model to observed data $\mathbf{x}\_\text{obs}$ consis
 $$p(\mathbf{z}, \theta \mid \mathbf{x}\_\text{obs}) = \frac{p(\mathbf{x}\_\text{obs} \mid \mathbf{z}, \theta) p(\mathbf{z} \mid \theta) p(\theta)}{p(\mathbf{x}\_\text{obs})}.$$
 
 The posterior distribution is used to examine the particular hidden structure that is manifested in the observed data. It can also be used to make predictions about new, unseen data, through the posterior predictive distribution,
-$$p(\mathbf{x}\_\text{new} \mid \mathbf{x}\_\text{obs}) = \iint p(\mathbf{x}\_\text{new} \mid \mathbf{z}, \theta) p(\mathbf{z}, \theta \mid \mathbf{x}\_\text{obs}) d\mathbf{z} d\theta.$$
+$$p(\mathbf{x}\_\text{new} \mid \mathbf{x}\_\text{obs}) = \iint p(\mathbf{x}\_\text{new} \mid \mathbf{z}\_\text{new}, \theta) p(\mathbf{z}\_\text{new} \mid \theta) p(\theta \mid \mathbf{x}\_\text{obs}) \, d\mathbf{z}\_\text{new} \, d\theta.$$
+
+A new observation comes with its own latent variable $\mathbf{z}\_\text{new}$, drawn from the model; only the parameters are informed by the data already seen.
 
 ---
 
