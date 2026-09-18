@@ -545,13 +545,15 @@ class: middle
 
 .center.width-65[![](figures/lec4/gaia-parallaxes.png)]
 
-.center[A random sample of 5000 stars from Gaia DR3.<br> 17% of the parallaxes are negative, and 82% have $\varpi\_i / \sigma\_i < 5$.]
+.center[A random sample of 5000 stars from Gaia DR3. For 82% of them $\varpi\_i / \sigma\_i < 5$,<br> and for the 17% below the line $1/\varpi\_i$ is not even a distance.]
 
 .footnote[Data: ESA/Gaia/DPAC, Gaia DR3.]
 
 ???
 
 A negative parallax is not a broken measurement: it is a noisy measurement of a small positive angle. Keeping only the stars with a good parallax, or inverting those alone, quietly restricts the sample to the nearby ones.
+
+So the naive estimate is useless for most of the catalogue. The rest of the example is about what these noisy measurements are still worth, one by one and all together.
 
 ---
 
