@@ -260,7 +260,7 @@ $$p(\theta \mid \alpha),$$
 or the prior distribution of latent variables may depend on hyperparameters,
 $$p(\mathbf{z} \mid \theta, \beta).$$
 
-.footnote[1: Estimating hyperparameters from data is possible; this is empirical Bayes, seen in Example 4 and in Lecture 8.]
+.footnote[1: Estimating hyperparameters from data is possible; this is empirical Bayes, discussed in Lecture 8.]
 
 ---
 
@@ -604,7 +604,7 @@ Fixing it makes it a hyperparameter. Letting the stars speak about it makes it a
 
 Its estimate maximizes the marginal likelihood of the catalogue,
 $$p(\varpi\_{1:N} \mid \sigma\_{1:N}, L) = \prod\_{i=1}^N \int p(\varpi\_i \mid r\_i, \sigma\_i) \\, p(r\_i \mid L) \\, dr\_i,$$
-the same integral as before, now read as a function of $L$. Estimating a hyperparameter this way is .bold[empirical Bayes], promised in the footnote of the hyperparameters slide.
+the same integral as before, now read as a function of $L$.
 
 ---
 
