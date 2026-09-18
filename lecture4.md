@@ -196,6 +196,8 @@ $$p(\mathbf{x}\_{1:3}, \mathbf{z}\_{1:3}, \theta) = \left( \prod\_{i=1}^3 p(\mat
 
 Shaded nodes represent observed variables, unshaded nodes represent latent variables or parameters.
 
+Here $\mathbf{x}\_i$ depends on $\theta$ only through $\mathbf{z}\_i$. In general, $\theta$ may also point directly at $\mathbf{x}\_i$, as in both examples of this lecture.
+
 ---
 
 class: middle
