@@ -580,8 +580,6 @@ class: middle
 
 .center.width-50[![](figures/lec4/gaia-model.svg)]
 
-.center[One $L$ for the whole catalogue, one $r\_i$ per star,<br> with $\varpi\_i$ observed and $\sigma\_i$ known.]
-
 Everything unobserved is inferred at once,
 $$p(r\_{1:N}, L \mid \varpi\_{1:N}, \sigma\_{1:N}) \propto p(L) \prod\_{i=1}^N p(\varpi\_i \mid r\_i, \sigma\_i) \, p(r\_i \mid L),$$
 a posterior over $N+1$ unknowns. Two questions are worth asking of it.
