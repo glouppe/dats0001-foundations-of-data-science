@@ -10,14 +10,14 @@ Prof. Gilles Louppe<br>
 
 ???
 
-An example to open with, back to the gravitational waves of Lecture 1.
+An example to open with: the distances to the stars Gaia measures.
 
-- A merger is heard once, and what its two black holes weigh is never observed: it is inferred from the waveform, as a posterior over the masses, spins and distance of that event. These are the local latent variables, one set per event.
-- The question astrophysicists ask is about the population: how black hole masses are distributed, how often mergers happen, how that rate changes with redshift. These are the global parameters, shared by every event.
-- Both levels are fitted together, hierarchically: each event informs the population, and the population acts as a prior on each event. The analysis also has to correct for what the detectors can hear, since loud, heavy and nearby mergers are over-represented in the catalogue.
-- With the 158 mergers of the fourth catalogue, the inferred mass spectrum is not featureless: it peaks near 10 and near 33 solar masses, and formation scenarios now have to explain those peaks.
+- Gaia reports a parallax for each of 1.47 billion stars, with its uncertainty. What astronomers want is the distance, and it is never observed. Most of these stars are so faint or so far that the parallax is too noisy to invert, and some of the measured parallaxes are even negative.
+- The model: the distance $r\_i$ of star $i$ is a latent variable, the measured parallax is $1/r\_i$ plus noise of known width, and the prior on $r\_i$ says where stars actually sit, from a three-dimensional model of the Galaxy, direction by direction, including interstellar dust and the varying depth of the survey across the sky.
+- The posterior of each star follows its parallax when it is good, and falls back on the population model when it is not. Colour and apparent magnitude sharpen it further, since stars of a given colour have a restricted range of absolute magnitudes.
+- This is how the distance catalogue everyone uses was built: Bailer-Jones et al., Estimating distances from parallaxes V, AJ 161, 147 (2021).
 
-Reference: LIGO-Virgo-KAGRA, GWTC-4.0: Population properties of merging compact binaries, ApJL 1005, L51 (2026).
+The population model is fixed here, a hyperparameter in the sense of this lecture. Make it a parameter shared by all the stars and the model becomes hierarchical, which is what is done when the Galaxy itself is the question, or in the gravitational-wave catalogues: per event, the masses of two black holes are latent; across events, the mass spectrum and the merger rate are the shared parameters (LIGO-Virgo-KAGRA, ApJL 1005, L51, 2026).
 
 XXX: Give a few more examples of latent variable models (from scientific domains, engineering, social sciences, etc.)
 
