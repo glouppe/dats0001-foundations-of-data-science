@@ -239,7 +239,7 @@ class: middle
 
 .center[Plate notation can be used to compactly represent<br> repeated structures in the graphical model.] 
 
-.success[Add an observation and you add a $\mathbf{z}\_i$, never a $\theta$: the latent variables are .bold[local], the parameters .bold[global].]
+.success[$\mathbf{z}\_i$ is .bold[local], $\theta$ is .bold[global].]
 
 ???
 
