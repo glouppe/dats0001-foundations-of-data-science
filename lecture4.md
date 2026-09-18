@@ -565,7 +565,7 @@ class: middle
 
 .center.width-50[![](figures/lec4/gaia-model.svg)]
 
-.center[A distance we want, a parallax we measure, an uncertainty the pipeline hands us,<br> a length scale we fix.]
+.center[For each star, a distance $r\_i$ drawn from the Galaxy,<br> then a parallax $\varpi\_i$ measured with a known uncertainty $\sigma\_i$.]
 
 ---
 
