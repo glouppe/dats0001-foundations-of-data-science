@@ -24,6 +24,17 @@ Last lecture produced plots like this one. This lecture is about drawing them we
 
 class: middle
 
+## Two kinds of plots
+
+- .bold[Exploratory]: made for yourself, quickly and in numbers, to see what the data show. That was Lecture 2.
+- .bold[Explanatory]: made for others, few and polished, to carry one message.
+
+The building blocks are the same, the standards are not. Later in the course, the same plots come back to show where a model fails (Lecture 7).
+
+---
+
+class: middle
+
 # Encoding data with visual cues
 
 ---
@@ -72,6 +83,30 @@ class: middle
 
 .footnote[Credits: T. Munzner, "Visualization Analysis and Design", 2014.]
 
+---
+
+class: middle
+
+## Anatomy of a plot
+
+Every plot follows the same recipe, the .bold[grammar of graphics]:
+
+.center[data → marks → channels → scales → coordinates → guides]
+
+The rest of this lecture takes these pieces in order. Guides are the axes, legends and labels that make the encoding readable.
+
+.footnote[Wilkinson, 1999; implemented in ggplot2, Vega-Lite, Altair and seaborn objects.]
+
+---
+
+class: middle
+
+## Two principles
+
+- .bold[Expressiveness]: show all the data facts, and only the data facts.
+- .bold[Effectiveness]: encode them with the channels a reader decodes most accurately.
+
+.footnote[Mackinlay, 1986.]
 
 ---
 
@@ -79,7 +114,7 @@ class: middle
 
 ## Perceptual hierarchy
 
-Data can be encoded through a variety of visual channels. However, not all channels are equally effective for conveying information.
+Effectiveness is measurable: not all channels are read equally well.
 
 .center.width-50[![](figures/lec3/ladder.png)]
 
@@ -354,6 +389,35 @@ class: middle
 class: middle
 
 # Choosing the right plot
+
+---
+
+class: middle
+
+## Start from the message
+
+Choose the graph from the question it answers:
+- .bold[Comparison] among data,
+- .bold[Distribution] of a variable,
+- .bold[Correlation] among variables,
+- .bold[Evolution] of a variable.
+
+Then choose the design from that question and the number of continuous variables. For subsets, either distinguish them within one panel, or juxtapose panels sharing identical scales.
+
+.footnote[Credits: [Doumont](https://www.principiae.be/X0100.php), Trees, maps, and theorems, 2009.]
+
+---
+
+class: middle
+
+## What that gives
+
+- .bold[Comparison]: horizontal bars, which must start at zero, or dots along a scale, which need not.
+- .bold[Distribution]: every point along a scale; a histogram or a box plot when there are too many.
+- .bold[Correlation]: a scatter plot, or an array of them beyond two variables.
+- .bold[Evolution]: lines against the independent variable; different units go in different panels sharing a scale.
+
+This is one opinionated but consistent take, not the only one.
 
 ---
 
