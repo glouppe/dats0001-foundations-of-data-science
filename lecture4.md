@@ -229,7 +229,7 @@ $$p(\mathbf{x}\_{1:3}, \mathbf{z}\_{1:3}, \theta) = \left( \prod\_{i=1}^3 p(\mat
 
 Shaded nodes represent observed variables, unshaded nodes represent latent variables or parameters.
 
-Here $\mathbf{x}\_i$ depends on $\theta$ only through $\mathbf{z}\_i$. In general, $\theta$ may also point directly at $\mathbf{x}\_i$, as in both examples of this lecture.
+Here $\mathbf{x}\_i$ depends on $\theta$ only through $\mathbf{z}\_i$. In general, $\theta$ may also point directly at $\mathbf{x}\_i$.
 
 ---
 
@@ -580,7 +580,7 @@ class: middle
 
 .center.width-50[![](figures/lec4/gaia-model.svg)]
 
-.center[One $L$ for the whole catalogue, one $r\_i$ per star: the .bold[global] and .bold[local]<br> latent variables of this lecture, with $\varpi\_i$ observed and $\sigma\_i$ known.]
+.center[One $L$ for the whole catalogue, one $r\_i$ per star,<br> with $\varpi\_i$ observed and $\sigma\_i$ known.]
 
 Everything unobserved is inferred at once,
 $$p(r\_{1:N}, L \mid \varpi\_{1:N}, \sigma\_{1:N}) \propto p(L) \prod\_{i=1}^N p(\varpi\_i \mid r\_i, \sigma\_i) \, p(r\_i \mid L),$$
