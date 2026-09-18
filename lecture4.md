@@ -239,7 +239,7 @@ class: middle
 
 .center[Plate notation can be used to compactly represent<br> repeated structures in the graphical model.] 
 
-.success[Inside the plate, one $\mathbf{z}\_i$ per observation: the .bold[local] variables. Outside, the parameters $\theta$ shared by all of them: the .bold[global] ones.]
+.success[Add an observation and you add a $\mathbf{z}\_i$, never a $\theta$: the latent variables are .bold[local], the parameters .bold[global].]
 
 ???
 
