@@ -506,9 +506,13 @@ Up to a point: grid lines help read values off a scale, and a memorable chart is
 
 class: middle
 
-.center.width-10[![](figures/lec3/grade.png)]
+# Wrap-up exercise
 
-## Wrap-up exercise
+---
+
+class: middle
+
+.center.width-10[![](figures/lec3/grade.png)]
 
 Let us discuss the following examples. For each of them, identify what is good and what could be improved.
 
