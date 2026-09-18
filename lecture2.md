@@ -123,8 +123,8 @@ Numerical data
 class: middle
 
 Categorical data
-- Nominal: $x \in \mathcal{C} = \\{c\_1, c\_2, ..., c\_n \\}$ (e.g., colors, types, text characters) without intrinsic order
-- Ordinal: $x \in \mathcal{C}$ with ordering relations $c\_1 \prec c\_2 \prec ... \prec c\_n$ (e.g., ratings, grades)
+- Nominal: $x \in \mathcal{C} = \\{c\_1, c\_2, ..., c\_K \\}$ (e.g., colors, types, text characters) without intrinsic order
+- Ordinal: $x \in \mathcal{C}$ with ordering relations $c\_1 \prec c\_2 \prec ... \prec c\_K$ (e.g., ratings, grades)
 
 ---
 
@@ -179,7 +179,7 @@ class: middle
 
 class: middle
 
-A data frame $\mathbf{X}$ represents a .bold[tabular collection] of $n$ records (rows) over $d$ variables/atomic measurements (columns),
+A data frame $\mathbf{X}$ represents a .bold[tabular collection] of $N$ records (rows) over $d$ variables/atomic measurements (columns),
 $$\mathbf{X} = \begin{pmatrix}
 x\_{11} & x\_{12} & \cdots & x\_{1d} \\\\
 x\_{21} & x\_{22} & \cdots & x\_{2d} \\\\
@@ -188,9 +188,9 @@ x\_{n1} & x\_{n2} & \cdots & x\_{nd}
 \end{pmatrix}.$$
 Each entry $x\_{ij}$ corresponds to the value of variable $j$ for record $i$. 
 
-Variables are often heterogeneous (mixing numerical and categorical types). When all variables are numerical, the data frame can be viewed as a matrix $\mathbf{X} \in \mathbb{R}^{n \times d}$.
+Variables are often heterogeneous (mixing numerical and categorical types). When all variables are numerical, the data frame can be viewed as a matrix $\mathbf{X} \in \mathbb{R}^{N \times d}$.
 
-For the penguins, $n = 344$ records over $d = 8$ variables, four of them numerical.
+For the penguins, $N = 344$ records over $d = 8$ variables, four of them numerical.
 
 ---
 
@@ -241,7 +241,7 @@ class: middle
 
 .bold[Missing values] are common in real-world datasets and can arise from various factors such as non-response in surveys, sensor malfunctions, or data corruption. 
 
-Let $\mathbf{X}\_\text{full}$ be the complete data and $\mathbf{M} \in \\{0, 1\\}^{n \times d}$ the missingness pattern, with $m\_{ij} = 1$ when entry $ij$ is observed and $m\_{ij} = 0$ when it is missing$^1$.
+Let $\mathbf{X}\_\text{full}$ be the complete data and $\mathbf{M} \in \\{0, 1\\}^{N \times d}$ the missingness pattern, with $m\_{ij} = 1$ when entry $ij$ is observed and $m\_{ij} = 0$ when it is missing$^1$.
 
 What we actually hold is the pair $(\mathbf{X}\_\text{obs}, \mathbf{M})$, where $\mathbf{X}\_\text{obs} = \\{ x\_{ij} : m\_{ij} = 1 \\}$ are the observed entries and $\mathbf{X}\_\text{mis} = \\{ x\_{ij} : m\_{ij} = 0 \\}$ the missing ones. A missing entry is not a zero, and no arithmetic can recover it.
 
@@ -374,12 +374,12 @@ class: middle
 
 ## What we are looking at
 
-All we hold is $n$ records, the rows $\mathbf{x}\_i = (x\_{i1}, \ldots, x\_{id})$ of the data frame. Their .bold[empirical distribution] puts equal mass on each of them,
-$$\hat{p}\_n(x) = \frac{1}{n} \sum\_{i=1}^n \delta(x - \mathbf{x}\_i).$$
+All we hold is $N$ records, the rows $\mathbf{x}\_i = (x\_{i1}, \ldots, x\_{id})$ of the data frame. Their .bold[empirical distribution] puts equal mass on each of them,
+$$\hat{p}\_N(x) = \frac{1}{N} \sum\_{i=1}^N \delta(x - \mathbf{x}\_i).$$
 
-Every plot and every statistic that follows is a functional of $\hat{p}\_n$: a histogram is a marginal, a scatter plot a joint, body mass by species a conditional, correlation and mutual information measure dependence, and PCA is a projection.
+Every plot and every statistic that follows is a functional of $\hat{p}\_N$: a histogram is a marginal, a scatter plot a joint, body mass by species a conditional, correlation and mutual information measure dependence, and PCA is a projection.
 
-.alert[$\hat{p}\_n$ is not $p\_r$. It is what $n$ records show of it, and that gap is what the rest of the course is about.]
+.alert[$\hat{p}\_N$ is not $p\_r$. It is what $N$ records show of it, and that gap is what the rest of the course is about.]
 
 ---
 
@@ -397,7 +397,7 @@ class: middle
 
 ## Univariate analysis
 
-Let us consider a variable $j$ of the data frame. We write $x\_j$ for that variable as a random quantity, distributed under $p\_r$, and $\mathbf{x}\_j = (x\_{1j}, x\_{2j}, ..., x\_{nj})^T$ for the column of values actually recorded.
+Let us consider a variable $j$ of the data frame. We write $x\_j$ for that variable as a random quantity, distributed under $p\_r$, and $\mathbf{x}\_j = (x\_{1j}, x\_{2j}, ..., x\_{Nj})^T$ for the column of values actually recorded.
 
 Univariate analysis focuses on understanding the distribution and characteristics of this single variable.
 
@@ -484,7 +484,7 @@ class: middle
 .bold[Correlation coefficients] can quantify the dependency between two numerical variables. They are useful but come with assumptions and limitations.
 
 - Pearson correlation measures linear relationships. Its empirical version reads
-$$\hat{\rho}\_{jk} = \frac{\sum\_{i=1}^n (x\_{ij} - \bar{x}\_j)(x\_{ik} - \bar{x}\_k)}{\sqrt{\sum\_{i=1}^n (x\_{ij} - \bar{x}\_j)^2} \sqrt{\sum\_{i=1}^n (x\_{ik} - \bar{x}\_k)^2}},$$
+$$\hat{\rho}\_{jk} = \frac{\sum\_{i=1}^N (x\_{ij} - \bar{x}\_j)(x\_{ik} - \bar{x}\_k)}{\sqrt{\sum\_{i=1}^N (x\_{ij} - \bar{x}\_j)^2} \sqrt{\sum\_{i=1}^N (x\_{ik} - \bar{x}\_k)^2}},$$
 an estimate of $\rho\_{jk} = \text{cov}(x\_j, x\_k) / (\sigma\_j \sigma\_k)$ under $p\_r$. It ignores non-linear dependencies.
 - Spearman correlation is the Pearson correlation of the rank-transformed variables. It captures monotonic relationships.
 - Correlation does not imply causation and can be affected by outliers.
@@ -501,7 +501,7 @@ The .bold[mutual information] between two variables $x\_j$ and $x\_k$ measures t
 $$I(x\_j; x\_k) = \sum\_{x\_j} \sum\_{x\_k} p\_r(x\_j, x\_k) \log \frac{p\_r(x\_j, x\_k)}{p\_r(x\_j)p\_r(x\_k)},$$
 with integrals in place of the sums for continuous ones.
 
-Mutual information captures any statistical relationship, not just linear or monotonic ones. It is a property of $p\_r$, however, which must itself be estimated from the $n$ records, and that is hard.
+Mutual information captures any statistical relationship, not just linear or monotonic ones. It is a property of $p\_r$, however, which must itself be estimated from the $N$ records, and that is hard.
 
 ---
 

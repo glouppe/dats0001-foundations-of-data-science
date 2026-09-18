@@ -192,7 +192,7 @@ class: middle
 
 .center[![](figures/lec4/fig3a.svg)]
 
-$$p(x\_{1:3}, z\_{1:3}, \theta) = \left( \prod\_{n=1}^3 p(x\_n \mid z\_n) p(z\_n \mid \theta) \right) p(\theta)$$
+$$p(x\_{1:3}, z\_{1:3}, \theta) = \left( \prod\_{i=1}^3 p(x\_i \mid z\_i) p(z\_i \mid \theta) \right) p(\theta)$$
 
 Shaded nodes represent observed variables, unshaded nodes represent latent variables or parameters.
 
@@ -206,7 +206,7 @@ class: middle
 
 ???
 
-Here, the plate around $x\_n$ and $z\_n$ indicates that these variables are repeated $N$ times, for $i = 1, \ldots, N$.
+Here, the plate around $x\_i$ and $z\_i$ indicates that these variables are repeated $N$ times, for $i = 1, \ldots, N$.
 
 ---
 
@@ -249,7 +249,7 @@ class: middle
 
 ## Example 1: (Probabilistic) PCA 
 
-In probabilistic PCA, each observation $x\_i \in \mathbb{R}^d$ is assumed to be generated from a lower-dimensional latent variable $z\_i \in \mathbb{R}^m$ through a linear transformation plus Gaussian noise.
+In probabilistic PCA, each observation $\mathbf{x}\_i \in \mathbb{R}^d$ is assumed to be generated from a lower-dimensional latent variable $\mathbf{z}\_i \in \mathbb{R}^m$ through a linear transformation plus Gaussian noise.
 
 .center[![](figures/lec4/pca.svg)]
 
@@ -257,30 +257,30 @@ In probabilistic PCA, each observation $x\_i \in \mathbb{R}^d$ is assumed to be 
 
 class: middle
 
-The joint distribution $p(z, x | B, \mu, \sigma^2)$ factorizes as $p(z) p(x | z, B, \mu, \sigma^2)$, where
-- $p(z) = \mathcal{N}(z | 0, I)$ assumes latent variables are standard Gaussian,
-- $p(x | z, B, \mu, \sigma^2) = \mathcal{N}(x | Bz + \mu, \sigma^2 I)$ assumes a linear Gaussian observation model, with $B \in \mathbb{R}^{d \times m}$ the loading matrix, $\mu \in \mathbb{R}^d$ the mean vector, and $\sigma^2$ the noise variance.
+The joint distribution $p(\mathbf{z}, \mathbf{x} \mid \mathbf{B}, \boldsymbol{\mu}, \sigma^2)$ factorizes as $p(\mathbf{z}) p(\mathbf{x} \mid \mathbf{z}, \mathbf{B}, \boldsymbol{\mu}, \sigma^2)$, where
+- $p(\mathbf{z}) = \mathcal{N}(\mathbf{z} \mid \mathbf{0}, \mathbf{I})$ assumes latent variables are standard Gaussian,
+- $p(\mathbf{x} \mid \mathbf{z}, \mathbf{B}, \boldsymbol{\mu}, \sigma^2) = \mathcal{N}(\mathbf{x} \mid \mathbf{B}\mathbf{z} + \boldsymbol{\mu}, \sigma^2 \mathbf{I})$ assumes a linear Gaussian observation model, with $\mathbf{B} \in \mathbb{R}^{d \times m}$ the loading matrix, $\boldsymbol{\mu} \in \mathbb{R}^d$ the mean vector, and $\sigma^2$ the noise variance.
 
 Therefore, using Gaussian identities, the joint distribution is Gaussian and can be written as
-$$p(z, x | B, \mu, \sigma^2) = \mathcal{N}\left(\begin{bmatrix} z \\\\ x \end{bmatrix} | \begin{bmatrix} 0 \\\\ \mu \end{bmatrix}, \begin{bmatrix} I & B^T \\\\ B & BB^T + \sigma^2 I \end{bmatrix}\right).$$
+$$p(\mathbf{z}, \mathbf{x} \mid \mathbf{B}, \boldsymbol{\mu}, \sigma^2) = \mathcal{N}\left(\begin{bmatrix} \mathbf{z} \\\\ \mathbf{x} \end{bmatrix} \bigg| \begin{bmatrix} \mathbf{0} \\\\ \boldsymbol{\mu} \end{bmatrix}, \begin{bmatrix} \mathbf{I} & \mathbf{B}^T \\\\ \mathbf{B} & \mathbf{B}\mathbf{B}^T + \sigma^2 \mathbf{I} \end{bmatrix}\right).$$
 
 ---
 
 class: middle
 
-The posterior distribution $p(z | x, B, \mu, \sigma^2)$ is also Gaussian,
-$$p(z | x, B, \mu, \sigma^2) = \mathcal{N}(z | m, C),$$
+The posterior distribution $p(\mathbf{z} \mid \mathbf{x}, \mathbf{B}, \boldsymbol{\mu}, \sigma^2)$ is also Gaussian,
+$$p(\mathbf{z} \mid \mathbf{x}, \mathbf{B}, \boldsymbol{\mu}, \sigma^2) = \mathcal{N}(\mathbf{z} \mid \boldsymbol{\mu}\_{z \mid x}, \boldsymbol{\Sigma}\_{z \mid x}),$$
 where
-- $m = B^T (BB^T + \sigma^2 I)^{-1} (x - \mu)$ is the posterior mean,
-- $C = I - B^T (BB^T + \sigma^2 I)^{-1} B$ is the posterior covariance.
+- $\boldsymbol{\mu}\_{z \mid x} = \mathbf{B}^T (\mathbf{B}\mathbf{B}^T + \sigma^2 \mathbf{I})^{-1} (\mathbf{x} - \boldsymbol{\mu})$ is the posterior mean,
+- $\boldsymbol{\Sigma}\_{z \mid x} = \mathbf{I} - \mathbf{B}^T (\mathbf{B}\mathbf{B}^T + \sigma^2 \mathbf{I})^{-1} \mathbf{B}$ is the posterior covariance.
 
 ---
 
 class: middle
 
-When $\sigma^2 \to 0$, 
-- $m = B^T (BB^T + \sigma^2 I)^{-1} (x - \mu) \to B^T (B B^T)^{-1} (x - \mu)$. If the columns of $B$ are orthonormal, then $B^T (B B^T)^{-1} = B^T$, so $m \to B^T (x - \mu)$, which corresponds to the PCA projection of $x$ onto the subspace spanned by the columns of $B$.
-- $C = I - B^T (BB^T + \sigma^2 I)^{-1} B \to I - B^T (B B^T)^{-1} B$. If the columns of $B$ are orthonormal, then $B^T B = I$, so $C \to 0$, indicating that the posterior distribution collapses to a point mass at the PCA projection.
+When $\sigma^2 \to 0$, and writing the posterior in the equivalent form $\boldsymbol{\mu}\_{z \mid x} = (\mathbf{B}^T\mathbf{B} + \sigma^2 \mathbf{I})^{-1} \mathbf{B}^T (\mathbf{x} - \boldsymbol{\mu})$ and $\boldsymbol{\Sigma}\_{z \mid x} = \sigma^2 (\mathbf{B}^T\mathbf{B} + \sigma^2 \mathbf{I})^{-1}$,
+- $\boldsymbol{\mu}\_{z \mid x} \to (\mathbf{B}^T\mathbf{B})^{-1} \mathbf{B}^T (\mathbf{x} - \boldsymbol{\mu})$. If the columns of $\mathbf{B}$ are orthonormal, this is $\mathbf{B}^T (\mathbf{x} - \boldsymbol{\mu})$, the PCA projection of $\mathbf{x}$ onto the subspace spanned by the columns of $\mathbf{B}$.
+- $\boldsymbol{\Sigma}\_{z \mid x} \to \mathbf{0}$, so the posterior collapses to a point mass at that projection.
 
 .alert[Probabilistic PCA recovers classical PCA in the limit of vanishing noise!]
 
@@ -288,29 +288,29 @@ When $\sigma^2 \to 0$,
 
 class: middle
 
-The hyperparameters $B, \mu, \sigma^2$ can be estimated from data $x\_{1:N}$ using maximum (marginal) likelihood estimation,
-$$(\hat{B}, \hat{\mu}, \hat{\sigma}^2) = \arg\max\_{B, \mu, \sigma^2} \prod\_{i=1}^N p(x\_i | B, \mu, \sigma^2),$$
-where $p(x | B, \mu, \sigma^2) = \int p(x | z, B, \mu, \sigma^2) p(z) dz$ is the marginal likelihood.
+The hyperparameters $\mathbf{B}, \boldsymbol{\mu}, \sigma^2$ can be estimated from data $\mathbf{x}\_{1:N}$ using maximum (marginal) likelihood estimation,
+$$(\hat{\mathbf{B}}, \hat{\boldsymbol{\mu}}, \hat{\sigma}^2) = \arg\max\_{\mathbf{B}, \boldsymbol{\mu}, \sigma^2} \prod\_{i=1}^N p(\mathbf{x}\_i \mid \mathbf{B}, \boldsymbol{\mu}, \sigma^2),$$
+where $p(\mathbf{x} \mid \mathbf{B}, \boldsymbol{\mu}, \sigma^2) = \int p(\mathbf{x} \mid \mathbf{z}, \mathbf{B}, \boldsymbol{\mu}, \sigma^2) p(\mathbf{z}) d\mathbf{z}$ is the marginal likelihood.
 
 Since the joint distribution is Gaussian, the marginal likelihood is also Gaussian,
-$$p(x | B, \mu, \sigma^2) = \mathcal{N}(x | \mu, BB^T + \sigma^2 I).$$
+$$p(\mathbf{x} \mid \mathbf{B}, \boldsymbol{\mu}, \sigma^2) = \mathcal{N}(\mathbf{x} \mid \boldsymbol{\mu}, \mathbf{B}\mathbf{B}^T + \sigma^2 \mathbf{I}).$$
 
 ---
 
 class: middle
 
-Therefore, writing $BB^T + \sigma^2 I = \Sigma$, maximum likelihood estimation reduces to
+Therefore, writing $\boldsymbol{\Sigma} = \mathbf{B}\mathbf{B}^T + \sigma^2 \mathbf{I}$, maximum likelihood estimation reduces to
 $$\begin{aligned}
-(\hat{B}, \hat{\mu}, \hat{\sigma}^2) &= \arg\max\_{B, \mu, \sigma^2} \prod\_{i=1}^N \mathcal{N}(x\_i | \mu, \Sigma) \\\\
-&= \arg\min\_{B, \mu, \sigma^2} \sum\_{i=1}^N (x\_i - \mu)^T \Sigma^{-1} (x\_i - \mu) + N \log |\Sigma| \\\\
-&= \arg\min\_{B, \mu, \sigma^2} N \text{tr}(\Sigma^{-1} S) + N \log |\Sigma|,
+(\hat{\mathbf{B}}, \hat{\boldsymbol{\mu}}, \hat{\sigma}^2) &= \arg\max\_{\mathbf{B}, \boldsymbol{\mu}, \sigma^2} \prod\_{i=1}^N \mathcal{N}(\mathbf{x}\_i \mid \boldsymbol{\mu}, \boldsymbol{\Sigma}) \\\\
+&= \arg\min\_{\mathbf{B}, \boldsymbol{\mu}, \sigma^2} \sum\_{i=1}^N (\mathbf{x}\_i - \boldsymbol{\mu})^T \boldsymbol{\Sigma}^{-1} (\mathbf{x}\_i - \boldsymbol{\mu}) + N \log |\boldsymbol{\Sigma}| \\\\
+&= \arg\min\_{\mathbf{B}, \boldsymbol{\mu}, \sigma^2} N \\, \text{tr}(\boldsymbol{\Sigma}^{-1} \mathbf{S}) + N \log |\boldsymbol{\Sigma}|,
 \end{aligned}$$
-where $S = \frac{1}{N} \sum\_{i=1}^N (x\_i - \mu)(x\_i - \mu)^T$ is the sample covariance matrix.
+where $\mathbf{S} = \frac{1}{N} \sum\_{i=1}^N (\mathbf{x}\_i - \boldsymbol{\mu})(\mathbf{x}\_i - \boldsymbol{\mu})^T$ is the sample covariance matrix.
 
 The solution can be derived in closed form, yielding
-- $\hat{\mu} = \frac{1}{N} \sum\_{i=1}^N x\_i$ (the sample mean),
-- $\hat{B} = U\_m (\Lambda\_m - \hat{\sigma}^2 I)^{1/2} R$, where $U\_m$ are the top $m$ eigenvectors of $S$, $\Lambda\_m$ are the corresponding eigenvalues, and $R$ is an arbitrary rotation matrix,
-- $\hat{\sigma}^2 = \frac{1}{d - m} \sum\_{j=m+1}^d \lambda_j$, where $\lambda\_j$ are the eigenvalues of $S$.
+- $\hat{\boldsymbol{\mu}} = \frac{1}{N} \sum\_{i=1}^N \mathbf{x}\_i$ (the sample mean),
+- $\hat{\mathbf{B}} = \mathbf{U}\_m (\boldsymbol{\Lambda}\_m - \hat{\sigma}^2 \mathbf{I})^{1/2} \mathbf{R}$, where $\mathbf{U}\_m$ holds the top $m$ eigenvectors of $\mathbf{S}$, $\boldsymbol{\Lambda}\_m$ the corresponding eigenvalues, and $\mathbf{R}$ is an arbitrary rotation matrix,
+- $\hat{\sigma}^2 = \frac{1}{d - m} \sum\_{j=m+1}^d \lambda\_j$, where $\lambda\_j$ are the eigenvalues of $\mathbf{S}$.
 
 ???
 
@@ -352,22 +352,22 @@ Mixture models assume that data are generated from a mixture of several underlyi
 
 class: middle
 
-For a Gaussian mixture model with $K$ components, each observation $x\_i \in \mathbb{R}^d$ is assumed to be generated by first selecting a component $z\_i \in \\{1, \ldots, K\\}$ according to a categorical distribution, then sampling $x\_i$ from a Gaussian distribution associated with that component.
+For a Gaussian mixture model with $K$ components, each observation $\mathbf{x}\_i \in \mathbb{R}^d$ is assumed to be generated by first selecting a component $z\_i \in \\{1, \ldots, K\\}$ according to a categorical distribution, then sampling $\mathbf{x}\_i$ from a Gaussian distribution associated with that component.
 
-The joint distribution $p(\theta, z\_{1:N}, x\_{1:N}, \mu\_{1:K}, \sigma^2\_{1:K} | \alpha, \sigma^2\_\mu, \sigma^2\_\sigma)$ factorizes as 
-$$p(\theta | \alpha) \prod\_{k=1}^K p(\mu\_k | \sigma^2\_\mu) p(\sigma^2\_k | \sigma^2\_\sigma) \prod\_{i=1}^N p(z\_i | \theta) p(x\_i | z\_i, \mu\_{z\_i}, \sigma^2\_{z\_i}),$$
+The joint distribution $p(\theta, z\_{1:N}, \mathbf{x}\_{1:N}, \boldsymbol{\mu}\_{1:K}, \sigma^2\_{1:K} \mid \alpha, \sigma^2\_\mu, \sigma^2\_\sigma)$ factorizes as 
+$$p(\theta \mid \alpha) \prod\_{k=1}^K p(\boldsymbol{\mu}\_k \mid \sigma^2\_\mu) p(\sigma^2\_k \mid \sigma^2\_\sigma) \prod\_{i=1}^N p(z\_i \mid \theta) p(\mathbf{x}\_i \mid z\_i, \boldsymbol{\mu}\_{z\_i}, \sigma^2\_{z\_i}),$$
 where
-- $p(\theta | \alpha) = \text{Dirichlet}(\alpha)$ is the prior over mixture weights,
-- $p(\mu\_k | \sigma^2\_\mu) = \mathcal{N}(0, \sigma^2\_\mu I)$ is the prior over component means,
-- $p(\sigma^2\_k | \sigma^2\_\sigma) = \text{Lognormal}(0, \sigma^2\_\sigma)$ is the prior over component variances,
-- $p(z\_i | \theta) = \text{Categorical}(\theta)$ is the categorical distribution over components,
-- $p(x\_i | z\_i, \mu\_{z\_i}, \sigma^2\_{z\_i}) = \mathcal{N}(\mu\_{z\_i}, \sigma^2\_{z\_i} I)$ is the Gaussian observation model.
+- $p(\theta \mid \alpha) = \text{Dirichlet}(\theta \mid \alpha)$ is the prior over mixture weights,
+- $p(\boldsymbol{\mu}\_k \mid \sigma^2\_\mu) = \mathcal{N}(\boldsymbol{\mu}\_k \mid \mathbf{0}, \sigma^2\_\mu \mathbf{I})$ is the prior over component means,
+- $p(\sigma^2\_k \mid \sigma^2\_\sigma) = \text{Lognormal}(\sigma^2\_k \mid 0, \sigma^2\_\sigma)$ is the prior over component variances,
+- $p(z\_i \mid \theta) = \text{Categorical}(z\_i \mid \theta)$ is the distribution over components,
+- $p(\mathbf{x}\_i \mid z\_i, \boldsymbol{\mu}\_{z\_i}, \sigma^2\_{z\_i}) = \mathcal{N}(\mathbf{x}\_i \mid \boldsymbol{\mu}\_{z\_i}, \sigma^2\_{z\_i} \mathbf{I})$ is the Gaussian observation model.
 
 ---
 
 class: middle
 
-Computing the posterior distribution $p(\theta, z\_{1:N}, \mu\_{1:K}, \sigma^2\_{1:K} | x\_{1:N}, \alpha, \sigma^2\_\mu, \sigma^2\_\sigma)$ amounts to solving a clustering problem, where each component corresponds to a cluster and the latent variables $z\_i$ indicate cluster membership of each observation.
+Computing the posterior distribution $p(\theta, z\_{1:N}, \boldsymbol{\mu}\_{1:K}, \sigma^2\_{1:K} \mid \mathbf{x}\_{1:N}, \alpha, \sigma^2\_\mu, \sigma^2\_\sigma)$ amounts to solving a clustering problem, where each component corresponds to a cluster and the latent variables $z\_i$ indicate cluster membership of each observation.
 
 The posterior is typically intractable, requiring approximate inference methods such as Expectation-Maximization (EM) or Variational Inference (VI).
 
