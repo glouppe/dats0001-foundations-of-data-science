@@ -11,6 +11,7 @@ OBSERVED = "#cfe0f3"
 R = .46           # node radius
 R_SQ = .17        # half-side of a hyperparameter square
 PAD = .42         # padding between a plate and the nodes it holds
+GAP = .34         # clearance between a plate and what sits outside it
 FS = 17           # label size
 
 plt.rcParams.update({"text.color": GREY, "mathtext.fontset": "cm"})
@@ -95,17 +96,19 @@ def unrolled():
 def plated(hyper=False):
     """The same model in plate notation, optionally with hyperparameters."""
     fig, ax = figure(3.6 if not hyper else 4.6, 3.8)
-    node(ax, (0, 2.7), r"$\theta$")
-    plate(ax, [box((0, 1.35)), box((0, 0))], "$N$")
+    observations = plate(ax, [box((0, 1.35)), box((0, 0))], "$N$")
+    theta = (0, observations[3] + GAP + R)
+    node(ax, theta, r"$\theta$")
     node(ax, (0, 1.35), r"$\mathbf{z}_i$")
     node(ax, (0, 0), r"$\mathbf{x}_i$", observed=True)
-    arrow(ax, (0, 2.7), (0, 1.35))
+    arrow(ax, theta, (0, 1.35))
     arrow(ax, (0, 1.35), (0, 0))
     if hyper:
-        square(ax, (2.1, 2.7), r"$\alpha$")
-        arrow(ax, (2.1, 2.7), (0, 2.7), r_start=R_SQ)
-        square(ax, (2.1, 1.35), r"$\beta$")
-        arrow(ax, (2.1, 1.35), (0, 1.35), r_start=R_SQ)
+        right = observations[2] + GAP + R_SQ
+        square(ax, (right, theta[1]), r"$\alpha$")
+        arrow(ax, (right, theta[1]), theta, r_start=R_SQ)
+        square(ax, (right, 1.35), r"$\beta$")
+        arrow(ax, (right, 1.35), (0, 1.35), r_start=R_SQ)
     save(fig, ax, "figures/lec4/lvm-plate%s.png" % ("-hyper" if hyper else ""))
 
 
@@ -124,14 +127,14 @@ def ppca():
 def mixture():
     """Gaussian mixture: weights pi, components (mu_k, sigma_k^2)."""
     fig, ax = figure(5.8, 4.6)
-    node(ax, (0, 3.3), r"$\boldsymbol{\pi}$")
-    square(ax, (2.3, 3.3), r"$\alpha$")
-    arrow(ax, (2.3, 3.3), (0, 3.3), r_start=R_SQ)
-
-    plate(ax, [box((0, 2.0)), box((0, .7))], "$N$")
+    observations = plate(ax, [box((0, 2.0)), box((0, .7))], "$N$")
+    pi = (0, observations[3] + GAP + R)
+    node(ax, pi, r"$\boldsymbol{\pi}$")
+    square(ax, (observations[2] + GAP + R_SQ + .5, pi[1]), r"$\alpha$")
+    arrow(ax, (observations[2] + GAP + R_SQ + .5, pi[1]), pi, r_start=R_SQ)
     node(ax, (0, 2.0), r"$z_i$")
     node(ax, (0, .7), r"$\mathbf{x}_i$", observed=True)
-    arrow(ax, (0, 3.3), (0, 2.0))
+    arrow(ax, pi, (0, 2.0))
     arrow(ax, (0, 2.0), (0, .7))
 
     plate(ax, [box((-.9, -1.5)), box((.9, -1.5))], "$K$")
