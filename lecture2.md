@@ -44,11 +44,11 @@ Someone stood in the cold, caught a penguin, measured its bill with a caliper an
 
 class: middle
 
-Mathematically, data can be viewed as a function $f$ that maps real-world entities $\omega$ to measurable values $x$,
+Mathematically, data can be viewed as a function $f$ that maps real-world entities $\omega$ to measurable values $\mathbf{x}$,
 $$f : \Omega \to \mathcal{X},$$
 where
 - $\Omega$ is the sample space of possible states $\omega$ of the world,
-- $\mathcal{X}$ is the measurement space of possible observations $x$.
+- $\mathcal{X}$ is the measurement space of possible observations $\mathbf{x}$.
 
 ---
 
@@ -57,16 +57,16 @@ class: middle
 Examples&#58;
 - Penguin body mass: $\omega \in \\{ \text{penguins} \\} \to x \in \mathbb{R}^+$ (g)
 - Stock price: $\omega \in \\{ \text{market states} \\} \to x \in \mathbb{R}^+$ (USD)
-- Pixel colour: $\omega \in \\{ \text{scenes} \\} \to x \in \\{0, \ldots, 255\\}^3$ (RGB values)
+- Pixel colour: $\omega \in \\{ \text{scenes} \\} \to \mathbf{x} \in \\{0, \ldots, 255\\}^3$ (RGB values)
 
 ---
 
 class: middle
 
-If the sample space $\Omega$ carries a probability distribution $p(\omega)$, then $f$ turns a random state of the world into a random observation $x = f(\omega)$. Its distribution is the one $f$ induces from $p$, called the .bold[data distribution] $p\_r(x)$, where $r$ stands for "real".
+If the sample space $\Omega$ carries a probability distribution $p(\omega)$, then $f$ turns a random state of the world into a random observation $\mathbf{x} = f(\omega)$. Its distribution is the one $f$ induces from $p$, called the .bold[data distribution] $p\_r(\mathbf{x})$, where $r$ stands for "real".
 
 When $\mathcal{X}$ is continuous, it can be written as
-$$p\_r(x) = \int\_{\omega \in \Omega} p(\omega) \delta(x - f(\omega)) d\omega,$$
+$$p\_r(\mathbf{x}) = \int\_{\omega \in \Omega} p(\omega) \delta(\mathbf{x} - f(\omega)) d\omega,$$
 where $\delta$ is the Dirac delta function. When $\mathcal{X}$ is discrete, $p\_r$ assigns probabilities rather than a density.
 
 ---
@@ -77,7 +77,7 @@ The .bold[measurement process] is part of the data generation mechanism. We make
 $$f : \Omega \times \Xi \to \mathcal{X}.$$
 
 Measurements can introduce quantization (continuous to discrete), noise (random perturbations), and bias (systematic deviations). If $\Omega \times \Xi$ carries a joint distribution $p(\omega, \xi)$, then
-$$p\_r(x) = \iint\_{\omega \in \Omega, \xi \in \Xi} p(\omega, \xi) \delta(x - f(\omega, \xi)) d\omega d\xi,$$
+$$p\_r(\mathbf{x}) = \iint\_{\omega \in \Omega, \xi \in \Xi} p(\omega, \xi) \delta(\mathbf{x} - f(\omega, \xi)) d\omega d\xi,$$
 which captures the variability of both the phenomenon and its measurement.
 
 ---
@@ -186,11 +186,24 @@ x\_{21} & x\_{22} & \cdots & x\_{2d} \\\\
 \vdots & \vdots & \ddots & \vdots \\\\
 x\_{n1} & x\_{n2} & \cdots & x\_{nd}
 \end{pmatrix}.$$
-Each entry $x\_{ij}$ corresponds to the value of variable $j$ for record $i$. 
+Each entry $x\_{ij}$ corresponds to the value of variable $j$ for record $i$.
 
 Variables are often heterogeneous (mixing numerical and categorical types). When all variables are numerical, the data frame can be viewed as a matrix $\mathbf{X} \in \mathbb{R}^{N \times d}$.
 
 For the penguins, $N = 344$ records over $d = 8$ variables, four of them numerical.
+
+---
+
+class: middle
+
+## Notation
+
+.success[Bold marks an object holding more than one number. Plain marks a single one.]
+
+- $\mathbf{X} \in \mathbb{R}^{N \times d}$ is the data frame, with $N$ records indexed by $i$ and $d$ variables indexed by $j$.
+- $\mathbf{x}\_i$ is a record, the $i$-th row; $\mathbf{x}\_j$ is the column of variable $j$; the index letter says which.
+- $x\_{ij}$ is a single entry, $x\_j$ a single variable seen as a random quantity.
+- $\mathbf{x}$ is a generic measurement, $\mathcal{X}$ the space it lives in.
 
 ---
 
@@ -319,7 +332,7 @@ class: middle
 Treating outliers requires a model of the measurement process that either describes measurements under normal conditions or explicitly accounts for anomalies. 
 
 Two models make this explicit&#58; a contamination mixture
-$$p(x) = (1 - \varepsilon) p\_\text{model}(x) + \varepsilon p\_\text{bad}(x),$$
+$$p(\mathbf{x}) = (1 - \varepsilon) p\_\text{model}(\mathbf{x}) + \varepsilon p\_\text{bad}(\mathbf{x}),$$
 which gives bad measurements their own distribution, or a heavy-tailed data model, which allows rare large deviations without special-casing them.
 
 .alert[.bold[Outliers should not be removed blindly] unless explicitly justified by the measurement model or domain knowledge.]
@@ -375,7 +388,7 @@ class: middle
 ## What we are looking at
 
 All we hold is $N$ records, the rows $\mathbf{x}\_i = (x\_{i1}, \ldots, x\_{id})$ of the data frame. Their .bold[empirical distribution] puts equal mass on each of them,
-$$\hat{p}\_N(x) = \frac{1}{N} \sum\_{i=1}^N \delta(x - \mathbf{x}\_i).$$
+$$\hat{p}\_N(\mathbf{x}) = \frac{1}{N} \sum\_{i=1}^N \delta(\mathbf{x} - \mathbf{x}\_i).$$
 
 Every plot and every statistic that follows is a functional of $\hat{p}\_N$: a histogram is a marginal, a scatter plot a joint, body mass by species a conditional, correlation and mutual information measure dependence, and PCA is a projection.
 

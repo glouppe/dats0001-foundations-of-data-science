@@ -32,35 +32,35 @@ class: middle
 
 class: middle
 
-Data are recorded observations about the world. Mathematically, we can think of data as resulting from a function $f$ that maps real-world entities $\omega$ to measurements $x$,
+Data are recorded observations about the world. Mathematically, we can think of data as resulting from a function $f$ that maps real-world entities $\omega$ to measurements $\mathbf{x}$,
 $$f : \Omega \to \mathcal{X},$$
 where
 - $\Omega$ is the sample space (the set of all possible entities, accounting for all sources of variability),
 - $\mathcal{X}$ is the measurement space.
 
-Entities $\omega \in \Omega$ are not observable, only their measurements $x = f(\omega) \in \mathcal{X}$ are.
+Entities $\omega \in \Omega$ are not observable, only their measurements $\mathbf{x} = f(\omega) \in \mathcal{X}$ are.
 
 ---
 
 class: middle
 
-If the sample space $\Omega$ is equipped with a probability function $p$, then the data $x = f(\omega)$ can be viewed as a random variable with distribution induced by $p$, $$x \sim p\_r(x) = \int_{\omega \in \Omega} p(\omega) \delta(x - f(\omega)) d\omega,$$ where $\delta$ is the Dirac delta function.
+If the sample space $\Omega$ is equipped with a probability function $p$, then the data $\mathbf{x} = f(\omega)$ can be viewed as a random variable with distribution induced by $p$, $$\mathbf{x} \sim p\_r(\mathbf{x}) = \int_{\omega \in \Omega} p(\omega) \delta(\mathbf{x} - f(\omega)) d\omega,$$ where $\delta$ is the Dirac delta function.
 
-We call $p\_{r}(x)$ the .bold[data generating process] or the data distribution, where $r$ stands for "real".
+We call $p\_{r}(\mathbf{x})$ the .bold[data generating process] or the data distribution, where $r$ stands for "real".
 
 ---
 
 class: middle
 
 A .bold[parametric probabilistic model] encodes assumptions about how data are generated. It is specified by a parametric family 
-$$\mathcal{P} = \\{ p(x \mid \theta) : \theta \in \Theta \\},$$
-where $p(x \mid \theta)$ is a probability distribution over $\mathcal{X}$, $\theta$ are parameters, and $\Theta$ is the parameter space.
+$$\mathcal{P} = \\{ p(\mathbf{x} \mid \theta) : \theta \in \Theta \\},$$
+where $p(\mathbf{x} \mid \theta)$ is a probability distribution over $\mathcal{X}$, $\theta$ are parameters, and $\Theta$ is the parameter space.
 
 ---
 
 class: middle
 
-.alert[$p(x \mid \theta)$ is not the data distribution $p\_{r}(x)$, only a model of it! There is no such thing as a .italic[true] parameter $\theta$.]
+.alert[$p(\mathbf{x} \mid \theta)$ is not the data distribution $p\_{r}(\mathbf{x})$, only a model of it! There is no such thing as a .italic[true] parameter $\theta$.]
 
 ---
 
@@ -89,8 +89,8 @@ class: middle
 
 ## Frequentist inference
 
-In the Frequentist framework, $\theta$ is treated as an unknown but fixed quantity to be estimated from observed data $x\_\text{obs}$. The data are assumed to be generated from the model for some unknown parameter value $\theta^\*$,
-$$x\_\text{obs} \sim p(x \mid \theta^\*).$$
+In the Frequentist framework, $\theta$ is treated as an unknown but fixed quantity to be estimated from observed data $\mathbf{x}\_\text{obs}$. The data are assumed to be generated from the model for some unknown parameter value $\theta^\*$,
+$$\mathbf{x}\_\text{obs} \sim p(\mathbf{x} \mid \theta^\*).$$
 
 Fitting the model to data consists in finding a point estimate $\hat{\theta}$ of $\theta^\*$ (or a confidence region thereof) that best explains the observed data.
 
@@ -103,17 +103,17 @@ class: middle
 In the Bayesian framework, $\theta$ is treated as a random variable with prior distribution $p(\theta)$ encoding beliefs about plausible parameter values before observing any data.
 
 A .bold[Bayesian model] therefore specifies a joint distribution over data and parameters,
-$$p(x, \theta) = p(x \mid \theta) p(\theta),$$
+$$p(\mathbf{x}, \theta) = p(\mathbf{x} \mid \theta) p(\theta),$$
 where 
-- $p(x \mid \theta)$ is the likelihood,
+- $p(\mathbf{x} \mid \theta)$ is the likelihood,
 - $p(\theta)$ is the prior over parameters.
 
 ---
 
 class: middle
 
-Fitting a Bayesian model to observed data $x\_\text{obs}$ consists in computing the posterior distribution of the parameters given the data. Using Bayes' rule,
-$$p(\theta \mid x\_\text{obs}) = \frac{p(x\_\text{obs} \mid \theta) p(\theta)}{p(x\_\text{obs})}.$$
+Fitting a Bayesian model to observed data $\mathbf{x}\_\text{obs}$ consists in computing the posterior distribution of the parameters given the data. Using Bayes' rule,
+$$p(\theta \mid \mathbf{x}\_\text{obs}) = \frac{p(\mathbf{x}\_\text{obs} \mid \theta) p(\theta)}{p(\mathbf{x}\_\text{obs})}.$$
 
 Depending on the structure of the model, this computation may be easy, difficult, or even intractable.
 
@@ -124,7 +124,7 @@ class: middle
 
 ## Prior predictive checks
 
-Often, the forward model $p(x | \theta)$ is understood, but the prior $p(\theta)$ is more subjective and harder to justify.
+Often, the forward model $p(\mathbf{x} \mid \theta)$ is understood, but the prior $p(\theta)$ is more subjective and harder to justify.
 
 The consequences of prior choices in the context of the generative model can be assessed through .bold[prior predictive checks], which involve simulating data from the model using only the prior distributions, without conditioning on any observed data.
 
@@ -133,7 +133,7 @@ The consequences of prior choices in the context of the generative model can be 
 class: middle
 
 The prior predictive distribution is given by
-$$p(x) = \int p(x | \theta) p(\theta) d\theta.$$
+$$p(\mathbf{x}) = \int p(\mathbf{x} \mid \theta) p(\theta) d\theta.$$
 
 This distribution defines the data that we expect to observe under the model assumptions encoded in the prior. It should be examined to ensure that it aligns with domain knowledge and expectations about the data.
 
@@ -160,21 +160,21 @@ class: middle
 
 ## Joint distribution
 
-A .bold[latent variable model] is a probabilistic model that assumes unobserved (latent) variables $z$ that mediate the relationship between observed data $x$ and model parameters $\theta$.
+A .bold[latent variable model] is a probabilistic model that assumes unobserved (latent) variables $\mathbf{z}$ that mediate the relationship between observed data $\mathbf{x}$ and model parameters $\theta$.
 
 It specifies a joint distribution over observed variables, latent variables, and parameters,
-$$p(x, z, \theta) = p(x \mid z, \theta) p(z \mid \theta) p(\theta),$$
-where $x$ is the observed data, $z$ are the latent variables, and $\theta$ are the parameters.
+$$p(\mathbf{x}, \mathbf{z}, \theta) = p(\mathbf{x} \mid \mathbf{z}, \theta) p(\mathbf{z} \mid \theta) p(\theta),$$
+where $\mathbf{x}$ is the observed data, $\mathbf{z}$ are the latent variables, and $\theta$ are the parameters.
 
 ---
 
 class: middle
 
-More generally, for a dataset of $N$ observations $\\{ x\_1, \ldots, x\_N \\}$, a latent variable model specifies a joint distribution
-$$p(x\_{1:N}, z\_{1:N}, \theta) = \left( \prod\_{i=1}^N p(x\_i \mid z\_i, \theta) p(z\_i \mid \theta) \right) p(\theta),$$
-where $z\_i$ are the latent variables associated with observation $x\_i$.
+More generally, for a dataset of $N$ observations $\\{ \mathbf{x}\_1, \ldots, \mathbf{x}\_N \\}$, a latent variable model specifies a joint distribution
+$$p(\mathbf{x}\_{1:N}, \mathbf{z}\_{1:N}, \theta) = \left( \prod\_{i=1}^N p(\mathbf{x}\_i \mid \mathbf{z}\_i, \theta) p(\mathbf{z}\_i \mid \theta) \right) p(\theta),$$
+where $\mathbf{z}\_i$ are the latent variables associated with observation $\mathbf{x}\_i$.
 
-The factorization assumes that each observation $x\_i$ is mediated by its own latent variable $z\_i$, and that observations are conditionally independent given their latent variables and the parameters. All are governed by shared parameters $\theta$.
+The factorization assumes that each observation $\mathbf{x}\_i$ is mediated by its own latent variable $\mathbf{z}\_i$, and that observations are conditionally independent given their latent variables and the parameters. All are governed by shared parameters $\theta$.
 
 ---
 
@@ -192,7 +192,7 @@ class: middle
 
 .center[![](figures/lec4/fig3a.svg)]
 
-$$p(x\_{1:3}, z\_{1:3}, \theta) = \left( \prod\_{i=1}^3 p(x\_i \mid z\_i) p(z\_i \mid \theta) \right) p(\theta)$$
+$$p(\mathbf{x}\_{1:3}, \mathbf{z}\_{1:3}, \theta) = \left( \prod\_{i=1}^3 p(\mathbf{x}\_i \mid \mathbf{z}\_i) p(\mathbf{z}\_i \mid \theta) \right) p(\theta)$$
 
 Shaded nodes represent observed variables, unshaded nodes represent latent variables or parameters.
 
@@ -206,7 +206,7 @@ class: middle
 
 ???
 
-Here, the plate around $x\_i$ and $z\_i$ indicates that these variables are repeated $N$ times, for $i = 1, \ldots, N$.
+Here, the plate around $\mathbf{x}\_i$ and $\mathbf{z}\_i$ indicates that these variables are repeated $N$ times, for $i = 1, \ldots, N$.
 
 ---
 
@@ -219,7 +219,7 @@ Conditional distributions in a latent variable model may depend on additional pa
 For instance, the prior distribution of parameters may depend on hyperparameters,
 $$p(\theta \mid \alpha),$$
 or the prior distribution of latent variables may depend on hyperparameters,
-$$p(z \mid \theta, \beta).$$
+$$p(\mathbf{z} \mid \theta, \beta).$$
 
 .footnote[1: Estimating hyperparameters from data is possible and will be discussed later in the course.]
 
@@ -237,11 +237,11 @@ class: middle
 
 ## Inference
 
-Fitting a latent variable model to observed data $x\_\text{obs}$ consists in computing the posterior distribution of latent variables and parameters given the data. Using Bayes' rule,
-$$p(z, \theta \mid x\_\text{obs}) = \frac{p(x\_\text{obs} \mid z, \theta) p(z \mid \theta) p(\theta)}{p(x\_\text{obs})}.$$
+Fitting a latent variable model to observed data $\mathbf{x}\_\text{obs}$ consists in computing the posterior distribution of latent variables and parameters given the data. Using Bayes' rule,
+$$p(\mathbf{z}, \theta \mid \mathbf{x}\_\text{obs}) = \frac{p(\mathbf{x}\_\text{obs} \mid \mathbf{z}, \theta) p(\mathbf{z} \mid \theta) p(\theta)}{p(\mathbf{x}\_\text{obs})}.$$
 
 The posterior distribution is used to examine the particular hidden structure that is manifested in the observed data. It can also be used to make predictions about new, unseen data, through the posterior predictive distribution,
-$$p(x\_\text{new} \mid x\_\text{obs}) = \iint p(x\_\text{new} \mid z, \theta) p(z, \theta \mid x\_\text{obs}) dz d\theta.$$
+$$p(\mathbf{x}\_\text{new} \mid \mathbf{x}\_\text{obs}) = \iint p(\mathbf{x}\_\text{new} \mid \mathbf{z}, \theta) p(\mathbf{z}, \theta \mid \mathbf{x}\_\text{obs}) d\mathbf{z} d\theta.$$
 
 ---
 
