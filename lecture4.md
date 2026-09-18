@@ -200,6 +200,24 @@ The factorization assumes that each observation $\mathbf{x}\_i$ is mediated by i
 
 class: middle
 
+## Marginal likelihood
+
+The latent variables are not observed. Integrating them out gives the likelihood of the data alone,
+$$p(\mathbf{x} \mid \theta) = \int p(\mathbf{x} \mid \mathbf{z}, \theta) p(\mathbf{z} \mid \theta) \, d\mathbf{z},$$
+or, for $N$ conditionally independent observations,
+$$p(\mathbf{x}\_{1:N} \mid \theta) = \prod\_{i=1}^N \int p(\mathbf{x}\_i \mid \mathbf{z}\_i, \theta) p(\mathbf{z}\_i \mid \theta) \, d\mathbf{z}\_i.$$
+
+This integral is where the difficulty of latent variable models lies: it is what maximum likelihood maximizes, and it is the normalizer of the posterior over the latent variables,
+$$p(\mathbf{z} \mid \mathbf{x}, \theta) = \frac{p(\mathbf{x} \mid \mathbf{z}, \theta) p(\mathbf{z} \mid \theta)}{p(\mathbf{x} \mid \theta)}.$$
+
+???
+
+Both examples of this lecture are among the rare cases where the integral is available in closed form: a Gaussian integral for probabilistic PCA, a finite sum over the $K$ components for a mixture. Elsewhere there is none, and much of the second half of the course is built around this: EM (L8) and variational inference (L9) attack the integral, while MCMC (L6) samples the posterior without ever computing its normalizer.
+
+---
+
+class: middle
+
 ## Graphical model representation
 
 Latent variable models can be represented using graphical models, where nodes represent variables (observed, latent, or parameters) and edges represent (possible) dependencies between them.
@@ -268,6 +286,8 @@ $$p(\mathbf{x}\_\text{new} \mid \mathbf{x}\_\text{obs}) = \iint p(\mathbf{x}\_\t
 ???
 
 Here $\mathbf{z}$ is the latent variable of the new observation, drawn from the model: only the parameters are informed by the data already seen.
+
+The denominator $p(\mathbf{x}\_\text{obs})$ is the marginal likelihood one level up, with the parameters integrated out too: $p(\mathbf{x}\_\text{obs}) = \int p(\mathbf{x}\_\text{obs} \mid \theta) p(\theta) \, d\theta$.
 
 ---
 
