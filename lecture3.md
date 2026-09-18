@@ -12,13 +12,6 @@ Prof. Gilles Louppe<br>
 
 https://badriadhikari.github.io/data-viz-workshop-2021/
 
----
-
-class: middle
-
-.center.width-55[![](figures/lec2/pairplot_by_species.png)]
-
-Last lecture produced plots like this one. This lecture is about drawing them well.
 
 ---
 
