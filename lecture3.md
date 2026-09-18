@@ -456,7 +456,7 @@ class: middle
 
 ???
 
-The rule follows from the encoding: a bar encodes a value as a length, so cutting its baseline lies. The next slide makes the distinction.
+The rule follows from the encoding: a bar encodes a value as a length, so cutting its baseline lies. A dot or a line encodes a position instead, and may show a narrow range: temperature anomalies of a degree need no axis starting at zero.
 
 .footnote[Credits: John Muyskens, [Most of Trump's charts skew the data](https://www.washingtonpost.com/graphics/politics/2016-election/trump-charts/), The Washington Post, 2016.]
 
@@ -471,15 +471,6 @@ class: middle
 
 .footnote[Credits: John Muyskens, [Most of Trump's charts skew the data](https://www.washingtonpost.com/graphics/politics/2016-election/trump-charts/), The Washington Post, 2016.]
 
----
-
-class: middle
-
-## Zero belongs under bars
-
-.center.width-95[![](figures/lec3/axis-zero.png)]
-
-A bar encodes a value as a length, so its baseline must be zero. A dot or a line encodes a position, and may show a narrow range: temperature anomalies of a degree do not need an axis starting at zero.
 
 ---
 

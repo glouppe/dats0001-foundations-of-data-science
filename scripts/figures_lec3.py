@@ -356,26 +356,6 @@ def uncertainty(df):
     save(fig, "figures/lec3/uncertainty.png")
 
 
-def axis_zero(df):
-    """Cutting the baseline lies about lengths, but not about positions."""
-    means = df.groupby("species").body_mass_g.mean().reindex(SPECIES)
-    fig, (bars, dots) = plt.subplots(1, 2, figsize=(11, 4.0), dpi=200)
-
-    bars.bar(SPECIES, means.values, color=[COLOR[s] for s in SPECIES])
-    bars.set_ylim(3500, 5200)
-    bars.set_ylabel("Mean body mass [g]")
-    bars.set_title("Bars cut at 3500 g: Gentoo look ten times heavier", fontsize=12, loc="left")
-
-    dots.scatter(SPECIES, means.values, s=90, color=[COLOR[s] for s in SPECIES], zorder=3)
-    dots.set_ylim(3500, 5200)
-    dots.grid(axis="y", alpha=.3)
-    dots.set_title("Dots on the same range: no length to misread", fontsize=12, loc="left")
-
-    for ax in (bars, dots):
-        ax.spines[["top", "right"]].set_visible(False)
-    save(fig, "figures/lec3/axis-zero.png")
-
-
 if __name__ == "__main__":
     penguins = pd.read_csv("data/penguins.csv").dropna(subset=["flipper_length_mm", "body_mass_g"])
     hsv_model()
@@ -391,4 +371,3 @@ if __name__ == "__main__":
     binning(penguins)
     guides(penguins)
     uncertainty(penguins)
-    axis_zero(penguins)
