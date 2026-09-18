@@ -529,9 +529,9 @@ Gaia is an ESA satellite that scanned the whole sky repeatedly from 2014 to 2025
 class: middle
 
 Distances are what turn a catalogue of angles and brightnesses into physics:
-- how bright a star looks depends both on how bright it is and on how far it sits; the distance separates the two, and the intrinsic brightness is what tells the star's mass and age,
-- how fast it drifts across the sky, an angle per year, becomes a speed in kilometres per second, from which the mass of the Galaxy, dark matter included, is weighed,
-- the catalogue becomes a three-dimensional map: spiral arms, clusters, streams.
+- how bright a star looks depends on how bright it really is and on how far away it is; the distance separates the two, and how bright it really is tells its mass and its age,
+- how fast it drifts across the sky, an angle per year, becomes a speed in kilometres per second, which is how the mass of the Galaxy, dark matter included, is weighed,
+- the catalogue stops being a picture of the sky and becomes a three-dimensional map.
 
 ???
 
@@ -627,9 +627,9 @@ class: middle
 
 .center[Three stars: where each could be knowing only that stars thin out with<br> distance (grey), and where it is once its own parallax is used (blue).]
 
-.success[Even the 82% of stars whose parallax is too noisy to invert come out with a distance, and still contribute to the estimate of $L$.]
-
 ???
+
+Even the 82% of stars whose parallax is too noisy to invert come out with a distance, and still contribute to the estimate of $L$.
 
 Top: the parallax is precise, so the posterior collapses onto $1/\varpi$ and the grey curve makes no difference. Middle: the parallax is noisy, and the posterior sits between $1/\varpi$ and the larger distances where most stars are. Bottom: the parallax is negative, so there is nothing to invert; what remains is the grey curve, cut back by the little the measurement does rule out.
 ---
