@@ -10,14 +10,9 @@ Prof. Gilles Louppe<br>
 
 ???
 
-An example to open with: the distances to the stars Gaia measures.
+An example to open with, developed at the end of the lecture as Example 4: the distances to the stars Gaia measures. The distance of a star is never observed, only a noisy parallax, and what fills the gap is a model of where stars sit in the Galaxy.
 
-- Gaia reports a parallax for each of 1.47 billion stars, with its uncertainty. What astronomers want is the distance, and it is never observed. Most of these stars are so faint or so far that the parallax is too noisy to invert, and some of the measured parallaxes are even negative.
-- The model: the distance $r\_i$ of star $i$ is a latent variable, the measured parallax is $1/r\_i$ plus noise of known width, and the prior on $r\_i$ says where stars actually sit, from a three-dimensional model of the Galaxy, direction by direction, including interstellar dust and the varying depth of the survey across the sky.
-- The posterior of each star follows its parallax when it is good, and falls back on the population model when it is not. Colour and apparent magnitude sharpen it further, since stars of a given colour have a restricted range of absolute magnitudes.
-- This is how the distance catalogue everyone uses was built: Bailer-Jones et al., Estimating distances from parallaxes V, AJ 161, 147 (2021).
-
-The population model is fixed here, a hyperparameter in the sense of this lecture. Make it a parameter shared by all the stars and the model becomes hierarchical, which is what is done when the Galaxy itself is the question, or in the gravitational-wave catalogues: per event, the masses of two black holes are latent; across events, the mass spectrum and the merger rate are the shared parameters (LIGO-Virgo-KAGRA, ApJL 1005, L51, 2026).
+A second one, hierarchical throughout: the gravitational-wave catalogues. Per event, the masses of the two black holes are latent; across events, the mass spectrum and the merger rate are the shared parameters (LIGO-Virgo-KAGRA, ApJL 1005, L51, 2026).
 
 XXX: Give a few more examples of latent variable models (from scientific domains, engineering, social sciences, etc.)
 
@@ -502,6 +497,148 @@ class: middle
 .center.width-100[![](figures/lec4/lda2.png)]
 
 .footnote[Credits: [Blei](https://www.eecis.udel.edu/~shatkay/Course/papers/UIntrotoTopicModelsBlei2011-5.pdf), 2011.]
+
+---
+
+class: middle
+
+## Example 4: How far are the stars?
+
+Gaia measured the .bold[parallax] of 1.47 billion stars: the angle that the radius of Earth's orbit subtends at the star. Geometry ties it to the distance,
+$$\varpi = \frac{1}{r},$$
+with $\varpi$ in milliarcseconds and $r$ in kiloparsecs.
+
+.center.width-65[![](figures/lec4/parallax-geometry.svg)]
+
+.center[Not to scale.]
+
+???
+
+At 1 kpc, the angle is one milliarcsecond: a two-euro coin seen from 5000 km.
+
+Gaia is an ESA satellite that scanned the whole sky repeatedly from 2014 to 2025. Its distances underpin much of what we now know about the Galaxy.
+
+---
+
+class: middle
+
+.center.width-65[![](figures/lec4/gaia-parallaxes.png)]
+
+.center[A random sample of 5000 stars from Gaia DR3.<br> 17% of the parallaxes are negative, and 82% have $\varpi\_i / \sigma\_i < 5$.]
+
+.footnote[Data: ESA/Gaia/DPAC, Gaia DR3.]
+
+???
+
+A negative parallax is not a broken measurement: it is a noisy measurement of a small positive angle. Keeping only the stars with a good parallax, or inverting those alone, quietly restricts the sample to the nearby ones.
+
+---
+
+class: middle
+
+.bold[Geometry.] The parallax of a star at distance $r\_i$ is exactly $1/r\_i$. There is no modelling freedom here: it is what a parallax is.
+
+.bold[The instrument.] Gaia does not report the angle, but an estimate of it, with an uncertainty $\sigma\_i$ computed star by star. These errors are unbiased and, to a good approximation, Gaussian,
+$$p(\varpi\_i \mid r\_i, \sigma\_i) = \mathcal{N}(\varpi\_i \mid 1/r\_i, \sigma\_i^2),$$
+which is why a measured parallax can be negative while a distance cannot.
+
+???
+
+The real instrument is messier still: Gaia's parallaxes carry a small systematic offset, of the order of $-17$ microarcseconds, which careful work corrects for before anything else. Another piece of domain knowledge, and another term in the model.
+
+---
+
+class: middle
+
+.bold[The Galaxy.] Stars are not spread evenly through space. Two facts fix the shape of the prior: a shell at distance $r$ has a volume growing like $r^2$, and the density of stars falls off with a scale length $L$. Together,
+$$p(r\_i \mid L) = \frac{r\_i^2}{2L^3} \exp(-r\_i / L), \qquad r\_i > 0.$$
+
+.success[Each piece comes from somewhere: the definition of a parallax, the error model of the instrument, the way stars fill the Galaxy.]
+
+???
+
+The $2L^3$ normalizes the prior. This exponentially decreasing space density prior is from Bailer-Jones (2015).
+
+---
+
+class: middle
+
+.center.width-50[![](figures/lec4/gaia-model.svg)]
+
+.center[A distance we want, a parallax we measure, an uncertainty the pipeline hands us,<br> a length scale we fix.]
+
+---
+
+class: middle
+
+For each star, Bayes' rule gives
+$$p(r\_i \mid \varpi\_i, \sigma\_i, L) \propto \mathcal{N}(\varpi\_i \mid 1/r\_i, \sigma\_i^2) \\, \frac{r\_i^2}{2L^3} \exp(-r\_i/L).$$
+
+There is no closed form, but the posterior is one-dimensional: a grid is enough.
+
+---
+
+class: middle
+
+.center.width-65[![](figures/lec4/gaia-posteriors.svg)]
+
+.center[Three stars of the sample: the parallax speaks when it is precise,<br> the Galaxy when it is not.]
+
+???
+
+Top: the parallax is precise, the posterior sits on $1/\varpi$ and the prior is irrelevant. Middle: the parallax is noisy, and the posterior is pulled towards the larger distances the Galaxy makes more likely, past $1/\varpi$. Bottom: the parallax is negative, there is nothing to invert, and what is left is the prior, trimmed by the measurement.
+
+---
+
+class: middle
+
+.question[Where does $L$ come from?]
+
+Fixing it makes it a hyperparameter. Letting the stars speak about it makes it a parameter shared by all of them, and the model .bold[hierarchical]: local distances $r\_i$ inside the plate, a global $L$ outside.
+
+Its estimate maximizes the marginal likelihood of the catalogue,
+$$p(\varpi\_{1:N} \mid \sigma\_{1:N}, L) = \prod\_{i=1}^N \int p(\varpi\_i \mid r\_i, \sigma\_i) \\, p(r\_i \mid L) \\, dr\_i,$$
+the same integral as before, now read as a function of $L$.
+
+---
+
+class: middle
+
+.center.width-50[![](figures/lec4/gaia-model-learned.svg)]
+
+.center[The square becomes a circle: what was fixed is now inferred,<br> from all the stars at once.]
+
+---
+
+class: middle
+
+.center.width-65[![](figures/lec4/gaia-length-scale.svg)]
+
+.center[The 5000 stars of the sample, taken together, put the length scale at about 1 kpc.]
+
+???
+
+No star on its own says anything about $L$; the catalogue does. This is the shape of every hierarchical model: each observation is weak, the population is not.
+
+The value is close to the 1.35 kpc used by Bailer-Jones (2015), which is reassuring, but it is also the answer to a caricature: one length scale for the whole sky, and no correction for the fact that Gaia only sees the stars bright enough to be detected.
+
+---
+
+class: middle
+
+.center.width-10[![](figures/lec4/light-bulb.png)]
+
+Every term of this model came from somewhere: the geometry from the definition of a parallax, the error model from the instrument, the prior from the way stars fill the Galaxy.
+
+.bold[A model is an argument about how the data came to be], not a stack of convenient distributions. Each assumption can be named, defended, and attacked.
+
+.footnote[Credits: [Bailer-Jones et al.](https://doi.org/10.3847/1538-3881/abd806), 2021.]
+
+???
+
+Attack this one. A single length scale ignores that the Galaxy is a disk seen from inside and that dust hides the distant stars: the published catalogue therefore fits the prior direction by direction, from a three-dimensional model of the Galaxy. And the sample is not a fair draw from the population, since Gaia only sees what is bright enough, which bends $\hat{L}$.
+
+That is the critique step of Box's loop, and the kind of assumption Lecture 7 puts to the test.
 
 ---
 
