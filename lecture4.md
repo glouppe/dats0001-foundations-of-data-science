@@ -612,6 +612,12 @@ Its estimate maximizes the marginal likelihood of the catalogue,
 $$p(\varpi\_{1:N} \mid \sigma\_{1:N}, L) = \prod\_{i=1}^N \int p(\varpi\_i \mid r\_i, \sigma\_i) \\, p(r\_i \mid L) \\, dr\_i,$$
 the same integral as before, now read as a function of $L$.
 
+Nothing stops us from putting a prior $p(L)$ on it and keeping a posterior instead, $p(L \mid \varpi\_{1:N}, \sigma\_{1:N}) \propto p(\varpi\_{1:N} \mid \sigma\_{1:N}, L) \, p(L)$. With 5000 stars it would change little, since that posterior is a spike; with fifty it would.
+
+???
+
+Under a flat prior, the curve on the next slide is that posterior on a log scale. Its maximum sits at 1.02 kpc and its width is about 0.014 kpc, an uncertainty of 1.4%, so plugging the maximum into each star's posterior is indistinguishable from integrating over it. Take 50 stars instead of 5000 and the width grows to 0.11 kpc, 12%: there, a single value would hide what we do not know, and $L$ would be sampled along with the distances, as in Lecture 6.
+
 ---
 
 class: middle
