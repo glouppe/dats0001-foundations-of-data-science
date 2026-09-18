@@ -551,12 +551,12 @@ class: middle
 
 ???
 
-- Good: a consistent layout, the sweep organised by width and modes, and exact values printed for reading.
-- Once every value is printed, the bars carry nothing: this is a table drawn as a chart. Use a table for exact numbers, or a heatmap to show the pattern.
-- The question is presumably "does depth or width help?". Lines of the metric against N, one panel per width, would answer it directly; 72 panels do not.
-- Comparison across panels is impossible: the eye has to jump between distant axes, and the negative values (−0.22, −8.07) are squashed by the 0–1 range.
-- Two legends sit far from what they label, and the text is too small to read on a slide.
-- Colour encodes an ordered quantity, the number of layers, with a sequential palette: that part is right.
+- This is an exploratory plot published as an explanatory one. As a private sweep it is defensible: everything is there, and the author knows what to look for. As a figure in a thesis it fails, because the reader is given 72 panels and no message.
+- Once every value is printed, the bars carry nothing: it is a table drawn as a chart. A table for exact numbers, a heatmap for the pattern.
+- The question is presumably "does depth or width help?". Lines of the metric against N, one panel per width, answer it directly.
+- Comparison across panels is impossible: the eye jumps between distant axes, and the negative values (−0.22, −8.07) are squashed by the 0–1 range.
+- Two legends sit far from what they label, and the text is unreadable at this size.
+- What it gets right: a consistent layout, and an ordered quantity (the number of layers) encoded with a sequential palette.
 
 
 ---
