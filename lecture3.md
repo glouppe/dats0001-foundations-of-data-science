@@ -524,17 +524,46 @@ class: middle
 
 .center.width-100[![](figures/lec3/discussion1.png)]
 
+???
+
+- Good: lines for an evolution against a continuous variable, axes labelled with their quantities, and a caption that states the setup.
+- Colour: noise is an ordered variable encoded with ten categorical colours. A sequential colormap would make the order readable, and would survive colour vision deficiency.
+- Guides: a ten-entry legend sends the eye back and forth. Label a few curves in place, or keep only 0%, 50% and 90%.
+- Eight curves overlap at the top: the story is the collapse near threshold 1. Zoom on 0.85–1.0, or spread that region with a scale on 1 − threshold.
+- The grey panel and heavy grid are default ink that no one reads.
+- The y axis starts at 0.2, which is fine: these are positions, not lengths.
+- Nothing shows how uncertain each curve is, though F1 is estimated on a finite test set.
+
 ---
 
 class: middle
 
 .center.width-85[![](figures/lec3/discussion2.png)]
 
+???
+
+- Good: small multiples, one panel per planet, a sequential colormap for an ordered variable (epoch), a single shared colorbar, and a legend for the marks given once.
+- The four panels use four different ranges, from 800 to 3000 mas, so they cannot be compared at a glance. Juxtaposed panels should share their scales.
+- The colormap is a rainbow: equal steps in time are not equal steps in colour. Viridis or plasma would be read correctly.
+- A thousand opaque orbits per panel saturate the centre. Transparency, or a band showing the bulk with a few sampled orbits on top.
+- The legend sits inside a panel and covers data.
+- The caption names the message, the impossible orbits, but the figure never points at them. Annotate one.
+- Inverting the x axis to match the literature is a good decision, and the caption says so.
+
 ---
 
 class: middle
 
 .center.width-60[![](figures/lec3/discussion3.png)]
+
+???
+
+- Good: a consistent layout, the sweep organised by width and modes, and exact values printed for reading.
+- Once every value is printed, the bars carry nothing: this is a table drawn as a chart. Use a table for exact numbers, or a heatmap to show the pattern.
+- The question is presumably "does depth or width help?". Lines of the metric against N, one panel per width, would answer it directly; 72 panels do not.
+- Comparison across panels is impossible: the eye has to jump between distant axes, and the negative values (−0.22, −8.07) are squashed by the 0–1 range.
+- Two legends sit far from what they label, and the text is too small to read on a slide.
+- Colour encodes an ordered quantity, the number of layers, with a sequential palette: that part is right.
 
 
 ---
