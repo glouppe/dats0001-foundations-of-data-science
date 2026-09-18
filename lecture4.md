@@ -631,11 +631,11 @@ class: middle
 
 Even the 82% of stars whose parallax is too noisy to invert come out with a distance, and still contribute to the estimate of $L$.
 
-Every curve is scaled to the same height, so compare shapes, not spreads.
+The two curves of a panel are densities on the same scale, but the scale differs from panel to panel: the spike of the first star reaches 20 per kpc, the other two about 0.3.
 
 Top: the parallax is precise, so the posterior collapses onto $1/\varpi$ and the grey curve makes no difference. Middle: the parallax is noisy, and the posterior sits between $1/\varpi$ and the larger distances where most stars are; it is genuinely narrower than the grey curve, 1.4 kpc against 1.8.
 
-Bottom: a negative parallax does not point at a distance, it only rules out the near ones. Its likelihood is a ramp rather than a bump: nearly zero at 1 kpc, then 0.27, 0.65 and 0.87 of its limiting value at 2, 4 and 8 kpc, since the closest the model can come to a negative angle is $1/r \to 0$. Multiplying the grey curve by that ramp cuts its near side and leaves the far tail almost untouched, so the posterior moves outwards, from a mode of 2.1 to 3.1 kpc, while its width hardly changes, 1.77 kpc against 1.78. It looks broader on the plot only because it sits further out.
+Bottom: a negative parallax does not point at a distance, it only rules out the near ones. Its likelihood is a ramp rather than a bump: nearly zero at 1 kpc, then 0.27, 0.65 and 0.87 of its limiting value at 2, 4 and 8 kpc, since the closest the model can come to a negative angle is $1/r \to 0$. Multiplying the grey curve by that ramp cuts its near side and leaves the far tail almost untouched, so the posterior moves outwards, from a mode of 2.1 to 3.1 kpc, while its width hardly changes, 1.77 kpc against 1.78. The panel shows it: the blue curve is no lower and no flatter than the grey one, only further out.
 ---
 
 class: middle

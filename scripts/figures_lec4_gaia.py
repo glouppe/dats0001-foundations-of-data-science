@@ -126,32 +126,44 @@ def summarize(lengths, density):
 
 
 def posteriors(df, lengths, density):
-    """Three stars of the sample: the parallax speaks, or the Galaxy does."""
+    """Three stars of the sample, as densities: the curves of a panel share its scale."""
     stars = [pick(df, error=.02, snr=40), pick(df, error=.3, snr=2),
              pick(df, error=.4, negative=True)]
     titles = ["a well measured parallax", "a noisy parallax",
               "a negative parallax, nothing to invert"]
 
-    r = np.linspace(.02, 8, 2000)
+    r = np.linspace(.02, 8, 4000)                 # what is drawn
+    wide = np.linspace(.02, 40, 8000)             # what the summaries are computed on
     # p(r_i | everything) integrates the Galaxy model over the posterior of L
-    population = np.trapezoid(prior(r[None, :], lengths[:, None]) * density[:, None],
-                              lengths, axis=0)
+    def marginal(grid):
+        return np.trapezoid(prior(grid[None, :], lengths[:, None]) * density[:, None],
+                            lengths, axis=0)
+    population, population_wide = marginal(r), marginal(wide)
     fig, axes = plt.subplots(3, 1, figsize=(5.8, 5.1), dpi=200, sharex=True)
     for ax, star, title in zip(axes, stars, titles):
         p = likelihood(r, star.parallax, star.parallax_error) * population
-        ax.plot(r, population / population.max(), color=LIGHT, lw=1.4,
-                label="before the parallax")
-        ax.fill_between(r, p / p.max(), color=BLUE, alpha=.25)
-        ax.plot(r, p / p.max(), color=BLUE, lw=1.6, label="after the parallax")
+        p /= np.trapezoid(p, r)
+        ax.plot(r, population, color=LIGHT, lw=1.4, label="before the parallax")
+        ax.fill_between(r, p, color=BLUE, alpha=.25)
+        ax.plot(r, p, color=BLUE, lw=1.6, label="after the parallax")
         if star.parallax > 0:
             ax.axvline(1 / star.parallax, color=RED, lw=1.2, ls=(0, (4, 3)),
                        label=r"$1/\varpi$")
-        ax.set_yticks([])
+        q = likelihood(wide, star.parallax, star.parallax_error) * population_wide
+        q /= np.trapezoid(q, wide)
+        mean = np.trapezoid(wide * q, wide)
+        sd = np.trapezoid((wide - mean) ** 2 * q, wide) ** .5
+        digits = 2 if sd < .1 else 1
+        ax.text(.99, .84, r"$r = %.*f \pm %.*f$ kpc" % (digits, mean, digits, sd),
+                transform=ax.transAxes, ha="right", va="top", fontsize=11, color=BLUE)
         ax.set_title(r"%s: $\varpi = %.2f \pm %.2f$ mas"
                      % (title, star.parallax, star.parallax_error),
                      loc="left", fontsize=11, pad=4)
-    axes[1].legend(loc="upper right", fontsize=10, frameon=False)
-    axes[1].set_ylabel("density")
+        ax.set_ylim(0, p.max() * 1.25)
+        ax.set_yticks([0, round(p.max(), 1 if p.max() < 1 else 0)])
+        ax.margins(x=0)
+    axes[1].legend(loc="upper right", bbox_to_anchor=(1, .78), fontsize=10, frameon=False)
+    axes[1].set_ylabel("density (per kpc)")
     axes[-1].set_xlabel("Distance $r$ (kpc)")
     fig.tight_layout()
     save(fig, "figures/lec4/gaia-posteriors.svg")
