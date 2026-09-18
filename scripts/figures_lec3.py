@@ -318,8 +318,9 @@ def guides(df):
 
 
 def uncertainty(df):
-    """Bars with error bars hide the data they summarize."""
-    fig, (dynamite, shown) = plt.subplots(1, 2, figsize=(11, 4.2), dpi=200, sharey=True)
+    """Bars with error bars hide the data they summarize, and never say what they measure."""
+    fig, (dynamite, shown, which) = plt.subplots(1, 3, figsize=(14, 4.2), dpi=200,
+                                                 sharey=True, width_ratios=[1, 1, .7])
     rng = np.random.default_rng(1)
     means = df.groupby("species").body_mass_g.mean().reindex(SPECIES)
     sems = df.groupby("species").body_mass_g.sem().reindex(SPECIES)
@@ -335,7 +336,21 @@ def uncertainty(df):
     shown.set_xticklabels(SPECIES)
     shown.set_title("Every bird, with the mean and its interval", fontsize=12, loc="left")
 
-    for ax in (dynamite, shown):
+    adelie = df[df.species == "Adelie"].body_mass_g
+    bars = [("standard\ndeviation", adelie.std()),
+            ("standard\nerror", adelie.sem()),
+            ("95%\ninterval", 1.96 * adelie.sem())]
+    for i, (name, half) in enumerate(bars):
+        which.errorbar(i, adelie.mean(), yerr=half, fmt="o", color=COLOR["Adelie"], capsize=8,
+                       lw=2)
+        which.annotate(f"±{half:.0f} g", (i, adelie.mean() + half), textcoords="offset points",
+                       xytext=(0, 8), ha="center", fontsize=10, color=GREY)
+    which.set_xticks(range(3))
+    which.set_xticklabels([name for name, _ in bars], fontsize=10)
+    which.set_xlim(-.6, 2.6)
+    which.set_title("Adelie mean, three error bars", fontsize=12, loc="left")
+
+    for ax in (dynamite, shown, which):
         ax.spines[["top", "right"]].set_visible(False)
     dynamite.set_ylabel("Body mass [g]")
     save(fig, "figures/lec3/uncertainty.png")

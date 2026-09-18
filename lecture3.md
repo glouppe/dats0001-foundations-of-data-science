@@ -394,7 +394,13 @@ class: middle
 
 .center.width-100[![](figures/lec3/uncertainty.png)]
 
-A bar with an error bar shows a mean and a width, and hides everything else. Show the data, then the estimate and its interval. From Lecture 7 on, the same holds for what a model predicts.
+A bar with an error bar shows a mean and a width, and hides everything else. Show the data, then the estimate and its interval.
+
+.alert[An error bar means nothing until the caption says what it is: here the same Adelie mean carries ±459 g, ±37 g or ±73 g, depending on whether the bar is a standard deviation, a standard error or a 95% interval.]
+
+???
+
+From Lecture 7 on, the same holds for what a model predicts.
 
 
 ---
