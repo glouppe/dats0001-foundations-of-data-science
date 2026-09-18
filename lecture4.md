@@ -8,23 +8,15 @@ Lecture 4: Latent variable models
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
-???
-
-An example to open with, developed at the end of the lecture as Example 4: the distances to the stars Gaia measures. The distance of a star is never observed, only a noisy parallax, and what fills the gap is a model of where stars sit in the Galaxy.
-
-A second one, hierarchical throughout: the gravitational-wave catalogues. Per event, the masses of the two black holes are latent; across events, the mass spectrum and the merger rate are the shared parameters (LIGO-Virgo-KAGRA, ApJL 1005, L51, 2026).
-
-XXX: Give a few more examples of latent variable models (from scientific domains, engineering, social sciences, etc.)
-
 ---
 
 class: middle
 
 .center.width-40[![](figures/lec4/pairplot_by_species.png)]
 
-In Lecture 2, our exploratory data analysis revealed that penguins are clustered by species, with distinctive physical traits. 
+Lecture 2 closed on four hypotheses, and three of them are for today: body mass is not a single population but a mixture of species, measurements differ from group to group, and the four measurements are correlated enough that fewer numbers may describe them.
 
-.question[What if we had not been given the species labels? What underlying factors might explain the observed variations in physical traits?]
+.question[What if we had not been given the species labels? Which unobserved quantities would explain what we see?]
 
 ---
 
@@ -36,21 +28,17 @@ class: middle
 
 class: middle
 
-Data are recorded observations about the world. Mathematically, we can think of data as resulting from a function $f$ that maps real-world entities $\omega$ to measurements $\mathbf{x}$,
-$$f : \Omega \to \mathcal{X},$$
-where
-- $\Omega$ is the sample space (the set of all possible entities, accounting for all sources of variability),
-- $\mathcal{X}$ is the measurement space.
+.bold[Recap from Lecture 2.] A measurement is what a process produces from an entity $\omega \in \Omega$ (a penguin) under measurement conditions $\xi \in \Xi$ (the scale, the observer, the day),
+$$f : \Omega \times \Xi \to \mathcal{X}.$$
+Neither $\omega$ nor $\xi$ is observed, only $\mathbf{x} = f(\omega, \xi)$.
 
-Entities $\omega \in \Omega$ are not observable, only their measurements $\mathbf{x} = f(\omega) \in \mathcal{X}$ are.
+Given a distribution $p(\omega, \xi)$ over entities and conditions, $f$ induces the .bold[data distribution]
+$$p\_r(\mathbf{x}) = \iint p(\omega, \xi) \, \delta(\mathbf{x} - f(\omega, \xi)) \, d\omega \, d\xi,$$
+which is what a model has to account for, and $\theta$ stays free for the parameters of that model.
 
----
+???
 
-class: middle
-
-If the sample space $\Omega$ is equipped with a probability function $p$, then the data $\mathbf{x} = f(\omega)$ can be viewed as a random variable with distribution induced by $p$, $$\mathbf{x} \sim p\_r(\mathbf{x}) = \int_{\omega \in \Omega} p(\omega) \delta(\mathbf{x} - f(\omega)) d\omega,$$ where $\delta$ is the Dirac delta function.
-
-We call $p\_{r}(\mathbf{x})$ the .bold[data generating process] or the data distribution, where $r$ stands for "real".
+The entities and the conditions are the first latent variables of the course, although we never call them that: they are unobserved, and they explain the variability of what we record. Today we put some of them back into the model, as $\mathbf{z}$.
 
 ---
 
@@ -165,12 +153,15 @@ This distribution defines the data that we expect to observe under the model ass
 
 class: middle
 
-$$\begin{aligned}
-p(\mu, \sigma^2) &= \mathcal{N}(\mu | 5000, 2000^2) \times \text{Uniform}(\sigma^2 | 0, 100) \\\\
-p(x | \mu, \sigma^2) &= \mathcal{N}(x | \mu, \sigma^2)
-\end{aligned}$$
+.center.width-65[![](figures/lec4/prior-predictive-check.png)]
 
-.center.width-80[![](figures/lec4/prior_predictive_samples.png)]
+.center[Five colonies of 342 penguins simulated from the prior (top), and from a wider<br> prior on $\sigma^2$ (bottom), against the penguins actually measured.]
+
+???
+
+$\text{Uniform}(\sigma^2 \mid 0, 100)$ caps $\sigma$ at 10 g, so every simulated colony weighs the same to within a few grams, while real penguins spread over some 800 g. A pooled histogram of many draws would have hidden this, since its width comes from the prior on $\mu$; simulating whole datasets shows it at once.
+
+The repair is not subtle, and that is the point: a prior predictive check is cheap, and it catches this before any data are touched.
 
 ---
 
@@ -269,7 +260,7 @@ $$p(\theta \mid \alpha),$$
 or the prior distribution of latent variables may depend on hyperparameters,
 $$p(\mathbf{z} \mid \theta, \beta).$$
 
-.footnote[1: Estimating hyperparameters from data is possible and will be discussed later in the course.]
+.footnote[1: Estimating hyperparameters from data is possible; this is empirical Bayes, seen in Example 4 and in Lecture 8.]
 
 ---
 
@@ -296,6 +287,21 @@ $$p(\mathbf{x}\_\text{new} \mid \mathbf{x}\_\text{obs}) = \iint p(\mathbf{x}\_\t
 Here $\mathbf{z}$ is the latent variable of the new observation, drawn from the model: only the parameters are informed by the data already seen.
 
 The denominator $p(\mathbf{x}\_\text{obs})$ is the marginal likelihood one level up, with the parameters integrated out too: $p(\mathbf{x}\_\text{obs}) = \int p(\mathbf{x}\_\text{obs} \mid \theta) p(\theta) \, d\theta$.
+
+---
+
+class: middle
+
+Latent variables appear wherever the quantity that matters cannot be recorded:
+- .bold[Astronomy]: the distance of a star, behind a noisy parallax (Example 4).
+- .bold[Engineering]: the position and velocity of a vehicle, behind its sensors (state-space models, Lecture 5).
+- .bold[Education]: the ability of a student, behind right and wrong answers (item response theory).
+- .bold[Genetics]: the ancestral populations a genome is mixed from, behind its alleles (admixture models, the same structure as the topic models below).
+- .bold[Epidemiology]: how many people are actually infected, behind the cases a health system reports.
+
+???
+
+The last one is the COVID story of Lecture 1: reported cases are a filtered, delayed view of an epidemic nobody observes directly.
 
 ---
 
@@ -429,7 +435,7 @@ class: middle
 
 Computing the posterior distribution $p(\theta, z\_{1:N} \mid \mathbf{x}\_{1:N}, \alpha, \sigma^2\_\mu, \sigma^2\_\sigma)$ amounts to solving a clustering problem, where each component corresponds to a cluster and the latent variables $z\_i$ indicate cluster membership of each observation.
 
-The posterior is typically intractable, requiring approximate inference methods such as Expectation-Maximization (EM) or Variational Inference (VI).
+The posterior is typically intractable. Sampling from it is the subject of Lecture 6 (MCMC), approximating it by a simpler distribution that of Lecture 9 (variational inference); Lecture 8 (EM) settles instead for a point estimate of $\theta$, with the $z\_i$ integrated out.
 
 A mixture is also identified only up to a permutation of its components: relabelling them leaves the distribution unchanged, so the posterior has $K!$ equivalent modes.
 
@@ -437,7 +443,7 @@ A mixture is also identified only up to a permutation of its components: relabel
 
 Label switching is why a sampler exploring the posterior of a mixture visits several equivalent modes, and why averaging the draws of $\boldsymbol{\mu}\_k$ across them is meaningless. We come back to this multimodality in L6.
 
-Again, deriving clustering from a latent variable model provides a probabilistic interpretation of cluster assignments as the most likely latent variables that could have generated the observed data. Its provides a principled narrative with explicit assumptions rather than a mere algorithmic recipe.
+Again, deriving clustering from a latent variable model provides a probabilistic interpretation of cluster assignments as the most likely latent variables that could have generated the observed data. It provides a principled narrative with explicit assumptions rather than a mere algorithmic recipe.
 
 ---
 
@@ -457,7 +463,7 @@ Nested sets of latent variables can also be used to model more complex generativ
 
 class: middle
 
-For instance, in mixed membership models of text documents (.bold[latent dirichlet allocation]), each document is assumed to be generated from a mixture of topics, where each topic is characterized by a distribution over words.
+For instance, in mixed membership models of text documents (.bold[latent Dirichlet allocation]), each document is assumed to be generated from a mixture of topics, where each topic is characterized by a distribution over words.
 
 .center.width-50[![](figures/lec4/lda-model.svg)]
 
@@ -551,7 +557,7 @@ class: middle
 
 .bold[Geometry.] The parallax of a star at distance $r\_i$ is exactly $1/r\_i$. There is no modelling freedom here: it is what a parallax is.
 
-.bold[The instrument.] Gaia does not report the angle, but an estimate of it, with an uncertainty $\sigma\_i$ computed star by star. These errors are unbiased and, to a good approximation, Gaussian,
+.bold[The instrument.] Gaia does not report the angle, but an estimate of it, with an uncertainty $\sigma\_i$ computed star by star. Modelling those errors as unbiased and Gaussian gives
 $$p(\varpi\_i \mid r\_i, \sigma\_i) = \mathcal{N}(\varpi\_i \mid 1/r\_i, \sigma\_i^2),$$
 which is why a measured parallax can be negative while a distance cannot.
 
@@ -563,7 +569,7 @@ The real instrument is messier still: Gaia's parallaxes carry a small systematic
 
 class: middle
 
-.bold[The Galaxy.] Stars are not spread evenly through space. Two facts fix the shape of the prior: a shell at distance $r$ has a volume growing like $r^2$, and the density of stars falls off with a scale length $L$. Together,
+.bold[The Galaxy.] Stars are not spread evenly through space. Geometry gives a shell at distance $r$ a volume growing like $r^2$, and the density of stars thins out with distance, which we model as an exponential of scale length $L$. Together,
 $$p(r\_i \mid L) = \frac{r\_i^2}{2L^3} \exp(-r\_i / L), \qquad r\_i > 0.$$
 
 .success[Each piece comes from somewhere: the definition of a parallax, the error model of the instrument, the way stars fill the Galaxy.]
@@ -579,6 +585,8 @@ class: middle
 .center.width-50[![](figures/lec4/gaia-model.svg)]
 
 .center[For each star, a distance $r\_i$ drawn from the Galaxy,<br> then a parallax $\varpi\_i$ measured with a known uncertainty $\sigma\_i$.]
+
+.success[$r\_i$ is the latent variable of the lecture, $\varpi\_i$ the observation, $L$ the parameter. Each is a single number here, hence no bold.]
 
 ---
 
@@ -611,7 +619,7 @@ Fixing it makes it a hyperparameter. Letting the stars speak about it makes it a
 
 Its estimate maximizes the marginal likelihood of the catalogue,
 $$p(\varpi\_{1:N} \mid \sigma\_{1:N}, L) = \prod\_{i=1}^N \int p(\varpi\_i \mid r\_i, \sigma\_i) \\, p(r\_i \mid L) \\, dr\_i,$$
-the same integral as before, now read as a function of $L$.
+the same integral as before, now read as a function of $L$. Estimating a hyperparameter this way is .bold[empirical Bayes], promised in the footnote of the hyperparameters slide.
 
 ---
 
@@ -633,11 +641,12 @@ class: middle
 
 class: middle
 
-$L$ is not a nuisance to be tolerated: it says how the density of stars falls off along the line of sight, so fitting it direction by direction is a measurement of the shape of the Galaxy.
+One model, and questions at both levels:
+- about a single star, $p(r\_i \mid \varpi\_i, \sigma\_i, L)$ is its distance, with the uncertainty that everything downstream inherits,
+- about the Galaxy, $L$ says how the density of stars thins out along the line of sight, so fitting it direction by direction measures the shape of the disk,
+- about the data still to come, the posterior predictive says which parallaxes the model expects, which is how it gets criticized.
 
-The two levels then feed each other: the catalogue tells each star where stars in general are, and each star, however noisy, contributes to that picture.
-
-.success[This is what a hierarchical model buys: the 82% of stars whose parallax alone says nothing still get a distance, and still have their say about the Galaxy.]
+.success[And the two levels feed each other: the 82% of stars whose parallax alone says nothing still get a distance, and still have their say about the Galaxy.]
 
 ???
 
