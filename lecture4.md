@@ -10,6 +10,15 @@ Prof. Gilles Louppe<br>
 
 ???
 
+An example to open with, back to the gravitational waves of Lecture 1.
+
+- A merger is heard once, and what its two black holes weigh is never observed: it is inferred from the waveform, as a posterior over the masses, spins and distance of that event. These are the local latent variables, one set per event.
+- The question astrophysicists ask is about the population: how black hole masses are distributed, how often mergers happen, how that rate changes with redshift. These are the global parameters, shared by every event.
+- Both levels are fitted together, hierarchically: each event informs the population, and the population acts as a prior on each event. The analysis also has to correct for what the detectors can hear, since loud, heavy and nearby mergers are over-represented in the catalogue.
+- With the 158 mergers of the fourth catalogue, the inferred mass spectrum is not featureless: it peaks near 10 and near 33 solar masses, and formation scenarios now have to explain those peaks.
+
+Reference: LIGO-Virgo-KAGRA, GWTC-4.0: Population properties of merging compact binaries, ApJL 1005, L51 (2026).
+
 XXX: Give a few more examples of latent variable models (from scientific domains, engineering, social sciences, etc.)
 
 ---
