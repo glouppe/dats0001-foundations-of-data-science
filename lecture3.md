@@ -63,10 +63,14 @@ class: middle
 
 ## Two kinds of plots
 
-- .bold[Exploratory]: made for yourself, quickly and in numbers, to see what the data show. That was Lecture 2.
-- .bold[Explanatory]: made for others, few and polished, to carry one message.
+.center.width-100[![](figures/lec3/exploratory-explanatory.png)]
 
-The building blocks are the same, the standards are not. Later in the course, the same plots come back to show where a model fails (Lecture 7).
+- .bold[Exploratory]: for yourself, quickly and in numbers, to see (Lecture 2).
+- .bold[Explanatory]: for others, few and polished, to carry one message.
+
+???
+
+The building blocks are the same, the standards are not. The same plots come back in Lecture 7, on what a model gets wrong.
 
 ---
 
@@ -80,15 +84,15 @@ class: middle
 
 ## Start from the message
 
-Choose the graph from the question it answers:
-- .bold[Comparison] among data,
-- .bold[Distribution] of a variable,
-- .bold[Correlation] among variables,
-- .bold[Evolution] of a variable.
+.center.width-75[![](figures/lec3/four-questions.png)]
 
-Then choose the design from that question and the number of continuous variables. For subsets, either distinguish them within one panel, or juxtapose panels sharing identical scales.
+Choose the graph from the question it answers, then the design from that question and the number of continuous variables.
 
 .footnote[Credits: [Doumont](https://www.principiae.be/X0100.php), Trees, maps, and theorems, 2009.]
+
+???
+
+For subsets, either distinguish them within one panel, or juxtapose panels sharing identical scales.
 
 ---
 
@@ -133,13 +137,15 @@ class: middle
 
 ## Anatomy of a plot
 
-Every plot follows the same recipe, the .bold[grammar of graphics]:
+.center.width-70[![](figures/lec3/anatomy.png)]
 
 .center[data → marks → channels → scales → coordinates → guides]
 
-The rest of this lecture takes these pieces in order. Guides are the axes, legends and labels that make the encoding readable.
+.footnote[The .bold[grammar of graphics]: Wilkinson, 1999; implemented in ggplot2, Vega-Lite, Altair and seaborn objects.]
 
-.footnote[Wilkinson, 1999; implemented in ggplot2, Vega-Lite, Altair and seaborn objects.]
+???
+
+The rest of the lecture takes these pieces in order.
 
 ---
 
@@ -235,10 +241,12 @@ class: middle
 
 class: middle
 
-A colormap specifies a mapping between data values and colors. There are three main types of colormaps:
-- .bold[Sequential colormaps]: vary smoothly from light to dark colors, often using a single hue; should be used for representing ordered data.
-- .bold[Diverging colormaps]: vary smoothly between two different hues, with a neutral color in the middle; should be used for representing ordered data with a critical midpoint.
-- .bold[Categorical colormaps]: consist of distinct colors; should be used for representing categorical data without inherent ordering.
+A colormap maps data values to colors. Three kinds, for three kinds of data:
+- .bold[Sequential]: ordered data, light to dark within a single hue.
+- .bold[Diverging]: ordered data with a meaningful midpoint, two hues.
+- .bold[Categorical]: unordered groups, distinct colors.
+
+.center.width-100[![](figures/lec3/colormap-types.png)]
 
 ---
 
