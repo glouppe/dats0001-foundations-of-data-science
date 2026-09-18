@@ -149,7 +149,7 @@ class: middle
 
 ## Data structures
 
-A measurement $x$ can be a single atomic value or a composite structure made of multiple atomic values. Common aggregates or data structures include:
+A measurement is either a single atomic value $x$, or a composite $\mathbf{x}$ made of several of them. Common composite structures include:
 - Tabular data
 - Arrays and tensors
 - Sequences
@@ -210,23 +210,23 @@ Later in the lecture, $\mathbf{x}\_j$ denotes the column of variable $j$: the in
 
 class: middle
 
-Collections of homogeneous measurements can be represented as .bold[arrays] or .bold[tensors] $\mathbf{X} \in \mathbb{R}^{d\_1 \times d\_2 \times \cdots \times d\_k}$, where the position of each atomic value in the array is usually associated to a spatial or temporal location.
-- Images: 3d arrays $\mathbf{X} \in \\{0, \ldots, 255\\}^{h \times w \times c}$ (height, width, channels). The photo on the previous slide is such an array.
-- Videos: 4d arrays $\mathbf{X} \in [0, 255]^{t \times h \times w \times c}$ (time, height, width, channels).
+Collections of homogeneous measurements can be represented as .bold[arrays] or .bold[tensors] $\mathbf{x} \in \mathbb{R}^{d\_1 \times d\_2 \times \cdots \times d\_k}$, where the position of each atomic value in the array is usually associated to a spatial or temporal location.
+- Images: 3d arrays $\mathbf{x} \in \\{0, \ldots, 255\\}^{h \times w \times c}$ (height, width, channels). The photo on the previous slide is such an array.
+- Videos: 4d arrays $\mathbf{x} \in \\{0, \ldots, 255\\}^{t \times h \times w \times c}$ (time, height, width, channels).
 
 ---
 
 class: middle
 
-Data can also be structured as ordered .bold[sequences] $S = (x\_1, x\_2, ..., x\_T)$ indexed by time or position. Each element $x\_t$ can be atomic or composite.
-- Time series: $S = (x\_1, x\_2, ..., x\_T)$ where $x\_t$ is a measurement at time $t$ (e.g., stock prices).
-- Text: $S = (w\_1, w\_2, ..., w\_T)$ where $w\_t$ is the $t$-th word in a document.
+Data can also be structured as ordered .bold[sequences] $\mathbf{x} = (x\_1, x\_2, ..., x\_T)$ indexed by time or position. Each element is atomic here, but may itself be composite.
+- Time series: $x\_t$ is a measurement at time $t$ (e.g., a stock price).
+- Text: $x\_t$ is the $t$-th word in a document.
 
 ---
 
 class: middle
 
-Finally, data can be organized as .bold[networks] or .bold[graphs] $G = (V, E)$, where entities are represented as nodes $V$ and relationships as edges $E$. Each may also have associated attributes, $x\_v$ for nodes and $x\_{uv}$ for edges.
+Finally, data can be organized as .bold[networks] or .bold[graphs] $\mathbf{x} = (V, E)$, where entities are represented as nodes $V$ and relationships as edges $E$. Nodes and edges may carry their own attributes, $\mathbf{x}\_v$ and $\mathbf{x}\_{uv}$.
 - Molecular structures, where nodes represent atoms and edges represent bonds.
 - Social networks, where nodes represent individuals and edges represent interactions or relationships.
 
