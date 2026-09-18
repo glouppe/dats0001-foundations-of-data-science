@@ -244,9 +244,13 @@ class: middle
 
 .center[Plate notation can be used to compactly represent<br> repeated structures in the graphical model.] 
 
+.success[Inside the plate, one $\mathbf{z}\_i$ per observation: the .bold[local] variables. Outside, the parameters $\theta$ shared by all of them: the .bold[global] ones.]
+
 ???
 
 Here, the plate around $\mathbf{x}\_i$ and $\mathbf{z}\_i$ indicates that these variables are repeated $N$ times, for $i = 1, \ldots, N$.
+
+The split is what the later algorithms exploit: EM (L8) and variational inference (L9) alternate between the local variables, one update per observation, and the global ones, shared across the data.
 
 ---
 
@@ -360,7 +364,11 @@ The solution can be derived in closed form, yielding
 - $\hat{\mathbf{B}} = \mathbf{U}\_m (\boldsymbol{\Lambda}\_m - \hat{\sigma}^2 \mathbf{I})^{1/2} \mathbf{R}$, where $\mathbf{U}\_m$ holds the top $m$ eigenvectors of $\mathbf{S}$, $\boldsymbol{\Lambda}\_m$ the corresponding eigenvalues, and $\mathbf{R}$ is an arbitrary rotation matrix,
 - $\hat{\sigma}^2 = \frac{1}{d - m} \sum\_{j=m+1}^d \lambda\_j$, where $\lambda\_j$ are the eigenvalues of $\mathbf{S}$.
 
+Since $\mathbf{R}$ is free, $\mathbf{B}$ is identified only up to a rotation: the model pins down the latent subspace, not the coordinates within it.
+
 ???
+
+The rotation is why the latent coordinates of probabilistic PCA should not be read one by one, unlike the components of PCA, which the choice $\mathbf{R} = \mathbf{I}$ recovers.
 
 Intuitive explanation for the solution:
 - $\hat{\mu}$ is the sample mean because it minimizes the squared deviations from the mean. This appears in the log-likelihood as the term $(x\_i - \mu)^T \Sigma^{-1} (x\_i - \mu)$.
@@ -419,7 +427,11 @@ Computing the posterior distribution $p(\theta, z\_{1:N} \mid \mathbf{x}\_{1:N},
 
 The posterior is typically intractable, requiring approximate inference methods such as Expectation-Maximization (EM) or Variational Inference (VI).
 
+A mixture is also identified only up to a permutation of its components: relabelling them leaves the distribution unchanged, so the posterior has $K!$ equivalent modes.
+
 ???
+
+Label switching is why a sampler exploring the posterior of a mixture visits several equivalent modes, and why averaging the draws of $\boldsymbol{\mu}\_k$ across them is meaningless. We come back to this multimodality in L6.
 
 Again, deriving clustering from a latent variable model provides a probabilistic interpretation of cluster assignments as the most likely latent variables that could have generated the observed data. Its provides a principled narrative with explicit assumptions rather than a mere algorithmic recipe.
 
