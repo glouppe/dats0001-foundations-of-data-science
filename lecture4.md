@@ -60,7 +60,13 @@ where $p(\mathbf{x} \mid \theta)$ is a probability distribution over $\mathcal{X
 
 class: middle
 
-.alert[$p(\mathbf{x} \mid \theta)$ is not the data distribution $p\_{r}(\mathbf{x})$, only a model of it! There is no such thing as a .italic[true] parameter $\theta$.]
+.alert[$p(\mathbf{x} \mid \theta)$ is not the data distribution $p\_{r}(\mathbf{x})$, only a model of it! A .italic[true] parameter exists only if $p\_r$ belongs to the family $\mathcal{P}$.]
+
+???
+
+Two cases where a true parameter does make sense. First, data simulated from the model itself: `nb01` draws data at a chosen $\theta^\*$ and checks that the estimate recovers it. Second, fields where the parameters are quantities of nature, a particle mass or a coupling constant, and the family is taken to be right: there, $\theta^\*$ is what the experiment is after.
+
+For the penguins, $\mathcal{P}$ is a convenient description and nothing more: no value of $(\mu, \sigma^2)$ makes the Gaussian equal to the real distribution of body masses.
 
 ---
 
@@ -93,6 +99,12 @@ In the Frequentist framework, $\theta$ is treated as an unknown but fixed quanti
 $$\mathbf{x}\_\text{obs} \sim p(\mathbf{x} \mid \theta^\*).$$
 
 Fitting the model to data consists in finding a point estimate $\hat{\theta}$ of $\theta^\*$ (or a confidence region thereof) that best explains the observed data.
+
+This $\theta^\*$ lives inside the model: it is the parameter of the member of $\mathcal{P}$ the data are assumed to come from. If the family contains no such member, $\hat{\theta}$ estimates the parameter of the member closest to $p\_r$.
+
+???
+
+Closest in the Kullback-Leibler sense: maximum likelihood converges to the $\theta$ minimizing $\text{KL}(p\_r \| p(\cdot \mid \theta))$, whether or not the family contains $p\_r$. Estimating something remains well defined; calling it true does not.
 
 ---
 
