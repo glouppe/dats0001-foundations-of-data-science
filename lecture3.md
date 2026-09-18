@@ -286,13 +286,13 @@ class: middle
 
 .center.width-95[![](figures/lec3/rainbow-crameri.png)]
 
-.center[.bold[Rainbow colormaps invent structure.] The same three images: as they are (a), in jet (b), and in a perceptually uniform map (c).<br> Jet adds edges and bands that are not in the data, and hides variation elsewhere.]
+.center[.bold[Rainbow colormaps invent structure.] The same images as they are (a),<br> in jet (b), and in a perceptually uniform map (c).]
 
 .footnote[Credits: [Crameri, Shephard & Heron](https://doi.org/10.1038/s41467-020-19160-7), Nature Communications, 2020, Fig. 1 (CC BY 4.0).]
 
 ???
 
-The trick of the figure: you already know what a face, the Earth and an apple look like, so the distortion is obvious. On data you have never seen, the same distortion passes unnoticed.
+Jet adds edges and bands that are not in the data, and hides variation elsewhere. The trick of the figure: you already know what a face, the Earth and an apple look like, so the distortion is obvious. On data you have never seen, it passes unnoticed.
 
 ???
 
@@ -413,7 +413,11 @@ class: middle
 
 .center.width-65[![](figures/lec3/spaghetti-ensemble.png)]
 
-.center[Ten forecasts of the same contour, three days ahead. Too many lines, deliberately&#58;<br> the message is the spread, and the annotation says where it matters.]
+.center[Ten forecasts of the same contour, three days ahead.<br> Too many lines on purpose&#58; the message is the spread.]
+
+???
+
+The annotation does the rest of the work, circling where the forecasts disagree.
 
 .footnote[Credits: NOAA/NCEP [Environmental Modeling Center](https://www.emc.ncep.noaa.gov/), 500 hPa ensemble forecast, 19 November 2001 (public domain).]
 
@@ -434,7 +438,7 @@ class: middle
 
 .center.width-45[![](figures/lec3/challenger-oring.jpg)]
 
-.center[.bold[Do not plot a subset.] Above, the flights with O-ring damage, the chart used the night before the launch.<br> Below, the same plot with the flights without damage added back.]
+.center[.bold[Do not plot a subset.] Above, only the flights that had damage; below, all of them.]
 
 .footnote[Credits: [Report of the Presidential Commission on the Space Shuttle Challenger Accident](https://www.nasa.gov/history/rogersrep/v1ch6.htm), 1986, Vol. 1, p. 146.]
 
