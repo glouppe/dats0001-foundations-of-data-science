@@ -185,6 +185,16 @@ class: middle
 
 class: middle
 
+## Overplotting
+
+.center.width-100[![](figures/lec3/overplotting.png)]
+
+Flipper lengths are whole millimetres, body masses multiples of 25 g, so identical readings stack. Transparency, jitter or binning give the density back.
+
+---
+
+class: middle
+
 ## Two principles
 
 - .bold[Expressiveness]: show all the data facts, and only the data facts.
@@ -295,6 +305,16 @@ Finally, colors can also be used to .bold[draw attention] to specific elements i
 
 class: middle
 
+## Small multiples
+
+.center.width-100[![](figures/lec3/small-multiples.png)]
+
+Subsets can be told apart within one panel, by colour, or split into panels sharing their scales. Keeping the other points in grey gives each panel its reference.
+
+---
+
+class: middle
+
 .center.width-10[![](figures/lec3/scale.png)]
 
 ## Scales and transformations
@@ -328,6 +348,16 @@ class: middle
 
 class: middle
 
+## Binning is a choice
+
+.center.width-100[![](figures/lec3/binning.png)]
+
+The same 342 body masses. Too few bins hide the second group, too many show noise as structure. Bin width, like kernel bandwidth, belongs to the plot and not to the data.
+
+---
+
+class: middle
+
 .center.width-10[![](figures/lec3/coordinates.png)]
 
 ## Coordinate systems
@@ -345,6 +375,26 @@ class: middle, black-slide
 .center[Climate spiral vs. line chart showing global mean temperature change over time.]
 
 .footnote[Credits: [Open climate data](https://openclimatedata.net/climate-spirals/temperature-line-chart/), adapted from Ed Hawkins' climate spiral.]
+
+---
+
+class: middle
+
+## Guides
+
+.center.width-100[![](figures/lec3/guides.png)]
+
+A legend costs a lookup for every group. Labelling them in place, and annotating the one thing the reader should notice, costs nothing.
+
+---
+
+class: middle
+
+## Show the uncertainty
+
+.center.width-100[![](figures/lec3/uncertainty.png)]
+
+A bar with an error bar shows a mean and a width, and hides everything else. Show the data, then the estimate and its interval. From Lecture 7 on, the same holds for what a model predicts.
 
 
 ---

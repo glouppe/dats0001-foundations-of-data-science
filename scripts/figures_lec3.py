@@ -244,6 +244,103 @@ def scales(countries):
         save(fig, path)
 
 
+def overplotting(df, seed=0):
+    """Identical readings hide each other, unless the marks are made to reveal them."""
+    rng = np.random.default_rng(seed)
+    fig, axes = plt.subplots(1, 3, figsize=(13, 4.0), dpi=200)
+
+    axes[0].scatter(df.flipper_length_mm, df.body_mass_g, s=60, color="#0173b2")
+    axes[0].set_title("Opaque marks: readings pile up", fontsize=12, loc="left")
+
+    jitter = rng.normal(0, .55, len(df))
+    axes[1].scatter(df.flipper_length_mm + jitter, df.body_mass_g, s=60, alpha=.25, color="#0173b2")
+    axes[1].set_title("Transparency and jitter", fontsize=12, loc="left")
+
+    hb = axes[2].hexbin(df.flipper_length_mm, df.body_mass_g, gridsize=18, cmap="Blues", mincnt=1)
+    fig.colorbar(hb, ax=axes[2], label="Count")
+    axes[2].set_title("Counts per cell", fontsize=12, loc="left")
+
+    for ax in axes:
+        ax.set_xlabel("Flipper length [mm]")
+        ax.spines[["top", "right"]].set_visible(False)
+    axes[0].set_ylabel("Body mass [g]")
+    save(fig, "figures/lec3/overplotting.png")
+
+
+def small_multiples(df):
+    """One panel per subset, on identical scales."""
+    fig, axes = plt.subplots(1, 3, figsize=(12, 3.8), dpi=200, sharex=True, sharey=True)
+    for ax, species in zip(axes, SPECIES):
+        d = df[df.species == species]
+        ax.scatter(df.flipper_length_mm, df.body_mass_g, s=12, color="#dfe3e6")
+        ax.scatter(d.flipper_length_mm, d.body_mass_g, s=14, color=COLOR[species])
+        ax.set_title(species, fontsize=12, loc="left", color=COLOR[species])
+        ax.set_xlabel("Flipper length [mm]")
+        ax.spines[["top", "right"]].set_visible(False)
+    axes[0].set_ylabel("Body mass [g]")
+    save(fig, "figures/lec3/small-multiples.png")
+
+
+def binning(df):
+    """The same distribution under three bin widths."""
+    fig, axes = plt.subplots(1, 3, figsize=(13, 3.8), dpi=200, sharey=False)
+    for ax, bins in zip(axes, [5, 25, 120]):
+        ax.hist(df.body_mass_g, bins=bins, color="#8c9196")
+        ax.set_title(f"{bins} bins", fontsize=12, loc="left")
+        ax.set_xlabel("Body mass [g]")
+        ax.spines[["top", "right"]].set_visible(False)
+    axes[0].set_ylabel("Count")
+    save(fig, "figures/lec3/binning.png")
+
+
+def guides(df):
+    """A legend costs a lookup; labels and annotations do not."""
+    fig, (legend, direct) = plt.subplots(1, 2, figsize=(11, 4.2), dpi=200, sharey=True)
+    for species in SPECIES:
+        d = df[df.species == species]
+        legend.scatter(d.flipper_length_mm, d.body_mass_g, s=16, alpha=.75,
+                       color=COLOR[species], label=species)
+        direct.scatter(d.flipper_length_mm, d.body_mass_g, s=16, alpha=.75, color=COLOR[species])
+        direct.annotate(species, LABEL_AT[species], color=COLOR[species], fontsize=12,
+                        fontweight="bold", ha="center")
+    legend.legend(title="Species", frameon=False, loc="upper left")
+    legend.set_title("A legend: match colour to name, then look back", fontsize=12, loc="left")
+    direct.set_title("Labels in place, and the point annotated", fontsize=12, loc="left")
+    direct.annotate("heaviest bird\nof the sample", xy=(222, 6300), xytext=(196, 6450),
+                    color=GREY, fontsize=10,
+                    arrowprops=dict(arrowstyle="->", color=GREY, lw=1.1))
+    for ax in (legend, direct):
+        ax.set_xlabel("Flipper length [mm]")
+        ax.set_ylim(2500, 6900)
+        ax.spines[["top", "right"]].set_visible(False)
+    legend.set_ylabel("Body mass [g]")
+    save(fig, "figures/lec3/guides.png")
+
+
+def uncertainty(df):
+    """Bars with error bars hide the data they summarize."""
+    fig, (dynamite, shown) = plt.subplots(1, 2, figsize=(11, 4.2), dpi=200, sharey=True)
+    rng = np.random.default_rng(1)
+    means = df.groupby("species").body_mass_g.mean().reindex(SPECIES)
+    sems = df.groupby("species").body_mass_g.sem().reindex(SPECIES)
+
+    dynamite.bar(SPECIES, means.values, yerr=sems.values, capsize=6, color="#8c9196")
+    dynamite.set_title("Bar and error bar: the data are gone", fontsize=12, loc="left")
+
+    for i, species in enumerate(SPECIES):
+        d = df[df.species == species].body_mass_g
+        shown.scatter(i + rng.normal(0, .06, len(d)), d, s=10, alpha=.35, color=COLOR[species])
+        shown.errorbar(i, d.mean(), yerr=1.96 * d.sem(), fmt="o", color=GREY, capsize=6, zorder=3)
+    shown.set_xticks(range(3))
+    shown.set_xticklabels(SPECIES)
+    shown.set_title("Every bird, with the mean and its interval", fontsize=12, loc="left")
+
+    for ax in (dynamite, shown):
+        ax.spines[["top", "right"]].set_visible(False)
+    dynamite.set_ylabel("Body mass [g]")
+    save(fig, "figures/lec3/uncertainty.png")
+
+
 if __name__ == "__main__":
     penguins = pd.read_csv("data/penguins.csv").dropna(subset=["flipper_length_mm", "body_mass_g"])
     hsv_model()
@@ -254,3 +351,8 @@ if __name__ == "__main__":
     encoding_examples(penguins)
     popout()
     scales(pd.read_csv("data/countries.csv"))
+    overplotting(penguins)
+    small_multiples(penguins)
+    binning(penguins)
+    guides(penguins)
+    uncertainty(penguins)
