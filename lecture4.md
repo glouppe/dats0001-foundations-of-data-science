@@ -625,7 +625,7 @@ class: middle
 
 .center.width-65[![](figures/lec4/gaia-posteriors.svg)]
 
-.center[Three stars: where each could be knowing only that stars thin out with<br> distance (grey), and where it is once its own parallax is used (blue).]
+.center[Three stars of the sample: how likely each distance is<br> before the parallax is used (grey), and after (blue).]
 
 ???
 
