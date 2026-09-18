@@ -8,10 +8,6 @@ Lecture 3: Visualization
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
-???
-
-https://badriadhikari.github.io/data-viz-workshop-2021/
-
 
 ---
 
