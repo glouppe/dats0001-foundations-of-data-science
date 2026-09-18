@@ -427,7 +427,9 @@ class: middle
 
 .center[Same data! .bold[Lengths and positions are easier to compare] than angles and areas.]
 
-.center[A pie is readable for two or three slices adding up to a whole.<br> Beyond that, it asks the reader to compare angles.]
+???
+
+A pie is readable for two or three slices adding up to a whole. Beyond that, it asks the reader to compare angles.
 
 ---
 
