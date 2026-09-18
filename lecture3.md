@@ -494,13 +494,13 @@ class: middle
 
 .center[.bold[Maximize the data-ink ratio] by removing unnecessary elements.]
 
-.center[Up to a point: grid lines help read values off a scale,<br> and a memorable chart is sometimes worth more ink (Bateman et al., 2010).]
-
 .footnote[Credits: Joey Cherdarchuk, [Data looks better naked](https://www.darkhorseanalytics.com/blog/data-looks-better-naked).]
 
 ???
 
 Antoine de Saint-Exupéry: "Perfection is achieved, not when there is nothing more to add, but when there is nothing left to take away."
+
+Up to a point: grid lines help read values off a scale, and a memorable chart is sometimes worth more ink (Bateman et al., 2010).
 
 ---
 
