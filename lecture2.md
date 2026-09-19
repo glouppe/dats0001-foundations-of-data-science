@@ -134,35 +134,41 @@ class: middle
 
 - $\omega$: the intention of a voter.
 - $f$: an answer to a question, from whoever was reached and agreed to reply.
-- $\xi$: who could be contacted, the mode, the wording and the order of the questions, the day.
+- $\xi$: who could be contacted, the mode, the wording of the questions, the day it was asked.
 
-.center.width-60[![](figures/lec2/literary-digest.png)]
+.center.width-60[![](figures/lec2/belgian-poll.png)]
 
-.alert[.bold[Selection bias]: who enters the data depends on what is being measured. Two and a half million answers did not fix it; Gallup called the winner with 50,000.]
+.alert[.bold[Selection bias]: who ends up in the data depends on what is being measured. No sample size repairs it.]
+
+.footnote[Credits: [Le Grand Baromètre](https://www.rtbf.be/article/elections-2024-les-sondages-se-sont-ils-vraiment-trompes-11388084), 4 June 2024; results of the Chamber in Flanders.]
 
 ???
 
-In 1936 the *Literary Digest* mailed 10 million ballots to its subscribers, to car owners and to telephone directories, in the middle of the Depression, and only the keenest replied. Both the frame and the non-response leaned the same way, and the error was 19 points.
+Five days before the federal election, the last poll put Vlaams Belang above 27% in Flanders and the N-VA at 19%. On 9 June the N-VA came first, 25.6% against 21.9%.
 
-Selection bias is the recurring danger of the whole course: a sample that is not a fair draw from $p\_r$, and no amount of data repairs it. The difference with the LHC is that there the selection is known and corrected for.
+Part of that gap is $\xi$: who answers a poll and who does not, and when people decide. One voter in five made up their mind in the last 24 to 48 hours, which no poll taken five days earlier can see.
+
+The lesson is not that polls are useless, it is that a sample is only as good as the process that produced it, and that process is rarely a fair draw.
 
 ---
 
 class: middle
 
-.italic[Example 4.] A click in a log.
+.italic[Example 4.] An evening on a streaming platform.
 
-- $\omega$: a person using a site or an app.
-- $f$: the events the program was told to emit, each with a timestamp and an identifier.
-- $\xi$: what the developers instrumented, blockers and bots, time zones, the rule that ends a session.
+- $\omega$: a person watching, scrolling and skipping.
+- $f$: every play, pause, seek and stop, with a timestamp and an account.
+- $\xi$: what the app instruments, the recommender that chose what was on offer, A/B tests, shared accounts and bots, the timeout that ends a session.
 
 .center.width-60[![](figures/lec2/sessions.png)]
 
-.alert[Much of it is convention rather than observation: a session is thirty minutes without an event, and whoever blocks the tracker is not in the data at all.]
+.alert[The platform measures behaviour that it also shapes: what was watched had been chosen by a model, and the next model is trained on that.]
 
 ???
 
-Analytics is found data: it was collected to run a product, not to answer your question, and the definitions were set by someone else, often by a default in a configuration file. The same holds for administrative records, invoices or hospital codes, where the definitions come from accounting or from the law.
+Found data: it is collected to run a product, not to answer your question, and the definitions belong to someone else. A session is thirty minutes without an event because a default says so; a "view" may be three seconds or thirty; whoever blocks the tracker is absent altogether.
+
+The same holds for administrative records, invoices or hospital codes, where the definitions come from accounting or from the law.
 
 ---
 

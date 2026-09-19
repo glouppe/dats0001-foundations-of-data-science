@@ -1,8 +1,8 @@
 """Illustrations for the measurement process section of lecture 2.
 
-One figure per example: what the LHC trigger keeps, the 1936 Literary Digest poll
-against the election, the timeout that cuts a log into sessions, and the
-annotators behind a label.
+One figure per example: what the LHC trigger keeps, the last poll of the 2024
+Belgian election against its result, the timeout that cuts a stream of events
+into sessions, and the annotators behind a label.
 
 Usage: uv run python scripts/figures_lec2_measurement.py
 """
@@ -50,51 +50,48 @@ def trigger():
     save(fig, "figures/lec2/trigger.png")
 
 
-def literary_digest():
-    """Two and a half million answers, and the wrong winner."""
+def belgian_poll():
+    """The last poll of the 2024 Belgian federal election, against the result."""
     fig, ax = plt.subplots(figsize=(5.8, 2.9), dpi=200)
     x = np.arange(2)
-    ax.bar(x - .19, [57, 38], .36, color=LIGHT, label="Landon")
-    ax.bar(x + .19, [43, 62], .36, color=BLUE, label="Roosevelt")
-    for xi, (a, b) in zip(x, [(57, 43), (38, 62)]):
-        ax.text(xi - .19, a + 1.5, f"{a}%", ha="center", fontsize=11)
-        ax.text(xi + .19, b + 1.5, f"{b}%", ha="center", fontsize=11, color=BLUE)
-    ax.set_xticks(x, ["the Literary Digest poll\n(2.4 million answers)",
-                      "the election"])
-    ax.set_ylim(0, 74)
+    ax.bar(x - .19, [19, 25.6], .36, color=LIGHT, label="N-VA")
+    ax.bar(x + .19, [27, 21.9], .36, color=BLUE, label="Vlaams Belang")
+    for xi, (a, b) in zip(x, [(19, 27), (25.6, 21.9)]):
+        ax.text(xi - .19, a + .8, "%g%%" % a, ha="center", fontsize=11)
+        ax.text(xi + .19, b + .8, "%g%%" % b, ha="center", fontsize=11, color=BLUE)
+    ax.set_xticks(x, ["the last poll, 4 June 2024", "the election, 9 June 2024"])
+    ax.set_ylim(0, 34)
     ax.set_yticks([])
     for side in ("left", "right", "top"):
         ax.spines[side].set_visible(False)
     ax.legend(frameon=False, ncols=2, loc="upper center", fontsize=11)
-    save(fig, "figures/lec2/literary-digest.png")
+    ax.set_title("Votes in Flanders, Chamber of Representatives", loc="left",
+                 fontsize=11, pad=8)
+    save(fig, "figures/lec2/belgian-poll.png")
 
 
 def sessions():
-    """A log is a list of events; a session is a rule applied to it."""
-    fig, ax = plt.subplots(figsize=(5.8, 1.9), dpi=200)
-    events = [0, 3, 6, 8, 14, 17, 62, 66, 73, 120]          # minutes
-    gap = 30
-    ax.plot(events, [0] * len(events), "o", ms=9, color=BLUE, zorder=3)
+    """An evening on a streaming app, cut into sessions by a timeout."""
+    fig, ax = plt.subplots(figsize=(5.8, 2.0), dpi=200)
+    events = [(0, "open"), (3, "play"), (6, "pause"), (8, "play"), (14, "seek"),
+              (17, "stop"), (62, "open"), (66, "play"), (73, "stop"), (120, "play")]
+    ax.plot([e for e, _ in events], [0] * len(events), "o", ms=9, color=BLUE, zorder=3)
     ax.axhline(0, color=LIGHT, lw=1)
-    start = 0
-    for k, (a, b) in enumerate(zip(events, events[1:] + [events[-1]])):
-        if b - a > gap or b == a:
-            ax.add_patch(FancyBboxPatch((start - 3, -.35), a - start + 6, .7,
-                                        boxstyle="round,pad=0,rounding_size=.2",
-                                        facecolor=BLUE, alpha=.12, edgecolor="none"))
-            ax.text((start + a) / 2, .55, "session %d" % (k and 1 or 1), ha="center",
-                    fontsize=11, color=BLUE, visible=False)
-            start = b
+    for e, label in events:
+        ax.text(e, -.28, label, rotation=45, ha="right", va="top", fontsize=9)
     for a, b, label in [(0, 17, "session 1"), (62, 73, "session 2"), (120, 120, "session 3")]:
-        ax.text((a + b) / 2, .5, label, ha="center", fontsize=11, color=BLUE)
+        ax.add_patch(FancyBboxPatch((a - 3, -.18), b - a + 6, .36,
+                                    boxstyle="round,pad=0,rounding_size=.15",
+                                    facecolor=BLUE, alpha=.12, edgecolor="none"))
+        ax.text((a + b) / 2, .3, label, ha="center", fontsize=11, color=BLUE)
     for a, b in [(17, 62), (73, 120)]:
-        ax.annotate("", (a, -.6), (b, -.6),
+        ax.annotate("", (a, -1.15), (b, -1.15),
                     arrowprops=dict(arrowstyle="<->", color=RED, lw=1))
-        ax.text((a + b) / 2, -.95, "%d min" % (b - a), ha="center", fontsize=10, color=RED)
-    ax.set_ylim(-1.3, .95)
-    ax.set_xlim(-8, 130)
+        ax.text((a + b) / 2, -1.45, "%d min" % (b - a), ha="center", fontsize=10, color=RED)
+    ax.set_ylim(-1.9, .7)
+    ax.set_xlim(-8, 132)
     ax.set_yticks([])
-    ax.set_xlabel("Minutes since the first event")
+    ax.set_xlabel("Minutes since the app was opened")
     for side in ("left", "right", "top"):
         ax.spines[side].set_visible(False)
     save(fig, "figures/lec2/sessions.png")
@@ -132,6 +129,6 @@ def annotation():
 
 if __name__ == "__main__":
     trigger()
-    literary_digest()
+    belgian_poll()
     sessions()
     annotation()
