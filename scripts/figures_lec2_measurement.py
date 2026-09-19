@@ -1,8 +1,8 @@
 """Illustrations for the measurement process section of lecture 2.
 
-One figure per example: crossings going by while the LHC trigger keeps a few, the last poll of the 2024
-Belgian election against its result, the timeout that cuts a stream of events
-into sessions.
+One figure per example: the last poll of the 2024 Belgian election against its
+result, and the timeout that cuts a stream of events into sessions. The LHC
+slide uses an animation and a recorded event, both from CERN.
 
 Usage: uv run python scripts/figures_lec2_measurement.py
 """
@@ -26,47 +26,6 @@ plt.rcParams.update({"font.size": 12, "text.color": GREY, "axes.labelcolor": GRE
 def save(fig, path):
     fig.savefig(path, bbox_inches="tight", facecolor="white")
     print("wrote", path)
-
-
-def trigger_animation(frames=36, kept=(9, 26), seed=2):
-    """Crossings going by, almost all of them discarded: the trigger, animated."""
-    rng = np.random.default_rng(seed)
-    fig, ax = plt.subplots(figsize=(4.4, 3.4), dpi=150)
-    fig.patch.set_facecolor("black")
-    ax.set_facecolor("black")
-    ax.set_axis_off()
-    ax.set_xlim(-1.35, 1.35)
-    ax.set_ylim(-1.15, 1.35)
-    seen = []
-
-    def draw(k):
-        ax.clear()
-        ax.set_facecolor("black")
-        ax.set_axis_off()
-        ax.set_xlim(-1.35, 1.35)
-        ax.set_ylim(-1.15, 1.35)
-        keep = k in kept
-        colour = "#f6c650" if keep else "#4a6f8a"
-        angles = rng.uniform(0, 2 * np.pi, 34)
-        lengths = rng.uniform(.35, 1.0, 34)
-        curl = rng.normal(0, .35, 34)
-        for a, r, c in zip(angles, lengths, curl):
-            t = np.linspace(0, r, 24)
-            ax.plot(t * np.cos(a + c * t), t * np.sin(a + c * t),
-                    color=colour, lw=.9, alpha=.9 if keep else .55)
-        ax.add_patch(plt.Circle((0, 0), 1.05, facecolor="none",
-                                edgecolor="#20323f", lw=1.2))
-        ax.text(0, 1.22, "crossing %d of 40 000 000 this second" % (k + 1),
-                color="#9fb3bf", fontsize=8, ha="center")
-        ax.text(0, -1.08, "kept" if keep else "discarded",
-                color="#7ed492" if keep else "#c0392b", fontsize=11, ha="center")
-        seen.append(keep)
-        return ax.lines
-
-    anim = animation.FuncAnimation(fig, draw, frames=frames, interval=380)
-    anim.save("figures/lec2/trigger.gif", writer=animation.PillowWriter(fps=2.6))
-    plt.close(fig)
-    print("wrote figures/lec2/trigger.gif")
 
 
 def belgian_poll():
@@ -117,6 +76,5 @@ def sessions():
 
 
 if __name__ == "__main__":
-    trigger_animation()
     belgian_poll()
     sessions()
