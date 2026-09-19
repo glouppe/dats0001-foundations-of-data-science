@@ -89,6 +89,21 @@ which captures the variability of both the phenomenon and its measurement.
 
 class: middle
 
+Not every entity ends up in the data. Writing $s = 1$ for "this measurement was recorded", what we observe is
+$$p\_r(\mathbf{x}) = \iint\_{\omega \in \Omega, \xi \in \Xi} p(\omega, \xi \mid s = 1) \, \delta(\mathbf{x} - f(\omega, \xi)) \, d\omega \, d\xi.$$
+
+The world enters through $p(\omega)$, the measurement through $\xi$, and the .bold[selection] through $s$. When the chance of being recorded depends on $\omega$ itself, $p\_r$ describes the entities that were recorded and not the population, however many of them there are.
+
+???
+
+Three sources of trouble, now visible at once: the world varies, the instrument distorts, and the sample is not a fair draw. Only the first two are usually modelled.
+
+The examples that follow each put their own $\omega$, $f$ and $\xi$ in place; the third one, the survey, is where $s$ does the damage.
+
+---
+
+class: middle
+
 .center.width-10[![](figures/lec2/penguin.png)]
 
 .italic[Example 1.] A penguin record.
@@ -133,7 +148,7 @@ class: middle
 - $f$: reaching someone, reading them a question, and writing down the answer.
 - $\xi$: who could be contacted, the mode, the wording of the questions, the day.
 
-.bold[Selection bias]: who ends up in the data depends on what is being measured, and no sample size repairs it.
+.bold[Selection bias]: the chance of answering depends on $\omega$ itself, so $p\_r$ describes the people who answer rather than the electorate. No sample size repairs it.
 
 .footnote[Credits: [Le Grand Baromètre](https://www.rtbf.be/article/elections-2024-les-sondages-se-sont-ils-vraiment-trompes-11388084), 4 June 2024; results of the Chamber in Flanders.]
 
