@@ -2,7 +2,7 @@
 
 One figure per example: what the LHC trigger keeps, the last poll of the 2024
 Belgian election against its result, the timeout that cuts a stream of events
-into sessions, and the annotators behind a label.
+into sessions.
 
 Usage: uv run python scripts/figures_lec2_measurement.py
 """
@@ -97,38 +97,7 @@ def sessions():
     save(fig, "figures/lec2/sessions.png")
 
 
-def annotation():
-    """Three people, one label, and the disagreements a majority vote hides."""
-    fig, ax = plt.subplots(figsize=(5.8, 2.2), dpi=200)
-    ax.set_axis_off()
-    items = ["a husky in the snow", "a cassette player", "a lakeside restaurant"]
-    votes = [["dog", "dog", "wolf"], ["phone", "cassette", "phone"],
-             ["boathouse", "restaurant", "restaurant"]]
-    stored = ["dog", "phone", "restaurant"]
-    columns = [6.4, 8.4, 10.4]
-    last = 13.2
-
-    for x, head in zip(columns, ["annotator 1", "annotator 2", "annotator 3"]):
-        ax.text(x, 3.4, head, fontsize=10, style="italic", ha="center")
-    ax.text(0, 3.4, "the image", fontsize=10, style="italic")
-    ax.text(last, 3.4, "stored label", fontsize=10, style="italic", ha="center")
-
-    for row, (item, vote, final) in enumerate(zip(items, votes, stored)):
-        y = 2.4 - row
-        ax.text(0, y, item, fontsize=10, va="center")
-        for x, v in zip(columns, vote):
-            ax.text(x, y, v, fontsize=10, va="center", ha="center",
-                    color=GREY if v == final else RED)
-        ax.text(last, y, final, fontsize=10, va="center", ha="center", color=GREEN)
-    ax.plot([-.3, 14.6], [3.05, 3.05], color=LIGHT, lw=1)
-    ax.plot([11.6, 11.6], [-.6, 3.3], color=LIGHT, lw=1)
-    ax.set_xlim(-.4, 14.8)
-    ax.set_ylim(-.8, 3.8)
-    save(fig, "figures/lec2/annotation.png")
-
-
 if __name__ == "__main__":
     trigger()
     belgian_poll()
     sessions()
-    annotation()

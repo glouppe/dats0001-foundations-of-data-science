@@ -94,7 +94,7 @@ class: middle
 .italic[Example 1.] A penguin record.
 
 - $\omega$: a bird on a nest in the Palmer Archipelago, in the summers of 2007 to 2009.
-- $f$: bill length and depth with dial calipers to 0.1 mm, flipper with a ruler to 1 mm, body mass with a spring scale to 25 g, sex read in the lab from a blood sample.
+- $f$: catching the bird at its nest, reading dial calipers on the bill, a ruler along the flipper, a spring scale under a weigh bag, and drawing blood for the lab.
 - $\xi$: the field season, the observer, and each instrument with the resolution it is read at.
 
 .success[The instruments are visible in the data: every body mass is a multiple of 25 g, every bill length has one decimal, every flipper length is a whole millimetre.]
@@ -108,7 +108,7 @@ class: middle
 .italic[Example 2.] A collision at the LHC.
 
 - $\omega$: a bunch crossing, 40 million times a second.
-- $f$: signals in millions of channels, reconstructed into tracks and energies.
+- $f$: the detector turning a crossing into electrical signals, and the reconstruction turning those into tracks and energies.
 - $\xi$: the .bold[trigger] rules, the calibration, the collisions piled up in one crossing.
 
 .grid[
@@ -133,10 +133,10 @@ class: middle
 .italic[Example 3.] An opinion in a survey.
 
 - $\omega$: the intention of a voter.
-- $f$: an answer to a question, from whoever was reached and agreed to reply.
+- $f$: reaching someone, reading them a question, and writing down the answer they give.
 - $\xi$: who could be contacted, the mode, the wording of the questions, the day it was asked.
 
-.center.width-60[![](figures/lec2/belgian-poll.png)]
+.center.width-55[![](figures/lec2/belgian-poll.png)]
 
 .alert[.bold[Selection bias]: who ends up in the data depends on what is being measured. No sample size repairs it.]
 
@@ -157,7 +157,7 @@ class: middle
 .italic[Example 4.] An evening on a streaming platform.
 
 - $\omega$: a person watching, scrolling and skipping.
-- $f$: every play, pause, seek and stop, with a timestamp and an account.
+- $f$: the app emitting an event at every play, pause, seek and stop, and the pipeline storing it.
 - $\xi$: what the app instruments, the recommender that chose what was on offer, A/B tests, shared accounts and bots, the timeout that ends a session.
 
 .center.width-60[![](figures/lec2/sessions.png)]
@@ -177,18 +177,20 @@ class: middle
 .italic[Example 5.] A label in a dataset.
 
 - $\omega$: what is in the image.
-- $f$: a category chosen by a person following guidelines, then settled by a majority vote.
-- $\xi$: the guidelines, the training and the fatigue of the annotators, the interface, the vote.
+- $f$: a person looking at the image, applying the guidelines and clicking a category, then a majority vote.
+- $\xi$: the guidelines, the annotators and their fatigue, the interface, the vote.
 
-.center.width-60[![](figures/lec2/annotation.png)]
+.center.width-55[![](figures/lec2/imagenet-label-errors.png)]
 
-.alert[A label is a measurement, not the truth: about 6% of the labels of the ImageNet validation set are wrong, and models are ranked on that set.]
+.center[The stored label, struck through, and the one annotators give when asked again.]
 
-.footnote[Credits: [Northcutt et al.](https://arxiv.org/abs/2103.14749), 2021.]
+.alert[A label is a measurement, not the truth: 6% of ImageNet's validation labels are wrong.]
+
+.footnote[Credits: [Northcutt et al.](https://labelerrors.com), 2021; images from [ImageNet](https://doi.org/10.1109/CVPR.2009.5206848), Deng et al., 2009.]
 
 ???
 
-2916 errors were found and confirmed by hand in the 50000 images of that validation set. Benchmarks are measurements too, with their own $\xi$, and half a point between two models can sit entirely inside it.
+Models are ranked on that set. 2916 errors were found and confirmed by hand in its 50000 images. Benchmarks are measurements too, with their own $\xi$, and half a point between two models can sit entirely inside it.
 
 ---
 
