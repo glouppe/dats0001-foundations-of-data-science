@@ -91,14 +91,11 @@ class: middle
 
 .center.width-10[![](figures/lec2/penguin.png)]
 
-Example: how a penguin record is made.
+.italic[Example 1.] A penguin record.
 
-- Bill length and depth: dial calipers, to 0.1 mm.
-- Flipper length: ruler, to 1 mm.
-- Body mass: Pesola spring scale and a weigh bag, to 25 g.
-- Sex: not measured at all, but inferred in the lab from a blood sample.
-
-Nests are found at the one-egg stage, both adults are caught, measured, sampled and released. All of this is $\xi$.
+- $\omega$: a bird on a nest in the Palmer Archipelago, in the summers of 2007 to 2009.
+- $f$: bill length and depth with dial calipers to 0.1 mm, flipper with a ruler to 1 mm, body mass with a spring scale to 25 g, sex read in the lab from a blood sample.
+- $\xi$: the field season, the observer, and each instrument with the resolution it is read at.
 
 .success[The instruments are visible in the data: every body mass is a multiple of 25 g, every bill length has one decimal, every flipper length is a whole millimetre.]
 
@@ -108,49 +105,60 @@ Nests are found at the one-egg stage, both adults are caught, measured, sampled 
 
 class: middle
 
-.bold[Example.] How a star's distance is measured.
+.italic[Example 2.] A collision at the LHC.
 
-- Gaia, a satellite that scanned the whole sky from 2014 to 2025, records the tiny yearly wobble of each star against the background, its .bold[parallax], which shrinks with distance.
-- The catalogue ships an angle and an uncertainty for each of 1.47 billion stars, built from a few years of repeated scans.
-- $\xi$: how often and from which angles a star happened to be scanned, the calibration of the instrument, the brightness and the colour of the star.
+- $\omega$: a bunch crossing, 40 million times a second.
+- $f$: signals in millions of channels, reconstructed into tracks and energies.
+- $\xi$: the .bold[trigger] rules, the calibration, the collisions piled up in one crossing.
 
-.success[Here too the instrument is visible: every row carries its own uncertainty, and 17% of the parallaxes in a random sample are negative, a value no distance can produce.]
+.grid[
+.kol-1-2[.center.width-90[![](figures/lec2/cms-event.png)]]
+.kol-1-2[.center.width-90[![](figures/lec2/trigger.png)]]
+]
 
-.footnote[Credits: ESA/Gaia/DPAC, Gaia DR3.]
+.alert[Almost everything is thrown away before anyone looks at it, by rules written in advance.]
+
+.footnote[Credits: [McCauley and Taylor](https://commons.wikimedia.org/wiki/File:3D_view_of_an_event_recorded_with_the_CMS_detector_in_2012_at_a_proton-proton_centre_of_mass_energy_of_8_TeV.png), CMS Collaboration and CERN, 2012 (CC BY-SA 3.0).]
 
 ???
 
-The calibration is never perfect: Gaia's parallaxes carry a global offset of about $-17$ microarcseconds, measured on quasars, which are so far away that their parallax should be zero. Careful work subtracts it before anything else (Lindegren et al., 2021).
+Run 3 rates: the hardware trigger keeps about 100 kHz, the software trigger about 3 kHz in ATLAS and 2.6 kHz in CMS.
 
-We model this data in Lecture 4.
+The selection here is deliberate and documented, and physicists correct for it: the efficiency of the trigger is measured on known processes and divided out. Compare that with the next example, where nobody chose who would answer.
 
 ---
 
 class: middle
 
-.bold[Example.] How an opinion is measured.
+.italic[Example 3.] An opinion in a survey.
 
-- A survey records an .bold[answer to a question], from whoever could be reached and agreed to answer.
-- $\xi$: who could be contacted at all, the mode (phone, web, doorstep), the wording and the order of the questions, the interviewer, the day.
+- $\omega$: the intention of a voter.
+- $f$: an answer to a question, from whoever was reached and agreed to reply.
+- $\xi$: who could be contacted, the mode, the wording and the order of the questions, the day.
 
-In 1936, the *Literary Digest* mailed 10 million ballots and got 2.4 million back. It announced Landon 57%, Roosevelt 43%. Roosevelt won with 62%.
+.center.width-60[![](figures/lec2/literary-digest.png)]
 
-.alert[The ballots went to subscribers, car owners and telephone directories, and only the keenest replied. Gallup called the winner with 50,000 respondents, by caring about who was in the sample.]
+.alert[.bold[Selection bias]: who enters the data depends on what is being measured. Two and a half million answers did not fix it; Gallup called the winner with 50,000.]
 
 ???
 
-Two and a half million answers, and the error was 19 points. Sample size does not fix a sampling frame, which is the same point Lecture 1 made about big data: more rows do not remove the need to think about how they came to be.
+In 1936 the *Literary Digest* mailed 10 million ballots to its subscribers, to car owners and to telephone directories, in the middle of the Depression, and only the keenest replied. Both the frame and the non-response leaned the same way, and the error was 19 points.
+
+Selection bias is the recurring danger of the whole course: a sample that is not a fair draw from $p\_r$, and no amount of data repairs it. The difference with the LHC is that there the selection is known and corrected for.
 
 ---
 
 class: middle
 
-.bold[Example.] How a click is measured.
+.italic[Example 4.] A click in a log.
 
-- Analytics records the .bold[events a program was told to emit]: a page view, a click, a purchase, each with a timestamp and an identifier.
-- $\xi$: which events the developers instrumented, the browsers and extensions that block the tracker, bots, time zones, what the pipeline samples and how long it keeps.
+- $\omega$: a person using a site or an app.
+- $f$: the events the program was told to emit, each with a timestamp and an identifier.
+- $\xi$: what the developers instrumented, blockers and bots, time zones, the rule that ends a session.
 
-.alert[Much of it is convention rather than observation. A "session" is what the tool decides it is, by default thirty minutes without an event, and the users who block the tracker are not in the data at all.]
+.center.width-60[![](figures/lec2/sessions.png)]
+
+.alert[Much of it is convention rather than observation: a session is thirty minutes without an event, and whoever blocks the tracker is not in the data at all.]
 
 ???
 
@@ -160,10 +168,13 @@ Analytics is found data: it was collected to run a product, not to answer your q
 
 class: middle
 
-.bold[Example.] How a label is measured.
+.italic[Example 5.] A label in a dataset.
 
-- A person assigns a category by following guidelines: an image label, a diagnosis code, a moderation decision, a preference between two answers of a model.
-- $\xi$: the guidelines, the training and the fatigue of the annotator, the interface, and the rule that settles disagreements, usually a majority vote.
+- $\omega$: what is in the image.
+- $f$: a category chosen by a person following guidelines, then settled by a majority vote.
+- $\xi$: the guidelines, the training and the fatigue of the annotators, the interface, the vote.
+
+.center.width-60[![](figures/lec2/annotation.png)]
 
 .alert[A label is a measurement, not the truth: about 6% of the labels of the ImageNet validation set are wrong, and models are ranked on that set.]
 
@@ -171,7 +182,7 @@ class: middle
 
 ???
 
-2916 errors were found and confirmed by hand in the 50000 images of that validation set. Benchmarks are measurements too, with their own $\xi$, and a difference of half a point between two models can sit entirely inside it.
+2916 errors were found and confirmed by hand in the 50000 images of that validation set. Benchmarks are measurements too, with their own $\xi$, and half a point between two models can sit entirely inside it.
 
 ---
 
