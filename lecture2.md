@@ -47,29 +47,30 @@ Someone stood in the cold, caught a penguin, measured its bill with a caliper an
 
 class: middle
 
-A measurement is what a process returns when it is applied to an entity: a penguin, a collision, a voter. Write the entity $\omega \in \Omega$ and the measurement
-$$f : \Omega \to \mathcal{X}, \qquad \mathbf{x} = f(\omega),$$
-where $\mathcal{X}$ is the space the measurements live in.
-
-Only $\mathbf{x}$ is ever recorded. $\omega$ is not.
-
----
-
-class: middle
-
-- A penguin $\omega$, its body mass $x \in \mathbb{R}^+$ in grams.
-- A market at some instant $\omega$, the price $x \in \mathbb{R}^+$ of a share.
-- A scene $\omega$, the colour $\mathbf{x} \in \\{0, \ldots, 255\\}^3$ of one pixel.
+Mathematically, data can be viewed as a function $f$ that maps real-world entities $\omega$ to measurable values $\mathbf{x}$,
+$$f : \Omega \to \mathcal{X},$$
+where
+- $\Omega$ is the sample space of possible states $\omega$ of the world,
+- $\mathcal{X}$ is the measurement space of possible observations $\mathbf{x}$.
 
 ---
 
 class: middle
 
-Give $\Omega$ a distribution $p(\omega)$. Then $\mathbf{x} = f(\omega)$ is a random variable, and its distribution is the .bold[data distribution]
-$$p\_r(\mathbf{x}) = \int\_\Omega p(\omega) \, \delta(\mathbf{x} - f(\omega)) \, d\omega,$$
-where $\delta$ is the Dirac delta. On a discrete $\mathcal{X}$, $p\_r$ assigns probabilities instead.
+Examples&#58;
+- Penguin body mass: $\omega \in \\{ \text{penguins} \\} \to x \in \mathbb{R}^+$ (g)
+- Stock price: $\omega \in \\{ \text{market states} \\} \to x \in \mathbb{R}^+$ (USD)
+- Pixel colour: $\omega \in \\{ \text{scenes} \\} \to \mathbf{x} \in \\{0, \ldots, 255\\}^3$ (RGB values)
 
-The whole course is about saying something on $p\_r$ from a finite number of draws.
+---
+
+class: middle
+
+If the sample space $\Omega$ carries a probability distribution $p(\omega)$, then $f$ turns a random state of the world into a random observation $\mathbf{x} = f(\omega)$. Its distribution is the one $f$ induces from $p$, called the .bold[data distribution] $p\_r(\mathbf{x})$, where $r$ stands for "real".
+
+When $\mathcal{X}$ is continuous, it can be written as
+$$p\_r(\mathbf{x}) = \int\_{\omega \in \Omega} p(\omega) \delta(\mathbf{x} - f(\omega)) d\omega,$$
+where $\delta$ is the Dirac delta function. When $\mathcal{X}$ is discrete, $p\_r$ assigns probabilities rather than a density.
 
 ---
 
@@ -77,19 +78,21 @@ class: middle
 
 ## The measurement process
 
-The same entity measured twice does not give the same number. Add the .bold[measurement conditions] $\xi \in \Xi$, the instrument and its settings, the operator, the environment:
-$$f : \Omega \times \Xi \to \mathcal{X}, \qquad p\_r(\mathbf{x}) = \iint p(\omega, \xi) \, \delta(\mathbf{x} - f(\omega, \xi)) \, d\omega \, d\xi.$$
+The measurement process is part of the data generation mechanism. We make it explicit by adding the measurement conditions $\xi \in \Xi$ (instrument settings, environmental conditions, observer effects) to the map,
+$$f : \Omega \times \Xi \to \mathcal{X}.$$
 
-Measuring introduces .bold[quantization], a continuous quantity recorded in steps; .bold[noise], the same entity giving a different value each time; and .bold[bias], every value off in the same direction.
+Measurements can introduce quantization (continuous to discrete), noise (random perturbations), and bias (systematic deviations). If $\Omega \times \Xi$ carries a joint distribution $p(\omega, \xi)$, then
+$$p\_r(\mathbf{x}) = \iint\_{\omega \in \Omega, \xi \in \Xi} p(\omega, \xi) \delta(\mathbf{x} - f(\omega, \xi)) d\omega d\xi,$$
+which captures the variability of both the phenomenon and its measurement.
 
 ---
 
 class: middle
 
-Not every entity reaches the file. Write $s = 1$ when a measurement is recorded:
-$$p\_r(\mathbf{x}) = \iint p(\omega, \xi \mid s = 1) \, \delta(\mathbf{x} - f(\omega, \xi)) \, d\omega \, d\xi.$$
+Not every entity ends up in the data. Writing $s = 1$ for "this measurement was recorded", what we observe is
+$$p\_r(\mathbf{x}) = \iint\_{\omega \in \Omega, \xi \in \Xi} p(\omega, \xi \mid s = 1) \, \delta(\mathbf{x} - f(\omega, \xi)) \, d\omega \, d\xi.$$
 
-The world enters through $p(\omega)$, the instrument through $\xi$, the .bold[selection] through $s$. If the chance of being recorded depends on $\omega$, then $p\_r$ describes what was recorded and not the population, however many records there are.
+The world enters through $p(\omega)$, the measurement through $\xi$, and the .bold[selection] through $s$. When the chance of being recorded depends on $\omega$ itself, $p\_r$ describes the entities that were recorded and not the population, however many of them there are.
 
 ???
 
@@ -105,12 +108,11 @@ class: middle
 
 .italic[Example 1.] A penguin record.
 
-- $\omega$: a penguin of the Palmer Archipelago.
-- $f$: catching it at its nest, reading calipers and a ruler, weighing it in a bag, taking blood for the lab.
-- $\xi$: the season, the observer, each instrument and the resolution it is read at.
-- $s$: only breeding adults, caught at nests holding one egg.
+- $\omega$: a bird on a nest in the Palmer Archipelago, in the summers of 2007 to 2009.
+- $f$: catching the bird at its nest, reading dial calipers on the bill, a ruler along the flipper, a spring scale under a weigh bag, and drawing blood for the lab.
+- $\xi$: the field season, the observer, and each instrument with the resolution it is read at.
 
-The instruments are visible in the data: body masses are multiples of 25 g, bill lengths have one decimal, flipper lengths are whole millimetres.
+The instruments are visible in the data: every body mass is a multiple of 25 g, every bill length has one decimal, every flipper length is a whole millimetre.
 
 .footnote[Credits: [Gorman et al.](https://doi.org/10.1371/journal.pone.0090081), 2014.]
 
@@ -122,10 +124,9 @@ class: middle, black-slide
 
 .italic[Example 2.] A collision at the LHC.
 
-- $\omega$: a bunch crossing, one of 40 million a second.
-- $f$: the detector turning the crossing into electrical signals, and the reconstruction turning those into tracks and energies.
-- $\xi$: the calibration, and the tens of collisions piled up in the same crossing.
-- $s$: the .bold[trigger], which keeps some 3000 crossings a second and drops the rest.
+- $\omega$: a bunch crossing, 40 million times a second.
+- $f$: the detector turning a crossing into electrical signals, and the reconstruction turning those into tracks and energies.
+- $\xi$: the .bold[trigger] rules, the calibration, the collisions piled up in one crossing.
 
 .footnote[Credits: CERN.]
 
@@ -143,12 +144,11 @@ class: middle
 
 .italic[Example 3.] An opinion in a survey.
 
-- $\omega$: a voter, whose intention nobody can see.
-- $f$: reaching them, reading a question, writing down the answer.
-- $\xi$: the mode, the wording and the order of the questions, the day.
-- $s$: who could be contacted, and who agreed to answer.
+- $\omega$: the intention of a voter.
+- $f$: reaching someone, reading them a question, and writing down the answer.
+- $\xi$: who could be contacted, the mode, the wording of the questions, the day.
 
-.bold[Selection bias]: the chance of answering depends on $\omega$ itself, so $p\_r$ describes the people who answer and not the electorate. No sample size repairs it.
+.bold[Selection bias]: the chance of answering depends on $\omega$ itself, so $p\_r$ describes the people who answer rather than the electorate. No sample size repairs it.
 
 .footnote[Credits: [Le Grand Baromètre](https://www.rtbf.be/article/elections-2024-les-sondages-se-sont-ils-vraiment-trompes-11388084), 4 June 2024; results of the Chamber in Flanders.]
 
@@ -169,11 +169,10 @@ class: middle
 .italic[Example 4.] An evening on a streaming platform.
 
 - $\omega$: a person watching, scrolling and skipping.
-- $f$: the app emitting an event at every play, pause, seek and stop.
-- $\xi$: what the app instruments, the timeout that ends a session, the A/B test in force.
-- $s$: blockers, bots, shared accounts, and whatever the pipeline samples or deletes.
+- $f$: the app emitting an event at every play, pause, seek and stop, and the pipeline storing it.
+- $\xi$: what the app instruments, the recommender that chose what was on offer, A/B tests, shared accounts and bots, the timeout that ends a session.
 
-The platform measures behaviour that it also shapes: what was watched had been chosen by a recommender, and the next recommender is trained on that.
+The platform measures behaviour that it also shapes: what was watched had been chosen by a model, and the next model is trained on that.
 
 ???
 
@@ -189,10 +188,9 @@ class: middle
 
 .italic[Example 5.] A label in a dataset.
 
-- $\omega$: the scene in an image.
-- $f$: a person applying the guidelines and clicking a category.
-- $\xi$: the guidelines, the annotators and their fatigue, the interface, the rule that settles disagreement.
-- $s$: which images were collected, and which were kept.
+- $\omega$: what is in the image.
+- $f$: a person looking at the image, applying the guidelines and clicking a category, then a majority vote.
+- $\xi$: the guidelines, the annotators and their fatigue, the interface, the vote.
 
 Above, the label stored in ImageNet, struck through, and the one annotators give when asked again: 6% of that validation set is wrong.
 
@@ -208,13 +206,13 @@ class: middle
 
 ## What to ask of any dataset
 
-- Which entities could have entered the data, and which could not?
+- Who or what could have entered the data, and who could not?
 - What exactly was recorded, in which units and at what resolution?
 - Under what conditions, by whom, with which instrument or protocol?
 - What was dropped, defaulted, inferred or imputed along the way?
 - Why were the data collected in the first place, and by whom?
 
-.success[The answers are $f$, $\xi$ and $s$. They are rarely in the file: they live in the protocol, the codebook and the source code.]
+.success[The answers are $\xi$. They are rarely in the file: they live in the protocol, the codebook and the source code.]
 
 ???
 
