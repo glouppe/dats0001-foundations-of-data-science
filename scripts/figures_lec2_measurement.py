@@ -1,16 +1,14 @@
 """Illustrations for the measurement process section of lecture 2.
 
-One figure per example: the last poll of the 2024 Belgian election against its
-result, and the timeout that cuts a stream of events into sessions. The LHC
-slide uses an animation and a recorded event, both from CERN.
+One figure per example that needs drawing: the last poll of the 2024 Belgian
+election against its result, and an evening of listening in which only plays of
+30 seconds or more become streams. The LHC slide uses an animation from CERN.
 
 Usage: uv run python scripts/figures_lec2_measurement.py
 """
 
-import matplotlib.animation as animation
 import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib.patches import FancyBboxPatch
 
 GREY = "#354046"
 LIGHT = "#b8c0c6"
@@ -48,33 +46,28 @@ def belgian_poll():
     save(fig, "figures/lec2/belgian-poll.png")
 
 
-def sessions():
-    """An evening on a streaming app, cut into sessions by a timeout."""
-    fig, ax = plt.subplots(figsize=(5.8, 2.0), dpi=200)
-    events = [(0, "open"), (3, "play"), (6, "pause"), (8, "play"), (14, "seek"),
-              (17, "stop"), (62, "open"), (66, "play"), (73, "stop"), (120, "play")]
-    ax.plot([e for e, _ in events], [0] * len(events), "o", ms=9, color=BLUE, zorder=3)
-    ax.axhline(0, color=LIGHT, lw=1)
-    for e, label in events:
-        ax.text(e, -.28, label, rotation=45, ha="right", va="top", fontsize=9)
-    for a, b, label in [(0, 17, "session 1"), (62, 73, "session 2"), (120, 120, "session 3")]:
-        ax.add_patch(FancyBboxPatch((a - 3, -.18), b - a + 6, .36,
-                                    boxstyle="round,pad=0,rounding_size=.15",
-                                    facecolor=BLUE, alpha=.12, edgecolor="none"))
-        ax.text((a + b) / 2, .3, label, ha="center", fontsize=11, color=BLUE)
-    for a, b in [(17, 62), (73, 120)]:
-        ax.annotate("", (a, -1.15), (b, -1.15),
-                    arrowprops=dict(arrowstyle="<->", color=RED, lw=1))
-        ax.text((a + b) / 2, -1.45, "%d min" % (b - a), ha="center", fontsize=10, color=RED)
-    ax.set_ylim(-1.9, .7)
-    ax.set_xlim(-8, 132)
+def streams():
+    """One evening of listening: a play becomes a stream only after 30 seconds."""
+    played = [212, 14, 187, 6, 31, 245, 22, 164]      # seconds, in order
+    counted = [t >= 30 for t in played]
+
+    fig, ax = plt.subplots(figsize=(5.8, 2.3), dpi=200)
+    y = np.arange(len(played))[::-1]
+    ax.barh(y, played, .62, color=[BLUE if c else LIGHT for c in counted])
+    ax.axvline(30, color=RED, lw=1.2, ls=(0, (4, 3)))
+    ax.text(33, len(played) - .35, "30 s", color=RED, fontsize=11, va="bottom")
+    for yi, t, c in zip(y, played, counted):
+        ax.text(max(t, 30) + 5, yi, "stream" if c else "not counted", va="center",
+                fontsize=9, color=BLUE if c else GREY)
     ax.set_yticks([])
-    ax.set_xlabel("Minutes since the app was opened")
+    ax.set_ylim(-.7, len(played) + .3)
+    ax.set_xlim(0, 300)
+    ax.set_xlabel("Seconds played, one track after another")
     for side in ("left", "right", "top"):
         ax.spines[side].set_visible(False)
-    save(fig, "figures/lec2/sessions.png")
+    save(fig, "figures/lec2/streams.png")
 
 
 if __name__ == "__main__":
     belgian_poll()
-    sessions()
+    streams()

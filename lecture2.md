@@ -167,22 +167,22 @@ The lesson is not that polls are useless, it is that a sample is only as good as
 
 class: middle
 
-.center.width-60[![](figures/lec2/sessions.png)]
+.center.width-55[![](figures/lec2/streams.png)]
 
-.italic[Example 4.] An evening on a streaming platform.
+.italic[Example 4.] A stream on Spotify.
 
-- $\omega$: a person watching, scrolling and skipping.
-- $f$: the app emitting an event at every play, pause, seek and stop.
-- $\xi$: what the app instruments, the timeout that ends a session, the A/B test in force.
-- $s$: blockers, bots, shared accounts, and whatever the pipeline samples or deletes.
+- $\omega$: a listener, and what they actually like.
+- $f$: logging every play, and counting a .bold[stream] after 30 seconds.
+- $\xi$: the device, the playlist or recommendation that started the track.
+- $s$: plays under 30 seconds, offline plays never synced, bots.
 
-The platform measures behaviour that it also shapes: what was watched had been chosen by a recommender, and the next recommender is trained on that.
+These data exist to pay artists in proportion to streams: the 30-second rule is a payment rule, not a definition of listening.
 
 ???
 
-Found data: it is collected to run a product, not to answer your question, and the definitions belong to someone else. A session is thirty minutes without an event because a default says so; a "view" may be three seconds or thirty; whoever blocks the tracker is absent altogether.
+In March 2014, the band Vulfpeck released *Sleepify*, ten silent tracks of about 31 seconds, and asked fans to play it on repeat while they slept. It earned $19,655 in royalties from some 5.5 million plays before Spotify removed it seven weeks later. Once a measurement pays, people optimise the measurement.
 
-The same holds for administrative records, invoices or hospital codes, where the definitions come from accounting or from the law.
+The same streams train the recommender that chooses what is played next, so the platform measures behaviour that it also shapes. Anyone studying musical taste from these data inherits the payment rule, the recommender, and the filters.
 
 ---
 
