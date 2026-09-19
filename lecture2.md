@@ -57,19 +57,20 @@ where
 
 class: middle
 
-- A penguin $\omega$, its body mass $x \in \mathbb{R}^+$ in grams.
-- A market at some instant $\omega$, the price $x \in \mathbb{R}^+$ of a share.
-- A scene $\omega$, the colour $\mathbf{x} \in \\{0, \ldots, 255\\}^3$ of one pixel.
+Examples&#58;
+- Penguin body mass: $\omega \in \\{ \text{penguins} \\} \to x \in \mathbb{R}^+$ (g)
+- Stock price: $\omega \in \\{ \text{market states} \\} \to x \in \mathbb{R}^+$ (USD)
+- Pixel colour: $\omega \in \\{ \text{scenes} \\} \to \mathbf{x} \in \\{0, \ldots, 255\\}^3$ (RGB values)
 
 ---
 
 class: middle
 
-Give $\Omega$ a distribution $p(\omega)$. Then $\mathbf{x} = f(\omega)$ is a random variable, and its distribution is the .bold[data distribution]
-$$p\_r(\mathbf{x}) = \int\_\Omega p(\omega) \, \delta(\mathbf{x} - f(\omega)) \, d\omega,$$
-where $\delta$ is the Dirac delta. On a discrete $\mathcal{X}$, $p\_r$ assigns probabilities instead.
+If the sample space $\Omega$ carries a probability distribution $p(\omega)$, then $f$ turns a random state of the world into a random observation $\mathbf{x} = f(\omega)$. Its distribution is the one $f$ induces from $p$, called the .bold[data distribution] $p\_r(\mathbf{x})$, where $r$ stands for "real".
 
-The whole course is about saying something on $p\_r$ from a finite number of draws.
+When $\mathcal{X}$ is continuous, it can be written as
+$$p\_r(\mathbf{x}) = \int\_{\omega \in \Omega} p(\omega) \delta(\mathbf{x} - f(\omega)) d\omega,$$
+where $\delta$ is the Dirac delta function. When $\mathcal{X}$ is discrete, $p\_r$ assigns probabilities rather than a density.
 
 ---
 
@@ -77,19 +78,21 @@ class: middle
 
 ## The measurement process
 
-The same entity measured twice does not give the same number. Add the .bold[measurement conditions] $\xi \in \Xi$, the instrument and its settings, the operator, the environment:
-$$f : \Omega \times \Xi \to \mathcal{X}, \qquad p\_r(\mathbf{x}) = \iint p(\omega, \xi) \, \delta(\mathbf{x} - f(\omega, \xi)) \, d\omega \, d\xi.$$
+The measurement process is part of the data generation mechanism. We make it explicit by adding the measurement conditions $\xi \in \Xi$ (instrument settings, environmental conditions, observer effects) to the map,
+$$f : \Omega \times \Xi \to \mathcal{X}.$$
 
-Measuring introduces .bold[quantization], a continuous quantity recorded in steps; .bold[noise], the same entity giving a different value each time; and .bold[bias], every value off in the same direction.
+Measurements can introduce quantization (continuous to discrete), noise (random perturbations), and bias (systematic deviations). If $\Omega \times \Xi$ carries a joint distribution $p(\omega, \xi)$, then
+$$p\_r(\mathbf{x}) = \iint\_{\omega \in \Omega, \xi \in \Xi} p(\omega, \xi) \delta(\mathbf{x} - f(\omega, \xi)) d\omega d\xi,$$
+which captures the variability of both the phenomenon and its measurement.
 
 ---
 
 class: middle
 
-Not every entity reaches the file. Write $s = 1$ when a measurement is recorded:
-$$p\_r(\mathbf{x}) = \iint p(\omega, \xi \mid s = 1) \, \delta(\mathbf{x} - f(\omega, \xi)) \, d\omega \, d\xi.$$
+Not every entity ends up in the data. Writing $s = 1$ for "this measurement was recorded", what we observe is
+$$p\_r(\mathbf{x}) = \iint\_{\omega \in \Omega, \xi \in \Xi} p(\omega, \xi \mid s = 1) \, \delta(\mathbf{x} - f(\omega, \xi)) \, d\omega \, d\xi.$$
 
-The world enters through $p(\omega)$, the instrument through $\xi$, the .bold[selection] through $s$. If the chance of being recorded depends on $\omega$, then $p\_r$ describes what was recorded and not the population, however many records there are.
+The world enters through $p(\omega)$, the measurement through $\xi$, and the .bold[selection] through $s$. When the chance of being recorded depends on $\omega$ itself, $p\_r$ describes the entities that were recorded and not the population, however many of them there are.
 
 ???
 
