@@ -47,11 +47,11 @@ Someone stood in the cold, caught a penguin, measured its bill with a caliper an
 
 class: middle
 
-A measurement is what a process returns when it is applied to an entity: a penguin, a collision, a voter. Write the entity $\omega \in \Omega$ and the measurement
-$$f : \Omega \to \mathcal{X}, \qquad \mathbf{x} = f(\omega),$$
-where $\mathcal{X}$ is the space the measurements live in.
-
-Only $\mathbf{x}$ is ever recorded. $\omega$ is not.
+Mathematically, data can be viewed as a function $f$ that maps real-world entities $\omega$ to measurable values $\mathbf{x}$,
+$$f : \Omega \to \mathcal{X},$$
+where
+- $\Omega$ is the sample space of possible states $\omega$ of the world,
+- $\mathcal{X}$ is the measurement space of possible observations $\mathbf{x}$.
 
 ---
 
