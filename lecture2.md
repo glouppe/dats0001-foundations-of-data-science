@@ -507,8 +507,9 @@ class: middle
 Everything in this part is one picture of how the data came to be:
 - the map $f$ from states of the world to measurements,
 - the conditions $\xi$ under which measurements are taken,
-- the pattern $\mathbf{M}$ of what ends up recorded,
-- the data distribution $p\_r(x)$ that all of this induces.
+- the selection $s$ of which entities are recorded at all,
+- the pattern $\mathbf{M}$ of which entries are missing,
+- the data distribution $p\_r(\mathbf{x})$ that all of this induces.
 
 ---
 
