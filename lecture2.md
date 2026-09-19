@@ -151,15 +151,15 @@ class: middle
 - $\xi$: the mode, the wording and the order of the questions, the day.
 - $s$: who could be contacted, and who agreed to answer.
 
-.bold[Selection bias]: the chance of answering depends on $\omega$ itself, so $p\_r$ describes the people who answer and not the electorate. No sample size repairs it.
-
 .footnote[Credits: [Le Grand Baromètre](https://www.rtbf.be/article/elections-2024-les-sondages-se-sont-ils-vraiment-trompes-11388084), 4 June 2024; results of the Chamber in Flanders.]
 
 ???
+The chance of answering depends on $\omega$ itself, so $p\_r$ describes the people who answer and not the electorate. No sample size repairs it: this is .bold[selection bias].
+
 
 Five days before the federal election, the last poll put Vlaams Belang above 27% in Flanders and the N-VA at 19%. On 9 June the N-VA came first, 25.6% against 21.9%.
 
-Part of that gap is $\xi$: who answers a poll and who does not, and when people decide. One voter in five made up their mind in the last 24 to 48 hours, which no poll taken five days earlier can see.
+Part of that gap is $s$, who answers a poll and who does not, and part is $\xi$, the day on which they are asked: one voter in five made up their mind in the last 24 to 48 hours, which no poll taken five days earlier can see.
 
 The lesson is not that polls are useless, it is that a sample is only as good as the process that produced it, and that process is rarely a fair draw.
 
