@@ -1,12 +1,13 @@
 """Illustrations for the measurement process section of lecture 2.
 
-One figure per example: what the LHC trigger keeps, the last poll of the 2024
+One figure per example: crossings going by while the LHC trigger keeps a few, the last poll of the 2024
 Belgian election against its result, the timeout that cuts a stream of events
 into sessions.
 
 Usage: uv run python scripts/figures_lec2_measurement.py
 """
 
+import matplotlib.animation as animation
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.patches import FancyBboxPatch
@@ -27,27 +28,45 @@ def save(fig, path):
     print("wrote", path)
 
 
-def trigger():
-    """Of 40 million crossings a second, a few thousand are written down.
-
-    A funnel rather than bars: on a log scale, bars would start nowhere.
-    """
-    levels = [(1.00, "40 000 000 crossings per second"),
-              (0.42, "100 000 kept by the hardware trigger"),
-              (0.12, "3 000 kept by the software trigger, and written down")]
-
-    fig, ax = plt.subplots(figsize=(5.8, 2.3), dpi=200)
+def trigger_animation(frames=36, kept=(9, 26), seed=2):
+    """Crossings going by, almost all of them discarded: the trigger, animated."""
+    rng = np.random.default_rng(seed)
+    fig, ax = plt.subplots(figsize=(4.4, 3.4), dpi=150)
+    fig.patch.set_facecolor("black")
+    ax.set_facecolor("black")
     ax.set_axis_off()
-    xs = [w / 2 for w, _ in levels] + [-w / 2 for w, _ in levels][::-1]
-    ys = [0, -1, -2, -2, -1, 0]
-    ax.fill(xs, ys, color=BLUE, alpha=.18, edgecolor="none")
-    for k, (w, label) in enumerate(levels):
-        ax.plot([-w / 2, w / 2], [-k, -k], color=BLUE, lw=1.6)
-        ax.text(w / 2 + .06, -k, label, va="center", fontsize=11,
-                color=BLUE if k == 2 else GREY)
-    ax.set_xlim(-.62, 1.9)
-    ax.set_ylim(-2.45, .45)
-    save(fig, "figures/lec2/trigger.png")
+    ax.set_xlim(-1.35, 1.35)
+    ax.set_ylim(-1.15, 1.35)
+    seen = []
+
+    def draw(k):
+        ax.clear()
+        ax.set_facecolor("black")
+        ax.set_axis_off()
+        ax.set_xlim(-1.35, 1.35)
+        ax.set_ylim(-1.15, 1.35)
+        keep = k in kept
+        colour = "#f6c650" if keep else "#4a6f8a"
+        angles = rng.uniform(0, 2 * np.pi, 34)
+        lengths = rng.uniform(.35, 1.0, 34)
+        curl = rng.normal(0, .35, 34)
+        for a, r, c in zip(angles, lengths, curl):
+            t = np.linspace(0, r, 24)
+            ax.plot(t * np.cos(a + c * t), t * np.sin(a + c * t),
+                    color=colour, lw=.9, alpha=.9 if keep else .55)
+        ax.add_patch(plt.Circle((0, 0), 1.05, facecolor="none",
+                                edgecolor="#20323f", lw=1.2))
+        ax.text(0, 1.22, "crossing %d of 40 000 000 this second" % (k + 1),
+                color="#9fb3bf", fontsize=8, ha="center")
+        ax.text(0, -1.08, "kept" if keep else "discarded",
+                color="#7ed492" if keep else "#c0392b", fontsize=11, ha="center")
+        seen.append(keep)
+        return ax.lines
+
+    anim = animation.FuncAnimation(fig, draw, frames=frames, interval=380)
+    anim.save("figures/lec2/trigger.gif", writer=animation.PillowWriter(fps=2.6))
+    plt.close(fig)
+    print("wrote figures/lec2/trigger.gif")
 
 
 def belgian_poll():
@@ -98,6 +117,6 @@ def sessions():
 
 
 if __name__ == "__main__":
-    trigger()
+    trigger_animation()
     belgian_poll()
     sessions()

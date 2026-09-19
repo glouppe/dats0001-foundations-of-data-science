@@ -103,7 +103,7 @@ class: middle
 
 ---
 
-class: middle
+class: middle, black-slide
 
 .italic[Example 2.] A collision at the LHC.
 
@@ -112,11 +112,11 @@ class: middle
 - $\xi$: the .bold[trigger] rules, the calibration, the collisions piled up in one crossing.
 
 .grid[
-.kol-1-2[.center.width-90[![](figures/lec2/cms-event.png)]]
-.kol-1-2[.center.width-90[![](figures/lec2/trigger.png)]]
+.kol-1-2[.center.width-95[![](figures/lec2/cms-event.png)]]
+.kol-1-2[.center.width-80[![](figures/lec2/trigger.gif)]]
 ]
 
-.alert[Almost everything is thrown away before anyone looks at it, by rules written in advance.]
+.center[Almost everything is thrown away before anyone looks at it, by rules written in advance.]
 
 .footnote[Credits: [McCauley and Taylor](https://commons.wikimedia.org/wiki/File:3D_view_of_an_event_recorded_with_the_CMS_detector_in_2012_at_a_proton-proton_centre_of_mass_energy_of_8_TeV.png), CMS Collaboration and CERN, 2012 (CC BY-SA 3.0).]
 
