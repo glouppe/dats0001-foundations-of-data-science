@@ -105,20 +105,15 @@ class: middle
 
 class: middle, black-slide
 
+.center.width-55[![](figures/lec2/lhc-detector.gif)]
+
 .italic[Example 2.] A collision at the LHC.
 
 - $\omega$: a bunch crossing, 40 million times a second.
 - $f$: the detector turning a crossing into electrical signals, and the reconstruction turning those into tracks and energies.
 - $\xi$: the .bold[trigger] rules, the calibration, the collisions piled up in one crossing.
 
-.grid[
-.kol-1-2[.center.width-100[![](figures/lec2/lhc-detector.gif)]]
-.kol-1-2[.center.width-95[![](figures/lec2/cms-event.png)]]
-]
-
-.center[40 000 000 crossings a second, about 3 000 written down:<br> almost everything is thrown away before anyone looks at it.]
-
-.footnote[Credits: CERN; the recorded event is by [McCauley and Taylor](https://commons.wikimedia.org/wiki/File:3D_view_of_an_event_recorded_with_the_CMS_detector_in_2012_at_a_proton-proton_centre_of_mass_energy_of_8_TeV.png), CMS Collaboration and CERN, 2012 (CC BY-SA 3.0).]
+.footnote[Credits: CERN.]
 
 ???
 
