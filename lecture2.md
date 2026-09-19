@@ -174,7 +174,7 @@ class: middle
 - $\omega$: a listener, and what they actually like.
 - $f$: logging every play, and counting a .bold[stream] after 30 seconds.
 - $\xi$: the device, the playlist or recommendation that started the track.
-- $s$: plays under 30 seconds, offline plays never synced, bots.
+- $s$: plays under 30 seconds are dropped.
 
 These data exist to pay artists, in proportion to streams, and to profile listeners, for recommendations and advertising.
 
