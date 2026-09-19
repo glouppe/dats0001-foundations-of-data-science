@@ -32,7 +32,10 @@ class: middle
 
 ## A running example
 
-.center.width-60[![](figures/lec2/lter-penguins.png)]
+.grid[
+.kol-1-2[.center.width-100[![](figures/lec2/lter-penguins.png)]]
+.kol-1-2[.center.width-100[![](figures/lec2/culmen-depth.png)]]
+]
 
 We will follow one dataset through this lecture: the .bold[Palmer Archipelago penguins], 344 birds of three species measured on three islands between 2007 and 2009.
 
@@ -73,7 +76,9 @@ where $\delta$ is the Dirac delta function. When $\mathcal{X}$ is discrete, $p\_
 
 class: middle
 
-The .bold[measurement process] is part of the data generation mechanism. We make it explicit by adding the measurement conditions $\xi \in \Xi$ (instrument settings, environmental conditions, observer effects) to the map,
+## The measurement process
+
+The measurement process is part of the data generation mechanism. We make it explicit by adding the measurement conditions $\xi \in \Xi$ (instrument settings, environmental conditions, observer effects) to the map,
 $$f : \Omega \times \Xi \to \mathcal{X}.$$
 
 Measurements can introduce quantization (continuous to discrete), noise (random perturbations), and bias (systematic deviations). If $\Omega \times \Xi$ carries a joint distribution $p(\omega, \xi)$, then
@@ -98,6 +103,93 @@ Nests are found at the one-egg stage, both adults are caught, measured, sampled 
 .success[The instruments are visible in the data: every body mass is a multiple of 25 g, every bill length has one decimal, every flipper length is a whole millimetre.]
 
 .footnote[Credits: [Gorman et al.](https://doi.org/10.1371/journal.pone.0090081), 2014.]
+
+---
+
+class: middle
+
+.bold[Example.] How a star's distance is measured.
+
+- Gaia, a satellite that scanned the whole sky from 2014 to 2025, records the tiny yearly wobble of each star against the background, its .bold[parallax], which shrinks with distance.
+- The catalogue ships an angle and an uncertainty for each of 1.47 billion stars, built from a few years of repeated scans.
+- $\xi$: how often and from which angles a star happened to be scanned, the calibration of the instrument, the brightness and the colour of the star.
+
+.success[Here too the instrument is visible: every row carries its own uncertainty, and 17% of the parallaxes in a random sample are negative, a value no distance can produce.]
+
+.footnote[Credits: ESA/Gaia/DPAC, Gaia DR3.]
+
+???
+
+The calibration is never perfect: Gaia's parallaxes carry a global offset of about $-17$ microarcseconds, measured on quasars, which are so far away that their parallax should be zero. Careful work subtracts it before anything else (Lindegren et al., 2021).
+
+We model this data in Lecture 4.
+
+---
+
+class: middle
+
+.bold[Example.] How an opinion is measured.
+
+- A survey records an .bold[answer to a question], from whoever could be reached and agreed to answer.
+- $\xi$: who could be contacted at all, the mode (phone, web, doorstep), the wording and the order of the questions, the interviewer, the day.
+
+In 1936, the *Literary Digest* mailed 10 million ballots and got 2.4 million back. It announced Landon 57%, Roosevelt 43%. Roosevelt won with 62%.
+
+.alert[The ballots went to subscribers, car owners and telephone directories, and only the keenest replied. Gallup called the winner with 50,000 respondents, by caring about who was in the sample.]
+
+???
+
+Two and a half million answers, and the error was 19 points. Sample size does not fix a sampling frame, which is the same point Lecture 1 made about big data: more rows do not remove the need to think about how they came to be.
+
+---
+
+class: middle
+
+.bold[Example.] How a click is measured.
+
+- Analytics records the .bold[events a program was told to emit]: a page view, a click, a purchase, each with a timestamp and an identifier.
+- $\xi$: which events the developers instrumented, the browsers and extensions that block the tracker, bots, time zones, what the pipeline samples and how long it keeps.
+
+.alert[Much of it is convention rather than observation. A "session" is what the tool decides it is, by default thirty minutes without an event, and the users who block the tracker are not in the data at all.]
+
+???
+
+Analytics is found data: it was collected to run a product, not to answer your question, and the definitions were set by someone else, often by a default in a configuration file. The same holds for administrative records, invoices or hospital codes, where the definitions come from accounting or from the law.
+
+---
+
+class: middle
+
+.bold[Example.] How a label is measured.
+
+- A person assigns a category by following guidelines: an image label, a diagnosis code, a moderation decision, a preference between two answers of a model.
+- $\xi$: the guidelines, the training and the fatigue of the annotator, the interface, and the rule that settles disagreements, usually a majority vote.
+
+.alert[A label is a measurement, not the truth: about 6% of the labels of the ImageNet validation set are wrong, and models are ranked on that set.]
+
+.footnote[Credits: [Northcutt et al.](https://arxiv.org/abs/2103.14749), 2021.]
+
+???
+
+2916 errors were found and confirmed by hand in the 50000 images of that validation set. Benchmarks are measurements too, with their own $\xi$, and a difference of half a point between two models can sit entirely inside it.
+
+---
+
+class: middle
+
+## What to ask of any dataset
+
+- Who or what could have entered the data, and who could not?
+- What exactly was recorded, in which units and at what resolution?
+- Under what conditions, by whom, with which instrument or protocol?
+- What was dropped, defaulted, inferred or imputed along the way?
+- Why were the data collected in the first place, and by whom?
+
+.success[The answers are $\xi$. They are rarely in the file: they live in the protocol, the codebook and the source code.]
+
+???
+
+This is the only moment of the course that looks at how data are made. Everything that follows, the models, the inference, the criticism, assumes that this question has been asked and answered.
 
 ---
 
