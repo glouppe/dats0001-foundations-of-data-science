@@ -176,7 +176,7 @@ class: middle
 - $\xi$: the device, the playlist or recommendation that started the track.
 - $s$: plays under 30 seconds, offline plays never synced, bots.
 
-These data exist to pay artists, in proportion to streams, and to profile listeners, for recommendations and advertising. The 30-second rule is a payment rule, not a definition of listening.
+These data exist to pay artists, in proportion to streams, and to profile listeners, for recommendations and advertising.
 
 ???
 
