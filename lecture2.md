@@ -192,10 +192,10 @@ class: middle
 
 .italic[Example 5.] A label in a dataset.
 
-- $\omega$: the scene in an image.
-- $f$: a person applying the guidelines and clicking a category.
+- $\omega$: an image, which exists before anyone labels it.
+- $f$: a person looking at the image, applying the guidelines and clicking a category.
 - $\xi$: the guidelines, the annotators and their fatigue, the interface, the rule that settles disagreement.
-- $s$: which images were collected, and which were kept.
+- $s$: which images were collected from the web, and which were kept.
 
 Above, the label stored in ImageNet, struck through, and the one annotators give when asked again: 6% of that validation set is wrong.
 
