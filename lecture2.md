@@ -197,11 +197,11 @@ class: middle
 - $\xi$: the guidelines, the annotators and their fatigue, the interface, the rule that settles disagreement.
 - $s$: which images were collected from the web, and which were kept.
 
-Above, the label stored in ImageNet, struck through, and the one annotators give when asked again: 6% of that validation set is wrong.
-
 .footnote[Credits: [Northcutt et al.](https://labelerrors.com), 2021; images from [ImageNet](https://doi.org/10.1109/CVPR.2009.5206848), Deng et al., 2009.]
 
 ???
+
+In the figure, the label stored in ImageNet, struck through, and the one annotators give when asked again: 6% of that validation set is wrong.
 
 Models are ranked on that set. 2916 errors were found and confirmed by hand in its 50000 images. Benchmarks are measurements too, with their own $\xi$, and half a point between two models can sit entirely inside it.
 
