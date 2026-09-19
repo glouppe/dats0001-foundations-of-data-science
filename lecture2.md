@@ -442,9 +442,7 @@ class: middle
 
 .footnote[Credits: Omega scan of a power-line glitch at LIGO Livingston (O4), [Gravity Spy](https://gravityspy.org); data from [GWOSC](https://gwosc.org) (CC BY 4.0).]
 
-Example&#58;
-
-Glitches in gravitational wave detectors are outliers that can mimic true signals and complicate detection efforts. They can arise from environmental disturbances, instrumental artifacts, or other non-astrophysical sources.
+.italic[Example 1.] Glitches in gravitational wave detectors are outliers that can mimic true signals and complicate detection efforts. They can arise from environmental disturbances, instrumental artifacts, or other non-astrophysical sources.
 
 ???
 
@@ -468,7 +466,7 @@ class: middle
 
 .center.width-10[![](figures/lec2/high-temperature.png)]
 
-Temperature readings in Liège:
+.italic[Example 2.] Temperature readings in Liège.
 
 ```
 20.1, 19.8, 20.3, 1000.0, 20.2, 19.9
@@ -480,6 +478,26 @@ The 1000.0 value is an outlier likely due to a sensor error.
 ```
 The 37.8 value is a rare but plausible measurement on a hot day.
 
+
+---
+
+class: middle
+
+.center.width-60[![](figures/lec2/penguin-outliers.png)]
+
+.italic[Example 3.] Outliers among the penguins.
+
+- Pooled, no measurement is an outlier: the three species hide each other.
+- Among the Gentoo, a 59.6 mm bill lies about 4 standard deviations above the mean.
+- Among the Chinstrap, one bird is unusual only jointly: neither its 58.0 mm bill nor its 181 mm flipper is extreme on its own.
+
+???
+
+Pooled, Tukey's fences (1.5 times the interquartile range) flag no value on any of the four measurements.
+
+Gentoo bills average 47.5 mm with a standard deviation of 3.1 mm. Chinstrap bills average 48.8 ± 3.3 mm and flippers 195.8 ± 7.1 mm; on the four measurements together, the squared Mahalanobis distance of that bird to the Chinstrap mean is 25.6, beyond the 0.1% tail of a $\chi^2$ with 4 degrees of freedom (18.5).
+
+Nothing in the file says whether these are errors or real birds: the Chinstrap bill could be a 48.0 typed as 58.0. An outlier is only defined against a reference distribution, and choosing it is a modelling decision. Lecture 4 makes the species a latent variable.
 ---
 
 class: middle

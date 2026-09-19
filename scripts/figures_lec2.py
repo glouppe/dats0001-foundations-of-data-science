@@ -1,4 +1,5 @@
-"""Regenerate the figures of lecture 2 that are drawn from the penguins data.
+"""Regenerate the figures of lecture 2 that are drawn from the penguins data:
+two tables, and the two birds that are outliers only within their species.
 
 Usage: uv run python scripts/figures_lec2.py
 """
@@ -7,6 +8,8 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 GREY = "#354046"
+LIGHT = "#b8c0c6"
+COLOR = {"Adelie": "#0173b2", "Chinstrap": "#de8f05", "Gentoo": "#029e73"}
 COLS = ["species", "island", "bill_length_mm", "body_mass_g", "sex"]
 HEADER = ["", "species", "island", "bill length (mm)", "body mass (g)", "sex"]
 
@@ -71,8 +74,36 @@ def with_missing(df):
     return rows, header, missing
 
 
+def outliers(df):
+    """Bill against flipper: nothing stands out pooled, two birds do by species."""
+    d = df.dropna(subset=["bill_length_mm", "flipper_length_mm"])
+    fig, ax = plt.subplots(figsize=(5.8, 3.4), dpi=200)
+    for species, colour in COLOR.items():
+        g = d[d.species == species]
+        ax.scatter(g.bill_length_mm, g.flipper_length_mm, s=14, alpha=.55,
+                   color=colour, linewidths=0, label=species)
+    marked = [(59.6, 230.0, "Gentoo, 59.6 mm bill", (-1.2, 7), "right"),
+              (58.0, 181.0, "Chinstrap, 58.0 mm bill\non a 181 mm flipper", (-3.5, -4), "right")]
+    for x, y, label, (dx, dy), ha in marked:
+        ax.scatter([x], [y], s=150, facecolors="none", edgecolors=GREY, linewidths=1.2)
+        ax.annotate(label, (x, y), (x + dx, y + dy), ha=ha, va="center", fontsize=9,
+                    color=GREY, arrowprops=dict(arrowstyle="-", color=GREY, lw=.7))
+    ax.set_xlabel("Bill length (mm)", color=GREY)
+    ax.set_ylabel("Flipper length (mm)", color=GREY)
+    ax.tick_params(colors=GREY)
+    for side in ("top", "right"):
+        ax.spines[side].set_visible(False)
+    for side in ("left", "bottom"):
+        ax.spines[side].set_color(LIGHT)
+    ax.legend(frameon=False, fontsize=9, loc="upper left", markerscale=1.4, labelcolor=GREY)
+    fig.tight_layout()
+    fig.savefig("figures/lec2/penguin-outliers.png", bbox_inches="tight", facecolor="white")
+    print("wrote figures/lec2/penguin-outliers.png")
+
+
 if __name__ == "__main__":
     df = pd.read_csv("data/penguins.csv")
     table(head_and_tail(df), HEADER, set(), "figures/lec2/penguins-tabular.png", (7.4, 3.3))
     rows, header, missing = with_missing(df)
     table(rows, header, missing, "figures/lec2/penguins-missing.png", (8.6, 3.0))
+    outliers(df)
