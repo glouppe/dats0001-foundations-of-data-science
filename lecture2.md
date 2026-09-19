@@ -97,7 +97,7 @@ class: middle
 - $f$: catching the bird at its nest, reading dial calipers on the bill, a ruler along the flipper, a spring scale under a weigh bag, and drawing blood for the lab.
 - $\xi$: the field season, the observer, and each instrument with the resolution it is read at.
 
-.success[The instruments are visible in the data: every body mass is a multiple of 25 g, every bill length has one decimal, every flipper length is a whole millimetre.]
+The instruments are visible in the data: every body mass is a multiple of 25 g, every bill length has one decimal, every flipper length is a whole millimetre.
 
 .footnote[Credits: [Gorman et al.](https://doi.org/10.1371/journal.pone.0090081), 2014.]
 
@@ -125,15 +125,15 @@ The selection here is deliberate and documented, and physicists correct for it: 
 
 class: middle
 
+.center.width-55[![](figures/lec2/belgian-poll.png)]
+
 .italic[Example 3.] An opinion in a survey.
 
 - $\omega$: the intention of a voter.
-- $f$: reaching someone, reading them a question, and writing down the answer they give.
-- $\xi$: who could be contacted, the mode, the wording of the questions, the day it was asked.
+- $f$: reaching someone, reading them a question, and writing down the answer.
+- $\xi$: who could be contacted, the mode, the wording of the questions, the day.
 
-.center.width-55[![](figures/lec2/belgian-poll.png)]
-
-.alert[.bold[Selection bias]: who ends up in the data depends on what is being measured. No sample size repairs it.]
+.bold[Selection bias]: who ends up in the data depends on what is being measured, and no sample size repairs it.
 
 .footnote[Credits: [Le Grand Baromètre](https://www.rtbf.be/article/elections-2024-les-sondages-se-sont-ils-vraiment-trompes-11388084), 4 June 2024; results of the Chamber in Flanders.]
 
@@ -149,15 +149,15 @@ The lesson is not that polls are useless, it is that a sample is only as good as
 
 class: middle
 
+.center.width-60[![](figures/lec2/sessions.png)]
+
 .italic[Example 4.] An evening on a streaming platform.
 
 - $\omega$: a person watching, scrolling and skipping.
 - $f$: the app emitting an event at every play, pause, seek and stop, and the pipeline storing it.
 - $\xi$: what the app instruments, the recommender that chose what was on offer, A/B tests, shared accounts and bots, the timeout that ends a session.
 
-.center.width-60[![](figures/lec2/sessions.png)]
-
-.alert[The platform measures behaviour that it also shapes: what was watched had been chosen by a model, and the next model is trained on that.]
+The platform measures behaviour that it also shapes: what was watched had been chosen by a model, and the next model is trained on that.
 
 ???
 
@@ -169,17 +169,15 @@ The same holds for administrative records, invoices or hospital codes, where the
 
 class: middle
 
+.center.width-55[![](figures/lec2/imagenet-label-errors.png)]
+
 .italic[Example 5.] A label in a dataset.
 
 - $\omega$: what is in the image.
 - $f$: a person looking at the image, applying the guidelines and clicking a category, then a majority vote.
 - $\xi$: the guidelines, the annotators and their fatigue, the interface, the vote.
 
-.center.width-55[![](figures/lec2/imagenet-label-errors.png)]
-
-.center[The stored label, struck through, and the one annotators give when asked again.]
-
-.alert[A label is a measurement, not the truth: 6% of ImageNet's validation labels are wrong.]
+Above, the label stored in ImageNet, struck through, and the one annotators give when asked again: 6% of that validation set is wrong.
 
 .footnote[Credits: [Northcutt et al.](https://labelerrors.com), 2021; images from [ImageNet](https://doi.org/10.1109/CVPR.2009.5206848), Deng et al., 2009.]
 

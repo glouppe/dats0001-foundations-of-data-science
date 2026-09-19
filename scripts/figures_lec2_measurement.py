@@ -38,7 +38,7 @@ def belgian_poll():
         ax.text(xi - .19, a + .8, "%g%%" % a, ha="center", fontsize=11)
         ax.text(xi + .19, b + .8, "%g%%" % b, ha="center", fontsize=11, color=BLUE)
     ax.set_xticks(x, ["the last poll, 4 June 2024", "the election, 9 June 2024"])
-    ax.set_ylim(0, 34)
+    ax.set_ylim(0, 40)
     ax.set_yticks([])
     for side in ("left", "right", "top"):
         ax.spines[side].set_visible(False)
