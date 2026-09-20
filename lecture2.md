@@ -318,7 +318,7 @@ Later in the lecture, $\mathbf{x}\_j$ denotes the column of variable $j$: the in
 
 class: middle
 
-Collections of homogeneous measurements can be represented as .bold[arrays] or .bold[tensors] $\mathbf{x} \in \mathbb{R}^{d\_1 \times d\_2 \times \cdots \times d\_k}$, where the position of each atomic value in the array is usually associated to a spatial or temporal location.
+Values of the same kind, in the same unit, can be stacked into .bold[arrays] or .bold[tensors] $\mathbf{x} \in \mathbb{R}^{d\_1 \times d\_2 \times \cdots \times d\_k}$, where the position of a value stands for a place or a time.
 - Images: 3d arrays $\mathbf{x} \in \\{0, \ldots, 255\\}^{h \times w \times c}$ (height, width, channels). The photo on the previous slide is such an array.
 - Videos: 4d arrays $\mathbf{x} \in \\{0, \ldots, 255\\}^{t \times h \times w \times c}$ (time, height, width, channels).
 
