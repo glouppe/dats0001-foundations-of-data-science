@@ -434,9 +434,13 @@ The value alone does not say which.
 
 class: middle
 
-Telling one from the other takes a model. Two of them make the distinction explicit: a .bold[contamination mixture]
+Two models account for outliers explicitly.
+
+A .bold[contamination mixture] gives bad measurements their own distribution,
 $$p(\mathbf{x}) = (1 - \varepsilon) p\_\text{model}(\mathbf{x}) + \varepsilon p\_\text{bad}(\mathbf{x}),$$
-which gives bad measurements their own distribution, or a heavy-tailed data model, which allows rare large deviations without special-casing them.
+where $\varepsilon$ is the proportion of bad measurements.
+
+A .bold[heavy-tailed] data model, a Student's $t$ in place of a Gaussian, assigns a larger probability to large deviations.
 
 .alert[.bold[Outliers should not be removed blindly] unless explicitly justified by the measurement model or domain knowledge.]
 
