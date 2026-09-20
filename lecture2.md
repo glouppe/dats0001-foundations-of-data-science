@@ -434,6 +434,16 @@ The value alone does not say which.
 
 class: middle
 
+Telling one from the other takes a model. Two of them make the distinction explicit: a .bold[contamination mixture]
+$$p(\mathbf{x}) = (1 - \varepsilon) p\_\text{model}(\mathbf{x}) + \varepsilon p\_\text{bad}(\mathbf{x}),$$
+which gives bad measurements their own distribution, or a heavy-tailed data model, which allows rare large deviations without special-casing them.
+
+.alert[.bold[Outliers should not be removed blindly] unless explicitly justified by the measurement model or domain knowledge.]
+
+---
+
+class: middle
+
 .center.width-50[![](figures/lec2/gw-glitch-powerline6.png)]
 
 .footnote[Credits: Omega scan of a power-line glitch at LIGO Livingston (O4), [Gravity Spy](https://gravityspy.org); data from [GWOSC](https://gwosc.org) (CC BY 4.0).]
@@ -443,18 +453,6 @@ class: middle
 ???
 
 Here powerline glitches are visible at 60 Hz, due to electromagnetic interference from electrical power systems.
-
----
-
-class: middle
-
-Treating outliers requires a model of the measurement process that either describes measurements under normal conditions or explicitly accounts for anomalies. 
-
-Two models make this explicit&#58; a contamination mixture
-$$p(\mathbf{x}) = (1 - \varepsilon) p\_\text{model}(\mathbf{x}) + \varepsilon p\_\text{bad}(\mathbf{x}),$$
-which gives bad measurements their own distribution, or a heavy-tailed data model, which allows rare large deviations without special-casing them.
-
-.alert[.bold[Outliers should not be removed blindly] unless explicitly justified by the measurement model or domain knowledge.]
 
 ---
 
