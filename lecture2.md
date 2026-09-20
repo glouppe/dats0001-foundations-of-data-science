@@ -392,6 +392,14 @@ The pattern $\mathbf{M}$ is itself produced by the measurement process, and is m
 - Missing at random (MAR): the pattern may depend on what is observed, but not on what is missing, $p(\mathbf{M} \mid \mathbf{X}\_\text{full}) = p(\mathbf{M} \mid \mathbf{X}\_\text{obs})$.
 - Missing not at random (MNAR): the pattern depends on the missing entries themselves.
 
+???
+
+Could $\mathbf{M}$ simply be part of $\xi$? Let a measurement return nothing under some conditions, and the pattern becomes a readout of $\xi$. That works exactly under MCAR: $\xi$ is then drawn independently of $\omega$, so the pattern cannot depend on the data.
+
+MAR needs more, since the conditions must depend on the entity through the entries already observed. The joint $p(\omega, \xi)$ allows it, but it is no longer the simple picture of conditions drawn on their own. MNAR needs that dependence to run through the values that are missing.
+
+Hence the separate symbol, and one asymmetry worth stating: $\mathbf{M}$ is the part of the mechanism we can see. The empty cells are in the file; the conditions that emptied them are not, and the records that never made it are not either.
+
 ---
 
 class: middle
