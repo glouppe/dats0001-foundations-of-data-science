@@ -335,6 +335,8 @@ Data can also be structured as ordered .bold[sequences] $\mathbf{x} = (x\_1, x\_
 class: middle
 
 Finally, data can be organized as .bold[networks] or .bold[graphs] $\mathbf{x} = (V, E)$, where entities are represented as nodes $V$ and relationships as edges $E$. Nodes and edges may carry their own attributes, $\mathbf{x}\_v$ and $\mathbf{x}\_{uv}$.
+
+.italic[Examples]:
 - Molecular structures, where nodes represent atoms and edges represent bonds.
 - Social networks, where nodes represent individuals and edges represent interactions or relationships.
 
