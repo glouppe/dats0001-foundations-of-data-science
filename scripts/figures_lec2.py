@@ -74,6 +74,24 @@ def with_missing(df):
     return rows, header, missing
 
 
+def raw_column(df, per_row=14):
+    """Every body mass, printed in the order the birds were measured."""
+    values = df.body_mass_g.tolist()
+    rows = [values[k:k + per_row] for k in range(0, len(values), per_row)]
+
+    fig, ax = plt.subplots(figsize=(5.8, 3.6), dpi=200)
+    ax.set_axis_off()
+    for r, row in enumerate(rows):
+        for c, v in enumerate(row):
+            text = "NA" if pd.isna(v) else "%d" % v
+            ax.text(c, -r, text, fontsize=7, ha="center", va="center",
+                    color=LIGHT if pd.isna(v) else GREY)
+    ax.set_xlim(-.8, per_row - .2)
+    ax.set_ylim(-len(rows) + .4, .6)
+    fig.savefig("figures/lec2/body-mass-values.png", bbox_inches="tight", facecolor="white")
+    print("wrote figures/lec2/body-mass-values.png")
+
+
 def outliers(df):
     """Bill against flipper: nothing stands out pooled, two birds do by species."""
     d = df.dropna(subset=["bill_length_mm", "flipper_length_mm"])
@@ -106,4 +124,5 @@ if __name__ == "__main__":
     table(head_and_tail(df), HEADER, set(), "figures/lec2/penguins-tabular.png", (7.4, 3.3))
     rows, header, missing = with_missing(df)
     table(rows, header, missing, "figures/lec2/penguins-missing.png", (8.6, 3.0))
+    raw_column(df)
     outliers(df)

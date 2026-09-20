@@ -554,13 +554,28 @@ Let us consider a variable $j$ of the data frame. We write $x\_j$ for that varia
 
 Univariate analysis focuses on understanding the distribution and characteristics of this single variable.
 
-For numerical variables, common techniques include:
-- Looking at the raw data: print values, scroll through them.
+.bold[Look at the values first]: print the column, scroll through it.
+
+Then, for numerical variables:
 - Plotting the data: histograms reveal the distribution shape.
 - Summarizing with statistics: mean, median, mode, variance, skewness, kurtosis.
 
 For categorical variables:
 - Counting occurrences of each category.
+
+---
+
+class: middle
+
+.center.width-70[![](figures/lec2/body-mass-values.png)]
+
+.center[The 344 body masses, in the order they were recorded.]
+
+???
+
+Two are missing, at rows 4 and 272. Every value is a multiple of 25 g, the resolution of the spring scale. They run from 2700 to 6300 g.
+
+The heavy stretch in the middle is not a trend: the file is ordered by species, 152 Adelie, then 124 Gentoo, then 68 Chinstrap, and the Gentoo are the heavy ones. Sorting is part of $\xi$ too.
 
 ---
 
