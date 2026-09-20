@@ -211,24 +211,6 @@ Models are ranked on that set. 2916 errors were found and confirmed by hand in i
 
 class: middle
 
-## What to ask of any dataset
-
-- Which entities could have entered the data, and which could not?
-- What exactly was recorded, in which units and at what resolution?
-- Under what conditions, by whom, with which instrument or protocol?
-- What was dropped, defaulted, inferred or imputed along the way?
-- Why were the data collected in the first place, and by whom?
-
-.success[The answers are $f$, $\xi$ and $s$. They are rarely in the file: they live in the protocol, the codebook and the source code.]
-
-???
-
-This is the only moment of the course that looks at how data are made. Everything that follows, the models, the inference, the criticism, assumes that this question has been asked and answered.
-
----
-
-class: middle
-
 ## Data types
 
 Atomic data are the indivisible units of information collected through measurements. They are often categorized based on their nature and the operations that can be performed on it.
