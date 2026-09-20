@@ -424,7 +424,11 @@ class: middle
 
 class: middle
 
-The measurement process can also introduce acquisition errors and produce observations that deviate significantly from regular measurements. These .bold[outliers] can arise from instrument malfunctions, data entry errors, or rare events.
+An .bold[outlier] is a value far from the rest. It can come from either end of the measurement process:
+- from $\xi$: an instrument that failed, a value typed in the wrong column, a unit mistaken;
+- from $\omega$: an entity that is genuinely unusual, measured correctly.
+
+The value alone does not say which.
 
 ---
 
