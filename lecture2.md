@@ -72,13 +72,15 @@ When $\mathcal{X}$ is continuous, it can be written as
 $$p\_r(\mathbf{x}) = \int\_{\omega \in \Omega} p(\omega) \delta(\mathbf{x} - f(\omega)) d\omega,$$
 where $\delta$ is the Dirac delta function. When $\mathcal{X}$ is discrete, $p\_r$ assigns probabilities rather than a density.
 
+The mechanism that produces the data, here $p(\omega)$ and $f$, is the .bold[data generating process]. $p\_r$ is the distribution it induces.
+
 ---
 
 class: middle
 
 ## The measurement process
 
-The measurement process is part of the data generation mechanism. We make it explicit by adding the measurement conditions $\xi \in \Xi$ (instrument settings, environmental conditions, observer effects) to the map,
+The measurement process is part of the data generating process. We make it explicit by adding the measurement conditions $\xi \in \Xi$ (instrument settings, environmental conditions, observer effects) to the map,
 $$f : \Omega \times \Xi \to \mathcal{X}.$$
 
 Measurements can introduce quantization (continuous to discrete), noise (random perturbations), and bias (systematic deviations). If $\Omega \times \Xi$ carries a joint distribution $p(\omega, \xi)$, then
