@@ -150,7 +150,7 @@ class: middle
 
 - $\omega$: a voter, whose intention nobody can see.
 - $f$: reaching them, reading a question, writing down the answer.
-- $\xi$: the mode, the wording and the order of the questions, the day.
+- $\xi$: telephone, web or doorstep, the wording and the order of the questions, the day.
 - $s$: who could be contacted, and who agreed to answer.
 
 .footnote[Credits: [Le Grand Baromètre](https://www.rtbf.be/article/elections-2024-les-sondages-se-sont-ils-vraiment-trompes-11388084), 4 June 2024; results of the Chamber in Flanders.]
