@@ -354,10 +354,10 @@ class: middle
 
 ## Data quality 
 
-Real-world data are often imperfect and may suffer from various .bold[quality issues] that can impact analysis and modeling. Common data quality issues include:
-- Missing values
-- Measurement errors
-- Outliers
+Real-world data are imperfect, and each .bold[quality issue] sits somewhere in the process that produced them:
+- .bold[Missing values]: nothing was recorded, for a whole record or for one of its entries.
+- .bold[Measurement errors]: $f(\omega, \xi)$ is off the quantity of interest, through the noise and the bias that $\xi$ brings.
+- .bold[Outliers]: a value far from the others, because $\xi$ went wrong or because $\omega$ was rare.
 
 ---
 
