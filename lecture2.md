@@ -413,9 +413,7 @@ Under MCAR or MAR, the second factor does not depend on the missing entries and,
 
 class: middle
 
-Example&#58;
-
-Survey of $n=1000$ respondents, 30% do not answer the income question.
+.italic[Example]: a survey of $N = 1000$ respondents, where 30% do not answer the income question.
 - MCAR: Randomly selected respondents skip the question.
 - MAR: Younger respondents are less likely to answer.
 - MNAR: High earners refuse to answer.
