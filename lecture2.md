@@ -625,7 +625,7 @@ class: middle
 
 class: middle
 
-.center.width-70[![](figures/lec2/pairplot.png)]
+.center.width-65[![](figures/lec2/pairplot.png)]
 .center[Pair plots of all numerical variables.<br>
 .italic[Most panels show two or three clouds rather than one.]]
 
@@ -635,7 +635,7 @@ class: middle
 
 .center.width-80[![](figures/lec2/body_mass_by_species.png)]
 .center[Categorical vs. numerical: Histograms of body mass by species.<br>
-.italic[The right tail was Gentoo, at 5076 g on average against about 3700 g for the others.]]
+.italic[The right tail was Gentoo, at 5076 g on average<br> against about 3700 g for the others.]]
 
 ---
 
@@ -643,7 +643,7 @@ class: middle
 
 .center[![](figures/lec2/contingency.png)]
 .center[Categorical vs. categorical: Contingency table of species and island.<br>
-.italic[Gentoo live only on Biscoe, Chinstrap only on Dream: species and island are dependent.]]
+.italic[Gentoo live only on Biscoe, Chinstrap only on Dream:<br> species and island are dependent.]]
 
 ---
 
@@ -669,7 +669,7 @@ The .bold[mutual information] between two variables $x\_j$ and $x\_k$ measures t
 $$I(x\_j; x\_k) = \sum\_{x\_j} \sum\_{x\_k} p\_r(x\_j, x\_k) \log \frac{p\_r(x\_j, x\_k)}{p\_r(x\_j)p\_r(x\_k)},$$
 with integrals in place of the sums for continuous ones.
 
-Mutual information captures any statistical relationship, not just linear or monotonic ones. It is a property of $p\_r$, however, which must itself be estimated from the $N$ records, and that is hard.
+Mutual information captures any statistical relationship, not just linear or monotonic ones. It is a property of $p\_r$, however, which must itself be estimated from the $N$ records, which can be challenging.
 
 ---
 
