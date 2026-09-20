@@ -532,8 +532,6 @@ class: middle
 All we hold is $N$ records, the rows $\mathbf{x}\_i = (x\_{i1}, \ldots, x\_{id})$ of the data frame. Their .bold[empirical distribution] puts equal mass on each of them,
 $$\hat{p}\_N(\mathbf{x}) = \frac{1}{N} \sum\_{i=1}^N \delta(\mathbf{x} - \mathbf{x}\_i).$$
 
-Every plot and every statistic that follows is a functional of $\hat{p}\_N$: a histogram is a marginal, a scatter plot a joint, body mass by species a conditional, correlation and mutual information measure dependence, and PCA is a projection.
-
 .alert[$\hat{p}\_N$ is not $p\_r$. It is what $N$ records show of it, and that gap is what the rest of the course is about.]
 
 ---
