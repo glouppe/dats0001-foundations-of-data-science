@@ -404,10 +404,17 @@ Hence the separate symbol, and one asymmetry worth stating: $\mathbf{M}$ is the 
 
 class: middle
 
-Why the distinction matters&#58; what we can compute is
-$$p(\mathbf{X}\_\text{obs}, \mathbf{M}) = \int p(\mathbf{X}\_\text{full}) p(\mathbf{M} \mid \mathbf{X}\_\text{full}) d\mathbf{X}\_\text{mis}.$$
+From the file we can only compute the joint law of the observed entries and of the pattern,
+$$p(\mathbf{X}\_\text{obs}, \mathbf{M}) = \int p(\mathbf{X}\_\text{full}) \, p(\mathbf{M} \mid \mathbf{X}\_\text{full}) \, d\mathbf{X}\_\text{mis}.$$
 
-Under MCAR or MAR, the second factor does not depend on the missing entries and, provided it shares no parameters with the first, it can be ignored: modelling the observed data is enough. Under MNAR it cannot be ignored, and the mechanism must be modeled jointly with the data.
+Under MAR, $p(\mathbf{M} \mid \mathbf{X}\_\text{full}) = p(\mathbf{M} \mid \mathbf{X}\_\text{obs})$ does not depend on $\mathbf{X}\_\text{mis}$, so it leaves the integral,
+$$p(\mathbf{X}\_\text{obs}, \mathbf{M}) = p(\mathbf{M} \mid \mathbf{X}\_\text{obs}) \int p(\mathbf{X}\_\text{full}) \, d\mathbf{X}\_\text{mis} = p(\mathbf{M} \mid \mathbf{X}\_\text{obs}) \, p(\mathbf{X}\_\text{obs}).$$
+
+If the two factors share no parameters, fitting a model to $\mathbf{X}\_\text{obs}$ alone is enough. Under MNAR the factor stays inside the integral, and the mechanism has to be modelled together with the data.
+
+???
+
+MCAR is the special case where $p(\mathbf{M} \mid \mathbf{X}\_\text{obs}) = p(\mathbf{M})$, so the same factorization holds.
 
 ---
 
