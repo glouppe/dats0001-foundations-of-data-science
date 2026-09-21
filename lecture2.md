@@ -404,7 +404,7 @@ Hence the separate symbol, and one asymmetry worth stating: $\mathbf{M}$ is the 
 
 class: middle
 
-From the file we can only compute the joint law of the observed entries and of the pattern,
+What we hold is the pair $(\mathbf{X}\_\text{obs}, \mathbf{M})$, whose joint law is
 $$p(\mathbf{X}\_\text{obs}, \mathbf{M}) = \int p(\mathbf{X}\_\text{full}) \, p(\mathbf{M} \mid \mathbf{X}\_\text{full}) \, d\mathbf{X}\_\text{mis}.$$
 
 Under MAR, $p(\mathbf{M} \mid \mathbf{X}\_\text{full}) = p(\mathbf{M} \mid \mathbf{X}\_\text{obs})$ does not depend on $\mathbf{X}\_\text{mis}$, so it leaves the integral,
