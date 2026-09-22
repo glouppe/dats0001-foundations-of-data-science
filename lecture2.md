@@ -94,7 +94,7 @@ class: middle
 Finally, not every entity ends up in the data. Writing $s = 1$ for "this measurement was recorded", what we observe is
 $$p\_r(\mathbf{x}) = \iint\_{\omega \in \Omega, \xi \in \Xi} p(\omega, \xi \mid s = 1) \, \delta(\mathbf{x} - f(\omega, \xi)) \, d\omega \, d\xi.$$
 
-The world enters through $p(\omega)$, the measurement through $\xi$, and the .bold[selection] through $s$. When the chance of being recorded depends on $\omega$ itself, $p\_r$ describes the entities that were recorded and not the population, however many of them there are.
+The world enters through $p(\omega)$, the measurement through $\xi$, and the .bold[selection] through $s$. When the chance of being recorded depends on $\omega$, $p\_r$ describes the entities that were recorded, not the population.
 
 ???
 
