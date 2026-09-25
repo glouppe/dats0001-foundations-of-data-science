@@ -13,43 +13,6 @@ Prof. Gilles Louppe<br>
 
 class: middle
 
-.smaller-x.center[
-```
-   dataset   mean_x   mean_y     sd_x     sd_y         cor
-      away 54.26610 47.83472 16.76982 26.93974 -0.06412835
-  bullseye 54.26873 47.83082 16.76924 26.93573 -0.06858639
-    circle 54.26732 47.83772 16.76001 26.93004 -0.06834336
-      dino 54.26327 47.83225 16.76514 26.93540 -0.06447185
-      dots 54.26030 47.83983 16.76774 26.93019 -0.06034144
-   h_lines 54.26144 47.83025 16.76590 26.93988 -0.06171484
-high_lines 54.26881 47.83545 16.76670 26.94000 -0.06850422
-slant_down 54.26785 47.83590 16.76676 26.93610 -0.06897974
-  slant_up 54.26588 47.83150 16.76885 26.93861 -0.06860921
-      star 54.26734 47.83955 16.76896 26.93027 -0.06296110
-   v_lines 54.26993 47.83699 16.76996 26.93768 -0.06944557
-wide_lines 54.26692 47.83160 16.77000 26.93790 -0.06657523
-   x_shape 54.26015 47.83972 16.76996 26.93000 -0.06558334
-```
-]
-
-.center[.bold[Do not summarize the data without visualizing it.]<br> The Datasaurus dozen: 13 datasets with identical summary statistics.]
-
-.footnote[Credits: [Matejka & Fitzmaurice](https://www.research.autodesk.com/publications/same-stats-different-graphs/), 2017.]
-
----
-
-class: middle
-
-.center.width-90[![](figures/lec3/datasaurus.png)]
-
-.center[Summary statistics can be misleading. .bold[Always visualize the rawest data]!]
-
-.footnote[Credits: [Matejka & Fitzmaurice](https://www.research.autodesk.com/publications/same-stats-different-graphs/), 2017.]
-
----
-
-class: middle
-
 ## Two kinds of plots
 
 .center.width-100[![](figures/lec3/exploratory-explanatory.png)]
@@ -290,10 +253,6 @@ class: middle
 
 Jet adds edges and bands that are not in the data, and hides variation elsewhere. The trick of the figure: you already know what a face, the Earth and an apple look like, so the distortion is obvious. On data you have never seen, it passes unnoticed.
 
-???
-
-They should be preferred over non-uniform colormaps (jet, rainbow) that can mislead interpretation.
-
 ---
 
 class: middle
@@ -411,16 +370,13 @@ class: middle
 
 .center[Ten forecasts of the same contour, three days ahead.<br> Too many lines on purpose&#58; the message is the spread.]
 
-???
-
-The annotation does the rest of the work, circling where the forecasts disagree.
-
 .footnote[Credits: NOAA/NCEP [Environmental Modeling Center](https://www.emc.ncep.noaa.gov/), 500 hPa ensemble forecast, 19 November 2001 (public domain).]
 
 ???
 
-From Lecture 7 on, the same holds for what a model predicts.
+The annotation does the rest of the work, circling where the forecasts disagree.
 
+From Lecture 7 on, the same holds for what a model predicts.
 
 ---
 
@@ -471,11 +427,11 @@ class: middle
 
 .center[.bold[Do not exaggerate reality] by truncating axes or using misleading aspect ratios.]
 
+.footnote[Credits: John Muyskens, [Most of Trump's charts skew the data](https://www.washingtonpost.com/graphics/politics/2016-election/trump-charts/), The Washington Post, 2016.]
+
 ???
 
 The rule follows from the encoding: a bar encodes a value as a length, so cutting its baseline lies. A dot or a line encodes a position instead, and may show a narrow range: temperature anomalies of a degree need no axis starting at zero.
-
-.footnote[Credits: John Muyskens, [Most of Trump's charts skew the data](https://www.washingtonpost.com/graphics/politics/2016-election/trump-charts/), The Washington Post, 2016.]
 
 ---
 
@@ -518,6 +474,43 @@ class: middle
 Antoine de Saint-Exupéry: "Perfection is achieved, not when there is nothing more to add, but when there is nothing left to take away."
 
 Up to a point: grid lines help read values off a scale, and a memorable chart is sometimes worth more ink (Bateman et al., 2010).
+
+---
+
+class: middle
+
+.smaller.center[
+```
+   dataset   mean_x   mean_y     sd_x     sd_y         cor
+      away 54.26610 47.83472 16.76982 26.93974 -0.06412835
+  bullseye 54.26873 47.83082 16.76924 26.93573 -0.06858639
+    circle 54.26732 47.83772 16.76001 26.93004 -0.06834336
+      dino 54.26327 47.83225 16.76514 26.93540 -0.06447185
+      dots 54.26030 47.83983 16.76774 26.93019 -0.06034144
+   h_lines 54.26144 47.83025 16.76590 26.93988 -0.06171484
+high_lines 54.26881 47.83545 16.76670 26.94000 -0.06850422
+slant_down 54.26785 47.83590 16.76676 26.93610 -0.06897974
+  slant_up 54.26588 47.83150 16.76885 26.93861 -0.06860921
+      star 54.26734 47.83955 16.76896 26.93027 -0.06296110
+   v_lines 54.26993 47.83699 16.76996 26.93768 -0.06944557
+wide_lines 54.26692 47.83160 16.77000 26.93790 -0.06657523
+   x_shape 54.26015 47.83972 16.76996 26.93000 -0.06558334
+```
+]
+
+.center[.bold[Do not summarize the data without visualizing it.]<br> The Datasaurus dozen: 13 datasets with identical summary statistics.]
+
+.footnote[Credits: [Matejka & Fitzmaurice](https://www.research.autodesk.com/publications/same-stats-different-graphs/), 2017.]
+
+---
+
+class: middle
+
+.center.width-90[![](figures/lec3/datasaurus.png)]
+
+.center[Summary statistics can be misleading. .bold[Always visualize the rawest data]!]
+
+.footnote[Credits: [Matejka & Fitzmaurice](https://www.research.autodesk.com/publications/same-stats-different-graphs/), 2017.]
 
 ---
 
