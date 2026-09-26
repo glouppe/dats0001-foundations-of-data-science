@@ -32,6 +32,14 @@ class: middle
 
 ---
 
+class: center, middle, black-slide
+
+<iframe width="600" height="400" src="https://www.youtube.com/embed/6lm4wJ1qm0w" frameborder="0" allowfullscreen></iframe>
+
+Jean-Luc Doumont, "Choosing the right graph", 2017.
+
+---
+
 class: middle
 
 ## Start from the message
@@ -58,14 +66,6 @@ class: middle
 - .bold[Evolution]: lines against the independent variable; different units go in different panels sharing a scale.
 
 This is one opinionated but consistent take, not the only one.
-
----
-
-class: center, middle, black-slide
-
-<iframe width="600" height="400" src="https://www.youtube.com/embed/6lm4wJ1qm0w" frameborder="0" allowfullscreen></iframe>
-
-Jean-Luc Doumont, "Choosing the right graph", 2017.
 
 ---
 
