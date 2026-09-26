@@ -319,9 +319,9 @@ However, a logarithmic scale also hides absolute differences, cannot show zero o
 
 class: middle
 
-.center.width-90[![](figures/lec3/scale-quantile.png)]
+.center.width-100[![](figures/lec3/scale-quantile.png)]
 
-When colour is the only channel, as on a map, values are grouped into a few classes, one shade each: the eye tells five shades apart, not 226 values. A .bold[quantile scale] puts the same number of countries in each class; equal-width classes leave almost all of them in the lightest.
+A .bold[quantile scale] puts the same number of countries in each class; equal-width classes leave almost all of them in the lightest.
 
 .footnote[Data: `data/countries.csv`, GDP per capita.]
 
@@ -339,7 +339,7 @@ class: middle
 
 .center.width-100[![](figures/lec3/binning.png)]
 
-The same 342 body masses. Too few bins hide the second group, too many show noise as structure. Bin width, like kernel bandwidth, belongs to the plot and not to the data.
+The same 342 body masses. Too few bins hide the second group, too many show noise as structure. 
 
 ---
 
