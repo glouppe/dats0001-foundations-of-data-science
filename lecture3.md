@@ -60,12 +60,14 @@ class: middle
 
 ## Which plot for which message
 
-- .bold[Comparison]: horizontal bars, which must start at zero, or dots along a scale, which need not.
-- .bold[Distribution]: every point along a scale; a histogram or a box plot when there are too many.
-- .bold[Correlation]: a scatter plot, or an array of them beyond two variables.
-- .bold[Evolution]: lines against the independent variable; different units go in different panels sharing a scale.
+- .bold[Comparison]: bars starting at zero, or dots.
+- .bold[Distribution]: all the points along an axis, or a histogram or box plot when there are many.
+- .bold[Correlation]: a scatter plot, or a matrix of scatter plots for more than two variables.
+- .bold[Evolution]: a line against time or another ordered variable.
 
-This is one opinionated but consistent take, not the only one.
+???
+
+Bars encode a length and must start at zero; dots encode a position and need not. This is Doumont's take; other guides differ in the details.
 
 ---
 
