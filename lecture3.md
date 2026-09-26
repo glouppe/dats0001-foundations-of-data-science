@@ -381,9 +381,11 @@ class: middle
 
 .center.width-100[![](figures/lec3/uncertainty.png)]
 
-A bar with an error bar shows a mean and a width, and hides everything else. Show the data, then the estimate and its interval.
+- Left: bars with error bars show one mean per species. The birds themselves are gone.
+- Middle: show every bird, then the mean and its interval on top.
+- Right: the same Adelie mean with three error bars. The standard deviation (±459 g) is the spread of the birds, the standard error (±37 g) the uncertainty on the mean, and the 95% interval (±73 g) about two standard errors.
 
-.alert[An error bar means nothing until the caption says what it is: here the same Adelie mean carries ±459 g, ±37 g or ±73 g, depending on whether the bar is a standard deviation, a standard error or a 95% interval.]
+.alert[Always say in the caption what the error bars show.]
 
 ---
 
