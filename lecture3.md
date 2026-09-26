@@ -381,9 +381,11 @@ class: middle
 
 .center.width-100[![](figures/lec3/uncertainty.png)]
 
-- Left: bars with error bars show one mean per species. The birds themselves are gone.
-- Middle: show every bird, then the mean and its interval on top.
-- Right: the same Adelie mean with three error bars. The standard deviation (±459 g) is the spread of the birds, the standard error (±37 g) the uncertainty on the mean, and the 95% interval (±73 g) about two standard errors.
+- Left: one bar per species, and the birds are gone.
+- Middle: every bird, with the mean and its 95% interval.
+- Right: the same Adelie mean, with three different error bars.
+
+The standard deviation is the spread of the birds; the standard error is the uncertainty on the mean.
 
 .alert[Always say in the caption what the error bars show.]
 
