@@ -219,6 +219,32 @@ def scales(countries):
         save(fig, path)
 
 
+def quantiles(countries, k=5, seed=0):
+    """The same GDP per capita cut into equal-width and into quantile classes."""
+    gdp = countries.GDP.dropna().to_numpy(float)
+    rng = np.random.default_rng(seed)
+    jitter = rng.uniform(-.35, .35, size=len(gdp))
+    colours = plt.cm.Blues(np.linspace(.35, 1, k))
+    cuts = {"Equal-width classes": np.linspace(gdp.min(), gdp.max(), k + 1),
+            "Quantile classes": np.quantile(gdp, np.linspace(0, 1, k + 1))}
+
+    fig, axes = plt.subplots(2, 1, figsize=(8.5, 4.4), dpi=200, sharex=True)
+    for ax, (title, edges) in zip(axes, cuts.items()):
+        cls = np.clip(np.searchsorted(edges, gdp, side="right") - 1, 0, k - 1)
+        counts = np.bincount(cls, minlength=k)
+        ax.scatter(gdp, jitter, s=14, color=colours[cls], zorder=3)
+        for e in edges[1:-1]:
+            ax.axvline(e, color=GREY, lw=.8, ls=(0, (3, 3)))
+        ax.set_title("%s: %s countries" % (title, ", ".join(map(str, counts))),
+                     fontsize=12, loc="left")
+        ax.set_yticks([])
+        ax.set_ylim(-.6, .6)
+        ax.spines[["top", "right", "left"]].set_visible(False)
+    axes[-1].set_xlabel("GDP per capita (US$)")
+    fig.tight_layout()
+    save(fig, "figures/lec3/scale-quantile.png")
+
+
 def overplotting(df, seed=0):
     """Identical readings hide each other, unless the marks are made to reveal them."""
     rng = np.random.default_rng(seed)
@@ -339,7 +365,9 @@ if __name__ == "__main__":
     anatomy(penguins)
     encoding_examples(penguins)
     popout()
-    scales(pd.read_csv("data/countries.csv"))
+    countries = pd.read_csv("data/countries.csv")
+    scales(countries)
+    quantiles(countries)
     overplotting(penguins)
     small_multiples(penguins)
     binning(penguins)

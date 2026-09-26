@@ -319,6 +319,22 @@ However, a logarithmic scale also hides absolute differences, cannot show zero o
 
 class: middle
 
+.center.width-90[![](figures/lec3/scale-quantile.png)]
+
+A .bold[quantile scale] cuts the data into classes holding the same number of records, here five. On skewed data, equal-width classes leave almost everything in the first one.
+
+.footnote[Data: `data/countries.csv`.]
+
+???
+
+The quantile counts are not exactly 45 each: GDP is rounded to the nearest 100 dollars, and tied values fall on the same side of a boundary.
+
+The classes differ in width, from 500 to 1600 dollars for the first and from 18600 to 55100 for the last, so a quantile scale says who is ahead of whom, not by how much. It is the usual choice for the colours of a choropleth map.
+
+---
+
+class: middle
+
 ## Binning is a choice
 
 .center.width-100[![](figures/lec3/binning.png)]
