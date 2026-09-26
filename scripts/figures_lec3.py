@@ -173,18 +173,19 @@ def encoding_examples(df):
 def popout(seed=3):
     """Colour pops out; a conjunction of colour and shape does not."""
     rng = np.random.default_rng(seed)
+    bright = "#e41a1c"   # brighter than RED, so the target stands out
     xy = rng.uniform(0, 1, size=(80, 2))
     target, others = xy[0], xy[1:]
     fig, (single, conj) = plt.subplots(1, 2, figsize=(10, 4.4), dpi=200)
 
     single.scatter(others[:, 0], others[:, 1], s=90, color="#b8c0c6")
-    single.scatter(*target, s=90, color=RED)
+    single.scatter(*target, s=90, color=bright)
     single.set_title("One channel: the red point pops out", fontsize=12, loc="left")
 
     half = len(others) // 2
     conj.scatter(others[:half, 0], others[:half, 1], s=90, color="#b8c0c6", marker="s")
-    conj.scatter(others[half:, 0], others[half:, 1], s=90, color=RED, marker="o")
-    conj.scatter(*target, s=90, color=RED, marker="s")
+    conj.scatter(others[half:, 0], others[half:, 1], s=90, color=bright, marker="o")
+    conj.scatter(*target, s=90, color=bright, marker="s")
     conj.set_title("Two channels at once: the red square must be searched", fontsize=12, loc="left")
 
     for ax in (single, conj):
