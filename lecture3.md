@@ -387,6 +387,10 @@ class: middle
 
 .alert[Always say in the caption what the error bars show.]
 
+???
+
+The left bars are one standard error, and the figure does not say so: that is the fault it illustrates. The middle bars are 95% intervals for the mean. Both look tiny because, with about 150 birds per species, the mean is known to within a few dozen grams, while the birds themselves spread over more than a kilogram.
+
 ---
 
 class: middle

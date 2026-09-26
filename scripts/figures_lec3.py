@@ -349,7 +349,7 @@ def uncertainty(df):
         shown.errorbar(i, d.mean(), yerr=1.96 * d.sem(), fmt="o", color=GREY, capsize=6, zorder=3)
     shown.set_xticks(range(3))
     shown.set_xticklabels(SPECIES)
-    shown.set_title("Every bird, with the mean and its interval", fontsize=12, loc="left")
+    shown.set_title("Every bird, with the mean and its 95% interval", fontsize=12, loc="left")
 
     adelie = df[df.species == "Adelie"].body_mass_g
     bars = [("standard\ndeviation", adelie.std()),
