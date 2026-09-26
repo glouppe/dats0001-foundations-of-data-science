@@ -188,10 +188,16 @@ class: middle
 
 Color is a powerful channel for encoding categorical and quantitative data.
 
-The primary representation system is the Hue, Saturation, Value (HSV) model:
-- .bold[Hue]: the type of color (e.g., red, green, blue), numerically represented as an angle on the color wheel (0-360 degrees).
-- .bold[Saturation]: the intensity or purity of the color (from gray to full color), represented as a percentage (0-100%).
-- .bold[Value]: the brightness of the color (from black to full brightness), represented as a percentage (0-100%).
+A screen stores a color as three intensities, red, green and blue (.bold[RGB]), each from 0 to 255. To design with color, the same color is more usefully described in the .bold[HSV] model:
+- .bold[Hue]: which color, as an angle on the color wheel (0 to 360°).
+- .bold[Saturation]: from gray to pure color (0 to 100%).
+- .bold[Value]: from black to full brightness (0 to 100%).
+
+Hue suits categories; saturation and value suit ordered data.
+
+???
+
+HSV is a re-parametrization of RGB, not a different set of colors. Neither is perceptually uniform: equal steps in value do not look like equal steps, which is why the perceptually uniform colormaps a few slides on are built in other color spaces, such as CIELAB.
 
 ---
 
