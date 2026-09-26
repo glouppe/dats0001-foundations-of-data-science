@@ -209,7 +209,7 @@ class: middle
 
 class: middle
 
-A colormap maps data values to colors. Three kinds, for three kinds of data:
+A colormap maps data values to colors. 
 - .bold[Sequential]: ordered data, light to dark within a single hue.
 - .bold[Diverging]: ordered data with a meaningful midpoint, two hues.
 - .bold[Categorical]: unordered groups, distinct colors.
