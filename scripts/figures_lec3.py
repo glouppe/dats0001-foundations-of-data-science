@@ -142,32 +142,6 @@ def anatomy(df):
     save(fig, "figures/lec3/anatomy.png")
 
 
-def colormap_types(df):
-    """Sequential, diverging and categorical colormaps, each on fitting data."""
-    fig, axes = plt.subplots(1, 3, figsize=(12, 3.6), dpi=200)
-    grid = np.linspace(-3, 3, 200)
-    X, Y = np.meshgrid(grid, grid)
-    Z = np.exp(-(X ** 2 + Y ** 2) / 3) * np.sin(2 * X)
-
-    axes[0].imshow(np.abs(Z), cmap="viridis", extent=(-3, 3, -3, 3))
-    axes[0].set_title("Sequential: ordered data", fontsize=12, loc="left")
-    axes[1].imshow(Z, cmap="RdBu_r", vmin=-.9, vmax=.9, extent=(-3, 3, -3, 3))
-    axes[1].set_title("Diverging: a meaningful zero", fontsize=12, loc="left")
-
-    for species in SPECIES:
-        d = df[df.species == species]
-        axes[2].scatter(d.flipper_length_mm, d.body_mass_g, s=12, alpha=.8, color=COLOR[species],
-                        label=species)
-    axes[2].set_title("Categorical: unordered groups", fontsize=12, loc="left")
-    axes[2].legend(frameon=False, fontsize=9, loc="upper left")
-    axes[2].spines[["top", "right"]].set_visible(False)
-
-    for ax in axes[:2]:
-        ax.set_xticks([])
-        ax.set_yticks([])
-    save(fig, "figures/lec3/colormap-types.png")
-
-
 def encoding_examples(df):
     """The same data encoded with more and more channels."""
     fig, axes = plt.subplots(1, 4, figsize=(15, 3.6), dpi=200)
@@ -362,7 +336,6 @@ if __name__ == "__main__":
     exploratory_explanatory(penguins)
     four_questions(penguins)
     anatomy(penguins)
-    colormap_types(penguins)
     encoding_examples(penguins)
     popout()
     scales(pd.read_csv("data/countries.csv"))

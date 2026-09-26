@@ -210,11 +210,10 @@ class: middle
 class: middle
 
 A colormap maps data values to colors. 
-- .bold[Sequential]: ordered data, from dark to light, in one hue or through several.
+- .bold[Sequential]: ordered data, light to dark within a single hue.
 - .bold[Diverging]: ordered data with a meaningful midpoint, two hues.
 - .bold[Categorical]: unordered groups, distinct colors.
 
-.center.width-100[![](figures/lec3/colormap-types.png)]
 
 ---
 
