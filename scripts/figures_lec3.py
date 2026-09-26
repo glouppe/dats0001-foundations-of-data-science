@@ -219,28 +219,42 @@ def scales(countries):
         save(fig, path)
 
 
-def quantiles(countries, k=5, seed=0):
-    """The same GDP per capita cut into equal-width and into quantile classes."""
-    gdp = countries.GDP.dropna().to_numpy(float)
-    rng = np.random.default_rng(seed)
-    jitter = rng.uniform(-.35, .35, size=len(gdp))
-    colours = plt.cm.Blues(np.linspace(.35, 1, k))
+def quantiles(countries, k=5):
+    """GDP per capita shown by colour alone, one square per country, grouped by
+    region: five equal-width classes against five quantile classes."""
+    names = {"SUB-SAHARAN AFRICA": "Sub-Saharan Africa", "LATIN AMER. & CARIB": "Latin America",
+             "WESTERN EUROPE": "Western Europe", "ASIA": "Asia", "OCEANIA": "Oceania",
+             "NEAR EAST": "Near East", "EASTERN EUROPE": "Eastern Europe",
+             "C.W. OF IND. STATES": "Former USSR", "NORTHERN AFRICA": "Northern Africa",
+             "NORTHERN AMERICA": "Northern America", "BALTICS": "Baltics"}
+    df = countries.dropna(subset=["GDP"]).assign(Region=countries.Region.str.strip(),
+                                                 Country=countries.Country.str.strip())
+    order = df.Region.value_counts().index
+    gdp = df.GDP.to_numpy(float)
+    colours = plt.cm.Blues(np.linspace(.2, 1, k))
     cuts = {"Equal-width classes": np.linspace(gdp.min(), gdp.max(), k + 1),
             "Quantile classes": np.quantile(gdp, np.linspace(0, 1, k + 1))}
 
-    fig, axes = plt.subplots(2, 1, figsize=(8.5, 4.4), dpi=200, sharex=True)
+    def thousands(x):
+        return "%.1fk" % (x / 1000) if x < 10000 else "%.0fk" % (x / 1000)
+
+    fig, axes = plt.subplots(2, 1, figsize=(9, 6.4), dpi=200)
     for ax, (title, edges) in zip(axes, cuts.items()):
-        cls = np.clip(np.searchsorted(edges, gdp, side="right") - 1, 0, k - 1)
-        counts = np.bincount(cls, minlength=k)
-        ax.scatter(gdp, jitter, s=14, color=colours[cls], zorder=3)
-        for e in edges[1:-1]:
-            ax.axvline(e, color=GREY, lw=.8, ls=(0, (3, 3)))
-        ax.set_title("%s: %s countries" % (title, ", ".join(map(str, counts))),
-                     fontsize=12, loc="left")
-        ax.set_yticks([])
-        ax.set_ylim(-.6, .6)
-        ax.spines[["top", "right", "left"]].set_visible(False)
-    axes[-1].set_xlabel("GDP per capita (US$)")
+        for row, region in enumerate(order):
+            g = df[df.Region == region].sort_values("Country")
+            cls = np.clip(np.searchsorted(edges, g.GDP.to_numpy(float), side="right") - 1, 0, k - 1)
+            for col, c in enumerate(cls):
+                ax.add_patch(plt.Rectangle((col, -row - .9), .85, .85, color=colours[c]))
+            ax.text(-.6, -row - .45, names[region], ha="right", va="center", fontsize=8)
+        for c in range(k):
+            ax.add_patch(plt.Rectangle((22 + 6 * c, -len(order) - 1.9), .85, .85, color=colours[c]))
+            ax.text(23.1 + 6 * c, -len(order) - 1.45, "%s–%s" % (thousands(edges[c]), thousands(edges[c + 1])),
+                    va="center", fontsize=7)
+        ax.set_title(title, fontsize=11, loc="left")
+        ax.set_xlim(-10, 52)
+        ax.set_ylim(-len(order) - 2.2, .3)
+        ax.set_aspect("equal")
+        ax.set_axis_off()
     fig.tight_layout()
     save(fig, "figures/lec3/scale-quantile.png")
 

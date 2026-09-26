@@ -321,13 +321,13 @@ class: middle
 
 .center.width-90[![](figures/lec3/scale-quantile.png)]
 
-A .bold[quantile scale] cuts the data into classes holding the same number of records, here five. On skewed data, equal-width classes leave almost everything in the first one.
+When colour is the only channel, as on a map, values are grouped into a few classes, one shade each: the eye tells five shades apart, not 226 values. A .bold[quantile scale] puts the same number of countries in each class; equal-width classes leave almost all of them in the lightest.
 
-.footnote[Data: `data/countries.csv`.]
+.footnote[Data: `data/countries.csv`, GDP per capita.]
 
 ???
 
-The quantile counts are not exactly 45 each: GDP is rounded to the nearest 100 dollars, and tied values fall on the same side of a boundary.
+One square per country, grouped by region and in alphabetical order within it, so that only the colour carries the GDP, as on a map.
 
 The classes differ in width, from 500 to 1600 dollars for the first and from 18600 to 55100 for the last, so a quantile scale says who is ahead of whom, not by how much. It is the usual choice for the colours of a choropleth map.
 
