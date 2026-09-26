@@ -46,7 +46,7 @@ class: middle
 
 .center.width-75[![](figures/lec3/four-questions.png)]
 
-Choose the plot from the question it answers, then the design from that question and the number of continuous variables.
+Decide first what the plot must show: a comparison, a distribution, a correlation or an evolution. That choice picks the kind of plot.
 
 .footnote[Credits: [Doumont](https://www.principiae.be/X0100.php), Trees, maps, and theorems, 2009.]
 
