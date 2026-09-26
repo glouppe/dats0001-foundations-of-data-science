@@ -149,20 +149,9 @@ Flipper lengths are whole millimetres, body masses multiples of 25 g, so identic
 
 class: middle
 
-## Two principles
-
-- .bold[Expressiveness]: show all the data facts, and only the data facts.
-- .bold[Effectiveness]: encode them with the channels a reader decodes most accurately.
-
-.footnote[Mackinlay, 1986.]
-
----
-
-class: middle
-
 ## Perceptual hierarchy
 
-Effectiveness is measurable: not all channels are read equally well.
+Not all channels are read equally well.
 
 .center.width-50[![](figures/lec3/ladder.png)]
 
