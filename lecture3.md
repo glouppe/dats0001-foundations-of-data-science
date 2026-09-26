@@ -44,9 +44,9 @@ class: middle
 
 ## Start from the message
 
-.center.width-75[![](figures/lec3/four-questions.png)]
+.center.width-85[![](figures/lec3/four-questions.png)]
 
-Decide first what the plot must show: a comparison, a distribution, a correlation or an evolution. That choice picks the kind of plot.
+Decide first what the plot must show: a comparison, a distribution, a correlation or an evolution. 
 
 .footnote[Credits: [Doumont](https://www.principiae.be/X0100.php), Trees, maps, and theorems, 2009.]
 
@@ -58,7 +58,7 @@ For subsets, either distinguish them within one panel, or juxtapose panels shari
 
 class: middle
 
-## What that gives
+## Which plot for which message
 
 - .bold[Comparison]: horizontal bars, which must start at zero, or dots along a scale, which need not.
 - .bold[Distribution]: every point along a scale; a histogram or a box plot when there are too many.
