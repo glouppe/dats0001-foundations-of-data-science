@@ -297,9 +297,9 @@ Sometimes, data spans several orders of magnitude or has a skewed distribution. 
 
 class: middle
 
-.center.width-80[![](figures/lec3/scale-linear.png)]
+.center.width-90[![](figures/lec3/scale-linear.png)]
 
-.center[Linear scales can be dominated by large values, dwarfing smaller values and making it hard to see small variations.]
+Linear scales can be dominated by large values, dwarfing smaller values and making it hard to see small variations.
 
 .footnote[Data: `data/countries.csv`.]
 
@@ -307,11 +307,11 @@ class: middle
 
 class: middle
 
-.center.width-80[![](figures/lec3/scale-log.png)]
+.center.width-90[![](figures/lec3/scale-log.png)]
 
-.center[Showing data on a logarithmic scale can prevent large values from dominating the visualization and reveal patterns among smaller values.]
+Showing data on a logarithmic scale can prevent large values from dominating the visualization and reveal patterns among smaller values.
 
-.center[It also hides absolute differences, cannot show zero or negative values,<br> and is read as linear by an audience that does not expect it.]
+However, a logarithmic scale also hides absolute differences, cannot show zero or negative values, and is read as linear by an audience that does not expect it.
 
 .footnote[Data: `data/countries.csv`.]
 
