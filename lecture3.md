@@ -167,6 +167,17 @@ Cleveland and McGill (1984) conducted experiments to evaluate the accuracy of vi
 
 .footnote[Credits: T. Munzner, "Visualization Analysis and Design", 2014.]
 
+???
+
+In each task, two marks are highlighted, and participants estimate what percentage the smaller is of the larger.
+
+- T1 to T5 are the five bar-chart cases of Cleveland and McGill. T1 and T3 compare two bars on a common baseline, adjacent then apart; T2 compares the bottom segments of two stacked bars, still on the baseline; in T4 and T5 the segments sit inside stacked bars, off any common baseline, so the reader judges a length rather than a position.
+- T6 compares two slices of a pie: angles.
+- T7 compares two circles: areas.
+- T8 compares two rectangles side by side, T9 two rectangles inside a treemap: areas again.
+
+The horizontal axis is the log of the absolute error, so further right is worse, and the bars are 95% confidence intervals. The top panel is the original experiment (Cleveland and McGill, 1984); the bottom one is a replication with crowd workers on Mechanical Turk (Heer and Bostock, 2010), which adds T6 to T9 and finds the same order: positions on a common scale, then lengths, then angles, then areas.
+
 ---
 
 class: middle
