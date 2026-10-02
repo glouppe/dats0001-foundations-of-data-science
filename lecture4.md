@@ -86,16 +86,76 @@ class: middle
 
 ## Frequentist inference
 
-In the Frequentist framework, $\theta$ is treated as an unknown but fixed quantity to be estimated from observed data $\mathbf{x}\_\text{obs}$. The data are assumed to be generated from the model for some unknown parameter value $\theta^\*$,
+In the Frequentist framework, $\theta$ is an unknown but fixed quantity. The data are assumed to be generated from the model for some parameter value $\theta^\*$,
 $$\mathbf{x}\_\text{obs} \sim p(\mathbf{x} \mid \theta^\*).$$
 
-Fitting the model to data consists in finding a point estimate $\hat{\theta}$ of $\theta^\*$ (or a confidence region thereof) that best explains the observed data.
-
-This $\theta^\*$ lives inside the model: it is the parameter of the member of $\mathcal{P}$ the data are assumed to come from. If the family contains no such member, $\hat{\theta}$ estimates the parameter of the member closest to $p\_r$.
+An .bold[estimator] is a recipe $\hat{\theta}(\mathbf{x})$ that turns any data set into a value of $\theta$, for example the maximum likelihood estimator
+$$\hat{\theta}(\mathbf{x}) = \arg\max\_\theta \, p(\mathbf{x} \mid \theta).$$
+Applied to $\mathbf{x}\_\text{obs}$, it gives a .bold[point estimate]. For the penguins, $\hat{\mu} = 4202$ g.
 
 ???
 
+This $\theta^\*$ lives inside the model: it is the parameter of the member of $\mathcal{P}$ the data are assumed to come from. If the family contains no such member, $\hat{\theta}$ estimates the parameter of the member closest to $p\_r$.
+
 Closest in the Kullback-Leibler sense: maximum likelihood converges to the $\theta$ minimizing $\text{KL}(p\_r \| p(\cdot \mid \theta))$, whether or not the family contains $p\_r$. Estimating something remains well defined; calling it true does not.
+
+For the Gaussian model, the maximum likelihood estimate of $\mu$ is the sample mean.
+
+---
+
+class: middle
+
+## Sampling distribution
+
+A point estimate says nothing about its precision. Another colony of 342 penguins would have given another estimate.
+
+Since $\mathbf{x} \sim p(\mathbf{x} \mid \theta^\*)$ is random, so is $\hat{\theta}(\mathbf{x})$. Its distribution is the .bold[sampling distribution] of the estimator.
+
+For the sample mean, by the central limit theorem,
+$$\hat{\mu}(\mathbf{x}) = \frac{1}{N} \sum\_{i=1}^N x\_i \sim \mathcal{N}\left(\mu^\*, \frac{\sigma^2}{N}\right) \quad \text{approximately}.$$
+Its standard deviation $\sigma / \sqrt{N}$ is the .bold[standard error]: how much the estimate varies from one data set to the next. For the penguins, $802 / \sqrt{342} \approx 43$ g.
+
+???
+
+The sampling distribution is a thought experiment: nobody measures new colonies. The repetitions are imagined data sets drawn by the same process. Under the model, they are drawn from $p(\mathbf{x} \mid \theta^\*)$; in reality, from $p\_r$. For a mean, the central limit theorem makes the two agree well enough, whatever the shape of $p\_r$.
+
+$\sigma$ is unknown as well, and is replaced by the standard deviation of the data, 802 g.
+
+---
+
+class: middle
+
+## Confidence interval
+
+A 95% .bold[confidence interval] is a recipe $[a(\mathbf{x}), b(\mathbf{x})]$ such that, whatever the value of $\theta^\*$,
+$$P\_{\mathbf{x} \sim p(\mathbf{x} \mid \theta^\*)}\left( a(\mathbf{x}) \leq \theta^\* \leq b(\mathbf{x}) \right) = 0.95.$$
+The probability is over the data. $\theta^\*$ is fixed, and never needs to be known.
+
+For the mean, $\hat{\mu}(\mathbf{x})$ falls within $1.96$ standard errors of $\mu^\*$ with probability 0.95. Turned around, $\mu^\*$ falls within $1.96$ standard errors of $\hat{\mu}(\mathbf{x})$, which gives the recipe
+$$\hat{\mu}(\mathbf{x}) \pm 1.96 \frac{\sigma}{\sqrt{N}}.$$
+For the penguins, $4202 \pm 85$ g, that is $[4117, 4287]$ g.
+
+???
+
+The turn-around is the whole trick: "$\hat{\mu}$ is within 85 g of $\mu^\*$" and "$\mu^\*$ is within 85 g of $\hat{\mu}$" are the same event. What moves from one data set to the next is the interval, not $\mu^\*$.
+
+The 1.96 is the 97.5% quantile of the standard Gaussian. For small $N$, a quantile of Student's $t$ distribution replaces it, to account for $\sigma$ being estimated; for 342 penguins it gives $[4116, 4287]$ g.
+
+---
+
+class: middle
+
+.center.width-65[![](figures/lec4/confidence-intervals.svg)]
+
+.center[50 colonies of 342 penguins simulated from the model with $\mu^\ast = 4200$ g, and the 95% interval each gives. Two of them miss $\mu^\ast$.]
+
+.alert[The 95% is a property of the recipe. A computed interval, such as $[4117, 4287]$ g, either contains $\mu^\*$ or does not.]
+
+???
+
+This is the only setting where $\mu^\*$ is known: data simulated from the model, at a value we chose. With real data, we never know whether our interval is one of the 48 or one of the 2.
+
+The same simulation can be run without the model: resampling the 342 penguins with replacement (the bootstrap) stands in for measuring new colonies.
 
 ---
 
@@ -120,12 +180,15 @@ $$p(\theta \mid \mathbf{x}\_\text{obs}) = \frac{p(\mathbf{x}\_\text{obs} \mid \t
 
 Depending on the structure of the model, this computation may be easy, difficult, or even intractable.
 
+A 95% .bold[credible interval] is a set $C$ such that
+$$P(\theta \in C \mid \mathbf{x}\_\text{obs}) = 0.95.$$
+The probability is over $\theta$. The data are fixed: they are the ones observed.
+
 ???
 
 The posterior lives inside the model just as $\theta^\*$ does: it is conditional on the family $\mathcal{P}$ and on the prior, and says nothing about what lies outside them. As the data grow, it concentrates on the member of $\mathcal{P}$ closest to $p\_r$, the same limit the maximum likelihood estimate reaches, and on $\theta^\*$ when the family contains $p\_r$.
 
 ---
-
 
 class: middle
 
@@ -162,24 +225,32 @@ The repair is not subtle, and that is the point: a prior predictive check is che
 
 class: middle
 
-## Point estimate, confidence interval, posterior
+## Confidence or credible?
 
-Three answers about the mean body mass $\mu$ of the penguins, to three different questions:
-- .bold[Point estimate.] Which single value of $\mu$ makes the data most likely? $\hat{\mu} = 4202$ g.
-- .bold[95% confidence interval.] $[4117, 4287]$ g. Imagine measuring 342 new penguins, again and again, and building an interval each time with the same recipe: 95% of these intervals would contain $\mu^\*$. The 95% describes the recipe, not this interval, which either contains $\mu^\*$ or does not.
-- .bold[Posterior.] How plausible is each value of $\mu$, given the data and the prior? With a flat prior, its 95% credible interval is the same $[4117, 4287]$ g, but this time it means that $\mu$ lies in it with probability 0.95.
+For the penguins, take $\sigma$ fixed to 802 g and a flat prior on $\mu$. The posterior is then
+$$p(\mu \mid \mathbf{x}\_\text{obs}) = \mathcal{N}\left(\mu \mid \hat{\mu}, \frac{\sigma^2}{N}\right),$$
+and its 95% credible interval is $[4117, 4287]$ g, the confidence interval again. The numbers are the same; what they say is not.
 
-The confidence interval is a statement about the recipe; the posterior is a statement about $\mu$.
+.grid[
+.kol-1-2[
+.bold[Confidence interval]
+- the data are random, $\mu^\ast$ is fixed
+- 95% of the intervals built this way contain $\mu^\ast$
+- needs a model
+]
+.kol-1-2[
+.bold[Credible interval]
+- the data are fixed, $\mu$ is random
+- $\mu$ lies in $[4117, 4287]$ g with probability 0.95
+- needs a model and a prior
+]
+]
 
 ???
 
-The numbers: $N = 342$, a standard deviation of 802 g, so a standard error of $802 / \sqrt{342} \approx 43$ g and an interval of $\pm 1.96 \times 43$ g.
+The two coincide here because the prior is flat and the likelihood Gaussian. With an informative prior, or few data, they part ways.
 
-Nobody measures new penguins: the repetitions are imagined, new data sets drawn from $p\_r$ by the same measurement process. The recipe gets its 95% if the model is right; for a mean, it gets close to 95% anyway, thanks to the central limit theorem. The repetitions can be simulated: resample the 342 penguins with replacement (the bootstrap), or draw new data sets from the fitted model.
-
-The common mistake is to read the confidence interval as a posterior: "$\mu$ lies in $[4117, 4287]$ g with probability 0.95". In the frequentist framework $\mu^\*$ is fixed, not random, so the sentence has no meaning there; only the posterior can say it.
-
-The two intervals coincide here because the prior is flat and the data are many; with a real prior, or few data, they part ways. What never coincides is what they mean.
+The common mistake is to read a confidence interval as a credible interval: "$\mu$ lies in $[4117, 4287]$ g with probability 0.95". In the frequentist framework $\mu^\*$ is fixed, not random, so the sentence has no meaning there; only the posterior can say it. Conversely, a credible interval comes with no guarantee over repeated data sets.
 
 ---
 
