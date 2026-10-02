@@ -126,25 +126,6 @@ The posterior lives inside the model just as $\theta^\*$ does: it is conditional
 
 ---
 
-class: middle
-
-## Point estimate, confidence interval, posterior
-
-Three answers to the same question, for the mean body mass $\mu$ of the 342 penguins:
-- A .bold[point estimate], $\hat{\mu} = 4202$ g, the value that maximizes the likelihood. One number, and nothing about its precision.
-- A 95% .bold[confidence interval], $[4117, 4287]$ g. If the data were drawn again and again from the model, 95% of the intervals built this way would contain $\mu^\*$. This one either does or does not.
-- A .bold[posterior] $p(\mu \mid \mathbf{x}\_\text{obs})$, here with a flat prior. Its 95% credible interval is the same $[4117, 4287]$ g, but it now says that, given the data and the prior, $\mu$ lies in it with probability 0.95.
-
-The confidence interval is a statement about the procedure; the posterior is a statement about $\mu$.
-
-???
-
-The numbers: $N = 342$, a standard deviation of 802 g, so a standard error of $802 / \sqrt{342} \approx 43$ g and an interval of $\pm 1.96 \times 43$ g.
-
-The two intervals coincide here because the prior is flat and the data are many; with a real prior, or few data, they part ways. What never coincides is what they mean.
-
----
-
 
 class: middle
 
@@ -176,6 +157,25 @@ class: middle
 $\text{Uniform}(\sigma^2 \mid 0, 100)$ caps $\sigma$ at 10 g, so every simulated colony weighs the same to within a few grams, while real penguins spread over some 800 g. A pooled histogram of many draws would have hidden this, since its width comes from the prior on $\mu$; simulating whole datasets shows it at once.
 
 The repair is not subtle, and that is the point: a prior predictive check is cheap, and it catches this before any data are touched.
+
+---
+
+class: middle
+
+## Point estimate, confidence interval, posterior
+
+Three answers to the same question, for the mean body mass $\mu$ of the 342 penguins:
+- A .bold[point estimate], $\hat{\mu} = 4202$ g, the value that maximizes the likelihood. One number, and nothing about its precision.
+- A 95% .bold[confidence interval], $[4117, 4287]$ g. If the data were drawn again and again from the model, 95% of the intervals built this way would contain $\mu^\*$. This one either does or does not.
+- A .bold[posterior] $p(\mu \mid \mathbf{x}\_\text{obs})$, here with a flat prior. Its 95% credible interval is the same $[4117, 4287]$ g, but it now says that, given the data and the prior, $\mu$ lies in it with probability 0.95.
+
+The confidence interval is a statement about the procedure; the posterior is a statement about $\mu$.
+
+???
+
+The numbers: $N = 342$, a standard deviation of 802 g, so a standard error of $802 / \sqrt{342} \approx 43$ g and an interval of $\pm 1.96 \times 43$ g.
+
+The two intervals coincide here because the prior is flat and the data are many; with a real prior, or few data, they part ways. What never coincides is what they mean.
 
 ---
 
