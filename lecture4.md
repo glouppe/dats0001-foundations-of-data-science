@@ -882,3 +882,35 @@ p\left(\begin{matrix}
 \end{aligned}
 $$
 
+---
+
+class: middle
+
+## Deriving the probabilistic PCA solution
+
+Up to constants and a factor $N$, the negative log-likelihood is
+$$\ell(\boldsymbol{\mu}, \mathbf{B}, \sigma^2) = \frac{1}{N} \sum\_{i=1}^N (\mathbf{x}\_i - \boldsymbol{\mu})^T \boldsymbol{\Sigma}^{-1} (\mathbf{x}\_i - \boldsymbol{\mu}) + \log |\boldsymbol{\Sigma}|, \quad \boldsymbol{\Sigma} = \mathbf{B}\mathbf{B}^T + \sigma^2 \mathbf{I}.$$
+
+.bold[Mean.] The gradient in $\boldsymbol{\mu}$, $-\frac{2}{N} \boldsymbol{\Sigma}^{-1} \sum\_i (\mathbf{x}\_i - \boldsymbol{\mu})$, is zero at the sample mean $\hat{\boldsymbol{\mu}}$, whatever $\boldsymbol{\Sigma}$. What remains is $\ell = \text{tr}(\boldsymbol{\Sigma}^{-1} \mathbf{S}) + \log |\boldsymbol{\Sigma}|$.
+
+.bold[Loadings.] Since $\partial\_\mathbf{B} \log |\boldsymbol{\Sigma}| = 2 \boldsymbol{\Sigma}^{-1} \mathbf{B}$ and $\partial\_\mathbf{B} \text{tr}(\boldsymbol{\Sigma}^{-1} \mathbf{S}) = -2 \boldsymbol{\Sigma}^{-1} \mathbf{S} \boldsymbol{\Sigma}^{-1} \mathbf{B}$, a stationary point satisfies $\mathbf{S} \boldsymbol{\Sigma}^{-1} \mathbf{B} = \mathbf{B}$.
+
+Write $\mathbf{B} = \mathbf{U} \mathbf{L} \mathbf{R}$ (singular value decomposition, with $\mathbf{U}$ of orthonormal columns $\mathbf{u}\_j$, $\mathbf{L}$ diagonal, $\mathbf{R}$ a rotation). Then $\boldsymbol{\Sigma} \mathbf{U} = \mathbf{U} (\mathbf{L}^2 + \sigma^2 \mathbf{I})$, and the condition becomes
+$$\mathbf{S} \mathbf{u}\_j = (l\_j^2 + \sigma^2) \, \mathbf{u}\_j.$$
+Each $\mathbf{u}\_j$ is an eigenvector of $\mathbf{S}$, with eigenvalue $\lambda\_j = l\_j^2 + \sigma^2$. Hence $\hat{\mathbf{B}} = \mathbf{U}\_m (\boldsymbol{\Lambda}\_m - \sigma^2 \mathbf{I})^{1/2} \mathbf{R}$.
+
+---
+
+class: middle
+
+.bold[Noise.] Let $K$ be the indices of the $m$ eigenvectors kept in $\mathbf{B}$. Along them, $\boldsymbol{\Sigma}$ has eigenvalues $\lambda\_j$; along the $d - m$ others, $\sigma^2$. In the eigenbasis of $\mathbf{S}$,
+$$\ell = m + \sum\_{j \in K} \log \lambda\_j + \sum\_{j \notin K} \frac{\lambda\_j}{\sigma^2} + (d - m) \log \sigma^2.$$
+Setting the derivative in $\sigma^2$ to zero gives $\hat{\sigma}^2 = \frac{1}{d - m} \sum\_{j \notin K} \lambda\_j$, the average of the discarded eigenvalues.
+
+.bold[Which eigenvectors.] Plugging $\hat{\sigma}^2$ back,
+$$\ell = d + \sum\_{j=1}^d \log \lambda\_j + \left( (d - m) \log \hat{\sigma}^2 - \sum\_{j \notin K} \log \lambda\_j \right).$$
+The first two terms do not depend on $K$. The bracket is $(d - m)$ times the log of the arithmetic mean of the discarded eigenvalues minus the mean of their logs: non-negative by Jensen's inequality, and zero when they are all equal. It is smallest when the discarded eigenvalues are the $d - m$ smallest, so $\mathbf{B}$ keeps the top $m$ eigenvectors.
+
+???
+
+The last step is the least obvious. Keeping an eigenvector also requires $\lambda\_j > \hat{\sigma}^2$, so that $l\_j = (\lambda\_j - \hat{\sigma}^2)^{1/2}$ is real; Tipping and Bishop (1999) show that among the admissible choices, discarding the smallest eigenvalues gives the global maximum of the likelihood, and that the other stationary points are saddle points.
