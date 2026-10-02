@@ -248,9 +248,9 @@ class: middle
 
 ## Confidence or credible?
 
-For the penguins, take $\sigma$ fixed to $\hat{\sigma} = 801$ g and a flat prior on $\mu$. The posterior is then
-$$p(\mu \mid \mathbf{x}\_\text{obs}) = \mathcal{N}\left(\mu \mid \hat{\mu}, \frac{\sigma^2}{N}\right),$$
-and its 95% credible interval is $[4117, 4287]$ g, the confidence interval again. The numbers are the same; what they say is not.
+For the penguins, take $\sigma$ fixed to $\hat{\sigma} = 801$ g and the prior $p(\mu) = \mathcal{N}(\mu \mid 4000, 1000^2)$ of the prior predictive check. The posterior is then Gaussian,
+$$p(\mu \mid \mathbf{x}\_\text{obs}) = \mathcal{N}(\mu \mid 4201, 43^2),$$
+and its 95% credible interval is $[4117, 4286]$ g, almost the confidence interval $[4117, 4287]$ g. The numbers nearly agree; what they say does not.
 
 .grid[
 .kol-1-2[
@@ -262,14 +262,16 @@ and its 95% credible interval is $[4117, 4287]$ g, the confidence interval again
 .kol-1-2[
 .bold[Credible interval]
 - the data are fixed, $\mu$ is random
-- $\mu$ lies in $[4117, 4287]$ g with probability 0.95
+- $\mu$ lies in $[4117, 4286]$ g with probability 0.95
 - needs a model and a prior
 ]
 ]
 
 ???
 
-The two coincide here because the prior is flat and the likelihood Gaussian. With an informative prior, or few data, they part ways.
+The posterior follows from the conjugacy of the Gaussian prior and likelihood: precisions add, $1 / 43^2 \approx 1 / 1000^2 + N / \sigma^2$, and the posterior mean is the precision-weighted average of 4000 g and $\hat{\mu}$. The prior is so wide compared to the likelihood that it barely moves anything.
+
+A flat prior $p(\mu) \propto 1$ would make the two intervals coincide exactly, but it is improper: it does not integrate to one, so it is not a distribution. Here the posterior it leads to, $\mathcal{N}(\mu \mid \hat{\mu}, \sigma^2 / N)$, is still proper, but this has to be checked case by case. With an informative prior, or few data, the two intervals part ways.
 
 The common mistake is to read a confidence interval as a credible interval: "$\mu$ lies in $[4117, 4287]$ g with probability 0.95". In the frequentist framework $\mu^\*$ is fixed, not random, so the sentence has no meaning there; only the posterior can say it. Conversely, a credible interval comes with no guarantee over repeated data sets.
 
