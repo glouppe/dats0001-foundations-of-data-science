@@ -891,7 +891,8 @@ Up to constants and a factor $N$, the negative log-likelihood is
 $$\ell = \frac{1}{N} \sum\_{i=1}^N (\mathbf{x}\_i - \boldsymbol{\mu})^T \boldsymbol{\Sigma}^{-1} (\mathbf{x}\_i - \boldsymbol{\mu}) + \log |\boldsymbol{\Sigma}|, \quad \boldsymbol{\Sigma} = \mathbf{B}\mathbf{B}^T + \sigma^2 \mathbf{I}.$$
 
 .bold[Step 1: the mean.] The gradient in $\boldsymbol{\mu}$ is $-\frac{2}{N} \boldsymbol{\Sigma}^{-1} \sum\_i (\mathbf{x}\_i - \boldsymbol{\mu})$, zero at $\hat{\boldsymbol{\mu}} = \frac{1}{N} \sum\_i \mathbf{x}\_i$ whatever $\boldsymbol{\Sigma}$. Writing each quadratic form as a trace, what remains is
-$$\ell = \text{tr}(\boldsymbol{\Sigma}^{-1} \mathbf{S}) + \log |\boldsymbol{\Sigma}|.$$
+$$\ell = \text{tr}(\boldsymbol{\Sigma}^{-1} \mathbf{S}) + \log |\boldsymbol{\Sigma}|, \quad \text{where } \mathbf{S} = \frac{1}{N} \sum\_{i=1}^N (\mathbf{x}\_i - \hat{\boldsymbol{\mu}})(\mathbf{x}\_i - \hat{\boldsymbol{\mu}})^T$$
+is the sample covariance matrix.
 
 .bold[Step 2: the loadings.] Since $\partial\_\mathbf{B} \log |\boldsymbol{\Sigma}| = 2 \boldsymbol{\Sigma}^{-1} \mathbf{B}$ and $\partial\_\mathbf{B} \text{tr}(\boldsymbol{\Sigma}^{-1} \mathbf{S}) = -2 \boldsymbol{\Sigma}^{-1} \mathbf{S} \boldsymbol{\Sigma}^{-1} \mathbf{B}$, a stationary point satisfies
 $$\mathbf{S} \boldsymbol{\Sigma}^{-1} \mathbf{B} = \mathbf{B}.$$
