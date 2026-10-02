@@ -118,15 +118,30 @@ class: middle
 Fitting a Bayesian model to observed data $\mathbf{x}\_\text{obs}$ consists in computing the posterior distribution of the parameters given the data. Using Bayes' rule,
 $$p(\theta \mid \mathbf{x}\_\text{obs}) = \frac{p(\mathbf{x}\_\text{obs} \mid \theta) p(\theta)}{p(\mathbf{x}\_\text{obs})}.$$
 
-Where the Frequentist framework estimates a single value $\hat{\theta}$, the Bayesian framework infers a distribution over $\Theta$: how plausible each member of $\mathcal{P}$ is, in light of the data and of the prior.
-
 Depending on the structure of the model, this computation may be easy, difficult, or even intractable.
 
 ???
 
 The posterior lives inside the model just as $\theta^\*$ does: it is conditional on the family $\mathcal{P}$ and on the prior, and says nothing about what lies outside them. As the data grow, it concentrates on the member of $\mathcal{P}$ closest to $p\_r$, the same limit the maximum likelihood estimate reaches, and on $\theta^\*$ when the family contains $p\_r$.
 
-Note also what each framework is uncertain about. A confidence region is a statement about the procedure, over repeated data sets; the posterior is a statement about $\theta$, for the data set at hand.
+---
+
+class: middle
+
+## Point estimate, confidence interval, posterior
+
+Three answers to the same question, for the mean body mass $\mu$ of the 342 penguins:
+- A .bold[point estimate], $\hat{\mu} = 4202$ g, the value that maximizes the likelihood. One number, and nothing about its precision.
+- A 95% .bold[confidence interval], $[4117, 4287]$ g. If the data were drawn again and again from the model, 95% of the intervals built this way would contain $\mu^\*$. This one either does or does not.
+- A .bold[posterior] $p(\mu \mid \mathbf{x}\_\text{obs})$, here with a flat prior. Its 95% credible interval is the same $[4117, 4287]$ g, but it now says that, given the data and the prior, $\mu$ lies in it with probability 0.95.
+
+The confidence interval is a statement about the procedure; the posterior is a statement about $\mu$.
+
+???
+
+The numbers: $N = 342$, a standard deviation of 802 g, so a standard error of $802 / \sqrt{342} \approx 43$ g and an interval of $\pm 1.96 \times 43$ g.
+
+The two intervals coincide here because the prior is flat and the data are many; with a real prior, or few data, they part ways. What never coincides is what they mean.
 
 ---
 
