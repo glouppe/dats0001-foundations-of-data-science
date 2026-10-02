@@ -552,19 +552,6 @@ class: middle
 
 class: middle
 
-.center.width-10[![](figures/lec4/light-bulb.png)]
-
-Deriving PCA from a latent variable model provides a .bold[probabilistic interpretation of PCA projections as the most likely latent variables that could have generated the observed data]. 
-
-It also enables direct extensions such as
-- Independent Component Analysis (ICA), which assumes non-Gaussian latent variables,
-- Factor Analysis, which assumes a more general noise covariance structure,
-- Bayesian PCA, which places a prior distribution over the hyperparameters.
-
----
-
-class: middle
-
 ## Example 2: Mixture models
 
 Mixture models assume that data are generated from a mixture of several underlying distributions, each corresponding to a different cluster or component.
@@ -600,7 +587,7 @@ A mixture is also identified only up to a permutation of its components: relabel
 
 Label switching is why a sampler exploring the posterior of a mixture visits several equivalent modes, and why averaging the draws of $\boldsymbol{\mu}\_k$ across them is meaningless. We come back to this multimodality in L6.
 
-Again, deriving clustering from a latent variable model provides a probabilistic interpretation of cluster assignments as the most likely latent variables that could have generated the observed data. It provides a principled narrative with explicit assumptions rather than a mere algorithmic recipe.
+Deriving clustering from a latent variable model provides a probabilistic interpretation of cluster assignments as the most likely latent variables that could have generated the observed data. It provides a principled narrative with explicit assumptions rather than a mere algorithmic recipe.
 
 ---
 
