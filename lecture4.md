@@ -65,7 +65,7 @@ class: middle
 
 .center.width-10[![](figures/lec4/penguin.png)]
 
-Example: Body masses of penguins could be modeled as
+.italic[Example.] Body masses of penguins could be modeled as
 $$p(x \mid \mu, \sigma^2) = \mathcal{N}(x \mid \mu, \sigma^2),$$
 where the parameters are $\theta = (\mu, \sigma^2)$, with $\mu \in \mathbb{R}$ and $\sigma^2 > 0$.
 
