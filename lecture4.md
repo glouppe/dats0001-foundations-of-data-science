@@ -99,7 +99,7 @@ This $\theta^\*$ lives inside the model: it is the parameter of the member of $\
 
 Closest in the Kullback-Leibler sense: maximum likelihood converges to the $\theta$ minimizing $\text{KL}(p\_r \| p(\cdot \mid \theta))$, whether or not the family contains $p\_r$. Estimating something remains well defined; calling it true does not.
 
-For the Gaussian model, the maximum likelihood estimates are the sample mean, $\hat{\mu} = \frac{1}{N} \sum\_i x\_i$, and the sample variance, $\hat{\sigma}^2 = \frac{1}{N} \sum\_i (x\_i - \hat{\mu})^2$. The latter divides by $N$; the usual standard deviation divides by $N - 1$ and gives 802 g, the value used on the next slides. With 342 penguins, the difference does not matter.
+For the Gaussian model, the maximum likelihood estimates are the sample mean, $\hat{\mu} = \frac{1}{N} \sum\_i x\_i$, and the sample variance, $\hat{\sigma}^2 = \frac{1}{N} \sum\_i (x\_i - \hat{\mu})^2$. The latter divides by $N$; the usual standard deviation divides by $N - 1$ and gives 802 g. With 342 penguins, the difference does not matter.
 
 ---
 
@@ -113,13 +113,13 @@ Since $\mathbf{x} \sim p(\mathbf{x} \mid \theta^\*)$ is random, so is $\hat{\the
 
 For the sample mean, by the central limit theorem,
 $$\hat{\mu}(\mathbf{x}) = \frac{1}{N} \sum\_{i=1}^N x\_i \sim \mathcal{N}\left(\mu^\*, \frac{\sigma^2}{N}\right) \quad \text{approximately}.$$
-Its standard deviation $\sigma / \sqrt{N}$ is the .bold[standard error]: how much the estimate varies from one data set to the next. For the penguins, $802 / \sqrt{342} \approx 43$ g.
+Its standard deviation $\sigma / \sqrt{N}$ is the .bold[standard error]: how much the estimate varies from one data set to the next. For the penguins, $801 / \sqrt{342} \approx 43$ g.
 
 ???
 
 The sampling distribution is a thought experiment: nobody measures new colonies. The repetitions are imagined data sets drawn by the same process. Under the model, they are drawn from $p(\mathbf{x} \mid \theta^\*)$; in reality, from $p\_r$. For a mean, the central limit theorem makes the two agree well enough, whatever the shape of $p\_r$.
 
-$\sigma$ is unknown as well, and is replaced by the standard deviation of the data, 802 g.
+$\sigma$ is unknown as well, and is replaced by its estimate $\hat{\sigma} = 801$ g.
 
 ---
 
@@ -227,7 +227,7 @@ class: middle
 
 ## Confidence or credible?
 
-For the penguins, take $\sigma$ fixed to 802 g and a flat prior on $\mu$. The posterior is then
+For the penguins, take $\sigma$ fixed to $\hat{\sigma} = 801$ g and a flat prior on $\mu$. The posterior is then
 $$p(\mu \mid \mathbf{x}\_\text{obs}) = \mathcal{N}\left(\mu \mid \hat{\mu}, \frac{\sigma^2}{N}\right),$$
 and its 95% credible interval is $[4117, 4287]$ g, the confidence interval again. The numbers are the same; what they say is not.
 
