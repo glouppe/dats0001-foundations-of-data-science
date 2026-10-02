@@ -12,9 +12,7 @@ Prof. Gilles Louppe<br>
 
 class: middle
 
-.center.width-40[![](figures/lec4/pairplot_by_species.png)]
-
-Lecture 2 closed on four hypotheses, and three of them are for today: body mass is not a single population but a mixture of species, measurements differ from group to group, and the four measurements are correlated enough that fewer numbers may describe them.
+.center.width-50[![](figures/lec4/pairplot_by_species.png)]
 
 .question[What if we had not been given the species labels? Which unobserved quantities would explain what we see?]
 
