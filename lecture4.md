@@ -135,13 +135,9 @@ The probability is over the data: $C(\mathbf{x})$ is random, $\theta^\*$ is fixe
 
 To build one, compare every candidate $\theta$ with the best one, through the .bold[likelihood ratio]
 $$\lambda(\theta; \mathbf{x}) = -2 \log \frac{p(\mathbf{x} \mid \theta)}{p(\mathbf{x} \mid \hat{\theta}(\mathbf{x}))} \geq 0.$$
-At $\theta = \theta^\*$, $\lambda(\theta^\*; \mathbf{x})$ is a random variable whose distribution is approximately $\chi^2\_k$, with $k$ the dimension of $\theta$, whatever $\theta^\*$ (Wilks' theorem). Keep every $\theta$ the data do not rule out,
-$$C(\mathbf{x}) = \\{ \theta : \lambda(\theta; \mathbf{x}) \leq c \\},$$
-with $c$ the 95% quantile of $\chi^2\_k$. Then $\theta^\* \in C(\mathbf{x})$ exactly when $\lambda(\theta^\*; \mathbf{x}) \leq c$, which happens with probability 0.95.
+At $\theta = \theta^\*$, $\lambda(\theta^\*; \mathbf{x})$ is a random variable whose distribution is approximately $\chi^2\_k$, with $k$ the dimension of $\theta$, whatever $\theta^\*$ (Wilks' theorem).
 
 ???
-
-The construction in one sentence: the interval collects the values of $\theta$ that a test at level 5% would not reject. The probability statement is about $\lambda(\theta^\*; \mathbf{x})$, a function of the random data, and transfers to the random set $C(\mathbf{x})$.
 
 Wilks' theorem holds as $N$ grows, under regularity conditions (the true value is not on the boundary of $\Theta$, the model is identifiable), and assumes the data come from the model. It is exact in the Gaussian case of the next slide.
 
@@ -149,14 +145,18 @@ Wilks' theorem holds as $N$ grows, under regularity conditions (the true value i
 
 class: middle
 
-.center.width-65[![](figures/lec4/likelihood-ratio.svg)]
+Keep every $\theta$ the data do not rule out,
+$$C(\mathbf{x}) = \\{ \theta : \lambda(\theta; \mathbf{x}) \leq c \\},$$
+with $c$ the 95% quantile of $\chi^2\_k$. Then $\theta^\* \in C(\mathbf{x})$ exactly when $\lambda(\theta^\*; \mathbf{x}) \leq c$, which happens with probability 0.95.
 
-For the mean body mass, with $\sigma$ fixed to $\hat{\sigma} = 801$ g, the likelihood ratio is a parabola,
-$$\lambda(\mu; \mathbf{x}) = \frac{N (\hat{\mu} - \mu)^2}{\sigma^2},$$
-and it is exactly $\chi^2\_1$ at $\mu^\*$. With $c = 3.84 = 1.96^2$, the set $\lambda(\mu; \mathbf{x}) \leq c$ is
-$$\hat{\mu} \pm 1.96 \frac{\sigma}{\sqrt{N}} = [4117, 4287] \text{ g}.$$
+.center.width-50[![](figures/lec4/likelihood-ratio.svg)]
+
+For the mean body mass, with $\sigma$ fixed to $\hat{\sigma} = 801$ g, $\lambda(\mu; \mathbf{x}) = N (\hat{\mu} - \mu)^2 / \sigma^2$ is a parabola, exactly $\chi^2\_1$ at $\mu^\*$. With $c = 3.84 = 1.96^2$,
+$$C(\mathbf{x}) = \hat{\mu} \pm 1.96 \frac{\sigma}{\sqrt{N}} = [4117, 4287] \text{ g}.$$
 
 ???
+
+The construction in one sentence: the interval collects the values of $\theta$ that a test at level 5% would not reject. The probability statement is about $\lambda(\theta^\*; \mathbf{x})$, a function of the random data, and transfers to the random set $C(\mathbf{x})$.
 
 The parabola: $\log p(\mathbf{x} \mid \mu) = -\frac{1}{2\sigma^2} \sum\_i (x\_i - \mu)^2 + \text{const}$, and $\sum\_i (x\_i - \mu)^2 = \sum\_i (x\_i - \hat{\mu})^2 + N (\hat{\mu} - \mu)^2$. Since $\hat{\mu} \sim \mathcal{N}(\mu^\*, \sigma^2 / N)$, $\sqrt{N} (\hat{\mu} - \mu^\*) / \sigma$ is a standard Gaussian, and its square is $\chi^2\_1$.
 
