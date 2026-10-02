@@ -127,19 +127,40 @@ class: middle
 
 ## Confidence interval
 
-A 95% .bold[confidence interval] is a recipe $[a(\mathbf{x}), b(\mathbf{x})]$ such that, whatever the value of $\theta^\*$,
-$$P\_{\mathbf{x} \sim p(\mathbf{x} \mid \theta^\*)}\left( a(\mathbf{x}) \leq \theta^\* \leq b(\mathbf{x}) \right) = 0.95.$$
+A 95% .bold[confidence interval] is a recipe $C(\mathbf{x})$ such that, whatever the value of $\theta^\*$,
+$$P\_{\mathbf{x} \sim p(\mathbf{x} \mid \theta^\*)}\left( \theta^\* \in C(\mathbf{x}) \right) = 0.95.$$
 The probability is over the data. $\theta^\*$ is fixed, and never needs to be known.
 
-For the mean, $\hat{\mu}(\mathbf{x})$ falls within $1.96$ standard errors of $\mu^\*$ with probability 0.95. Turned around, $\mu^\*$ falls within $1.96$ standard errors of $\hat{\mu}(\mathbf{x})$, which gives the recipe
-$$\hat{\mu}(\mathbf{x}) \pm 1.96 \frac{\sigma}{\sqrt{N}}.$$
-For the penguins, $4202 \pm 85$ g, that is $[4117, 4287]$ g.
+To build one, compare every candidate $\theta$ with the best one, through the .bold[likelihood ratio]
+$$\lambda(\theta; \mathbf{x}) = -2 \log \frac{p(\mathbf{x} \mid \theta)}{p(\mathbf{x} \mid \hat{\theta}(\mathbf{x}))} \geq 0.$$
+At $\theta = \theta^\*$, $\lambda(\theta^\*; \mathbf{x})$ is a random variable whose distribution is approximately $\chi^2\_k$, with $k$ the dimension of $\theta$, whatever $\theta^\*$ (Wilks' theorem). Keep every $\theta$ the data do not rule out,
+$$C(\mathbf{x}) = \\{ \theta : \lambda(\theta; \mathbf{x}) \leq c \\},$$
+with $c$ the 95% quantile of $\chi^2\_k$. Then $\theta^\* \in C(\mathbf{x})$ exactly when $\lambda(\theta^\*; \mathbf{x}) \leq c$, which happens with probability 0.95.
 
 ???
 
-The turn-around is the whole trick: "$\hat{\mu}$ is within 85 g of $\mu^\*$" and "$\mu^\*$ is within 85 g of $\hat{\mu}$" are the same event. What moves from one data set to the next is the interval, not $\mu^\*$.
+The construction in one sentence: the interval collects the values of $\theta$ that a test at level 5% would not reject. The probability statement is about $\lambda(\theta^\*; \mathbf{x})$, a function of the random data, and transfers to the random set $C(\mathbf{x})$.
 
-The 1.96 is the 97.5% quantile of the standard Gaussian. For small $N$, a quantile of Student's $t$ distribution replaces it, to account for $\sigma$ being estimated; for 342 penguins it gives $[4116, 4287]$ g.
+Wilks' theorem holds as $N$ grows, under regularity conditions (the true value is not on the boundary of $\Theta$, the model is identifiable), and assumes the data come from the model. It is exact in the Gaussian case of the next slide.
+
+---
+
+class: middle
+
+.center.width-65[![](figures/lec4/likelihood-ratio.svg)]
+
+For the mean body mass, with $\sigma$ fixed to $\hat{\sigma} = 801$ g, the likelihood ratio is a parabola,
+$$\lambda(\mu; \mathbf{x}) = \frac{N (\hat{\mu} - \mu)^2}{\sigma^2},$$
+and it is exactly $\chi^2\_1$ at $\mu^\*$. With $c = 3.84 = 1.96^2$, the set $\lambda(\mu; \mathbf{x}) \leq c$ is
+$$\hat{\mu} \pm 1.96 \frac{\sigma}{\sqrt{N}} = [4117, 4287] \text{ g}.$$
+
+???
+
+The parabola: $\log p(\mathbf{x} \mid \mu) = -\frac{1}{2\sigma^2} \sum\_i (x\_i - \mu)^2 + \text{const}$, and $\sum\_i (x\_i - \mu)^2 = \sum\_i (x\_i - \hat{\mu})^2 + N (\hat{\mu} - \mu)^2$. Since $\hat{\mu} \sim \mathcal{N}(\mu^\*, \sigma^2 / N)$, $\sqrt{N} (\hat{\mu} - \mu^\*) / \sigma$ is a standard Gaussian, and its square is $\chi^2\_1$.
+
+The width of the interval is set by the curvature of the log-likelihood: the more data, the sharper the parabola, the narrower the interval.
+
+Fixing $\sigma$ to its estimate is a shortcut. The rigorous version maximizes over $\sigma$ for each $\mu$ (the profile likelihood). For the Gaussian, this leads to Student's $t$ interval, $[4116, 4287]$ g.
 
 ---
 
