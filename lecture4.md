@@ -175,6 +175,8 @@ The confidence interval is a statement about the procedure; the posterior is a s
 
 The numbers: $N = 342$, a standard deviation of 802 g, so a standard error of $802 / \sqrt{342} \approx 43$ g and an interval of $\pm 1.96 \times 43$ g.
 
+The repetitions are hypothetical: new data sets of 342 penguins drawn from $p\_r$, by the same measurement process. The 95% holds if the model is right, or approximately for a mean, by the central limit theorem; the bootstrap simulates them, by resampling the data or drawing from the fitted model.
+
 The two intervals coincide here because the prior is flat and the data are many; with a real prior, or few data, they part ways. What never coincides is what they mean.
 
 ---
