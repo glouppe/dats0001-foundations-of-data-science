@@ -164,10 +164,10 @@ class: middle
 
 ## Point estimate, confidence interval, posterior
 
-Three answers to the same question, for the mean body mass $\mu$ of the 342 penguins:
-- A .bold[point estimate], $\hat{\mu} = 4202$ g, the value that maximizes the likelihood. One number, and nothing about its precision.
-- A 95% .bold[confidence interval], $[4117, 4287]$ g. If the data were drawn again and again from the model, 95% of the intervals built this way would contain $\mu^\*$. This one either does or does not.
-- A .bold[posterior] $p(\mu \mid \mathbf{x}\_\text{obs})$, here with a flat prior. Its 95% credible interval is the same $[4117, 4287]$ g, but it now says that, given the data and the prior, $\mu$ lies in it with probability 0.95.
+For the mean body mass $\mu$ of the 342 penguins, each answers a different question:
+- A .bold[point estimate] answers "which value of $\mu$ explains the data best?" Here $\hat{\mu} = 4202$ g, the value that maximizes the likelihood. One number, and nothing about its precision.
+- A 95% .bold[confidence interval] answers "which range, built by a procedure that catches $\mu^\*$ 95% of the time, do these data give?" Here $[4117, 4287]$ g. Over repeated data sets, 95% of the intervals built this way would contain $\mu^\*$; this one either does or does not.
+- A .bold[posterior] $p(\mu \mid \mathbf{x}\_\text{obs})$ answers "how plausible is each value of $\mu$, given the data and the prior?" With a flat prior, its 95% credible interval is the same $[4117, 4287]$ g, but it now says that $\mu$ lies in it with probability 0.95.
 
 The confidence interval is a statement about the procedure; the posterior is a statement about $\mu$.
 
