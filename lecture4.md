@@ -396,13 +396,11 @@ class: middle
 
 .center[Plate notation can be used to compactly represent<br> repeated structures in the graphical model.] 
 
-.success[$\mathbf{z}\_i$ is .bold[local], $\theta$ is .bold[global].]
-
 ???
 
 Here, the plate around $\mathbf{x}\_i$ and $\mathbf{z}\_i$ indicates that these variables are repeated $N$ times, for $i = 1, \ldots, N$.
 
-The split is what the later algorithms exploit: EM (L8) and variational inference (L9) alternate between the local variables, one update per observation, and the global ones, shared across the data.
+Each $\mathbf{z}\_i$ is local, tied to one observation; $\theta$ is global, shared by all. The split is what the later algorithms exploit: EM (L8) and variational inference (L9) alternate between the local variables, one update per observation, and the global ones, shared across the data.
 
 ---
 
