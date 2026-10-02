@@ -145,20 +145,29 @@ Wilks' theorem holds as $N$ grows, under regularity conditions (the true value i
 
 class: middle
 
+For the mean body mass, with $\sigma$ fixed to $\hat{\sigma} = 801$ g, the log-likelihood of the Gaussian model is
+$$\log p(\mathbf{x} \mid \mu) = -\frac{1}{2\sigma^2} \sum\_{i=1}^N (x\_i - \mu)^2 - N \log \left(\sqrt{2\pi} \sigma\right).$$
+In the likelihood ratio, the constant term cancels:
+$$\lambda(\mu; \mathbf{x}) = -2 \left( \log p(\mathbf{x} \mid \mu) - \log p(\mathbf{x} \mid \hat{\mu}) \right) = \frac{1}{\sigma^2} \left( \sum\_i (x\_i - \mu)^2 - \sum\_i (x\_i - \hat{\mu})^2 \right).$$
+Write $x\_i - \mu = (x\_i - \hat{\mu}) + (\hat{\mu} - \mu)$ and expand the square. The cross term $2 (\hat{\mu} - \mu) \sum\_i (x\_i - \hat{\mu})$ is zero, since $\hat{\mu}$ is the mean, so
+$$\sum\_i (x\_i - \mu)^2 = \sum\_i (x\_i - \hat{\mu})^2 + N (\hat{\mu} - \mu)^2 \quad \Rightarrow \quad \lambda(\mu; \mathbf{x}) = \frac{N (\hat{\mu} - \mu)^2}{\sigma^2}.$$
+
+---
+
+class: middle
+
 Keep every $\theta$ the data do not rule out,
 $$C(\mathbf{x}) = \\{ \theta : \lambda(\theta; \mathbf{x}) \leq c \\},$$
 with $c$ the 95% quantile of $\chi^2\_k$. Then $\theta^\* \in C(\mathbf{x})$ exactly when $\lambda(\theta^\*; \mathbf{x}) \leq c$, which happens with probability 0.95.
 
 .center.width-50[![](figures/lec4/likelihood-ratio.svg)]
 
-For the mean body mass, with $\sigma$ fixed to $\hat{\sigma} = 801$ g, $\lambda(\mu; \mathbf{x}) = N (\hat{\mu} - \mu)^2 / \sigma^2$ is a parabola, exactly $\chi^2\_1$ at $\mu^\*$. With $c = 3.84 = 1.96^2$,
+For the penguins, if $\mathbf{x} \sim p(\mathbf{x} \mid \mu^\*)$, then $\hat{\mu} \sim \mathcal{N}(\mu^\*, \sigma^2 / N)$, so $\lambda(\mu^\*; \mathbf{x})$ is the square of a standard Gaussian: exactly $\chi^2\_1$, and $c = 3.84 = 1.96^2$. Hence
 $$C(\mathbf{x}) = \hat{\mu} \pm 1.96 \frac{\sigma}{\sqrt{N}} = [4117, 4287] \text{ g}.$$
 
 ???
 
 The construction in one sentence: the interval collects the values of $\theta$ that a test at level 5% would not reject. The probability statement is about $\lambda(\theta^\*; \mathbf{x})$, a function of the random data, and transfers to the random set $C(\mathbf{x})$.
-
-The parabola: $\log p(\mathbf{x} \mid \mu) = -\frac{1}{2\sigma^2} \sum\_i (x\_i - \mu)^2 + \text{const}$, and $\sum\_i (x\_i - \mu)^2 = \sum\_i (x\_i - \hat{\mu})^2 + N (\hat{\mu} - \mu)^2$. Since $\hat{\mu} \sim \mathcal{N}(\mu^\*, \sigma^2 / N)$, $\sqrt{N} (\hat{\mu} - \mu^\*) / \sigma$ is a standard Gaussian, and its square is $\chi^2\_1$.
 
 The width of the interval is set by the curvature of the log-likelihood: the more data, the sharper the parabola, the narrower the interval.
 
