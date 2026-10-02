@@ -26,7 +26,9 @@ class: middle
 
 class: middle
 
-.bold[Recap from Lecture 2.] A measurement is what a process produces from an entity $\omega \in \Omega$ (a penguin) under measurement conditions $\xi \in \Xi$ (the scale, the observer, the day),
+## Recap from Lecture 2
+
+A measurement is what a process produces from an entity $\omega \in \Omega$ (a penguin) under measurement conditions $\xi \in \Xi$ (the scale, the observer, the day),
 $$f : \Omega \times \Xi \to \mathcal{X}.$$
 Neither $\omega$ nor $\xi$ is observed, only $\mathbf{x} = f(\omega, \xi)$.
 
