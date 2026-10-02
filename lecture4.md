@@ -129,9 +129,9 @@ class: middle
 
 ## Confidence interval
 
-A 95% .bold[confidence interval] is a recipe $C(\mathbf{x})$ such that, whatever the value of $\theta^\*$,
+A 95% .bold[confidence interval] is a set $C(\mathbf{x})$ of values of $\theta$, computed from the data, such that, whatever the value of $\theta^\*$,
 $$P\_{\mathbf{x} \sim p(\mathbf{x} \mid \theta^\*)}\left( \theta^\* \in C(\mathbf{x}) \right) = 0.95.$$
-The probability is over the data. $\theta^\*$ is fixed, and never needs to be known.
+The probability is over the data: $C(\mathbf{x})$ is random, $\theta^\*$ is fixed and never needs to be known.
 
 To build one, compare every candidate $\theta$ with the best one, through the .bold[likelihood ratio]
 $$\lambda(\theta; \mathbf{x}) = -2 \log \frac{p(\mathbf{x} \mid \theta)}{p(\mathbf{x} \mid \hat{\theta}(\mathbf{x}))} \geq 0.$$
