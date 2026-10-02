@@ -579,7 +579,9 @@ class: middle
 
 Computing the posterior $p(\theta, z\_{1:N} \mid \mathbf{x}\_{1:N}, \alpha, \sigma^2\_\mu, \sigma^2\_\sigma)$ amounts to clustering: each component is a cluster, and $z\_i$ is the cluster of observation $i$.
 
-This posterior is typically intractable.
+This posterior has no closed form. Its normalizing constant
+$$p(\mathbf{x}\_{1:N}) = \int \sum\_{z\_1 = 1}^K \cdots \sum\_{z\_N = 1}^K p(\theta, z\_{1:N}, \mathbf{x}\_{1:N}) \, d\theta$$
+sums over all $K^N$ assignments of the observations to components: for 342 penguins and 3 components, about $10^{163}$ terms.
 
 ???
 
@@ -593,7 +595,17 @@ Deriving clustering from a latent variable model provides a probabilistic interp
 
 class: middle
 
-.center.width-80[![](figures/lec4/bill-clustering.png)]
+.center.width-55[![](figures/lec4/bill-clustering.png)]
+
+.center[Three Gaussians fitted to the bill measurements by maximum likelihood.<br> Each penguin is coloured by its most likely component.]
+
+???
+
+This is not the posterior of the previous slide. With $\theta$ fixed to its estimate $\hat{\theta}$, the posterior of each $z\_i$ is easy, a normalization over $K$ terms only,
+$$p(z\_i = k \mid \mathbf{x}\_i, \hat{\theta}) = \frac{\pi\_k \, p(\mathbf{x}\_i \mid z\_i = k, \hat{\theta})}{\sum\_{j=1}^K \pi\_j \, p(\mathbf{x}\_i \mid z\_i = j, \hat{\theta})}.$$
+What has no closed form is the joint posterior over $\theta$ and all the $z\_i$ together. EM (Lecture 8) is how $\hat{\theta}$ is found, alternating between these per-observation posteriors and the parameters.
+
+The bill measurements are standardized, and the components have full covariance matrices, a slight generalization of the isotropic model of the slide before.
 
 ---
 
