@@ -701,7 +701,7 @@ class: middle
 
 .center.width-65[![](figures/lec4/gaia-parallaxes.png)]
 
-.center[A random sample of 5000 stars from Gaia DR3. For 82% of them $\varpi\_i / \sigma\_i < 5$,<br> and for the 17% below the line $1/\varpi\_i$ is not even a distance.]
+.center[5000 stars from Gaia DR3, each parallax $\varpi\_i$ reported with an uncertainty $\sigma\_i$.<br> For 82% of them $\varpi\_i < 5 \sigma\_i$; for the 17% below the line, $1/\varpi\_i$ is not a distance.]
 
 .footnote[Data: ESA/Gaia/DPAC, Gaia DR3.]
 
