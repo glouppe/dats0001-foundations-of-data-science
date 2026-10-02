@@ -156,13 +156,24 @@ $$\sum\_i (x\_i - \mu)^2 = \sum\_i (x\_i - \hat{\mu})^2 + N (\hat{\mu} - \mu)^2 
 
 class: middle
 
+Wilks' theorem is exact here. If $\mathbf{x} \sim p(\mathbf{x} \mid \mu^\*)$, each $x\_i$ is drawn independently from $\mathcal{N}(\mu^\*, \sigma^2)$, and their mean is Gaussian too,
+$$\hat{\mu}(\mathbf{x}) \sim \mathcal{N}\left(\mu^\*, \frac{\sigma^2}{N}\right), \quad \text{so} \quad Z = \frac{\hat{\mu}(\mathbf{x}) - \mu^\*}{\sigma / \sqrt{N}} \sim \mathcal{N}(0, 1).$$
+At $\mu = \mu^\*$, the likelihood ratio is the square of $Z$,
+$$\lambda(\mu^\*; \mathbf{x}) = \frac{N (\hat{\mu}(\mathbf{x}) - \mu^\*)^2}{\sigma^2} = Z^2.$$
+The square of a standard Gaussian is, by definition, $\chi^2\_1$ distributed. Its 95% quantile follows from the Gaussian one,
+$$P(Z^2 \leq c) = P(-\sqrt{c} \leq Z \leq \sqrt{c}) = 0.95 \quad \text{for } \sqrt{c} = 1.96, \text{ that is } c = 3.84.$$
+
+---
+
+class: middle
+
 Keep every $\theta$ the data do not rule out,
 $$C(\mathbf{x}) = \\{ \theta : \lambda(\theta; \mathbf{x}) \leq c \\},$$
 with $c$ the 95% quantile of $\chi^2\_k$. Then $\theta^\* \in C(\mathbf{x})$ exactly when $\lambda(\theta^\*; \mathbf{x}) \leq c$, which happens with probability 0.95.
 
 .center.width-50[![](figures/lec4/likelihood-ratio.svg)]
 
-For the penguins, if $\mathbf{x} \sim p(\mathbf{x} \mid \mu^\*)$, then $\hat{\mu} \sim \mathcal{N}(\mu^\*, \sigma^2 / N)$, so $\lambda(\mu^\*; \mathbf{x})$ is the square of a standard Gaussian: exactly $\chi^2\_1$, and $c = 3.84 = 1.96^2$. Hence
+For the penguins, $\lambda(\mu; \mathbf{x}) \leq 3.84$ exactly when $|\hat{\mu} - \mu| \leq 1.96 \, \sigma / \sqrt{N}$, hence
 $$C(\mathbf{x}) = \hat{\mu} \pm 1.96 \frac{\sigma}{\sqrt{N}} = [4117, 4287] \text{ g}.$$
 
 ???
