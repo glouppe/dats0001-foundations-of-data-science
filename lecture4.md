@@ -266,6 +266,8 @@ $\text{Uniform}(\sigma^2 \mid 0, 100)$ caps $\sigma$ at 10 g, so every simulated
 
 The repair is not subtle, and that is the point: a prior predictive check is cheap, and it catches this before any data are touched.
 
+The repaired prior is still vague on $\mu$: it allows colonies of 9 kg penguins. That is acceptable, since 342 measurements will dominate it; what it must not do is rule out the truth, as the prior on $\sigma^2$ did.
+
 ---
 
 class: middle
@@ -295,7 +297,7 @@ and its 95% credible interval is $[4117, 4287]$ g, the confidence interval again
 
 The posterior: as a function of $\mu$, the likelihood is proportional to $\exp\left(-N (\mu - \hat{\mu})^2 / 2\sigma^2\right)$, and the uniform prior only cuts it to $[0, 10000]$ g. The Gaussian is 43 g wide around 4202 g, so the cut changes nothing visible, and the credible interval matches the confidence interval to the gram.
 
-The prior is chosen to be proper and to respect what a mass is. A flat prior on all of $\mathbb{R}$ would not integrate to one, so it would not be a distribution; a Gaussian prior would give some weight to negative masses.
+The prior on $\mu$ is the one of the prior predictive check. It is chosen to be proper and to respect what a mass is. A flat prior on all of $\mathbb{R}$ would not integrate to one, so it would not be a distribution; a Gaussian prior would give some weight to negative masses.
 
 With an informative prior, or few data, the two intervals part ways.
 

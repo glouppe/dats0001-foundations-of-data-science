@@ -23,7 +23,7 @@ plt.rcParams.update({"font.size": 12, "text.color": GREY, "axes.labelcolor": GRE
 
 def colonies(rng, mass, scale2):
     """Simulate N_COLONIES datasets of the observed size, from the prior."""
-    mu = rng.normal(*mass, size=N_COLONIES)
+    mu = rng.uniform(*mass, size=N_COLONIES)
     sigma2 = rng.uniform(0, scale2, size=N_COLONIES)
     return rng.normal(mu[:, None], np.sqrt(sigma2)[:, None], size=(N_COLONIES, N))
 
@@ -39,10 +39,11 @@ if __name__ == "__main__":
     rng = np.random.default_rng(1)
     np.random.seed(1)
 
-    priors = [(r"$\mathcal{N}(\mu \mid 5000, 2000^2)$, $\mathrm{Uniform}(\sigma^2 \mid 0, 100)$",
-               (5000, 2000), 100),
-              (r"$\mathcal{N}(\mu \mid 4000, 1000^2)$, $\mathrm{Uniform}(\sigma^2 \mid 0, 1500^2)$",
-               (4000, 1000), 1500 ** 2)]
+    # the prior on mu is the one of the credible interval, later in the lecture
+    priors = [(r"$\mathrm{Uniform}(\mu \mid 0, 10000)$, $\mathrm{Uniform}(\sigma^2 \mid 0, 100)$",
+               (0, 10000), 100),
+              (r"$\mathrm{Uniform}(\mu \mid 0, 10000)$, $\mathrm{Uniform}(\sigma^2 \mid 0, 1500^2)$",
+               (0, 10000), 1500 ** 2)]
 
     fig, axes = plt.subplots(2, 1, figsize=(5.8, 4.4), dpi=200, sharex=True)
     for ax, (title, mass, scale2) in zip(axes, priors):
@@ -53,7 +54,7 @@ if __name__ == "__main__":
         ax.set_yticks(range(N_COLONIES + 1))
         ax.set_yticklabels(["measured"] + ["simulated"] * N_COLONIES, fontsize=9)
         ax.set_ylim(-.6, N_COLONIES + .6)
-        ax.set_xlim(-1000, 11000)
+        ax.set_xlim(-1000, 15000)
     axes[-1].set_xlabel("Body mass (g)")
     fig.tight_layout()
     fig.savefig("figures/lec4/prior-predictive-check.png", bbox_inches="tight",
