@@ -510,8 +510,6 @@ where $p(\mathbf{x} \mid \mathbf{B}, \boldsymbol{\mu}, \sigma^2) = \int p(\mathb
 Since the joint distribution is Gaussian, the marginal likelihood is also Gaussian,
 $$p(\mathbf{x} \mid \mathbf{B}, \boldsymbol{\mu}, \sigma^2) = \mathcal{N}(\mathbf{x} \mid \boldsymbol{\mu}, \mathbf{B}\mathbf{B}^T + \sigma^2 \mathbf{I}).$$
 
-This is a point estimate of $\theta$, not a posterior over it: the latent variables $\mathbf{z}\_i$ are integrated out, the parameters are not.
-
 ---
 
 class: middle
