@@ -62,7 +62,7 @@ def coverage():
     rng = np.random.default_rng(0)
     x = rng.normal(MU, SIGMA, size=(COLONIES, N))
     mean = x.mean(axis=1)
-    half = 1.96 * x.std(axis=1, ddof=1) / np.sqrt(N)
+    half = 1.96 * x.std(axis=1) / np.sqrt(N)          # sigma-hat, the MLE
     miss = np.abs(mean - MU) > half
 
     fig, ax = plt.subplots(figsize=(5.8, 3.4), dpi=200)

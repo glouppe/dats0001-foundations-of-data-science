@@ -190,15 +190,17 @@ class: middle
 
 .center.width-65[![](figures/lec4/confidence-intervals.svg)]
 
-.center[50 colonies of 342 penguins simulated from the model with $\mu^\ast = 4200$ g, and the 95% interval each gives. Two of them miss $\mu^\ast$.]
+.center[50 colonies of 342 penguins simulated from the model with $\mu^\ast = 4200$ g, and the interval $C(\mathbf{x}) = \hat{\mu} \pm 1.96 \, \hat{\sigma} / \sqrt{N}$ each gives. Three of them miss $\mu^\ast$.]
 
-.alert[The 95% is a property of the recipe. A computed interval, such as $[4117, 4287]$ g, either contains $\mu^\*$ or does not.]
+.alert[The 95% is a property of $C$, the way intervals are built. One computed interval, such as $[4117, 4287]$ g, either contains $\mu^\ast$ or does not.]
 
 ???
 
-This is the only setting where $\mu^\*$ is known: data simulated from the model, at a value we chose. With real data, we never know whether our interval is one of the 48 or one of the 2.
+This is the only setting where $\mu^\*$ is known: data simulated from the model, at a value we chose. With real data, we never know whether our interval is one of the 47 or one of the 3.
 
-The same simulation can be run without the model: resampling the 342 penguins with replacement (the bootstrap) stands in for measuring new colonies.
+The same simulation can be run without the model: resampling the 342 penguins with replacement (the bootstrap) stands in for measuring new colonies, with the mean of the 342 penguins in the role of $\mu^\*$.
+
+Each colony uses its own $\hat{\sigma}$, as the penguins do: the intervals do not all have the same width.
 
 ---
 
