@@ -67,7 +67,7 @@ class: middle
 
 .italic[Example.] Body masses of penguins could be modeled as
 $$p(x \mid \mu, \sigma^2) = \mathcal{N}(x \mid \mu, \sigma^2),$$
-where the parameters are $\theta = (\mu, \sigma^2)$, with $\mu \in \mathbb{R}$ and $\sigma^2 > 0$.
+where the parameters are $\theta = (\mu, \sigma^2)$, with $\mu > 0$ and $\sigma^2 > 0$.
 
 This would assume
 - body masses cluster around a central value $\mu$,
