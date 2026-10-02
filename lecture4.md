@@ -667,14 +667,16 @@ class: middle
 ## Example 4: How far are the stars?
 
 Gaia measured the .bold[parallax] of 1.47 billion stars: the angle that the radius of Earth's orbit subtends at the star, which shrinks as the star gets further away,
-$$\varpi = \frac{1}{r}.$$
-The units make it exact: $\varpi$ in milliarcseconds (a thousandth of an arcsecond) and $r$ in kiloparsecs (about 3260 light-years).
+$$\varpi = \frac{1}{r},$$
+with $\varpi$ in milliarcseconds (a thousandth of an arcsecond) and $r$ in kiloparsecs (about 3260 light-years).
 
 .center.width-65[![](figures/lec4/parallax-geometry.svg)]
 
 .center[Not to scale.]
 
 ???
+
+The parsec is defined so that this holds: it is the distance at which the radius of Earth's orbit subtends one arcsecond. For such small angles, the angle is inversely proportional to the distance.
 
 An arcsecond is 1/3600 of a degree, so a milliarcsecond is a very small angle: at 1 kpc it is what a two-euro coin subtends from 5000 km away.
 
