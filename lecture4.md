@@ -369,9 +369,12 @@ class: middle
 
 ## Graphical model representation
 
-Latent variable models can be represented using graphical models, where nodes represent variables (observed, latent, or parameters) and edges represent (possible) dependencies between them.
+Latent variable models can be represented as .bold[directed graphical models]: a directed acyclic graph with one node per variable (observed, latent, or parameter), and an edge $a \to b$ whenever $a$ appears in the conditional distribution of $b$.
 
-The graphical model illustrates the structure of the factorization of the joint distribution and the flow of the generative process.
+The joint distribution is the product of one factor per node, given its parents $\text{pa}(v)$ in the graph,
+$$p(v\_1, \ldots, v\_K) = \prod\_{k=1}^K p(v\_k \mid \text{pa}(v\_k)).$$
+
+Followed along the edges, the graph is also the generative process: each variable is sampled once its parents are. A missing edge is an assumption: it removes a dependency from the factorization.
 
 ---
 
