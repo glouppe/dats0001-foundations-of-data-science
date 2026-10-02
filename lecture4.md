@@ -577,15 +577,15 @@ where
 
 class: middle
 
-Computing the posterior distribution $p(\theta, z\_{1:N} \mid \mathbf{x}\_{1:N}, \alpha, \sigma^2\_\mu, \sigma^2\_\sigma)$ amounts to solving a clustering problem, where each component corresponds to a cluster and the latent variables $z\_i$ indicate cluster membership of each observation.
+Computing the posterior $p(\theta, z\_{1:N} \mid \mathbf{x}\_{1:N}, \alpha, \sigma^2\_\mu, \sigma^2\_\sigma)$ amounts to clustering: each component is a cluster, and $z\_i$ is the cluster of observation $i$.
 
-The posterior is typically intractable. Sampling from it is the subject of Lecture 6 (MCMC), approximating it by a simpler distribution that of Lecture 9 (variational inference); Lecture 8 (EM) settles instead for a point estimate of $\theta$, with the $z\_i$ integrated out.
-
-A mixture is also identified only up to a permutation of its components: relabelling them leaves the distribution unchanged, so the posterior has $K!$ equivalent modes.
+This posterior is typically intractable.
 
 ???
 
-Label switching is why a sampler exploring the posterior of a mixture visits several equivalent modes, and why averaging the draws of $\boldsymbol{\mu}\_k$ across them is meaningless. We come back to this multimodality in L6.
+Sampling from the posterior is the subject of Lecture 6 (MCMC), approximating it by a simpler distribution that of Lecture 9 (variational inference); Lecture 8 (EM) settles instead for a point estimate of $\theta$, with the $z\_i$ integrated out.
+
+A mixture is identified only up to a permutation of its components: relabelling them leaves the distribution unchanged, so the posterior has $K!$ equivalent modes. This label switching is why a sampler exploring the posterior of a mixture visits several equivalent modes, and why averaging the draws of $\boldsymbol{\mu}\_k$ across them is meaningless. We come back to this multimodality in L6.
 
 Deriving clustering from a latent variable model provides a probabilistic interpretation of cluster assignments as the most likely latent variables that could have generated the observed data. It provides a principled narrative with explicit assumptions rather than a mere algorithmic recipe.
 
