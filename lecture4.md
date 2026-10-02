@@ -91,7 +91,7 @@ $$\mathbf{x}\_\text{obs} \sim p(\mathbf{x} \mid \theta^\*).$$
 
 An .bold[estimator] is a recipe $\hat{\theta}(\mathbf{x})$ that turns any data set into a value of $\theta$, for example the maximum likelihood estimator
 $$\hat{\theta}(\mathbf{x}) = \arg\max\_\theta \, p(\mathbf{x} \mid \theta).$$
-Applied to $\mathbf{x}\_\text{obs}$, it gives a .bold[point estimate]. For the penguins, $\hat{\mu} = 4202$ g.
+Applied to $\mathbf{x}\_\text{obs}$, it gives a .bold[point estimate]. For the penguins, $\hat{\theta} = (\hat{\mu}, \hat{\sigma}^2)$ with $\hat{\mu} = 4202$ g and $\hat{\sigma} = 801$ g.
 
 ???
 
@@ -99,7 +99,7 @@ This $\theta^\*$ lives inside the model: it is the parameter of the member of $\
 
 Closest in the Kullback-Leibler sense: maximum likelihood converges to the $\theta$ minimizing $\text{KL}(p\_r \| p(\cdot \mid \theta))$, whether or not the family contains $p\_r$. Estimating something remains well defined; calling it true does not.
 
-For the Gaussian model, the maximum likelihood estimate of $\mu$ is the sample mean.
+For the Gaussian model, the maximum likelihood estimates are the sample mean, $\hat{\mu} = \frac{1}{N} \sum\_i x\_i$, and the sample variance, $\hat{\sigma}^2 = \frac{1}{N} \sum\_i (x\_i - \hat{\mu})^2$. The latter divides by $N$; the usual standard deviation divides by $N - 1$ and gives 802 g, the value used on the next slides. With 342 penguins, the difference does not matter.
 
 ---
 
