@@ -672,8 +672,6 @@ with $\varpi$ in milliarcseconds (a thousandth of an arcsecond) and $r$ in kilop
 
 .center.width-65[![](figures/lec4/parallax-geometry.svg)]
 
-.center[Not to scale.]
-
 ???
 
 The parsec is defined so that this holds: it is the distance at which the radius of Earth's orbit subtends one arcsecond. For such small angles, the angle is inversely proportional to the distance.
