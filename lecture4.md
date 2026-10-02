@@ -894,7 +894,7 @@ $$\ell = \frac{1}{N} \sum\_{i=1}^N (\mathbf{x}\_i - \boldsymbol{\mu})^T \boldsym
 $$\ell = \text{tr}(\boldsymbol{\Sigma}^{-1} \mathbf{S}) + \log |\boldsymbol{\Sigma}|, \quad \text{where } \mathbf{S} = \frac{1}{N} \sum\_{i=1}^N (\mathbf{x}\_i - \hat{\boldsymbol{\mu}})(\mathbf{x}\_i - \hat{\boldsymbol{\mu}})^T$$
 is the sample covariance matrix.
 
-.bold[Step 2: the loadings.] Since $\partial\_\mathbf{B} \log |\boldsymbol{\Sigma}| = 2 \boldsymbol{\Sigma}^{-1} \mathbf{B}$ and $\partial\_\mathbf{B} \text{tr}(\boldsymbol{\Sigma}^{-1} \mathbf{S}) = -2 \boldsymbol{\Sigma}^{-1} \mathbf{S} \boldsymbol{\Sigma}^{-1} \mathbf{B}$, a stationary point satisfies
+.bold[Step 2: the loadings.] Since $\partial\_\mathbf{B} \log |\boldsymbol{\Sigma}| = 2 \boldsymbol{\Sigma}^{-1} \mathbf{B}$ and $\partial\_\mathbf{B} \text{tr}(\boldsymbol{\Sigma}^{-1} \mathbf{S}) = -2 \boldsymbol{\Sigma}^{-1} \mathbf{S} \boldsymbol{\Sigma}^{-1} \mathbf{B}$, setting the gradient in $\mathbf{B}$ to zero gives
 $$\mathbf{S} \boldsymbol{\Sigma}^{-1} \mathbf{B} = \mathbf{B}.$$
 
 ---
@@ -925,6 +925,6 @@ since $\lambda\_p > \hat{\sigma}^2$ (step 2). Every such swap lowers $\ell$: $K$
 
 ???
 
-The derivation assumes $\mathbf{B}$ of full rank $m$, so that every $l\_j > 0$. Tipping and Bishop (1999) treat the general case and show that the other stationary points, with other choices of $K$, are saddle points.
+The derivation assumes $\mathbf{B}$ of full rank $m$, so that every $l\_j > 0$. Tipping and Bishop (1999) treat the general case and show that the other solutions of this zero-gradient condition, with other choices of $K$, are saddle points.
 
 After the swap, the new kept eigenvalue $\lambda\_q$ still exceeds the new, smaller $\hat{\sigma}^2$, so the swapped solution is admissible too, and the argument can be repeated until $K$ is the top $m$.
