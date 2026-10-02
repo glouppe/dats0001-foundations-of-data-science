@@ -112,14 +112,16 @@ A point estimate says nothing about its precision. Another colony of 342 penguin
 Since $\mathbf{x} \sim p(\mathbf{x} \mid \theta^\*)$ is random, so is $\hat{\theta}(\mathbf{x})$. Its distribution is the .bold[sampling distribution] of the estimator.
 
 For the sample mean, by the central limit theorem,
-$$\hat{\mu}(\mathbf{x}) = \frac{1}{N} \sum\_{i=1}^N x\_i \sim \mathcal{N}\left(\mu^\*, \frac{\sigma^2}{N}\right) \quad \text{approximately}.$$
-Its standard deviation $\sigma / \sqrt{N}$ is the .bold[standard error]: how much the estimate varies from one data set to the next. For the penguins, $801 / \sqrt{342} \approx 43$ g.
+$$\hat{\mu}(\mathbf{x}) = \frac{1}{N} \sum\_{i=1}^N x\_i \sim \mathcal{N}\left(\mu^\*, \frac{{\sigma^\*}^2}{N}\right) \quad \text{approximately}.$$
+Its standard deviation $\sigma^\* / \sqrt{N}$ is the .bold[standard error]: how much the estimate varies from one data set to the next.
+
+$\sigma^\*$ is unknown too, so it is replaced by its estimate. For the penguins, the estimated standard error is $\hat{\sigma} / \sqrt{N} = 801 / \sqrt{342} \approx 43$ g.
 
 ???
 
 The sampling distribution is a thought experiment: nobody measures new colonies. The repetitions are imagined data sets drawn by the same process. Under the model, they are drawn from $p(\mathbf{x} \mid \theta^\*)$; in reality, from $p\_r$. For a mean, the central limit theorem makes the two agree well enough, whatever the shape of $p\_r$.
 
-$\sigma$ is unknown as well, and is replaced by its estimate $\hat{\sigma} = 801$ g.
+Plugging in $\hat{\sigma}$ adds a little uncertainty of its own, since $\hat{\sigma}$ also varies from one data set to the next. With 342 penguins it is negligible; with a handful of data, Student's $t$ distribution accounts for it.
 
 ---
 
