@@ -164,18 +164,20 @@ class: middle
 
 ## Point estimate, confidence interval, posterior
 
-For the mean body mass $\mu$ of the 342 penguins, each answers a different question:
-- A .bold[point estimate] answers "which value of $\mu$ explains the data best?" Here $\hat{\mu} = 4202$ g, the value that maximizes the likelihood. One number, and nothing about its precision.
-- A 95% .bold[confidence interval] answers "which range, built by a procedure that catches $\mu^\*$ 95% of the time, do these data give?" Here $[4117, 4287]$ g, which either contains $\mu^\*$ or does not.
-- A .bold[posterior] $p(\mu \mid \mathbf{x}\_\text{obs})$ answers "how plausible is each value of $\mu$, given the data and the prior?" With a flat prior, its 95% credible interval is the same $[4117, 4287]$ g, but it now says that $\mu$ lies in it with probability 0.95.
+Three answers about the mean body mass $\mu$ of the penguins, to three different questions:
+- .bold[Point estimate.] Which single value of $\mu$ makes the data most likely? $\hat{\mu} = 4202$ g.
+- .bold[95% confidence interval.] $[4117, 4287]$ g. Imagine measuring 342 new penguins, again and again, and building an interval each time with the same recipe: 95% of these intervals would contain $\mu^\*$. The 95% describes the recipe, not this interval, which either contains $\mu^\*$ or does not.
+- .bold[Posterior.] How plausible is each value of $\mu$, given the data and the prior? With a flat prior, its 95% credible interval is the same $[4117, 4287]$ g, but this time it means that $\mu$ lies in it with probability 0.95.
 
-The confidence interval is a statement about the procedure; the posterior is a statement about $\mu$.
+The confidence interval is a statement about the recipe; the posterior is a statement about $\mu$.
 
 ???
 
 The numbers: $N = 342$, a standard deviation of 802 g, so a standard error of $802 / \sqrt{342} \approx 43$ g and an interval of $\pm 1.96 \times 43$ g.
 
-The repetitions are hypothetical: new data sets of 342 penguins drawn from $p\_r$, by the same measurement process. The 95% holds if the model is right, or approximately for a mean, by the central limit theorem; the bootstrap simulates them, by resampling the data or drawing from the fitted model.
+Nobody measures new penguins: the repetitions are imagined, new data sets drawn from $p\_r$ by the same measurement process. The recipe gets its 95% if the model is right; for a mean, it gets close to 95% anyway, thanks to the central limit theorem. The repetitions can be simulated: resample the 342 penguins with replacement (the bootstrap), or draw new data sets from the fitted model.
+
+The common mistake is to read the confidence interval as a posterior: "$\mu$ lies in $[4117, 4287]$ g with probability 0.95". In the frequentist framework $\mu^\*$ is fixed, not random, so the sentence has no meaning there; only the posterior can say it.
 
 The two intervals coincide here because the prior is flat and the data are many; with a real prior, or few data, they part ways. What never coincides is what they mean.
 
