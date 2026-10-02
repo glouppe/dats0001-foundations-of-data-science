@@ -135,7 +135,7 @@ The probability is over the data: $C(\mathbf{x})$ is random, $\theta^\*$ is fixe
 
 To build one, compare every candidate $\theta$ with the best one, through the .bold[likelihood ratio]
 $$\lambda(\theta; \mathbf{x}) = -2 \log \frac{p(\mathbf{x} \mid \theta)}{p(\mathbf{x} \mid \hat{\theta}(\mathbf{x}))} \geq 0.$$
-At $\theta = \theta^\*$, $\lambda(\theta^\*; \mathbf{x})$ is a random variable whose distribution is approximately $\chi^2\_k$, with $k$ the dimension of $\theta$, whatever $\theta^\*$ (Wilks' theorem).
+If $\mathbf{x} \sim p(\mathbf{x} \mid \theta^\*)$, then $\lambda(\theta^\*; \mathbf{x})$ is a random variable whose distribution is approximately $\chi^2\_k$ for large $N$, with $k$ the dimension of $\theta$, whatever $\theta^\*$ (Wilks' theorem).
 
 ???
 
