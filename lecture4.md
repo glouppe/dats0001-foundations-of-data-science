@@ -888,28 +888,42 @@ class: middle
 ## Deriving the probabilistic PCA solution
 
 Up to constants and a factor $N$, the negative log-likelihood is
-$$\ell(\boldsymbol{\mu}, \mathbf{B}, \sigma^2) = \frac{1}{N} \sum\_{i=1}^N (\mathbf{x}\_i - \boldsymbol{\mu})^T \boldsymbol{\Sigma}^{-1} (\mathbf{x}\_i - \boldsymbol{\mu}) + \log |\boldsymbol{\Sigma}|, \quad \boldsymbol{\Sigma} = \mathbf{B}\mathbf{B}^T + \sigma^2 \mathbf{I}.$$
+$$\ell = \frac{1}{N} \sum\_{i=1}^N (\mathbf{x}\_i - \boldsymbol{\mu})^T \boldsymbol{\Sigma}^{-1} (\mathbf{x}\_i - \boldsymbol{\mu}) + \log |\boldsymbol{\Sigma}|, \quad \boldsymbol{\Sigma} = \mathbf{B}\mathbf{B}^T + \sigma^2 \mathbf{I}.$$
 
-.bold[Mean.] The gradient in $\boldsymbol{\mu}$, $-\frac{2}{N} \boldsymbol{\Sigma}^{-1} \sum\_i (\mathbf{x}\_i - \boldsymbol{\mu})$, is zero at the sample mean $\hat{\boldsymbol{\mu}}$, whatever $\boldsymbol{\Sigma}$. What remains is $\ell = \text{tr}(\boldsymbol{\Sigma}^{-1} \mathbf{S}) + \log |\boldsymbol{\Sigma}|$.
+.bold[Step 1: the mean.] The gradient in $\boldsymbol{\mu}$ is $-\frac{2}{N} \boldsymbol{\Sigma}^{-1} \sum\_i (\mathbf{x}\_i - \boldsymbol{\mu})$, zero at $\hat{\boldsymbol{\mu}} = \frac{1}{N} \sum\_i \mathbf{x}\_i$ whatever $\boldsymbol{\Sigma}$. Writing each quadratic form as a trace, what remains is
+$$\ell = \text{tr}(\boldsymbol{\Sigma}^{-1} \mathbf{S}) + \log |\boldsymbol{\Sigma}|.$$
 
-.bold[Loadings.] Since $\partial\_\mathbf{B} \log |\boldsymbol{\Sigma}| = 2 \boldsymbol{\Sigma}^{-1} \mathbf{B}$ and $\partial\_\mathbf{B} \text{tr}(\boldsymbol{\Sigma}^{-1} \mathbf{S}) = -2 \boldsymbol{\Sigma}^{-1} \mathbf{S} \boldsymbol{\Sigma}^{-1} \mathbf{B}$, a stationary point satisfies $\mathbf{S} \boldsymbol{\Sigma}^{-1} \mathbf{B} = \mathbf{B}$.
-
-Write $\mathbf{B} = \mathbf{U} \mathbf{L} \mathbf{R}$ (singular value decomposition, with $\mathbf{U}$ of orthonormal columns $\mathbf{u}\_j$, $\mathbf{L}$ diagonal, $\mathbf{R}$ a rotation). Then $\boldsymbol{\Sigma} \mathbf{U} = \mathbf{U} (\mathbf{L}^2 + \sigma^2 \mathbf{I})$, and the condition becomes
-$$\mathbf{S} \mathbf{u}\_j = (l\_j^2 + \sigma^2) \, \mathbf{u}\_j.$$
-Each $\mathbf{u}\_j$ is an eigenvector of $\mathbf{S}$, with eigenvalue $\lambda\_j = l\_j^2 + \sigma^2$. Hence $\hat{\mathbf{B}} = \mathbf{U}\_m (\boldsymbol{\Lambda}\_m - \sigma^2 \mathbf{I})^{1/2} \mathbf{R}$.
+.bold[Step 2: the loadings.] Since $\partial\_\mathbf{B} \log |\boldsymbol{\Sigma}| = 2 \boldsymbol{\Sigma}^{-1} \mathbf{B}$ and $\partial\_\mathbf{B} \text{tr}(\boldsymbol{\Sigma}^{-1} \mathbf{S}) = -2 \boldsymbol{\Sigma}^{-1} \mathbf{S} \boldsymbol{\Sigma}^{-1} \mathbf{B}$, a stationary point satisfies
+$$\mathbf{S} \boldsymbol{\Sigma}^{-1} \mathbf{B} = \mathbf{B}.$$
 
 ---
 
 class: middle
 
-.bold[Noise.] Let $K$ be the indices of the $m$ eigenvectors kept in $\mathbf{B}$. Along them, $\boldsymbol{\Sigma}$ has eigenvalues $\lambda\_j$; along the $d - m$ others, $\sigma^2$. In the eigenbasis of $\mathbf{S}$,
-$$\ell = m + \sum\_{j \in K} \log \lambda\_j + \sum\_{j \notin K} \frac{\lambda\_j}{\sigma^2} + (d - m) \log \sigma^2.$$
-Setting the derivative in $\sigma^2$ to zero gives $\hat{\sigma}^2 = \frac{1}{d - m} \sum\_{j \notin K} \lambda\_j$, the average of the discarded eigenvalues.
+Write $\mathbf{B} = \mathbf{U} \mathbf{L} \mathbf{R}$ (singular value decomposition: orthonormal columns $\mathbf{u}\_j$, $\mathbf{L} = \text{diag}(l\_1, \ldots, l\_m)$, $\mathbf{R}$ a rotation). Then $\boldsymbol{\Sigma} \mathbf{u}\_j = (l\_j^2 + \sigma^2) \mathbf{u}\_j$, so $\boldsymbol{\Sigma}^{-1} \mathbf{B} = \mathbf{U} (\mathbf{L}^2 + \sigma^2 \mathbf{I})^{-1} \mathbf{L} \mathbf{R}$, and the condition reads, column by column,
+$$\mathbf{S} \mathbf{u}\_j = (l\_j^2 + \sigma^2) \, \mathbf{u}\_j.$$
 
-.bold[Which eigenvectors.] Plugging $\hat{\sigma}^2$ back,
-$$\ell = d + \sum\_{j=1}^d \log \lambda\_j + \left( (d - m) \log \hat{\sigma}^2 - \sum\_{j \notin K} \log \lambda\_j \right).$$
-The first two terms do not depend on $K$. The bracket is $(d - m)$ times the log of the arithmetic mean of the discarded eigenvalues minus the mean of their logs: non-negative by Jensen's inequality, and zero when they are all equal. It is smallest when the discarded eigenvalues are the $d - m$ smallest, so $\mathbf{B}$ keeps the top $m$ eigenvectors.
+Each $\mathbf{u}\_j$ is an eigenvector of $\mathbf{S}$, with eigenvalue $\lambda\_j = l\_j^2 + \sigma^2 > \sigma^2$. Hence
+$$\mathbf{B} = \mathbf{U}\_K (\boldsymbol{\Lambda}\_K - \sigma^2 \mathbf{I})^{1/2} \mathbf{R}$$
+for some set $K$ of $m$ eigenvectors of $\mathbf{S}$, still to be chosen.
+
+.bold[Step 3: the noise.] In the eigenbasis of $\mathbf{S}$, $\boldsymbol{\Sigma}$ has eigenvalues $\lambda\_j$ for $j \in K$ and $\sigma^2$ for the $d - m$ others, so
+$$\ell = m + \sum\_{j \in K} \log \lambda\_j + (d - m) \log \sigma^2 + \frac{1}{\sigma^2} \sum\_{j \notin K} \lambda\_j.$$
+It is minimized at $\hat{\sigma}^2 = \frac{1}{d - m} \sum\_{j \notin K} \lambda\_j$, the average of the discarded eigenvalues.
+
+---
+
+class: middle
+
+.bold[Step 4: which eigenvectors.] At $\sigma^2 = \hat{\sigma}^2$, the objective depends on $K$ only,
+$$\ell(K) = d + \sum\_{j \in K} \log \lambda\_j + (d - m) \log \hat{\sigma}^2.$$
+
+Suppose a kept $\lambda\_p$ is smaller than a discarded $\lambda\_q$, and swap them, with $\delta = \lambda\_q - \lambda\_p > 0$. Using $\log(1 + x) \leq x$,
+$$\Delta \ell = \log\left(1 + \frac{\delta}{\lambda\_p}\right) + (d - m) \log\left(1 - \frac{\delta}{(d - m) \hat{\sigma}^2}\right) \leq \delta \left( \frac{1}{\lambda\_p} - \frac{1}{\hat{\sigma}^2} \right) < 0,$$
+since $\lambda\_p > \hat{\sigma}^2$ (step 2). Every such swap lowers $\ell$: $K$ holds the $m$ largest eigenvalues.
 
 ???
 
-The last step is the least obvious. Keeping an eigenvector also requires $\lambda\_j > \hat{\sigma}^2$, so that $l\_j = (\lambda\_j - \hat{\sigma}^2)^{1/2}$ is real; Tipping and Bishop (1999) show that among the admissible choices, discarding the smallest eigenvalues gives the global maximum of the likelihood, and that the other stationary points are saddle points.
+The derivation assumes $\mathbf{B}$ of full rank $m$, so that every $l\_j > 0$. Tipping and Bishop (1999) treat the general case and show that the other stationary points, with other choices of $K$, are saddle points.
+
+After the swap, the new kept eigenvalue $\lambda\_q$ still exceeds the new, smaller $\hat{\sigma}^2$, so the swapped solution is admissible too, and the argument can be repeated until $K$ is the top $m$.
