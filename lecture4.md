@@ -33,8 +33,7 @@ $$f : \Omega \times \Xi \to \mathcal{X}.$$
 Neither $\omega$ nor $\xi$ is observed, only $\mathbf{x} = f(\omega, \xi)$.
 
 Given a distribution $p(\omega, \xi)$ over entities and conditions, $f$ induces the .bold[data distribution]
-$$p\_r(\mathbf{x}) = \iint p(\omega, \xi) \, \delta(\mathbf{x} - f(\omega, \xi)) \, d\omega \, d\xi,$$
-which is what a model has to account for, and $\theta$ stays free for the parameters of that model.
+$$p\_r(\mathbf{x}) = \iint p(\omega, \xi) \, \delta(\mathbf{x} - f(\omega, \xi)) \, d\omega \, d\xi.$$
 
 ???
 
