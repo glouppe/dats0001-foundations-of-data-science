@@ -248,9 +248,9 @@ class: middle
 
 ## Confidence or credible?
 
-For the penguins, take $\sigma$ fixed to $\hat{\sigma} = 801$ g and the prior $p(\mu) = \mathcal{N}(\mu \mid 4000, 1000^2)$ of the prior predictive check. The posterior is then Gaussian,
-$$p(\mu \mid \mathbf{x}\_\text{obs}) = \mathcal{N}(\mu \mid 4201, 43^2),$$
-and its 95% credible interval is $[4117, 4286]$ g, almost the confidence interval $[4117, 4287]$ g. The numbers nearly agree; what they say does not.
+For the penguins, take $\sigma$ fixed to $\hat{\sigma} = 801$ g and a uniform prior on $\mu$ between 0 and 10 kg. The posterior is then
+$$p(\mu \mid \mathbf{x}\_\text{obs}) \propto \mathcal{N}\left(\mu \mid \hat{\mu}, \frac{\sigma^2}{N}\right) \mathbb{1}[0 \leq \mu \leq 10000],$$
+and its 95% credible interval is $[4117, 4287]$ g, the confidence interval again. The numbers are the same; what they say is not.
 
 .grid[
 .kol-1-2[
@@ -262,16 +262,18 @@ and its 95% credible interval is $[4117, 4286]$ g, almost the confidence interva
 .kol-1-2[
 .bold[Credible interval]
 - the data are fixed, $\mu$ is random
-- $\mu$ lies in $[4117, 4286]$ g with probability 0.95
+- $\mu$ lies in $[4117, 4287]$ g with probability 0.95
 - needs a model and a prior
 ]
 ]
 
 ???
 
-The posterior follows from the conjugacy of the Gaussian prior and likelihood: precisions add, $1 / 43^2 \approx 1 / 1000^2 + N / \sigma^2$, and the posterior mean is the precision-weighted average of 4000 g and $\hat{\mu}$. The prior is so wide compared to the likelihood that it barely moves anything.
+The posterior: as a function of $\mu$, the likelihood is proportional to $\exp\left(-N (\mu - \hat{\mu})^2 / 2\sigma^2\right)$, and the uniform prior only cuts it to $[0, 10000]$ g. The Gaussian is 43 g wide around 4202 g, so the cut changes nothing visible, and the credible interval matches the confidence interval to the gram.
 
-A flat prior $p(\mu) \propto 1$ would make the two intervals coincide exactly, but it is improper: it does not integrate to one, so it is not a distribution. Here the posterior it leads to, $\mathcal{N}(\mu \mid \hat{\mu}, \sigma^2 / N)$, is still proper, but this has to be checked case by case. With an informative prior, or few data, the two intervals part ways.
+The prior is chosen to be proper and to respect what a mass is. A flat prior on all of $\mathbb{R}$ would not integrate to one, so it would not be a distribution; a Gaussian prior would give some weight to negative masses.
+
+With an informative prior, or few data, the two intervals part ways.
 
 The common mistake is to read a confidence interval as a credible interval: "$\mu$ lies in $[4117, 4287]$ g with probability 0.95". In the frequentist framework $\mu^\*$ is fixed, not random, so the sentence has no meaning there; only the posterior can say it. Conversely, a credible interval comes with no guarantee over repeated data sets.
 
