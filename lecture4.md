@@ -112,7 +112,7 @@ A point estimate says nothing about its precision. Another colony of 342 penguin
 Since $\mathbf{x} \sim p(\mathbf{x} \mid \theta^\*)$ is random, so is $\hat{\theta}(\mathbf{x})$. Its distribution is the .bold[sampling distribution] of the estimator.
 
 For the sample mean, by the central limit theorem,
-$$\hat{\mu}(\mathbf{x}) = \frac{1}{N} \sum\_{i=1}^N x\_i \sim \mathcal{N}\left(\mu^\*, \frac{{\sigma^\*}^2}{N}\right) \quad \text{approximately}.$$
+$$\hat{\mu}(\mathbf{x}) = \frac{1}{N} \sum\_{i=1}^N x\_i \sim \mathcal{N}\left(\mu^\*, \frac{\sigma^{\*2}}{N}\right) \quad \text{approximately}.$$
 Its standard deviation $\sigma^\* / \sqrt{N}$ is the .bold[standard error]: how much the estimate varies from one data set to the next.
 
 $\sigma^\*$ is unknown too, so it is replaced by its estimate. For the penguins, the estimated standard error is $\hat{\sigma} / \sqrt{N} = 801 / \sqrt{342} \approx 43$ g.
