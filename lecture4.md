@@ -746,7 +746,7 @@ class: middle
 The two curves of a panel share a scale; the panels do not.
 - Top: a precise parallax, and the posterior sits at $1/\varpi$.
 - Middle: a noisy parallax, and the posterior sits between $1/\varpi$ and where most stars are, narrower than the grey curve (1.4 against 1.8 kpc).
-- Bottom: a negative parallax only rules out the near distances. The posterior moves outwards (mode 2.1 to 3.1 kpc) with the same width.
+- Bottom: a negative parallax only rules out the near distances. The posterior moves outwards (mode 2.1 to 3.1 kpc), as wide as the grey curve.
 
 ---
 
