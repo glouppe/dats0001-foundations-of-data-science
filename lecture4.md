@@ -141,7 +141,24 @@ It is zero at $\hat{\theta}$ and grows as $\theta$ explains the data worse.
 
 ???
 
-Wilks' theorem holds as $N$ grows, under regularity conditions (the true value is not on the boundary of $\Theta$, the model is identifiable), and assumes the data come from the model. It is exact in the Gaussian case of the next slide.
+Wilks' theorem holds as $N$ grows, under regularity conditions (the true value is not on the boundary of $\Theta$, the model is identifiable), and assumes the data come from the model. It is exact in the Gaussian case that follows.
+
+---
+
+class: middle
+
+We do not know $\theta^\*$, and we do not need to: Wilks' theorem gives the distribution of $\lambda(\theta^\*; \mathbf{x})$ without using the value of $\theta^\*$. Let $c$ be the 95% quantile of $\chi^2\_k$. Whatever $\theta^\*$,
+$$P\_{\mathbf{x} \sim p(\mathbf{x} \mid \theta^\*)}\left( \lambda(\theta^\*; \mathbf{x}) \leq c \right) \approx 0.95.$$
+
+We keep every $\theta$ that passes the same test,
+$$C(\mathbf{x}) = \\{ \theta : \lambda(\theta; \mathbf{x}) \leq c \\}.$$
+Then $\theta^\* \in C(\mathbf{x})$ exactly when $\lambda(\theta^\*; \mathbf{x}) \leq c$, which happens with probability 0.95. $C(\mathbf{x})$ is a 95% confidence interval, and computing it requires only the data.
+
+The 95% is approximate because Wilks' theorem is. It replaces the log-likelihood by a parabola around $\hat{\theta}$, and the distribution of $\hat{\theta}$ by a Gaussian, both exact only as $N \to \infty$. For the mean of a Gaussian model, both hold for every $N$.
+
+???
+
+The construction in one sentence: the interval collects the values of $\theta$ that a test at level 5% would not reject. The probability statement is about $\lambda(\theta^\*; \mathbf{x})$, a function of the random data, and transfers to the random set $C(\mathbf{x})$.
 
 ---
 
@@ -169,18 +186,12 @@ $$P(Z^2 \leq c) = P(-\sqrt{c} \leq Z \leq \sqrt{c}) = 0.95 \quad \text{for } \sq
 
 class: middle
 
-Keep every $\theta$ the data do not rule out,
-$$C(\mathbf{x}) = \\{ \theta : \lambda(\theta; \mathbf{x}) \leq c \\},$$
-with $c$ the 95% quantile of $\chi^2\_k$. Then $\theta^\* \in C(\mathbf{x})$ exactly when $\lambda(\theta^\*; \mathbf{x}) \leq c$, which happens with probability 0.95.
-
-.center.width-50[![](figures/lec4/likelihood-ratio.svg)]
+.center.width-65[![](figures/lec4/likelihood-ratio.svg)]
 
 For the penguins, $\lambda(\mu; \mathbf{x}) \leq 3.84$ exactly when $|\hat{\mu} - \mu| \leq 1.96 \, \sigma / \sqrt{N}$, hence
 $$C(\mathbf{x}) = \hat{\mu} \pm 1.96 \frac{\sigma}{\sqrt{N}} = [4117, 4287] \text{ g}.$$
 
 ???
-
-The construction in one sentence: the interval collects the values of $\theta$ that a test at level 5% would not reject. The probability statement is about $\lambda(\theta^\*; \mathbf{x})$, a function of the random data, and transfers to the random set $C(\mathbf{x})$.
 
 The width of the interval is set by the curvature of the log-likelihood: the more data, the sharper the parabola, the narrower the interval.
 
