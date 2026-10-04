@@ -156,7 +156,7 @@ Define
 $$C(\mathbf{x}) = \\{ \theta : \lambda(\theta; \mathbf{x}) \leq c \\}.$$
 Since $\theta^\* \in C(\mathbf{x}) \iff \lambda(\theta^\*; \mathbf{x}) \leq c$, the two events have the same probability:
 $$P\_{\mathbf{x} \sim p(\mathbf{x} \mid \theta^\*)}\left( \theta^\* \in C(\mathbf{x}) \right) \approx 0.95 \quad \text{whatever } \theta^\*.$$
-$C(\mathbf{x})$ is an approximate 95% confidence interval.
+$C(\mathbf{x})$ is a 95% confidence interval, up to the large-$N$ approximation of Wilks' theorem.
 
 ???
 
