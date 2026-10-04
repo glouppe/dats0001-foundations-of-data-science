@@ -303,7 +303,7 @@ and its 95% credible interval is $[4117, 4287]$ g, the confidence interval again
 .kol-1-2[
 .bold[Credible interval]
 - the data are fixed, $\mu$ is random
-- $\mu$ lies in $[4117, 4287]$ g with probability 0.95
+- $\mu$ is believed to lie in $[4117, 4287]$ g with probability 0.95
 - needs a model and a prior
 ]
 ]
@@ -316,7 +316,7 @@ The prior on $\mu$ is the one of the prior predictive check. It is chosen to be 
 
 With an informative prior, or few data, the two intervals part ways.
 
-The common mistake is to read a confidence interval as a credible interval: "$\mu$ lies in $[4117, 4287]$ g with probability 0.95". In the frequentist framework $\mu^\*$ is fixed, not random, so the sentence has no meaning there; only the posterior can say it. Conversely, a credible interval comes with no guarantee over repeated data sets.
+The common mistake is to read a confidence interval as a credible interval: "$\mu$ lies in $[4117, 4287]$ g with probability 0.95". In the frequentist framework $\mu^\*$ is fixed, not random, so the sentence has no meaning there; only the posterior can say it, as a degree of belief given the model, the prior and the data. Conversely, a credible interval comes with no guarantee over repeated data sets.
 
 ---
 
