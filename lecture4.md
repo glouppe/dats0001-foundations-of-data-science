@@ -152,13 +152,15 @@ class: middle
 $\theta^\*$ is unknown, but Wilks' theorem does not need it. With $c$ the 95% quantile of $\chi^2\_k$,
 $$P\_{\mathbf{x} \sim p(\mathbf{x} \mid \theta^\*)}\left( \lambda(\theta^\*; \mathbf{x}) \leq c \right) \approx 0.95 \quad \text{whatever } \theta^\*.$$
 
-Hence the set
-$$C(\mathbf{x}) = \\{ \theta : \lambda(\theta; \mathbf{x}) \leq c \\}$$
-contains $\theta^\*$ with probability close to 0.95: it is an approximate 95% confidence interval.
+Define
+$$C(\mathbf{x}) = \\{ \theta : \lambda(\theta; \mathbf{x}) \leq c \\}.$$
+Since $\theta^\* \in C(\mathbf{x}) \iff \lambda(\theta^\*; \mathbf{x}) \leq c$, the two events have the same probability:
+$$P\_{\mathbf{x} \sim p(\mathbf{x} \mid \theta^\*)}\left( \theta^\* \in C(\mathbf{x}) \right) \approx 0.95 \quad \text{whatever } \theta^\*.$$
+$C(\mathbf{x})$ is an approximate 95% confidence interval.
 
 ???
 
-$\theta^\* \in C(\mathbf{x})$ exactly when $\lambda(\theta^\*; \mathbf{x}) \leq c$. The interval collects the values of $\theta$ that a test at level 5% would not reject, and computing it requires only the data.
+The interval collects the values of $\theta$ that a test at level 5% would not reject, and computing it requires only the data.
 
 The 95% is approximate because Wilks' theorem is: it replaces the log-likelihood by a parabola around $\hat{\theta}$, and the distribution of $\hat{\theta}$ by a Gaussian, both exact only as $N \to \infty$. For the mean of a Gaussian model, both hold for every $N$.
 
