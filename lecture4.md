@@ -465,9 +465,9 @@ where
 
 class: middle
 
-When $\sigma^2 \to 0$, and writing the posterior in the equivalent form $\boldsymbol{\mu}\_{z \mid x} = (\mathbf{B}^T\mathbf{B} + \sigma^2 \mathbf{I})^{-1} \mathbf{B}^T (\mathbf{x} - \boldsymbol{\mu})$ and $\boldsymbol{\Sigma}\_{z \mid x} = \sigma^2 (\mathbf{B}^T\mathbf{B} + \sigma^2 \mathbf{I})^{-1}$,
-- $\boldsymbol{\mu}\_{z \mid x} \to (\mathbf{B}^T\mathbf{B})^{-1} \mathbf{B}^T (\mathbf{x} - \boldsymbol{\mu})$. If the columns of $\mathbf{B}$ are orthonormal, this is $\mathbf{B}^T (\mathbf{x} - \boldsymbol{\mu})$, the PCA projection of $\mathbf{x}$ onto the subspace spanned by the columns of $\mathbf{B}$.
-- $\boldsymbol{\Sigma}\_{z \mid x} \to \mathbf{0}$, so the posterior collapses to a point mass at that projection.
+When $\sigma^2 \to 0$, $\mathbf{B}^T (\mathbf{B}\mathbf{B}^T + \sigma^2 \mathbf{I})^{-1} \to \mathbf{B}^+$, the pseudo-inverse of $\mathbf{B}$, so
+- $\boldsymbol{\mu}\_{z \mid x} \to \mathbf{B}^+ (\mathbf{x} - \boldsymbol{\mu})$. If the columns of $\mathbf{B}$ are orthonormal, $\mathbf{B}^+ = \mathbf{B}^T$ and this is the PCA projection of $\mathbf{x}$.
+- $\boldsymbol{\Sigma}\_{z \mid x} \to \mathbf{I} - \mathbf{B}^+ \mathbf{B} = \mathbf{0}$: the posterior collapses to a point mass at that projection.
 
 .alert[Probabilistic PCA recovers classical PCA in the limit of vanishing noise!]
 
