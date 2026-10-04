@@ -341,7 +341,7 @@ class: middle
 
 Latent variable models can be represented as .bold[directed graphical models]: a directed acyclic graph with one node per variable (observed, latent, or parameter), and an edge $a \to b$ whenever $a$ appears in the conditional distribution of $b$.
 
-The joint distribution is the product of one factor per node, given its parents $\text{pa}(v)$ in the graph,
+The joint distribution is the product of one factor per node $v\_k$, its distribution given its parents $\text{pa}(v\_k)$ in the graph,
 $$p(v\_1, \ldots, v\_K) = \prod\_{k=1}^K p(v\_k \mid \text{pa}(v\_k)).$$
 
 Followed along the edges, the graph is also the generative process: each variable is sampled once its parents are. A missing edge is an assumption: it removes a dependency from the factorization.
