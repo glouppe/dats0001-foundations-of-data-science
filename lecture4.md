@@ -680,7 +680,7 @@ class: middle
 $$p(\varpi\_i \mid r\_i, \sigma\_i) = \mathcal{N}(\varpi\_i \mid 1/r\_i, \sigma\_i^2),$$
 which is why a measured parallax can be negative while a distance cannot.
 
-.bold[The Galaxy.] Stars are not spread evenly: a shell at distance $r$ has a volume growing like $r^2$, and their density thins out with distance, modelled as an exponential of scale length $L$,
+.bold[The Galaxy.] Far away, there is more room for stars: the points at distance $r$ form a sphere whose area grows like $r^2$. But stars also thin out with distance, modelled as an exponential decay of scale length $L$,
 $$p(r\_i \mid L) = \frac{r\_i^2}{2L^3} \exp(-r\_i / L), \qquad r\_i > 0.$$
 That scale length is unknown too, and belongs to the Galaxy rather than to any star, so it gets a vague prior of its own, $p(L) = \text{Uniform}(L \mid 0, 5)$.
 
