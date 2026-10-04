@@ -487,20 +487,11 @@ $$p(\mathbf{x} \mid \mathbf{B}, \boldsymbol{\mu}, \sigma^2) = \mathcal{N}(\mathb
 class: middle
 
 Therefore, writing $\boldsymbol{\Sigma} = \mathbf{B}\mathbf{B}^T + \sigma^2 \mathbf{I}$, maximum likelihood estimation reduces to
-$$\begin{aligned}
-(\hat{\mathbf{B}}, \hat{\boldsymbol{\mu}}, \hat{\sigma}^2) &= \arg\max\_{\mathbf{B}, \boldsymbol{\mu}, \sigma^2} \prod\_{i=1}^N \mathcal{N}(\mathbf{x}\_i \mid \boldsymbol{\mu}, \boldsymbol{\Sigma}) \\\\
-&= \arg\min\_{\mathbf{B}, \boldsymbol{\mu}, \sigma^2} \sum\_{i=1}^N (\mathbf{x}\_i - \boldsymbol{\mu})^T \boldsymbol{\Sigma}^{-1} (\mathbf{x}\_i - \boldsymbol{\mu}) + N \log |\boldsymbol{\Sigma}| \\\\
-&= \arg\min\_{\mathbf{B}, \boldsymbol{\mu}, \sigma^2} N \\, \text{tr}(\boldsymbol{\Sigma}^{-1} \mathbf{S}) + N \log |\boldsymbol{\Sigma}|,
-\end{aligned}$$
-where $\mathbf{S} = \frac{1}{N} \sum\_{i=1}^N (\mathbf{x}\_i - \boldsymbol{\mu})(\mathbf{x}\_i - \boldsymbol{\mu})^T$ is the sample covariance matrix.
-
----
-
-class: middle
+$$(\hat{\mathbf{B}}, \hat{\boldsymbol{\mu}}, \hat{\sigma}^2) = \arg\max\_{\mathbf{B}, \boldsymbol{\mu}, \sigma^2} \prod\_{i=1}^N \mathcal{N}(\mathbf{x}\_i \mid \boldsymbol{\mu}, \boldsymbol{\Sigma}).$$
 
 The solution can be derived in closed form, yielding
 - $\hat{\boldsymbol{\mu}} = \frac{1}{N} \sum\_{i=1}^N \mathbf{x}\_i$ (the sample mean),
-- $\hat{\mathbf{B}} = \mathbf{U}\_m (\boldsymbol{\Lambda}\_m - \hat{\sigma}^2 \mathbf{I})^{1/2} \mathbf{R}$, where $\mathbf{U}\_m$ holds the top $m$ eigenvectors of $\mathbf{S}$, $\boldsymbol{\Lambda}\_m$ the corresponding eigenvalues, and $\mathbf{R}$ is an arbitrary rotation matrix,
+- $\hat{\mathbf{B}} = \mathbf{U}\_m (\boldsymbol{\Lambda}\_m - \hat{\sigma}^2 \mathbf{I})^{1/2} \mathbf{R}$, where $\mathbf{U}\_m$ holds the top $m$ eigenvectors of the sample covariance matrix $\mathbf{S} = \frac{1}{N} \sum\_{i=1}^N (\mathbf{x}\_i - \hat{\boldsymbol{\mu}})(\mathbf{x}\_i - \hat{\boldsymbol{\mu}})^T$, $\boldsymbol{\Lambda}\_m$ the corresponding eigenvalues, and $\mathbf{R}$ is an arbitrary rotation matrix,
 - $\hat{\sigma}^2 = \frac{1}{d - m} \sum\_{j=m+1}^d \lambda\_j$, where $\lambda\_j$ are the eigenvalues of $\mathbf{S}$.
 
 Since $\mathbf{R}$ is free, $\mathbf{B}$ is identified only up to a rotation: the model pins down the latent subspace, not the coordinates within it.
@@ -509,10 +500,7 @@ Since $\mathbf{R}$ is free, $\mathbf{B}$ is identified only up to a rotation: th
 
 The rotation is why the latent coordinates of probabilistic PCA should not be read one by one, unlike the components of PCA, which the choice $\mathbf{R} = \mathbf{I}$ recovers.
 
-Intuitive explanation for the solution:
-- $\hat{\mu}$ is the sample mean because it minimizes the squared deviations from the mean. This appears in the log-likelihood as the term $(x\_i - \mu)^T \Sigma^{-1} (x\_i - \mu)$.
-- $\hat{B}$ is related to the top $m$ eigenvectors of $S$ because these directions capture the most variance in the data. The term $\text{tr}(\Sigma^{-1} S)$ in the log-likelihood encourages $\Sigma$ to align with the directions of high variance in $S$.
-- $\hat{\sigma}^2$ is the average of the remaining eigenvalues because it represents the isotropic noise variance that accounts for the variance not captured by the top $m$ components. The term $\log |\Sigma|$ in the log-likelihood penalizes overly complex models, leading to a balance between fitting the data and maintaining a reasonable noise level.
+$\hat{\mathbf{B}}$ spans the $m$ directions of largest variance; $\hat{\sigma}^2$ is the average variance left in the others.
 
 ---
 
