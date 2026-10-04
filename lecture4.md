@@ -349,6 +349,8 @@ Read along the arrows, the graph is the generative process. A missing arrow is a
 
 class: middle
 
+A latent variable model with $N = 3$ observations, as a graphical model:
+
 .center.width-50[![](figures/lec4/lvm-unrolled.svg)]
 
 $$p(\mathbf{x}\_{1:3}, \mathbf{z}\_{1:3}, \theta) = \left( \prod\_{i=1}^3 p(\mathbf{x}\_i \mid \mathbf{z}\_i) p(\mathbf{z}\_i \mid \theta) \right) p(\theta)$$
