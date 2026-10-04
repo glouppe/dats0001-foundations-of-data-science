@@ -129,70 +129,65 @@ class: middle
 
 ## Confidence interval
 
-A 95% .bold[confidence interval] is a set $C(\mathbf{x})$ of parameter values, computed from the data, such that
-$$P\_{\mathbf{x} \sim p(\mathbf{x} \mid \theta^\*)}\left( \theta^\* \in C(\mathbf{x}) \right) = 0.95$$
-for every $\theta^\*$. The probability is over the data: $C(\mathbf{x})$ is random, $\theta^\*$ is fixed.
+A 95% .bold[confidence interval] is a set $C(\mathbf{x})$ computed from the data such that, for every $\theta^\*$,
+$$P\_{\mathbf{x} \sim p(\mathbf{x} \mid \theta^\*)}\left( \theta^\* \in C(\mathbf{x}) \right) = 0.95.$$
 
-To build one, we compare each $\theta$ with the maximum likelihood estimate $\hat{\theta}(\mathbf{x})$ through the .bold[likelihood ratio]
-$$\lambda(\theta; \mathbf{x}) = -2 \log \frac{p(\mathbf{x} \mid \theta)}{p(\mathbf{x} \mid \hat{\theta}(\mathbf{x}))} \geq 0.$$
-It is zero at $\hat{\theta}$ and grows as $\theta$ explains the data worse.
+The .bold[likelihood ratio] compares each $\theta$ with the maximum likelihood estimate,
+$$\lambda(\theta; \mathbf{x}) = -2 \log \frac{p(\mathbf{x} \mid \theta)}{p(\mathbf{x} \mid \hat{\theta}(\mathbf{x}))}.$$
 
-.bold[Wilks' theorem.] If $\mathbf{x} \sim p(\mathbf{x} \mid \theta^\*)$, then $\lambda(\theta^\*; \mathbf{x})$ is approximately $\chi^2\_k$ distributed for large $N$, whatever $\theta^\*$, where $k$ is the dimension of $\theta$.
+.bold[Wilks' theorem.] If $\mathbf{x} \sim p(\mathbf{x} \mid \theta^\*)$, then $\lambda(\theta^\*; \mathbf{x})$ is approximately $\chi^2\_k$ distributed, whatever $\theta^\*$.
 
 ???
 
-Wilks' theorem holds as $N$ grows, under regularity conditions (the true value is not on the boundary of $\Theta$, the model is identifiable), and assumes the data come from the model. It is exact in the Gaussian case that follows.
+The probability is over the data: $C(\mathbf{x})$ is random, $\theta^\*$ is fixed.
+
+$\lambda$ is zero at $\hat{\theta}$ and grows as $\theta$ explains the data worse. $k$ is the dimension of $\theta$.
+
+Wilks' theorem holds as $N$ grows, under regularity conditions (the true value is not on the boundary of $\Theta$, the model is identifiable), and assumes the data come from the model.
 
 ---
 
 class: middle
 
-We do not know $\theta^\*$, and we do not need to. Wilks' theorem gives the distribution of $\lambda(\theta^\*; \mathbf{x})$ without using the value of $\theta^\*$. Let $c$ be the 95% quantile of $\chi^2\_k$. Whatever $\theta^\*$,
-$$P\_{\mathbf{x} \sim p(\mathbf{x} \mid \theta^\*)}\left( \lambda(\theta^\*; \mathbf{x}) \leq c \right) \approx 0.95.$$
+$\theta^\*$ is unknown, but Wilks' theorem does not need it. With $c$ the 95% quantile of $\chi^2\_k$,
+$$P\_{\mathbf{x} \sim p(\mathbf{x} \mid \theta^\*)}\left( \lambda(\theta^\*; \mathbf{x}) \leq c \right) \approx 0.95 \quad \text{whatever } \theta^\*.$$
 
-We keep every $\theta$ that passes the same test,
-$$C(\mathbf{x}) = \\{ \theta : \lambda(\theta; \mathbf{x}) \leq c \\}.$$
-Then $\theta^\* \in C(\mathbf{x})$ exactly when $\lambda(\theta^\*; \mathbf{x}) \leq c$, which happens with probability close to 0.95. $C(\mathbf{x})$ is an approximate 95% confidence interval, and computing it requires only the data.
-
-The 95% is approximate because Wilks' theorem is. It replaces the log-likelihood by a parabola around $\hat{\theta}$, and the distribution of $\hat{\theta}$ by a Gaussian, both exact only as $N \to \infty$. For the mean of a Gaussian model, both hold for every $N$.
+Hence the set
+$$C(\mathbf{x}) = \\{ \theta : \lambda(\theta; \mathbf{x}) \leq c \\}$$
+contains $\theta^\*$ with probability close to 0.95: it is an approximate 95% confidence interval.
 
 ???
 
-The construction in one sentence: the interval collects the values of $\theta$ that a test at level 5% would not reject. The probability statement is about $\lambda(\theta^\*; \mathbf{x})$, a function of the random data, and transfers to the random set $C(\mathbf{x})$.
+$\theta^\* \in C(\mathbf{x})$ exactly when $\lambda(\theta^\*; \mathbf{x}) \leq c$. The interval collects the values of $\theta$ that a test at level 5% would not reject, and computing it requires only the data.
+
+The 95% is approximate because Wilks' theorem is: it replaces the log-likelihood by a parabola around $\hat{\theta}$, and the distribution of $\hat{\theta}$ by a Gaussian, both exact only as $N \to \infty$. For the mean of a Gaussian model, both hold for every $N$.
 
 ---
 
 class: middle
 
-For the mean body mass, with $\sigma$ fixed to $\hat{\sigma} = 801$ g, the log-likelihood of the Gaussian model is
-$$\log p(\mathbf{x} \mid \mu) = -\frac{1}{2\sigma^2} \sum\_{i=1}^N (x\_i - \mu)^2 - N \log \left(\sqrt{2\pi} \sigma\right).$$
-In the likelihood ratio, the constant term cancels:
-$$\lambda(\mu; \mathbf{x}) = -2 \left( \log p(\mathbf{x} \mid \mu) - \log p(\mathbf{x} \mid \hat{\mu}) \right) = \frac{1}{\sigma^2} \left( \sum\_i (x\_i - \mu)^2 - \sum\_i (x\_i - \hat{\mu})^2 \right).$$
-Write $x\_i - \mu = (x\_i - \hat{\mu}) + (\hat{\mu} - \mu)$ and expand the square. The cross term $2 (\hat{\mu} - \mu) \sum\_i (x\_i - \hat{\mu})$ is zero, since $\hat{\mu}$ is the mean, so
-$$\sum\_i (x\_i - \mu)^2 = \sum\_i (x\_i - \hat{\mu})^2 + N (\hat{\mu} - \mu)^2 \quad \Rightarrow \quad \lambda(\mu; \mathbf{x}) = \frac{N (\hat{\mu} - \mu)^2}{\sigma^2}.$$
+For the mean body mass, with $\sigma$ fixed to $\hat{\sigma} = 801$ g,
+$$\lambda(\mu; \mathbf{x}) = \frac{1}{\sigma^2} \sum\_{i=1}^N \left[ (x\_i - \mu)^2 - (x\_i - \hat{\mu})^2 \right] = \frac{N (\hat{\mu} - \mu)^2}{\sigma^2}.$$
 
----
-
-class: middle
-
-Wilks' theorem is exact here. If $\mathbf{x} \sim p(\mathbf{x} \mid \mu^\*)$, each $x\_i$ is drawn independently from $\mathcal{N}(\mu^\*, \sigma^2)$, and their mean is Gaussian too,
-$$\hat{\mu}(\mathbf{x}) \sim \mathcal{N}\left(\mu^\*, \frac{\sigma^2}{N}\right), \quad \text{so} \quad Z = \frac{\hat{\mu}(\mathbf{x}) - \mu^\*}{\sigma / \sqrt{N}} \sim \mathcal{N}(0, 1).$$
-At $\mu = \mu^\*$, the likelihood ratio is the square of $Z$,
-$$\lambda(\mu^\*; \mathbf{x}) = \frac{N (\hat{\mu}(\mathbf{x}) - \mu^\*)^2}{\sigma^2} = Z^2.$$
-The square of a standard Gaussian is, by definition, $\chi^2\_1$ distributed. Its 95% quantile follows from the Gaussian one,
-$$P(Z^2 \leq c) = P(-\sqrt{c} \leq Z \leq \sqrt{c}) = 0.95 \quad \text{for } \sqrt{c} = 1.96, \text{ that is } c = 3.84.$$
+If $\mathbf{x} \sim p(\mathbf{x} \mid \mu^\*)$, then $\hat{\mu} \sim \mathcal{N}(\mu^\*, \sigma^2 / N)$, so
+$$\lambda(\mu^\*; \mathbf{x}) = Z^2, \quad Z = \frac{\hat{\mu} - \mu^\*}{\sigma / \sqrt{N}} \sim \mathcal{N}(0, 1).$$
+Wilks' theorem is exact: $\lambda(\mu^\*; \mathbf{x}) \sim \chi^2\_1$, and $c = 1.96^2 = 3.84$.
 
 ???
 
-Exact for a known $\sigma$. With $\hat{\sigma}$ plugged in, $\lambda(\mu^\*; \mathbf{x})$ is only close to $\chi^2\_1$, and Student's $t$ distribution gives the exact answer (next slide's notes); with 342 penguins, the difference is in the last gram.
+The first equality: $\log p(\mathbf{x} \mid \mu) = -\frac{1}{2\sigma^2} \sum\_i (x\_i - \mu)^2 - N \log(\sqrt{2\pi} \sigma)$, and the constant cancels in the ratio. The second: write $x\_i - \mu = (x\_i - \hat{\mu}) + (\hat{\mu} - \mu)$ and expand; the cross term $2 (\hat{\mu} - \mu) \sum\_i (x\_i - \hat{\mu})$ is zero since $\hat{\mu}$ is the mean.
+
+$\hat{\mu}$ is Gaussian because it is an average of independent Gaussians. The square of a standard Gaussian is $\chi^2\_1$ by definition, and $P(Z^2 \leq c) = P(-\sqrt{c} \leq Z \leq \sqrt{c}) = 0.95$ for $\sqrt{c} = 1.96$.
+
+Exact for a known $\sigma$. With $\hat{\sigma}$ plugged in, $\lambda(\mu^\*; \mathbf{x})$ is only close to $\chi^2\_1$, and Student's $t$ distribution gives the exact answer; with 342 penguins, the difference is in the last gram.
 
 ---
 
 class: middle
 
-.center.width-65[![](figures/lec4/likelihood-ratio.svg)]
+.center.width-70[![](figures/lec4/likelihood-ratio.svg)]
 
-For the penguins, $\lambda(\mu; \mathbf{x}) \leq 3.84$ exactly when $|\hat{\mu} - \mu| \leq 1.96 \, \sigma / \sqrt{N}$, hence
+$\lambda(\mu; \mathbf{x}) \leq 3.84$ gives
 $$C(\mathbf{x}) = \hat{\mu} \pm 1.96 \frac{\sigma}{\sqrt{N}} = [4117, 4287] \text{ g}.$$
 
 ???
@@ -205,19 +200,19 @@ Fixing $\sigma$ to its estimate is a shortcut. The rigorous version maximizes ov
 
 class: middle
 
-.center.width-65[![](figures/lec4/confidence-intervals.svg)]
+.center.width-70[![](figures/lec4/confidence-intervals.svg)]
 
-.center[50 colonies of 342 penguins simulated from the model with $\mu^\ast = 4200$ g, and the interval $C(\mathbf{x}) = \hat{\mu} \pm 1.96 \, \hat{\sigma} / \sqrt{N}$ each gives. Three of them miss $\mu^\ast$.]
+.center[50 colonies simulated from the model with $\mu^\ast = 4200$ g. Three intervals miss $\mu^\ast$.]
 
-.alert[The 95% is a property of $C$, the way intervals are built. One computed interval, such as $[4117, 4287]$ g, either contains $\mu^\ast$ or does not.]
+.alert[The 95% is a property of $C$, not of one interval. $[4117, 4287]$ g either contains $\mu^\ast$ or does not.]
 
 ???
+
+Each colony has 342 penguins and gives its own interval $\hat{\mu} \pm 1.96 \, \hat{\sigma} / \sqrt{N}$, with its own $\hat{\sigma}$: the intervals do not all have the same width.
 
 This is the only setting where $\mu^\*$ is known: data simulated from the model, at a value we chose. With real data, we never know whether our interval is one of the 47 or one of the 3.
 
 The same simulation can be run without the model: resampling the 342 penguins with replacement (the bootstrap) stands in for measuring new colonies, with the mean of the 342 penguins in the role of $\mu^\*$.
-
-Each colony uses its own $\hat{\sigma}$, as the penguins do: the intervals do not all have the same width.
 
 ---
 
