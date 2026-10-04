@@ -418,7 +418,7 @@ The denominator $p(\mathbf{x}\_\text{obs})$ is the marginal likelihood one level
 
 class: middle
 
-Many data generating processes are a cascade of variables, each produced from the ones before it. Only the last ones are observed, through a measurement process; the others are latent:
+Models of data generating processes are often written as a cascade of variables, each produced from the ones before it. Only the last ones are observed, through a measurement process; the others are latent:
 $$\underbrace{\theta \to \mathbf{z}\_1 \to \cdots \to \mathbf{z}\_L}\_{\text{latent}} \to \underbrace{\mathbf{x}}\_{\text{measured}}$$
 
 - .bold[Astronomy]: Galaxy $\to$ distance of a star $\to$ parallax.
