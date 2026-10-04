@@ -500,7 +500,10 @@ Since $\mathbf{R}$ is free, $\mathbf{B}$ is identified only up to a rotation: th
 
 The rotation is why the latent coordinates of probabilistic PCA should not be read one by one, unlike the components of PCA, which the choice $\mathbf{R} = \mathbf{I}$ recovers.
 
-$\hat{\mathbf{B}}$ spans the $m$ directions of largest variance; $\hat{\sigma}^2$ is the average variance left in the others.
+The fit makes the model covariance $\mathbf{B}\mathbf{B}^T + \sigma^2 \mathbf{I}$ match the sample covariance $\mathbf{S}$ as well as it can.
+- $\hat{\boldsymbol{\mu}}$: since $\mathbf{z}$ has mean zero, the model's mean of $\mathbf{x}$ is $\boldsymbol{\mu}$, so it is set to the centre of the data.
+- $\hat{\mathbf{B}}$: the $m$ columns point along the $m$ directions in which the data vary most. Along each, the observed variance $\lambda\_j$ is split into noise, $\sigma^2$, and the rest, $\lambda\_j - \sigma^2$, which $\mathbf{z}$ explains; hence the square root.
+- $\hat{\sigma}^2$: along the $d - m$ other directions, the model has nothing but noise to explain the variance, and one isotropic noise level for all of them; the best one is their average variance.
 
 ---
 
