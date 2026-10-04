@@ -139,7 +139,7 @@ $C(\mathbf{x})$ is random, $\theta^\*$ is fixed. Wilks' theorem also needs regul
 
 class: middle
 
-$\theta^\*$ is unknown, but Wilks' theorem does not need it. With $c$ the 95% quantile of $\chi^2\_k$,
+Wilks' theorem does not require knowing $\theta^\*$. With $c$ the 95% quantile of $\chi^2\_k$,
 $$P\_{\mathbf{x} \sim p(\mathbf{x} \mid \theta^\*)}\left( \lambda(\theta^\*; \mathbf{x}) \leq c \right) \approx 0.95 \quad \text{whatever } \theta^\*.$$
 
 Define
@@ -189,7 +189,7 @@ class: middle
 
 .center[50 colonies simulated from the model with $\mu^\ast = 4200$ g. Three intervals miss $\mu^\ast$.]
 
-.alert[The 95% is a property of $C$, not of one interval. $[4117, 4287]$ g either contains $\mu^\ast$ or does not.]
+.alert[95% of the intervals built by $C$ contain $\mu^\ast$. Whether $[4117, 4287]$ g does is unknown.]
 
 ???
 
@@ -265,7 +265,7 @@ class: middle
 
 For the penguins, take $\sigma$ fixed to $\hat{\sigma} = 801$ g and a uniform prior on $\mu$ between 0 and 10 kg. The posterior is then
 $$p(\mu \mid \mathbf{x}\_\text{obs}) \propto \mathcal{N}\left(\mu \mid \hat{\mu}, \frac{\sigma^2}{N}\right) \mathbb{1}[0 \leq \mu \leq 10000],$$
-and its 95% credible interval is $[4117, 4287]$ g, the confidence interval again. The numbers are the same; what they say is not.
+and its 95% credible interval is $[4117, 4287]$ g, the confidence interval again. The two intervals differ in meaning:
 
 .grid[
 .kol-1-2[
@@ -494,7 +494,7 @@ The solution can be derived in closed form, yielding
 - $\hat{\mathbf{B}} = \mathbf{U}\_m (\boldsymbol{\Lambda}\_m - \hat{\sigma}^2 \mathbf{I})^{1/2} \mathbf{R}$, where $\mathbf{U}\_m$ holds the top $m$ eigenvectors of the sample covariance matrix $\mathbf{S} = \frac{1}{N} \sum\_{i=1}^N (\mathbf{x}\_i - \hat{\boldsymbol{\mu}})(\mathbf{x}\_i - \hat{\boldsymbol{\mu}})^T$, $\boldsymbol{\Lambda}\_m$ the corresponding eigenvalues, and $\mathbf{R}$ is an arbitrary rotation matrix,
 - $\hat{\sigma}^2 = \frac{1}{d - m} \sum\_{j=m+1}^d \lambda\_j$, where $\lambda\_j$ are the eigenvalues of $\mathbf{S}$.
 
-Since $\mathbf{R}$ is free, $\mathbf{B}$ is identified only up to a rotation: the model pins down the latent subspace, not the coordinates within it.
+Since $\mathbf{R}$ is free, $\mathbf{B}$ is identified only up to a rotation: the model determines the latent subspace, and any orthonormal basis of it fits the data equally well.
 
 ???
 
@@ -552,7 +552,7 @@ Sampling from the posterior is the subject of Lecture 6 (MCMC), approximating it
 
 A mixture is identified only up to a permutation of its components: relabelling them leaves the distribution unchanged, so the posterior has $K!$ equivalent modes. This label switching is why a sampler exploring the posterior of a mixture visits several equivalent modes, and why averaging the draws of $\boldsymbol{\mu}\_k$ across them is meaningless. We come back to this multimodality in L6.
 
-Deriving clustering from a latent variable model provides a probabilistic interpretation of cluster assignments as the most likely latent variables that could have generated the observed data. It provides a principled narrative with explicit assumptions rather than a mere algorithmic recipe.
+Deriving clustering from a latent variable model provides a probabilistic interpretation of cluster assignments as the most likely latent variables that could have generated the observed data.
 
 ---
 
@@ -654,7 +654,7 @@ Distances are what turn a catalogue of angles and brightnesses into physics:
 
 The distance turns how bright a star looks into how bright it is: $M = m - 5 \log\_{10}(r / 10\\,\text{pc})$.
 
-Everything downstream inherits the uncertainty on $r\_i$: hence a posterior, not a number.
+Everything downstream inherits the uncertainty on $r\_i$, which a posterior carries.
 
 ---
 
@@ -662,13 +662,13 @@ class: middle
 
 .center.width-65[![](figures/lec4/gaia-parallaxes.png)]
 
-.center[5000 stars from Gaia DR3, each parallax $\varpi\_i$ reported with an uncertainty $\sigma\_i$.<br> For 82% of them $\varpi\_i < 5 \sigma\_i$; for the 17% below the line, $1/\varpi\_i$ is not a distance.]
+.center[5000 stars from Gaia DR3, each parallax $\varpi\_i$ reported with an uncertainty $\sigma\_i$.<br> For 82% of them $\varpi\_i < 5 \sigma\_i$; for the 17% below the line, $1/\varpi\_i$ is negative.]
 
 .footnote[Data: ESA/Gaia/DPAC, Gaia DR3.]
 
 ???
 
-A negative parallax is a noisy measurement of a small positive angle, not an error. Keeping only the good parallaxes would restrict the sample to nearby stars.
+A negative parallax is a noisy measurement of a small positive angle. Keeping only the good parallaxes would restrict the sample to nearby stars.
 
 ---
 
@@ -680,9 +680,9 @@ class: middle
 $$p(\varpi\_i \mid r\_i, \sigma\_i) = \mathcal{N}(\varpi\_i \mid 1/r\_i, \sigma\_i^2),$$
 which is why a measured parallax can be negative while a distance cannot.
 
-.bold[The Galaxy.] Far away, there is more room for stars, but fewer stars per unit of room:
+.bold[The Galaxy.] The number of stars at distance $r\_i$ grows with the room available and decreases with their density:
 $$p(r\_i \mid L) \propto \underbrace{r\_i^2}\_{\text{room at distance } r\_i} \times \underbrace{\exp(-r\_i / L)}\_{\text{density of stars}}, \qquad r\_i > 0.$$
-The scale length $L$ of the decay is unknown too, and belongs to the Galaxy rather than to any star, so it gets a vague prior of its own, $p(L) = \text{Uniform}(L \mid 0, 5)$.
+The scale length $L$ of the decay is unknown too, and shared by all stars, so it gets a vague prior of its own, $p(L) = \text{Uniform}(L \mid 0, 5)$.
 
 ???
 
@@ -708,7 +708,7 @@ class: middle
 $$p(L \mid \varpi\_{1:N}, \sigma\_{1:N}) \propto p(L) \prod\_{i=1}^N \int p(\varpi\_i \mid r\_i, \sigma\_i) \, p(r\_i \mid L) \, dr\_i,$$
 the marginal likelihood of the catalogue, times the prior.
 
-One parallax constrains $L$ almost not at all: a single noisy angle is compatible with nearly any value. Five thousand of them together are not.
+Each star contributes one factor. One noisy parallax barely constrains $L$; the product over 5000 stars pins it down.
 
 ???
 
@@ -743,7 +743,7 @@ class: middle
 
 ???
 
-The two curves of a panel share a scale; the panels do not.
+Each panel has its own vertical scale.
 - Top: a precise parallax, and the posterior sits at $1/\varpi$.
 - Middle: a noisy parallax, and the posterior sits between $1/\varpi$ and where most stars are, narrower than the grey curve (1.4 against 1.8 kpc).
 - Bottom: a negative parallax only rules out the near distances. The posterior moves outwards (mode 2.1 to 3.1 kpc), as wide as the grey curve.
@@ -756,7 +756,7 @@ class: middle
 
 Every term of this model came from somewhere: the geometry from the definition of a parallax, the error model from the instrument, the prior from the way stars fill the Galaxy.
 
-.bold[A model is an argument about how the data came to be], not a stack of convenient distributions. Each assumption can be named, defended, and attacked.
+.bold[A model is an argument about how the data came to be.] Each assumption can be named, defended, and attacked.
 
 .footnote[Credits: [Bailer-Jones et al.](https://doi.org/10.3847/1538-3881/abd806), 2021.]
 
