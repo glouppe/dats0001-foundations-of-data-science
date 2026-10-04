@@ -680,13 +680,13 @@ class: middle
 $$p(\varpi\_i \mid r\_i, \sigma\_i) = \mathcal{N}(\varpi\_i \mid 1/r\_i, \sigma\_i^2),$$
 which is why a measured parallax can be negative while a distance cannot.
 
-.bold[The Galaxy.] Far away, there is more room for stars: the points at distance $r$ form a sphere whose area grows like $r^2$. But stars also thin out with distance, modelled as an exponential decay of scale length $L$,
-$$p(r\_i \mid L) = \frac{r\_i^2}{2L^3} \exp(-r\_i / L), \qquad r\_i > 0.$$
-That scale length is unknown too, and belongs to the Galaxy rather than to any star, so it gets a vague prior of its own, $p(L) = \text{Uniform}(L \mid 0, 5)$.
+.bold[The Galaxy.] Far away, there is more room for stars, but fewer stars per unit of room:
+$$p(r\_i \mid L) \propto \underbrace{r\_i^2}\_{\text{room at distance } r\_i} \times \underbrace{\exp(-r\_i / L)}\_{\text{density of stars}}, \qquad r\_i > 0.$$
+The scale length $L$ of the decay is unknown too, and belongs to the Galaxy rather than to any star, so it gets a vague prior of its own, $p(L) = \text{Uniform}(L \mid 0, 5)$.
 
 ???
 
-Gaia's parallaxes also carry a systematic offset of about $-17$ microarcseconds, corrected in practice. The prior is from Bailer-Jones (2015); $2L^3$ normalizes it.
+Gaia's parallaxes also carry a systematic offset of about $-17$ microarcseconds, corrected in practice. The prior is from Bailer-Jones (2015). The room grows like the area of a sphere of radius $r\_i$; the density decays with scale length $L$. Normalized, $p(r\_i \mid L) = \frac{r\_i^2}{2L^3} \exp(-r\_i / L)$, which peaks at $r\_i = 2L$.
 
 ---
 class: middle
