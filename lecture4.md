@@ -135,7 +135,7 @@ $$P\_{\mathbf{x} \sim p(\mathbf{x} \mid \theta^\*)}\left( \theta^\* \in C(\mathb
 The .bold[likelihood ratio] compares each $\theta$ with the maximum likelihood estimate,
 $$\lambda(\theta; \mathbf{x}) = -2 \log \frac{p(\mathbf{x} \mid \theta)}{p(\mathbf{x} \mid \hat{\theta}(\mathbf{x}))}.$$
 
-.bold[Wilks' theorem.] If $\mathbf{x} \sim p(\mathbf{x} \mid \theta^\*)$, then $\lambda(\theta^\*; \mathbf{x})$ is approximately $\chi^2\_k$ distributed, whatever $\theta^\*$.
+.bold[Wilks' theorem.] If $\mathbf{x} \sim p(\mathbf{x} \mid \theta^\*)$, then $\lambda(\theta^\*; \mathbf{x})$ converges in distribution to $\chi^2\_k$ as $N \to \infty$, whatever $\theta^\*$.
 
 ???
 
