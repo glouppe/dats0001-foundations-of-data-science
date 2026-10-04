@@ -637,7 +637,9 @@ with $\varpi$ in milliarcseconds (a thousandth of an arcsecond) and $r$ in kilop
 
 ???
 
-The parsec is defined so that this holds: it is the distance at which the radius of Earth's orbit subtends one arcsecond. For such small angles, the angle is inversely proportional to the distance.
+Why $1/r$: in the right triangle of the figure, $\tan \varpi = (1 \text{ au}) / r$. Parallaxes are tiny, and for small angles $\tan \varpi \approx \varpi$ (in radians), so $\varpi = (1 \text{ au}) / r$: the angle is inversely proportional to the distance.
+
+The units remove the constant. The parsec is defined as the distance at which 1 au subtends one arcsecond, so $\varpi$ in arcseconds is $1/r$ in parsecs, and $\varpi$ in milliarcseconds is $1/r$ in kiloparsecs.
 
 An arcsecond is 1/3600 of a degree, so a milliarcsecond is a very small angle: at 1 kpc it is what a two-euro coin subtends from 5000 km away.
 
