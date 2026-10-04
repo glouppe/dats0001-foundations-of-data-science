@@ -750,22 +750,6 @@ Each panel has its own vertical scale.
 
 ---
 
-class: middle
-
-.center.width-10[![](figures/lec4/light-bulb.png)]
-
-Every term of this model came from somewhere: the geometry from the definition of a parallax, the error model from the instrument, the prior from the way stars fill the Galaxy.
-
-.bold[A model is an argument about how the data came to be.] Each assumption can be named, defended, and attacked.
-
-.footnote[Credits: [Bailer-Jones et al.](https://doi.org/10.3847/1538-3881/abd806), 2021.]
-
-???
-
-Attack it: the Galaxy is a disk seen from inside, dust hides the distant stars, and Gaia only sees the bright ones. This is the critique step of Box's loop, the subject of Lecture 7.
-
----
-
 class: end-slide, center
 count: false
 
