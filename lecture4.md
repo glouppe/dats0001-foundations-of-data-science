@@ -327,8 +327,7 @@ $$p(\mathbf{x} \mid \theta) = \int p(\mathbf{x} \mid \mathbf{z}, \theta) p(\math
 or, for $N$ conditionally independent observations,
 $$p(\mathbf{x}\_{1:N} \mid \theta) = \prod\_{i=1}^N \int p(\mathbf{x}\_i \mid \mathbf{z}\_i, \theta) p(\mathbf{z}\_i \mid \theta) \, d\mathbf{z}\_i.$$
 
-This integral is where the difficulty of latent variable models lies: it is what maximum likelihood maximizes, and it is the normalizer of the posterior over the latent variables,
-$$p(\mathbf{z} \mid \mathbf{x}, \theta) = \frac{p(\mathbf{x} \mid \mathbf{z}, \theta) p(\mathbf{z} \mid \theta)}{p(\mathbf{x} \mid \theta)}.$$
+This integral is where the difficulty of latent variable models lies: it is what maximum likelihood maximizes, and it is the normalizer of the posterior over the latent variables.
 
 ???
 
