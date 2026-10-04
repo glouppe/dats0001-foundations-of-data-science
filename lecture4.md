@@ -418,16 +418,18 @@ The denominator $p(\mathbf{x}\_\text{obs})$ is the marginal likelihood one level
 
 class: middle
 
-Latent variables appear wherever the quantity that matters cannot be recorded:
-- .bold[Astronomy]: the distance of a star, behind a noisy parallax (Example 4).
-- .bold[Engineering]: the position and velocity of a vehicle, behind its sensors (state-space models, Lecture 5).
-- .bold[Education]: the ability of a student, behind right and wrong answers (item response theory).
-- .bold[Genetics]: the ancestral populations a genome is mixed from, behind its alleles (admixture models, the same structure as the topic models below).
-- .bold[Epidemiology]: how many people are actually infected, behind the cases a health system reports.
+Many data generating processes are a cascade of variables, each produced from the ones before it. Only the last ones are observed, through a measurement process; the others are latent:
+$$\underbrace{\theta \to \mathbf{z}\_1 \to \cdots \to \mathbf{z}\_L}\_{\text{latent}} \to \underbrace{\mathbf{x}}\_{\text{measured}}$$
+
+- .bold[Astronomy]: Galaxy $\to$ distance of a star $\to$ parallax.
+- .bold[Epidemiology]: transmission rate $\to$ infections $\to$ reported cases.
+- .bold[Engineering]: controls $\to$ position of a vehicle $\to$ sensor readings.
+- .bold[Education]: ability of a student $\to$ right and wrong answers.
+- .bold[Genetics]: ancestral populations $\to$ ancestry of a genome $\to$ alleles.
 
 ???
 
-The last one is the COVID story of Lecture 1: reported cases are a filtered, delayed view of an epidemic nobody observes directly.
+The measurement process is the $f(\omega, \xi)$ of Lecture 2, at the end of the chain. The astronomy chain is Example 4, the engineering one the state-space models of Lecture 5, the epidemiology one the COVID story of Lecture 1.
 
 ---
 
