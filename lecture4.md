@@ -292,20 +292,6 @@ A flat prior on $\mathbb{R}$ would make the two intervals coincide exactly, but 
 
 class: middle
 
-.center.width-70[![](figures/lec4/body_mass_histogram.png)]
-
-.alert[Inference pinned $\mu$ down to $4202 \pm 43$ g, a mass no penguin species has. The interval is precise about the model, not about the penguins.]
-
-???
-
-More data, or a better inference method, would only narrow the interval around the same number. What is missing is in the model: the species of each penguin, which is not part of $\mathbf{x}$. Inference answers questions inside a model; modeling decides which questions can be asked. Back to the opening question: the species is the kind of unobserved quantity that explains what we see. Putting it back into the model, as a latent variable $z\_i$ for each penguin, is what latent variable models do; Example 2 (mixture models) does it for the bill measurements.
-
-The species means, from the data: Adélie 3701 g, Chinstrap 3733 g, Gentoo 5076 g.
-
----
-
-class: middle
-
 # Latent variable models
 
 ---
