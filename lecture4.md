@@ -37,7 +37,7 @@ $$p\_r(\mathbf{x}) = \iint p(\omega, \xi) \, \delta(\mathbf{x} - f(\omega, \xi))
 
 ???
 
-The entities and the conditions are the first latent variables of the course, although we never call them that: they are unobserved, and they explain the variability of what we record. Today we put some of them back into the model, as $\mathbf{z}$.
+The entities and the conditions are the first latent variables of the course. Today some of them come back into the model, as $\mathbf{z}$.
 
 ---
 
@@ -55,9 +55,7 @@ class: middle
 
 ???
 
-Two cases where a true parameter does make sense. First, data simulated from the model itself: `nb01` draws data at a chosen $\theta^\*$ and checks that the estimate recovers it. Second, fields where the parameters are quantities of nature, a particle mass or a coupling constant, and the family is taken to be right: there, $\theta^\*$ is what the experiment is after.
-
-For the penguins, $\mathcal{P}$ is a convenient description and nothing more: no value of $(\mu, \sigma^2)$ makes the Gaussian equal to the real distribution of body masses.
+A true $\theta^\*$ makes sense for data simulated from the model (`nb01`), or when the parameters are quantities of nature, such as a particle mass. Not for the penguins.
 
 ---
 
@@ -95,11 +93,9 @@ Applied to $\mathbf{x}\_\text{obs}$, it gives a .bold[point estimate]. For the p
 
 ???
 
-This $\theta^\*$ lives inside the model: it is the parameter of the member of $\mathcal{P}$ the data are assumed to come from. If the family contains no such member, $\hat{\theta}$ estimates the parameter of the member closest to $p\_r$.
+If no member of $\mathcal{P}$ equals $p\_r$, $\hat{\theta}$ converges to the member closest to $p\_r$ in Kullback-Leibler divergence.
 
-Closest in the Kullback-Leibler sense: maximum likelihood converges to the $\theta$ minimizing $\text{KL}(p\_r \| p(\cdot \mid \theta))$, whether or not the family contains $p\_r$. Estimating something remains well defined; calling it true does not.
-
-For the Gaussian model, the maximum likelihood estimates are the sample mean, $\hat{\mu} = \frac{1}{N} \sum\_i x\_i$, and the sample variance, $\hat{\sigma}^2 = \frac{1}{N} \sum\_i (x\_i - \hat{\mu})^2$. The latter divides by $N$; the usual standard deviation divides by $N - 1$ and gives 802 g. With 342 penguins, the difference does not matter.
+$\hat{\sigma}^2$ divides by $N$ (801 g); the usual standard deviation divides by $N - 1$ (802 g).
 
 ---
 
@@ -119,9 +115,7 @@ $\sigma^\*$ is unknown too, so it is replaced by its estimate. For the penguins,
 
 ???
 
-The sampling distribution is a thought experiment: nobody measures new colonies. The repetitions are imagined data sets drawn by the same process. Under the model, they are drawn from $p(\mathbf{x} \mid \theta^\*)$; in reality, from $p\_r$. For a mean, the central limit theorem makes the two agree well enough, whatever the shape of $p\_r$.
-
-Plugging in $\hat{\sigma}$ adds a little uncertainty of its own, since $\hat{\sigma}$ also varies from one data set to the next. With 342 penguins it is negligible; with a handful of data, Student's $t$ distribution accounts for it.
+A thought experiment: the repetitions are imagined data sets, drawn from $p(\mathbf{x} \mid \theta^\*)$ under the model, from $p\_r$ in reality.
 
 ---
 
@@ -139,11 +133,7 @@ $$\lambda(\theta; \mathbf{x}) = -2 \log \frac{p(\mathbf{x} \mid \theta)}{p(\math
 
 ???
 
-The probability is over the data: $C(\mathbf{x})$ is random, $\theta^\*$ is fixed.
-
-$\lambda$ is zero at $\hat{\theta}$ and grows as $\theta$ explains the data worse. $k$ is the dimension of $\theta$.
-
-Wilks' theorem holds as $N$ grows, under regularity conditions (the true value is not on the boundary of $\Theta$, the model is identifiable), and assumes the data come from the model.
+$C(\mathbf{x})$ is random, $\theta^\*$ is fixed. Wilks' theorem also needs regularity conditions ($\theta^\*$ inside $\Theta$, an identifiable model).
 
 ---
 
@@ -160,9 +150,7 @@ $C(\mathbf{x})$ is a 95% confidence interval, up to the large-$N$ approximation 
 
 ???
 
-The interval collects the values of $\theta$ that a test at level 5% would not reject, and computing it requires only the data.
-
-The 95% is approximate because Wilks' theorem is: it replaces the log-likelihood by a parabola around $\hat{\theta}$, and the distribution of $\hat{\theta}$ by a Gaussian, both exact only as $N \to \infty$. For the mean of a Gaussian model, both hold for every $N$.
+$C(\mathbf{x})$ collects the $\theta$ that a test at level 5% would not reject. Wilks' theorem is exact when the log-likelihood is a parabola and $\hat{\theta}$ is Gaussian, as for a Gaussian mean.
 
 ---
 
@@ -178,11 +166,7 @@ $$c = 1.96^2 = 3.84.$$
 
 ???
 
-The first equality: $\log p(\mathbf{x} \mid \mu) = -\frac{1}{2\sigma^2} \sum\_i (x\_i - \mu)^2 - N \log(\sqrt{2\pi} \sigma)$, and the constant cancels in the ratio. The second: write $x\_i - \mu = (x\_i - \hat{\mu}) + (\hat{\mu} - \mu)$ and expand; the cross term $2 (\hat{\mu} - \mu) \sum\_i (x\_i - \hat{\mu})$ is zero since $\hat{\mu}$ is the mean.
-
-$\hat{\mu}$ is Gaussian because it is an average of independent Gaussians. The square of a standard Gaussian is $\chi^2\_1$ by definition, and $P(Z^2 \leq c) = P(-\sqrt{c} \leq Z \leq \sqrt{c}) = 0.95$ for $\sqrt{c} = 1.96$.
-
-Exact for a known $\sigma$. With $\hat{\sigma}$ plugged in, $\lambda(\mu^\*; \mathbf{x})$ is only close to $\chi^2\_1$, and Student's $t$ distribution gives the exact answer; with 342 penguins, the difference is in the last gram.
+The cross term vanishes since $\sum\_i (x\_i - \hat{\mu}) = 0$. Exact for a known $\sigma$; with $\hat{\sigma}$ plugged in, Student's $t$ is exact, within a gram here.
 
 ---
 
@@ -195,9 +179,7 @@ $$C(\mathbf{x}) = \hat{\mu} \pm 1.96 \frac{\sigma}{\sqrt{N}} = [4117, 4287] \tex
 
 ???
 
-The width of the interval is set by the curvature of the log-likelihood: the more data, the sharper the parabola, the narrower the interval.
-
-Fixing $\sigma$ to its estimate is a shortcut. The rigorous version maximizes over $\sigma$ for each $\mu$ (the profile likelihood). For the Gaussian, this leads to Student's $t$ interval, $[4116, 4287]$ g.
+More data, a sharper parabola, a narrower interval.
 
 ---
 
@@ -211,11 +193,7 @@ class: middle
 
 ???
 
-Each colony has 342 penguins and gives its own interval $\hat{\mu} \pm 1.96 \, \hat{\sigma} / \sqrt{N}$, with its own $\hat{\sigma}$: the intervals do not all have the same width.
-
-This is the only setting where $\mu^\*$ is known: data simulated from the model, at a value we chose. With real data, we never know whether our interval is one of the 47 or one of the 3.
-
-The same simulation can be run without the model: resampling the 342 penguins with replacement (the bootstrap) stands in for measuring new colonies, with the mean of the 342 penguins in the role of $\mu^\*$.
+$\mu^\*$ is known only because the data are simulated. With real data, we never know whether our interval is one of the 47 or one of the 3.
 
 ---
 
@@ -246,7 +224,7 @@ The probability is over $\theta$. The data are fixed: they are the ones observed
 
 ???
 
-The posterior lives inside the model just as $\theta^\*$ does: it is conditional on the family $\mathcal{P}$ and on the prior, and says nothing about what lies outside them. As the data grow, it concentrates on the member of $\mathcal{P}$ closest to $p\_r$, the same limit the maximum likelihood estimate reaches, and on $\theta^\*$ when the family contains $p\_r$.
+The posterior is conditional on $\mathcal{P}$ and the prior. As $N$ grows, it concentrates where the maximum likelihood estimate goes.
 
 ---
 
@@ -277,11 +255,7 @@ class: middle
 
 ???
 
-$\text{Uniform}(\sigma^2 \mid 0, 100)$ caps $\sigma$ at 10 g, so every simulated colony weighs the same to within a few grams, while real penguins spread over some 800 g. A pooled histogram of many draws would have hidden this, since its width comes from the prior on $\mu$; simulating whole datasets shows it at once.
-
-The repair is not subtle, and that is the point: a prior predictive check is cheap, and it catches this before any data are touched.
-
-The repaired prior is still vague on $\mu$: it allows colonies of 9 kg penguins. That is acceptable, since 342 measurements will dominate it; what it must not do is rule out the truth, as the prior on $\sigma^2$ did.
+$\text{Uniform}(\sigma^2 \mid 0, 100)$ caps $\sigma$ at 10 g: every simulated colony collapses to a point. The check catches it before any data are used.
 
 ---
 
@@ -310,13 +284,9 @@ and its 95% credible interval is $[4117, 4287]$ g, the confidence interval again
 
 ???
 
-The posterior: as a function of $\mu$, the likelihood is proportional to $\exp\left(-N (\mu - \hat{\mu})^2 / 2\sigma^2\right)$, and the uniform prior only cuts it to $[0, 10000]$ g. The Gaussian is 43 g wide around 4202 g, so the cut changes nothing visible, and the credible interval matches the confidence interval to the gram.
+The common mistake is to read a confidence interval as a credible interval.
 
-The prior on $\mu$ is the one of the prior predictive check. It is chosen to be proper and to respect what a mass is. A flat prior on all of $\mathbb{R}$ would not integrate to one, so it would not be a distribution; a Gaussian prior would give some weight to negative masses.
-
-With an informative prior, or few data, the two intervals part ways.
-
-The common mistake is to read a confidence interval as a credible interval: "$\mu$ lies in $[4117, 4287]$ g with probability 0.95". In the frequentist framework $\mu^\*$ is fixed, not random, so the sentence has no meaning there; only the posterior can say it, as a degree of belief given the model, the prior and the data. Conversely, a credible interval comes with no guarantee over repeated data sets.
+A flat prior on $\mathbb{R}$ would make the two intervals coincide exactly, but it is improper. With an informative prior or few data, they part ways.
 
 ---
 
