@@ -131,7 +131,7 @@ class: middle
 
 A 95% .bold[confidence interval] is a set $C(\mathbf{x})$ of parameter values, computed from the data, such that
 $$P\_{\mathbf{x} \sim p(\mathbf{x} \mid \theta^\*)}\left( \theta^\* \in C(\mathbf{x}) \right) = 0.95$$
-for every $\theta^\*$. The probability is over the data: $C(\mathbf{x})$ is random, $\theta^\*$ is fixed. We never need to know $\theta^\*$.
+for every $\theta^\*$. The probability is over the data: $C(\mathbf{x})$ is random, $\theta^\*$ is fixed.
 
 To build one, we compare each $\theta$ with the maximum likelihood estimate $\hat{\theta}(\mathbf{x})$ through the .bold[likelihood ratio]
 $$\lambda(\theta; \mathbf{x}) = -2 \log \frac{p(\mathbf{x} \mid \theta)}{p(\mathbf{x} \mid \hat{\theta}(\mathbf{x}))} \geq 0.$$
@@ -147,12 +147,12 @@ Wilks' theorem holds as $N$ grows, under regularity conditions (the true value i
 
 class: middle
 
-We do not know $\theta^\*$, and we do not need to: Wilks' theorem gives the distribution of $\lambda(\theta^\*; \mathbf{x})$ without using the value of $\theta^\*$. Let $c$ be the 95% quantile of $\chi^2\_k$. Whatever $\theta^\*$,
+We do not know $\theta^\*$, and we do not need to. Wilks' theorem gives the distribution of $\lambda(\theta^\*; \mathbf{x})$ without using the value of $\theta^\*$. Let $c$ be the 95% quantile of $\chi^2\_k$. Whatever $\theta^\*$,
 $$P\_{\mathbf{x} \sim p(\mathbf{x} \mid \theta^\*)}\left( \lambda(\theta^\*; \mathbf{x}) \leq c \right) \approx 0.95.$$
 
 We keep every $\theta$ that passes the same test,
 $$C(\mathbf{x}) = \\{ \theta : \lambda(\theta; \mathbf{x}) \leq c \\}.$$
-Then $\theta^\* \in C(\mathbf{x})$ exactly when $\lambda(\theta^\*; \mathbf{x}) \leq c$, which happens with probability 0.95. $C(\mathbf{x})$ is a 95% confidence interval, and computing it requires only the data.
+Then $\theta^\* \in C(\mathbf{x})$ exactly when $\lambda(\theta^\*; \mathbf{x}) \leq c$, which happens with probability close to 0.95. $C(\mathbf{x})$ is an approximate 95% confidence interval, and computing it requires only the data.
 
 The 95% is approximate because Wilks' theorem is. It replaces the log-likelihood by a parabola around $\hat{\theta}$, and the distribution of $\hat{\theta}$ by a Gaussian, both exact only as $N \to \infty$. For the mean of a Gaussian model, both hold for every $N$.
 
@@ -181,6 +181,10 @@ At $\mu = \mu^\*$, the likelihood ratio is the square of $Z$,
 $$\lambda(\mu^\*; \mathbf{x}) = \frac{N (\hat{\mu}(\mathbf{x}) - \mu^\*)^2}{\sigma^2} = Z^2.$$
 The square of a standard Gaussian is, by definition, $\chi^2\_1$ distributed. Its 95% quantile follows from the Gaussian one,
 $$P(Z^2 \leq c) = P(-\sqrt{c} \leq Z \leq \sqrt{c}) = 0.95 \quad \text{for } \sqrt{c} = 1.96, \text{ that is } c = 3.84.$$
+
+???
+
+Exact for a known $\sigma$. With $\hat{\sigma}$ plugged in, $\lambda(\mu^\*; \mathbf{x})$ is only close to $\chi^2\_1$, and Student's $t$ distribution gives the exact answer (next slide's notes); with 342 penguins, the difference is in the last gram.
 
 ---
 
