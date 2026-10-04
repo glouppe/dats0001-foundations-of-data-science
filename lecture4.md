@@ -637,13 +637,9 @@ with $\varpi$ in milliarcseconds (a thousandth of an arcsecond) and $r$ in kilop
 
 ???
 
-Why $1/r$: in the right triangle of the figure, $\tan \varpi = (1 \text{ au}) / r$. Parallaxes are tiny, and for small angles $\tan \varpi \approx \varpi$ (in radians), so $\varpi = (1 \text{ au}) / r$: the angle is inversely proportional to the distance.
+$\tan \varpi = (1 \text{ au}) / r$, and $\tan \varpi \approx \varpi$ for small angles, so $\varpi \propto 1/r$. The parsec is the distance at which 1 au subtends one arcsecond, hence $\varpi$ in milliarcseconds is $1/r$ in kiloparsecs.
 
-The units remove the constant. The parsec is defined as the distance at which 1 au subtends one arcsecond, so $\varpi$ in arcseconds is $1/r$ in parsecs, and $\varpi$ in milliarcseconds is $1/r$ in kiloparsecs.
-
-An arcsecond is 1/3600 of a degree, so a milliarcsecond is a very small angle: at 1 kpc it is what a two-euro coin subtends from 5000 km away.
-
-Gaia is an ESA satellite that scanned the whole sky repeatedly from 2014 to 2025. Its distances underpin much of what we now know about the Galaxy.
+A milliarcsecond is a two-euro coin seen from 5000 km. Gaia is an ESA satellite that scanned the whole sky from 2014 to 2025.
 
 ---
 
@@ -656,9 +652,9 @@ Distances are what turn a catalogue of angles and brightnesses into physics:
 
 ???
 
-The first one is the distance modulus, $M = m - 5 \log\_{10}(r / 10\\,\text{pc})$, and the diagram it feeds is the Hertzsprung-Russell diagram, the workhorse of stellar physics.
+The distance turns how bright a star looks into how bright it is: $M = m - 5 \log\_{10}(r / 10\\,\text{pc})$.
 
-Everything downstream inherits the uncertainty on $r\_i$, which is the reason to want a posterior rather than a number.
+Everything downstream inherits the uncertainty on $r\_i$: hence a posterior, not a number.
 
 ---
 
@@ -672,9 +668,7 @@ class: middle
 
 ???
 
-A negative parallax is not a broken measurement: it is a noisy measurement of a small positive angle. Keeping only the stars with a good parallax, or inverting those alone, quietly restricts the sample to the nearby ones.
-
-So the naive estimate is useless for most of the catalogue. The rest of the example is about what these noisy measurements are still worth, one by one and all together.
+A negative parallax is a noisy measurement of a small positive angle, not an error. Keeping only the good parallaxes would restrict the sample to nearby stars.
 
 ---
 
@@ -692,9 +686,7 @@ That scale length is unknown too, and belongs to the Galaxy rather than to any s
 
 ???
 
-The real instrument is messier still: Gaia's parallaxes carry a small systematic offset, of the order of $-17$ microarcseconds, which careful work corrects for before anything else. Another piece of domain knowledge, and another term in the model.
-
-The $2L^3$ normalizes the prior. This exponentially decreasing space density prior is from Bailer-Jones (2015).
+Gaia's parallaxes also carry a systematic offset of about $-17$ microarcseconds, corrected in practice. The prior is from Bailer-Jones (2015); $2L^3$ normalizes it.
 
 ---
 class: middle
@@ -707,7 +699,8 @@ a posterior over $N+1$ unknowns. Two questions are worth asking of it.
 
 ???
 
-Nothing here is specific to astronomy. A noisy sensor measuring a quantity you want, plus what you know about where that quantity usually lies, is the same model: a GPS fix against a map, a delivery time against the times of every other delivery, a rating against the ratings of everyone else.
+The same model fits any noisy sensor combined with what is known about the quantity: a GPS fix against a map, a rating against everyone else's.
+
 ---
 class: middle
 
@@ -719,7 +712,8 @@ One parallax constrains $L$ almost not at all: a single noisy angle is compatibl
 
 ???
 
-The integral is the one written earlier in the lecture, now read as a function of the unknown it depends on. Each factor is one-dimensional, so a grid per star is enough, and the product runs over the catalogue.
+Each integral is one-dimensional: a grid per star is enough.
+
 ---
 class: middle
 
@@ -729,11 +723,10 @@ class: middle
 
 ???
 
-This is what makes $L$ worth inferring rather than fixing: it is not a knob, it is a number about the Galaxy, and the posterior says how well 5000 stars pin it down, to about 1.4%.
+5000 stars pin $L$ down to about 1.4%; with 50, the posterior would be 0.11 kpc wide.
 
-Fitted direction by direction rather than over the whole sky, the same posterior maps how the disk thins out around us, which is what the published catalogue does.
+The caveats: one length scale for the whole sky, and Gaia only sees the stars bright enough to be detected.
 
-The value sits near the 1.35 kpc used by Bailer-Jones (2015), which is reassuring, but it is also the answer to a caricature: one length scale for the whole sky, and no correction for the fact that Gaia only sees the stars bright enough to be detected. With 50 stars instead of 5000 the posterior would be 0.11 kpc wide, and no one would call it a measurement.
 ---
 class: middle
 
@@ -750,13 +743,11 @@ class: middle
 
 ???
 
-Even the 82% of stars whose parallax is too noisy to invert come out with a distance, and still contribute to the estimate of $L$.
+The two curves of a panel share a scale; the panels do not.
+- Top: a precise parallax, and the posterior sits at $1/\varpi$.
+- Middle: a noisy parallax, and the posterior sits between $1/\varpi$ and where most stars are, narrower than the grey curve (1.4 against 1.8 kpc).
+- Bottom: a negative parallax only rules out the near distances. The posterior moves outwards (mode 2.1 to 3.1 kpc) with the same width.
 
-The two curves of a panel are densities on the same scale, but the scale differs from panel to panel: the spike of the first star reaches 20 per kpc, the other two about 0.3.
-
-Top: the parallax is precise, so the posterior collapses onto $1/\varpi$ and the grey curve makes no difference. Middle: the parallax is noisy, and the posterior sits between $1/\varpi$ and the larger distances where most stars are; it is genuinely narrower than the grey curve, 1.4 kpc against 1.8.
-
-Bottom: a negative parallax does not point at a distance, it only rules out the near ones. Its likelihood is a ramp rather than a bump: nearly zero at 1 kpc, then 0.27, 0.65 and 0.87 of its limiting value at 2, 4 and 8 kpc, since the closest the model can come to a negative angle is $1/r \to 0$. Multiplying the grey curve by that ramp cuts its near side and leaves the far tail almost untouched, so the posterior moves outwards, from a mode of 2.1 to 3.1 kpc, while its width hardly changes, 1.77 kpc against 1.78. The panel shows it: the blue curve is no lower and no flatter than the grey one, only further out.
 ---
 
 class: middle
@@ -771,9 +762,7 @@ Every term of this model came from somewhere: the geometry from the definition o
 
 ???
 
-Attack this one. A single length scale ignores that the Galaxy is a disk seen from inside and that dust hides the distant stars: the published catalogue therefore fits the prior direction by direction, from a three-dimensional model of the Galaxy. And the sample is not a fair draw from the population, since Gaia only sees what is bright enough, which bends $\hat{L}$.
-
-That is the critique step of Box's loop, and the kind of assumption Lecture 7 puts to the test.
+Attack it: the Galaxy is a disk seen from inside, dust hides the distant stars, and Gaia only sees the bright ones. This is the critique step of Box's loop, the subject of Lecture 7.
 
 ---
 
