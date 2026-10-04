@@ -695,7 +695,7 @@ class: middle
 
 Everything unobserved is inferred at once,
 $$p(r\_{1:N}, L \mid \varpi\_{1:N}, \sigma\_{1:N}) \propto p(L) \prod\_{i=1}^N p(\varpi\_i \mid r\_i, \sigma\_i) \, p(r\_i \mid L),$$
-a posterior over $N+1$ unknowns. Two questions are worth asking of it.
+a posterior over $N+1$ unknowns.
 
 ???
 
