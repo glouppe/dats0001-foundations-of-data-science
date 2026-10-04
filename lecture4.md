@@ -301,15 +301,14 @@ class: middle
 Models of data generating processes are often written as a cascade of variables, each produced from the ones before it. Only the last ones are observed, through a measurement process; the others are latent:
 $$\underbrace{\theta \to \mathbf{z}\_1 \to \cdots \to \mathbf{z}\_L}\_{\text{latent}} \to \underbrace{\mathbf{x}}\_{\text{measured}}$$
 
-- .bold[Astronomy]: Galaxy $\to$ distance of a star $\to$ parallax.
-- .bold[Epidemiology]: transmission rate $\to$ infections $\to$ reported cases.
-- .bold[Engineering]: controls $\to$ position of a vehicle $\to$ sensor readings.
-- .bold[Education]: ability of a student $\to$ right and wrong answers.
-- .bold[Genetics]: ancestral populations $\to$ ancestry of a genome $\to$ alleles.
+- .bold[Particle physics]: theory $\to$ collision $\to$ particle showers $\to$ detector hits.
+- .bold[Epidemiology]: transmission $\to$ infections $\to$ symptoms $\to$ tests $\to$ cases.
+- .bold[Hydrology]: rainfall $\to$ soil saturation $\to$ Meuse discharge $\to$ water level.
+- .bold[Astronomy]: stellar mass $\to$ luminosity $\to$ brightness at Earth $\to$ pixels.
 
 ???
 
-The measurement process is the $f(\omega, \xi)$ of Lecture 2, at the end of the chain. The astronomy chain is Example 4, the engineering one the state-space models of Lecture 5, the epidemiology one the COVID story of Lecture 1.
+The measurement process is the $f(\omega, \xi)$ of Lecture 2, at the end of the chain. Particle physics is the LHC of Lecture 2; epidemiology the COVID story of Lecture 1; hydrology the July 2021 floods. Each arrow is a model of its own, and only the last variable is recorded.
 
 ---
 
