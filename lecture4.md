@@ -144,8 +144,8 @@ $$P\_{\mathbf{x} \sim p(\mathbf{x} \mid \theta^\*)}\left( \lambda(\theta^\*; \ma
 
 Define
 $$C(\mathbf{x}) = \\{ \theta : \lambda(\theta; \mathbf{x}) \leq c \\}.$$
-Since $\theta^\* \in C(\mathbf{x}) \iff \lambda(\theta^\*; \mathbf{x}) \leq c$, the two events have the same probability:
-$$P\_{\mathbf{x} \sim p(\mathbf{x} \mid \theta^\*)}\left( \theta^\* \in C(\mathbf{x}) \right) \approx 0.95 \quad \text{whatever } \theta^\*.$$
+By definition of $C(\mathbf{x})$, the true value $\theta^\*$ belongs to it exactly when it satisfies the condition $\lambda(\theta^\*; \mathbf{x}) \leq c$. The two events hold for the same data sets $\mathbf{x}$, hence
+$$P\_{\mathbf{x} \sim p(\mathbf{x} \mid \theta^\*)}\left( \theta^\* \in C(\mathbf{x}) \right) = P\_{\mathbf{x} \sim p(\mathbf{x} \mid \theta^\*)}\left( \lambda(\theta^\*; \mathbf{x}) \leq c \right) \approx 0.95.$$
 $C(\mathbf{x})$ is a 95% confidence interval, up to the large-$N$ approximation of Wilks' theorem.
 
 ???
