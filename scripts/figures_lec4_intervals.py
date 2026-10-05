@@ -83,14 +83,14 @@ def simulated_statistic(simulations=10000, candidates=49, per_candidate=2000):
     grid = np.linspace(.02, 10, 400)
     left.plot(grid, chi2.pdf(grid, df=1), color=GREY, lw=1.2, label=r"$\chi^2_1$")
     left.axvline(c, color=RED, lw=1.2, ls=(0, (4, 3)))
-    left.text(c + .2, .9, "$c(\\mu) = %.2f$" % c, color=RED, fontsize=10)
+    left.text(c + .2, .9, "$c(\\hat{\\mu}) = %.2f$" % c, color=RED, fontsize=10)
     left.text(c + 1.2, .14, "5%", color=RED, fontsize=10)
     left.set_xlabel(r"$\lambda(\mu; \mathbf{x})$, $\mathbf{x} \sim p(\mathbf{x} \mid \mu)$")
     left.set_ylabel("density")
     left.set_xlim(0, 10)
     left.set_ylim(0, 1.2)
     left.legend(frameon=False, loc="upper right")
-    left.set_title("simulated at one candidate $\\mu$", fontsize=10, loc="left")
+    left.set_title("simulated at $\\mu = \\hat{\\mu}$, one of the candidates", fontsize=10, loc="left")
 
     # right: c(mu) on a grid of candidates, against the observed lambda(mu; x_obs)
     mus = np.linspace(4060, 4345, candidates)
@@ -103,6 +103,10 @@ def simulated_statistic(simulations=10000, candidates=49, per_candidate=2000):
              for k in range(len(mus) - 1) if np.sign(gap[k]) != np.sign(gap[k + 1])]
     right.plot(fine, observed, color=BLUE, lw=1.6, label=r"$\lambda(\mu; \mathbf{x}_\mathrm{obs})$")
     right.plot(mus, cs, "o", ms=3, color=RED, label=r"$c(\mu)$, simulated")
+    right.plot(mu_hat, c, "o", ms=9, mfc="none", mec=RED, mew=1.4, zorder=4)
+    right.annotate("left panel", (mu_hat, c), (mu_hat - 95, 7.2), color=RED, fontsize=9,
+                   ha="center", arrowprops=dict(arrowstyle="->", color=RED, lw=.9,
+                                                shrinkB=6))
     lo, hi = min(cross), max(cross)
     right.axvspan(lo, hi, color=BLUE, alpha=.12, lw=0)
     right.set_xticks([lo, mu_hat, hi], ["%.0f" % lo, "%.0f" % mu_hat, "%.0f" % hi])
