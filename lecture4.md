@@ -117,6 +117,9 @@ $\sigma^\*$ is unknown too, so it is replaced by its estimate. For the penguins,
 
 A thought experiment: the repetitions are imagined data sets, drawn from $p(\mathbf{x} \mid \theta^\*)$ under the model, from $p\_r$ in reality.
 
+The central limit theorem needs independent draws. Penguins from the same island or colony may be correlated, which would make the true standard error larger than $\sigma / \sqrt{N}$.
+
+
 ---
 
 class: middle
@@ -169,7 +172,12 @@ is the square of a standard Gaussian. Wilks' theorem is exact here: $\lambda(\mu
 
 ???
 
-Step 1: $\lambda(\mu; \mathbf{x}) = \frac{1}{\sigma^2} \sum\_i \left[ (x\_i - \mu)^2 - (x\_i - \hat{\mu})^2 \right]$, the constant of the log-likelihood cancelling; expanding $x\_i - \mu = (x\_i - \hat{\mu}) + (\hat{\mu} - \mu)$, the cross term vanishes since $\sum\_i (x\_i - \hat{\mu}) = 0$. The square of a standard Gaussian is $\chi^2\_1$ by definition of $\chi^2\_k$, a sum of $k$ squared independent standard Gaussians. Exact for a known $\sigma$; with $\hat{\sigma}$ plugged in, Student's $t$ is exact, within a gram here.
+In the ratio, the constant of the log-likelihood cancels. Expanding $x\_i - \mu = (x\_i - \hat{\mu}) + (\hat{\mu} - \mu)$, the cross term vanishes since $\sum\_i (x\_i - \hat{\mu}) = 0$.
+
+$\chi^2\_k$ is, by definition, the distribution of a sum of $k$ squared independent standard Gaussians.
+
+All of this assumes $\sigma$ known. With $\hat{\sigma}$ plugged in, Student's $t$ gives the exact interval, $[4116, 4287]$ g.
+
 
 ---
 
@@ -201,11 +209,10 @@ At $\theta = \theta^\*$, this is the distribution of $\lambda(\theta^\*; \mathbf
 
 ???
 
-The $\chi^2\_1$ curve is the right reference: the data are simulated at the same $\mu$ at which $\lambda$ is evaluated, which is the setting of Wilks' theorem with $\theta^\* = 4150$. The simulation recovers the theorem where it is exact; for a non-Gaussian model or a small $N$, the histogram would drift from the curve, and $c(\theta)$ is the one to trust. With data from another value, $\lambda(4150; \mathbf{x})$ would not be $\chi^2\_1$, but the construction never needs that case.
+The $\chi^2\_1$ curve is the right reference: the data are simulated at the $\mu$ where $\lambda$ is evaluated, the setting of Wilks' theorem with $\theta^\* = 4150$. For a non-Gaussian model or a small $N$, the histogram would drift from the curve, and $c(\theta)$ is the one to trust. For data from another value, $\lambda(4150; \mathbf{x})$ would not be $\chi^2\_1$; the construction never uses that case.
 
-This needs only a simulator of the model. Here the simulation replaces only the derivation of the $\chi^2$ distribution; $\lambda$ itself is still computed from the likelihood. The price is $M$ simulations per candidate $\theta$.
+Only the $\chi^2$ derivation is replaced; $\lambda$ is still computed from the likelihood. The cost is $M$ simulations per candidate. Simulating instead of deriving is the idea behind simulation-based inference (Lecture 10).
 
-Simulating instead of deriving is the idea behind simulation-based inference (Lecture 10), for models whose likelihood cannot even be written down.
 
 ---
 
@@ -220,6 +227,11 @@ On the observed data, we compute $\lambda(\theta; \mathbf{x}\_\text{obs})$ at ev
 .center.width-65[![](figures/lec4/simulated-interval.svg)]
 
 .center[$C(\mathbf{x}\_\text{obs}) = [4117, 4289]$ g by simulation, $[4117, 4287]$ g with $\chi^2\_1$.]
+
+???
+
+Each candidate is tested against its own threshold. In general $c(\theta)$ varies with $\theta$; for this model it does not, and the red dots scatter around 3.84 by Monte Carlo noise only.
+
 
 ---
 
