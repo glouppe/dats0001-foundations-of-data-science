@@ -265,8 +265,6 @@ where
 
 class: middle
 
-## Prior predictive checks
-
 Often, the forward model $p(\mathbf{x} \mid \theta)$ is understood, but the prior $p(\theta)$ is more subjective and harder to justify.
 
 The consequences of prior choices in the context of the generative model can be assessed through .bold[prior predictive checks], which involve simulating data from the model using only the prior distributions, without conditioning on any observed data.
