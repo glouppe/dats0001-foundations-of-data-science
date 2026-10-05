@@ -168,7 +168,7 @@ $$\lambda(\mu; \mathbf{x}) = -2 \log \frac{p(\mathbf{x} \mid \mu)}{p(\mathbf{x} 
 
 If $\mathbf{x} \sim p(\mathbf{x} \mid \mu^\*)$, then $\hat{\mu} \sim \mathcal{N}(\mu^\*, \sigma^2 / N)$, and
 $$\lambda(\mu^\*; \mathbf{x}) = \left( \frac{\hat{\mu} - \mu^\*}{\sigma / \sqrt{N}} \right)^2$$
-is the square of a standard Gaussian. Wilks' theorem is exact here: $\lambda(\mu^\*; \mathbf{x})$ is $\chi^2\_1$ distributed for every $N$, and its 95% quantile is $c = 1.96^2 = 3.84$.
+is the square of a standard Gaussian, whatever the value of $\mu^\*$: the argument only uses that the data were generated at $\mu^\*$. Wilks' theorem is exact here: $\lambda(\mu^\*; \mathbf{x})$ is $\chi^2\_1$ distributed for every $N$, and its 95% quantile is $c = 1.96^2 = 3.84$.
 
 ???
 
