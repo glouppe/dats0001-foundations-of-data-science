@@ -193,11 +193,11 @@ The distribution of $\lambda(\theta^\*; \mathbf{x})$ can also be simulated with 
 2. compute $\lambda(\theta; \mathbf{x}\_m)$ for each of them,
 3. denote their empirical 95% quantile as $c(\theta)$.
 
-Then $C(\mathbf{x}) = \\{ \theta : \lambda(\theta; \mathbf{x}) \leq c(\theta) \\}$ contains $\theta^\*$ exactly when $\lambda(\theta^\*; \mathbf{x}) \leq c(\theta^\*)$, which happens with probability 0.95, for any $N$.
+Then $C(\mathbf{x}) = \\{ \theta : \lambda(\theta; \mathbf{x}) \leq c(\theta) \\}$ contains $\theta^\*$ exactly when $\lambda(\theta^\*; \mathbf{x}) \leq c(\theta^\*)$, which happens with probability 0.95, for any $N$. The reported interval is $C(\mathbf{x}\_\text{obs})$.
 
 .center.width-80[![](figures/lec4/simulated-statistic.svg)]
 
-.center[Penguins: $[4119, 4286]$ g by brute force, $[4117, 4287]$ g with $\chi^2\_1$.]
+.center[Penguins: $C(\mathbf{x}\_\text{obs}) = [4119, 4286]$ g by brute force, $[4117, 4287]$ g with $\chi^2\_1$.]
 
 ???
 
