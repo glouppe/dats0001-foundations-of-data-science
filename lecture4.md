@@ -129,7 +129,7 @@ $$P\_{\mathbf{x} \sim p(\mathbf{x} \mid \theta^\*)}\left( \theta^\* \in C(\mathb
 The .bold[likelihood ratio] compares each $\theta$ with the maximum likelihood estimate,
 $$\lambda(\theta; \mathbf{x}) = -2 \log \frac{p(\mathbf{x} \mid \theta)}{p(\mathbf{x} \mid \hat{\theta}(\mathbf{x}))}.$$
 
-.bold[Wilks' theorem.] If $\mathbf{x} \sim p(\mathbf{x} \mid \theta^\*)$, then $\lambda(\theta^\*; \mathbf{x})$ converges in distribution to $\chi^2\_k$ as $N \to \infty$, whatever $\theta^\*$.
+Wilks' theorem states that if $\mathbf{x} \sim p(\mathbf{x} \mid \theta^\*)$, then $\lambda(\theta^\*; \mathbf{x})$ converges in distribution to $\chi^2\_k$ as $N \to \infty$, whatever $\theta^\*$.
 
 ???
 
@@ -158,16 +158,12 @@ class: middle
 
 ## Example: mean body mass
 
-.bold[Model.] $x\_i \sim \mathcal{N}(\mu, \sigma^2)$, with $\theta = \mu$ (so $k = 1$) and $\sigma$ fixed to $\hat{\sigma} = 801$ g. The maximum likelihood estimate is $\hat{\mu} = \frac{1}{N} \sum\_i x\_i$.
-
-.bold[Likelihood ratio.]
+Let $x\_i \sim \mathcal{N}(\mu, \sigma^2)$, with $\theta = \mu$ (so $k = 1$) and $\sigma$ fixed to $\hat{\sigma} = 801$ g. The maximum likelihood estimate is $\hat{\mu} = \frac{1}{N} \sum\_i x\_i$, and the likelihood ratio is
 $$\lambda(\mu; \mathbf{x}) = -2 \log \frac{p(\mathbf{x} \mid \mu)}{p(\mathbf{x} \mid \hat{\mu})} = \frac{N (\hat{\mu} - \mu)^2}{\sigma^2}.$$
 
-.bold[Wilks' theorem.] If $\mathbf{x} \sim p(\mathbf{x} \mid \mu^\*)$, then $\hat{\mu} \sim \mathcal{N}(\mu^\*, \sigma^2 / N)$, and
+If $\mathbf{x} \sim p(\mathbf{x} \mid \mu^\*)$, then $\hat{\mu} \sim \mathcal{N}(\mu^\*, \sigma^2 / N)$, and
 $$\lambda(\mu^\*; \mathbf{x}) = \left( \frac{\hat{\mu} - \mu^\*}{\sigma / \sqrt{N}} \right)^2$$
-is the square of a standard Gaussian: exactly $\chi^2\_1$, for every $N$.
-
-.bold[Quantile.] The 95% quantile of $\chi^2\_1$ is $c = 1.96^2 = 3.84$.
+is the square of a standard Gaussian. Wilks' theorem is exact here: $\lambda(\mu^\*; \mathbf{x})$ is $\chi^2\_1$ distributed for every $N$, and its 95% quantile is $c = 1.96^2 = 3.84$.
 
 ???
 
@@ -179,7 +175,7 @@ class: middle
 
 .center.width-65[![](figures/lec4/likelihood-ratio.svg)]
 
-.bold[Confidence interval.]
+The confidence interval is
 $$C(\mathbf{x}) = \\{ \mu : \lambda(\mu; \mathbf{x}) \leq 3.84 \\} = \hat{\mu} \pm 1.96 \frac{\sigma}{\sqrt{N}} = [4117, 4287] \text{ g}.$$
 
 ???
