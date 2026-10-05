@@ -131,7 +131,7 @@ $$P\_{\mathbf{x} \sim p(\mathbf{x} \mid \theta^\*)}\left( \theta^\* \in C(\mathb
 
 To build such a set, we score each candidate $\theta$ by how much worse it explains the data than the maximum likelihood estimate, with the .bold[likelihood ratio]
 $$\lambda(\theta; \mathbf{x}) = -2 \log \frac{p(\mathbf{x} \mid \theta)}{p(\mathbf{x} \mid \hat{\theta}(\mathbf{x}))},$$
-and keep the candidates with a small score. Wilks' theorem tells how small: if $\mathbf{x} \sim p(\mathbf{x} \mid \theta^\*)$, then $\lambda(\theta^\*; \mathbf{x})$ converges in distribution to $\chi^2\_k$ as $N \to \infty$, for all $\theta^\*$.
+and keep the candidates with a small score. Wilks' theorem tells how small: if $\mathbf{x} \sim p(\mathbf{x} \mid \theta^\*)$, then $\lambda(\theta^\*; \mathbf{x})$ converges in distribution to $\chi^2\_k$ as $N \to \infty$, for all $\theta^\*$. Its 95% quantile is therefore a threshold that the true value passes with probability 0.95, computable without knowing $\theta^\*$.
 
 ???
 
@@ -141,7 +141,7 @@ $C(\mathbf{x})$ is random, $\theta^\*$ is fixed. Wilks' theorem also needs regul
 
 class: middle
 
-Wilks' theorem does not require knowing $\theta^\*$. With $c$ the 95% quantile of $\chi^2\_k$,
+Formally, let $c$ be the 95% quantile of $\chi^2\_k$. Then
 $$P\_{\mathbf{x} \sim p(\mathbf{x} \mid \theta^\*)}\left( \lambda(\theta^\*; \mathbf{x}) \leq c \right) \approx 0.95 \quad \text{for all } \theta^\*.$$
 
 Define the set of all parameter values that satisfy the same inequality,
