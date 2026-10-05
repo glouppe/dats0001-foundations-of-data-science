@@ -126,7 +126,7 @@ class: middle
 
 ## Confidence interval
 
-A 95% .bold[confidence interval] is a set $C(\mathbf{x})$ computed from the data such that, for every $\theta^\*$,
+The standard error measures how much $\hat{\theta}$ varies over data sets. A .bold[confidence interval] turns the same variability into a statement about $\theta^\*$: at 95%, it is a set $C(\mathbf{x})$ computed from the data such that, for every $\theta^\*$,
 $$P\_{\mathbf{x} \sim p(\mathbf{x} \mid \theta^\*)}\left( \theta^\* \in C(\mathbf{x}) \right) = 0.95.$$
 
 The .bold[likelihood ratio] compares each $\theta$ with the maximum likelihood estimate,
@@ -187,6 +187,7 @@ class: middle
 
 The confidence interval is
 $$C(\mathbf{x}) = \\{ \mu : \lambda(\mu; \mathbf{x}) \leq 3.84 \\} = \hat{\mu} \pm 1.96 \frac{\sigma}{\sqrt{N}} = [4117, 4287] \text{ g}.$$
+It is $\hat{\mu} \pm 1.96$ standard errors because the sampling distribution of $\hat{\mu}$ is Gaussian. For a skewed or bounded parameter, the same construction gives an asymmetric interval with the right coverage, where $\pm 1.96$ standard errors would not.
 
 ???
 
