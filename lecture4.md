@@ -186,6 +186,27 @@ More data, a sharper parabola, a narrower interval.
 
 class: middle
 
+The distribution of $\lambda(\theta; \mathbf{x})$ can also be obtained by brute force, with the forward model. For each candidate $\theta$:
+1. simulate data sets $\mathbf{x}\_1, \ldots, \mathbf{x}\_M \sim p(\mathbf{x} \mid \theta)$,
+2. compute $\lambda(\theta; \mathbf{x}\_m)$ for each of them,
+3. take $c(\theta)$ as their empirical 95% quantile.
+
+Then $C(\mathbf{x}\_\text{obs}) = \\{ \theta : \lambda(\theta; \mathbf{x}\_\text{obs}) \leq c(\theta) \\}$. This needs only a simulator of the model, and is valid for any $N$.
+
+.center.width-55[![](figures/lec4/simulated-statistic.svg)]
+
+.center[The penguins at $\mu = \hat{\mu}$: 3.80 simulated, against 3.84 for $\chi^2\_1$.]
+
+???
+
+Here the simulation replaces only the derivation of the $\chi^2$ distribution; $\lambda$ itself is still computed from the likelihood. The price is $M$ simulations per candidate $\theta$.
+
+Simulating instead of deriving is the idea behind simulation-based inference (Lecture 10), for models whose likelihood cannot even be written down.
+
+---
+
+class: middle
+
 .center.width-70[![](figures/lec4/confidence-intervals.svg)]
 
 .center[50 colonies simulated from the model with $\mu^\ast = 4200$ g. Three intervals miss $\mu^\ast$.]

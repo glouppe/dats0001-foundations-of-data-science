@@ -1,5 +1,6 @@
 """The confidence interval of lecture 4: how it is built from the likelihood
-ratio of the penguin data, and what it promises, on colonies of penguins
+ratio of the penguin data, how the distribution of that ratio can be simulated
+instead of derived, and what the interval promises, on colonies of penguins
 simulated from the model at a known mu*.
 
 The parameters are round numbers close to the penguin estimates, so that the
@@ -58,6 +59,35 @@ def likelihood_ratio():
     print("wrote figures/lec4/likelihood-ratio.svg: [%.0f, %.0f] g" % (lo, hi))
 
 
+def simulated_statistic(simulations=10000):
+    """The distribution of lambda(mu; x) at mu = mu-hat, simulated with the forward model."""
+    x = pd.read_csv("data/penguins.csv")["body_mass_g"].dropna().to_numpy()
+    n, mu, sigma = len(x), x.mean(), x.std()
+    rng = np.random.default_rng(0)
+    data = rng.normal(mu, sigma, size=(simulations, n))
+    lam = n * (data.mean(axis=1) - mu) ** 2 / sigma ** 2
+    c = np.quantile(lam, .95)
+
+    fig, ax = plt.subplots(figsize=(5.8, 2.8), dpi=200)
+    ax.hist(lam, bins=np.linspace(0, 10, 51), density=True, color=BLUE, alpha=.35,
+            label="%d simulated data sets" % simulations)
+    grid = np.linspace(.02, 10, 400)
+    ax.plot(grid, chi2.pdf(grid, df=1), color=GREY, lw=1.4, label=r"$\chi^2_1$")
+    ax.axvline(c, color=RED, lw=1.2, ls=(0, (4, 3)))
+    ax.text(c + .15, 1.05, "95%% quantile: %.2f" % c, color=RED, fontsize=10, va="top")
+    ax.set_xlabel(r"$\lambda(\mu; \mathbf{x})$")
+    ax.set_ylabel("density")
+    ax.set_xlim(0, 10)
+    ax.set_ylim(0, 1.2)
+    ax.legend(frameon=False, loc="center right")
+    for side in ("right", "top"):
+        ax.spines[side].set_visible(False)
+    fig.tight_layout()
+    fig.savefig("figures/lec4/simulated-statistic.svg", bbox_inches="tight",
+                facecolor="white")
+    print("wrote figures/lec4/simulated-statistic.svg: c = %.3f" % c)
+
+
 def coverage():
     rng = np.random.default_rng(0)
     x = rng.normal(MU, SIGMA, size=(COLONIES, N))
@@ -88,4 +118,5 @@ def coverage():
 
 if __name__ == "__main__":
     likelihood_ratio()
+    simulated_statistic()
     coverage()
