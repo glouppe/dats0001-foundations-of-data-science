@@ -188,22 +188,36 @@ More data, a sharper parabola, a narrower interval.
 
 class: middle
 
-The distribution of $\lambda(\theta^\*; \mathbf{x})$ can also be simulated with the forward model. Since $\theta^\*$ is unknown, we do it for each candidate $\theta$, as if it were the true value:
+Wilks' theorem can be replaced by simulation. For any candidate $\theta$, the forward model gives the distribution of $\lambda(\theta; \mathbf{x})$ when the data come from $p(\mathbf{x} \mid \theta)$:
 1. simulate data sets $\mathbf{x}\_1, \ldots, \mathbf{x}\_M \sim p(\mathbf{x} \mid \theta)$,
 2. compute $\lambda(\theta; \mathbf{x}\_m)$ for each of them,
 3. denote their empirical 95% quantile as $c(\theta)$.
 
-Then $C(\mathbf{x}) = \\{ \theta : \lambda(\theta; \mathbf{x}) \leq c(\theta) \\}$ contains $\theta^\*$ exactly when $\lambda(\theta^\*; \mathbf{x}) \leq c(\theta^\*)$, which happens with probability 0.95, for any $N$. The reported interval is $C(\mathbf{x}\_\text{obs})$.
+At $\theta = \theta^\*$, this is the distribution of $\lambda(\theta^\*; \mathbf{x})$, and $c(\theta^\*)$ takes the place of $c$.
 
-.center.width-80[![](figures/lec4/simulated-statistic.svg)]
+.center.width-65[![](figures/lec4/simulated-statistic.svg)]
 
-.center[Penguins: $C(\mathbf{x}\_\text{obs}) = [4119, 4286]$ g by brute force, $[4117, 4287]$ g with $\chi^2\_1$.]
+.center[For the penguins at $\mu = \hat{\mu}$: $c(\hat{\mu}) = 3.80$, against 3.84 for $\chi^2\_1$.]
 
 ???
 
 This needs only a simulator of the model. Here the simulation replaces only the derivation of the $\chi^2$ distribution; $\lambda$ itself is still computed from the likelihood. The price is $M$ simulations per candidate $\theta$.
 
 Simulating instead of deriving is the idea behind simulation-based inference (Lecture 10), for models whose likelihood cannot even be written down.
+
+---
+
+class: middle
+
+The construction is then the same as before, with $c(\theta)$ in place of $c$,
+$$C(\mathbf{x}) = \\{ \theta : \lambda(\theta; \mathbf{x}) \leq c(\theta) \\}.$$
+It contains $\theta^\*$ exactly when $\lambda(\theta^\*; \mathbf{x}) \leq c(\theta^\*)$, which happens with probability 0.95, for any $N$.
+
+On the observed data, we compute $\lambda(\theta; \mathbf{x}\_\text{obs})$ at every candidate and keep those below their own $c(\theta)$:
+
+.center.width-65[![](figures/lec4/simulated-interval.svg)]
+
+.center[$C(\mathbf{x}\_\text{obs}) = [4117, 4289]$ g by simulation, $[4117, 4287]$ g with $\chi^2\_1$.]
 
 ---
 
