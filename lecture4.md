@@ -265,18 +265,9 @@ where
 
 class: middle
 
-Often, the forward model $p(\mathbf{x} \mid \theta)$ is understood, but the prior $p(\theta)$ is more subjective and harder to justify.
-
-The consequences of prior choices in the context of the generative model can be assessed through .bold[prior predictive checks], which involve simulating data from the model using only the prior distributions, without conditioning on any observed data.
-
----
-
-class: middle
-
-The prior predictive distribution is given by
-$$p(\mathbf{x}) = \int p(\mathbf{x} \mid \theta) p(\theta) d\theta.$$
-
-This distribution defines the data that we expect to observe under the model assumptions encoded in the prior. It should be examined to ensure that it aligns with domain knowledge and expectations about the data.
+The prior $p(\theta)$ is often harder to justify than the forward model $p(\mathbf{x} \mid \theta)$. A .bold[prior predictive check] simulates data from the model before any data are observed,
+$$\mathbf{x} \sim p(\mathbf{x}) = \int p(\mathbf{x} \mid \theta) p(\theta) \, d\theta,$$
+and compares them with what is known about the data.
 
 ---
 
