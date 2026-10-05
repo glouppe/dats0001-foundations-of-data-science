@@ -142,9 +142,11 @@ class: middle
 Wilks' theorem does not require knowing $\theta^\*$. With $c$ the 95% quantile of $\chi^2\_k$,
 $$P\_{\mathbf{x} \sim p(\mathbf{x} \mid \theta^\*)}\left( \lambda(\theta^\*; \mathbf{x}) \leq c \right) \approx 0.95 \quad \text{whatever } \theta^\*.$$
 
-Define
+Define the set of all parameter values that satisfy the same inequality,
 $$C(\mathbf{x}) = \\{ \theta : \lambda(\theta; \mathbf{x}) \leq c \\}.$$
-By definition of $C(\mathbf{x})$, the true value $\theta^\*$ belongs to it exactly when it satisfies the condition $\lambda(\theta^\*; \mathbf{x}) \leq c$. The two events hold for the same data sets $\mathbf{x}$, hence
+Taking $\theta = \theta^\*$,
+$$\theta^\* \in C(\mathbf{x}) \iff \lambda(\theta^\*; \mathbf{x}) \leq c.$$
+For every data set $\mathbf{x}$, the two statements are both true or both false. They are the same event, with the same probability,
 $$P\_{\mathbf{x} \sim p(\mathbf{x} \mid \theta^\*)}\left( \theta^\* \in C(\mathbf{x}) \right) = P\_{\mathbf{x} \sim p(\mathbf{x} \mid \theta^\*)}\left( \lambda(\theta^\*; \mathbf{x}) \leq c \right) \approx 0.95.$$
 $C(\mathbf{x})$ is a 95% confidence interval, up to the large-$N$ approximation of Wilks' theorem.
 
