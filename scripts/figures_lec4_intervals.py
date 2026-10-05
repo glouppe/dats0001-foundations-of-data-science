@@ -59,7 +59,7 @@ def likelihood_ratio():
     print("wrote figures/lec4/likelihood-ratio.svg: [%.0f, %.0f] g" % (lo, hi))
 
 
-def simulated_statistic(simulations=10000, candidates=49, per_candidate=2000):
+def simulated_statistic(simulations=10000, candidates=49, per_candidate=2000, shown=4150):
     """The interval by brute force, in two figures: the simulated distribution of
     lambda at one candidate mu and its 95% quantile c(mu); then c(mu) at every
     candidate, against the observed lambda(mu; x_obs), which it cuts into the interval."""
@@ -75,7 +75,7 @@ def simulated_statistic(simulations=10000, candidates=49, per_candidate=2000):
             ax.spines[side].set_visible(False)
 
     # step 1: the simulated distribution of lambda at one candidate, and its quantile
-    lam = lam_sim(mu_hat, simulations)
+    lam = lam_sim(shown, simulations)                   # one arbitrary candidate
     c = np.quantile(lam, .95)
     fig, ax = plt.subplots(figsize=(5.8, 2.6), dpi=200)
     bins = np.linspace(0, 10, 51)
@@ -86,9 +86,9 @@ def simulated_statistic(simulations=10000, candidates=49, per_candidate=2000):
     grid = np.linspace(.02, 10, 400)
     ax.plot(grid, chi2.pdf(grid, df=1), color=GREY, lw=1.2, label=r"$\chi^2_1$")
     ax.axvline(c, color=RED, lw=1.2, ls=(0, (4, 3)))
-    ax.text(c + .2, .9, "$c(\\hat{\\mu}) = %.2f$" % c, color=RED, fontsize=10)
+    ax.text(c + .2, .9, "$c(%d) = %.2f$" % (shown, c), color=RED, fontsize=10)
     ax.text(c + 1.2, .14, "5%", color=RED, fontsize=10)
-    ax.set_xlabel(r"$\lambda(\hat{\mu}; \mathbf{x})$, $\mathbf{x} \sim p(\mathbf{x} \mid \hat{\mu})$")
+    ax.set_xlabel(r"$\lambda(%d; \mathbf{x})$, $\mathbf{x} \sim p(\mathbf{x} \mid \mu = %d)$" % (shown, shown))
     ax.set_ylabel("density")
     ax.set_xlim(0, 10)
     ax.set_ylim(0, 1.2)
@@ -110,8 +110,8 @@ def simulated_statistic(simulations=10000, candidates=49, per_candidate=2000):
     ax.plot(fine, n * (mu_hat - fine) ** 2 / sigma ** 2, color=BLUE, lw=1.6,
             label=r"$\lambda(\mu; \mathbf{x}_\mathrm{obs})$")
     ax.plot(mus, cs, "o", ms=3, color=RED, label=r"$c(\mu)$, simulated at each $\mu$")
-    ax.plot(mu_hat, c, "o", ms=9, mfc="none", mec=RED, mew=1.4, zorder=4)
-    ax.annotate(r"$c(\hat{\mu})$", (mu_hat, c), (mu_hat - 70, 7), color=RED, fontsize=10,
+    ax.plot(shown, c, "o", ms=9, mfc="none", mec=RED, mew=1.4, zorder=4)
+    ax.annotate(r"$c(%d)$" % shown, (shown, c), (shown - 50, 7.5), color=RED, fontsize=10,
                 ha="center", arrowprops=dict(arrowstyle="->", color=RED, lw=.9, shrinkB=6))
     ax.axvspan(lo, hi, color=BLUE, alpha=.12, lw=0)
     ax.set_xticks([lo, mu_hat, hi], ["%.0f" % lo, "%.0f" % mu_hat, "%.0f" % hi])

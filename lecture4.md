@@ -197,7 +197,7 @@ At $\theta = \theta^\*$, this is the distribution of $\lambda(\theta^\*; \mathbf
 
 .center.width-65[![](figures/lec4/simulated-statistic.svg)]
 
-.center[For the penguins at $\mu = \hat{\mu}$: $c(\hat{\mu}) = 3.80$, against 3.84 for $\chi^2\_1$.]
+.center[One candidate, $\mu = 4150$ g: $c(\mu) = 3.80$, against 3.84 for $\chi^2\_1$.]
 
 ???
 
