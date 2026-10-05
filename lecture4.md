@@ -186,12 +186,12 @@ More data, a sharper parabola, a narrower interval.
 
 class: middle
 
-The distribution of $\lambda(\theta; \mathbf{x})$ can also be obtained by brute force, with the forward model. For each candidate $\theta$:
+The distribution of $\lambda(\theta^\*; \mathbf{x})$ can also be simulated with the forward model. Since $\theta^\*$ is unknown, we do it for each candidate $\theta$, as if it were the true value:
 1. simulate data sets $\mathbf{x}\_1, \ldots, \mathbf{x}\_M \sim p(\mathbf{x} \mid \theta)$,
 2. compute $\lambda(\theta; \mathbf{x}\_m)$ for each of them,
 3. denote their empirical 95% quantile as $c(\theta)$.
 
-Then $C(\mathbf{x}\_\text{obs}) = \\{ \theta : \lambda(\theta; \mathbf{x}\_\text{obs}) \leq c(\theta) \\}$. This needs only a simulator of the model, and is valid for any $N$.
+Then $C(\mathbf{x}) = \\{ \theta : \lambda(\theta; \mathbf{x}) \leq c(\theta) \\}$ contains $\theta^\*$ exactly when $\lambda(\theta^\*; \mathbf{x}) \leq c(\theta^\*)$, which happens with probability 0.95, for any $N$.
 
 .center.width-80[![](figures/lec4/simulated-statistic.svg)]
 
@@ -199,7 +199,7 @@ Then $C(\mathbf{x}\_\text{obs}) = \\{ \theta : \lambda(\theta; \mathbf{x}\_\text
 
 ???
 
-Here the simulation replaces only the derivation of the $\chi^2$ distribution; $\lambda$ itself is still computed from the likelihood. The price is $M$ simulations per candidate $\theta$.
+This needs only a simulator of the model. Here the simulation replaces only the derivation of the $\chi^2$ distribution; $\lambda$ itself is still computed from the likelihood. The price is $M$ simulations per candidate $\theta$.
 
 Simulating instead of deriving is the idea behind simulation-based inference (Lecture 10), for models whose likelihood cannot even be written down.
 
