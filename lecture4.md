@@ -193,9 +193,9 @@ The distribution of $\lambda(\theta; \mathbf{x})$ can also be obtained by brute 
 
 Then $C(\mathbf{x}\_\text{obs}) = \\{ \theta : \lambda(\theta; \mathbf{x}\_\text{obs}) \leq c(\theta) \\}$. This needs only a simulator of the model, and is valid for any $N$.
 
-.center.width-55[![](figures/lec4/simulated-statistic.svg)]
+.center.width-80[![](figures/lec4/simulated-statistic.svg)]
 
-.center[The penguins at $\mu = \hat{\mu}$: 3.80 simulated, against 3.84 for $\chi^2\_1$.]
+.center[Penguins: $[4119, 4286]$ g by brute force, $[4117, 4287]$ g with $\chi^2\_1$.]
 
 ???
 

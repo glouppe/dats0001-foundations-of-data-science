@@ -59,33 +59,66 @@ def likelihood_ratio():
     print("wrote figures/lec4/likelihood-ratio.svg: [%.0f, %.0f] g" % (lo, hi))
 
 
-def simulated_statistic(simulations=10000):
-    """The distribution of lambda(mu; x) at mu = mu-hat, simulated with the forward model."""
+def simulated_statistic(simulations=10000, candidates=49, per_candidate=2000):
+    """The interval by brute force: simulate lambda at each candidate mu, take its
+    95% quantile c(mu), and keep the mu at which the observed lambda falls below it."""
     x = pd.read_csv("data/penguins.csv")["body_mass_g"].dropna().to_numpy()
-    n, mu, sigma = len(x), x.mean(), x.std()
+    n, mu_hat, sigma = len(x), x.mean(), x.std()
     rng = np.random.default_rng(0)
-    data = rng.normal(mu, sigma, size=(simulations, n))
-    lam = n * (data.mean(axis=1) - mu) ** 2 / sigma ** 2
-    c = np.quantile(lam, .95)
 
-    fig, ax = plt.subplots(figsize=(5.8, 2.8), dpi=200)
-    ax.hist(lam, bins=np.linspace(0, 10, 51), density=True, color=BLUE, alpha=.35,
-            label="%d simulated data sets" % simulations)
+    def lam_sim(mu, m):
+        return n * (rng.normal(mu, sigma, size=(m, n)).mean(axis=1) - mu) ** 2 / sigma ** 2
+
+    fig, (left, right) = plt.subplots(1, 2, figsize=(7.6, 2.8), dpi=200,
+                                      gridspec_kw=dict(width_ratios=[1, 1.15]))
+
+    # left: the simulated distribution of lambda at one candidate, and its quantile
+    lam = lam_sim(mu_hat, simulations)
+    c = np.quantile(lam, .95)
+    bins = np.linspace(0, 10, 51)
+    left.hist(lam[lam <= c], bins=bins, density=False, weights=np.full((lam <= c).sum(), 1 / (simulations * (bins[1] - bins[0]))),
+              color=BLUE, alpha=.35)
+    left.hist(lam[lam > c], bins=bins, weights=np.full((lam > c).sum(), 1 / (simulations * (bins[1] - bins[0]))),
+              color=RED, alpha=.5)
     grid = np.linspace(.02, 10, 400)
-    ax.plot(grid, chi2.pdf(grid, df=1), color=GREY, lw=1.4, label=r"$\chi^2_1$")
-    ax.axvline(c, color=RED, lw=1.2, ls=(0, (4, 3)))
-    ax.text(c + .15, 1.05, "95%% quantile: %.2f" % c, color=RED, fontsize=10, va="top")
-    ax.set_xlabel(r"$\lambda(\mu; \mathbf{x})$")
-    ax.set_ylabel("density")
-    ax.set_xlim(0, 10)
-    ax.set_ylim(0, 1.2)
-    ax.legend(frameon=False, loc="center right")
-    for side in ("right", "top"):
-        ax.spines[side].set_visible(False)
+    left.plot(grid, chi2.pdf(grid, df=1), color=GREY, lw=1.2, label=r"$\chi^2_1$")
+    left.axvline(c, color=RED, lw=1.2, ls=(0, (4, 3)))
+    left.text(c + .2, .9, "$c(\\mu) = %.2f$" % c, color=RED, fontsize=10)
+    left.text(c + 1.2, .14, "5%", color=RED, fontsize=10)
+    left.set_xlabel(r"$\lambda(\mu; \mathbf{x})$, $\mathbf{x} \sim p(\mathbf{x} \mid \mu)$")
+    left.set_ylabel("density")
+    left.set_xlim(0, 10)
+    left.set_ylim(0, 1.2)
+    left.legend(frameon=False, loc="upper right")
+    left.set_title("simulated at one candidate $\\mu$", fontsize=10, loc="left")
+
+    # right: c(mu) on a grid of candidates, against the observed lambda(mu; x_obs)
+    mus = np.linspace(4060, 4345, candidates)
+    cs = np.array([np.quantile(lam_sim(m, per_candidate), .95) for m in mus])
+    fine = np.linspace(4040, 4365, 400)
+    observed = n * (mu_hat - fine) ** 2 / sigma ** 2
+    gap = n * (mu_hat - mus) ** 2 / sigma ** 2 - cs        # negative inside the interval
+    cross = [np.interp(0, [gap[k], gap[k + 1]], [mus[k], mus[k + 1]]) if gap[k] > gap[k + 1]
+             else np.interp(0, [gap[k + 1], gap[k]], [mus[k + 1], mus[k]])
+             for k in range(len(mus) - 1) if np.sign(gap[k]) != np.sign(gap[k + 1])]
+    right.plot(fine, observed, color=BLUE, lw=1.6, label=r"$\lambda(\mu; \mathbf{x}_\mathrm{obs})$")
+    right.plot(mus, cs, "o", ms=3, color=RED, label=r"$c(\mu)$, simulated")
+    lo, hi = min(cross), max(cross)
+    right.axvspan(lo, hi, color=BLUE, alpha=.12, lw=0)
+    right.set_xticks([lo, mu_hat, hi], ["%.0f" % lo, "%.0f" % mu_hat, "%.0f" % hi])
+    right.set_xlabel(r"$\mu$ (g)")
+    right.set_xlim(fine[0], fine[-1])
+    right.set_ylim(0, 12)
+    right.legend(frameon=False, loc="upper center", fontsize=9)
+    right.set_title("kept where $\\lambda(\\mu; \\mathbf{x}_\\mathrm{obs}) \\leq c(\\mu)$", fontsize=10, loc="left")
+    for ax in (left, right):
+        for side in ("right", "top"):
+            ax.spines[side].set_visible(False)
     fig.tight_layout()
     fig.savefig("figures/lec4/simulated-statistic.svg", bbox_inches="tight",
                 facecolor="white")
-    print("wrote figures/lec4/simulated-statistic.svg: c = %.3f" % c)
+    print("wrote figures/lec4/simulated-statistic.svg: c = %.3f, kept [%.0f, %.0f]"
+          % (c, lo, hi))
 
 
 def coverage():
