@@ -201,6 +201,8 @@ At $\theta = \theta^\*$, this is the distribution of $\lambda(\theta^\*; \mathbf
 
 ???
 
+The $\chi^2\_1$ curve is the right reference: the data are simulated at the same $\mu$ at which $\lambda$ is evaluated, which is the setting of Wilks' theorem with $\theta^\* = 4150$. The simulation recovers the theorem where it is exact; for a non-Gaussian model or a small $N$, the histogram would drift from the curve, and $c(\theta)$ is the one to trust. With data from another value, $\lambda(4150; \mathbf{x})$ would not be $\chi^2\_1$, but the construction never needs that case.
+
 This needs only a simulator of the model. Here the simulation replaces only the derivation of the $\chi^2$ distribution; $\lambda$ itself is still computed from the likelihood. The price is $M$ simulations per candidate $\theta$.
 
 Simulating instead of deriving is the idea behind simulation-based inference (Lecture 10), for models whose likelihood cannot even be written down.
