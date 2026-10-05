@@ -196,6 +196,20 @@ More data, a sharper parabola, a narrower interval.
 
 class: middle
 
+.center.width-70[![](figures/lec4/confidence-intervals.svg)]
+
+.center[50 colonies simulated from the model with $\mu^\ast = 4200$ g. Three intervals miss $\mu^\ast$.]
+
+.alert[95% of the intervals built by $C$ contain $\mu^\ast$. Whether $[4117, 4287]$ g does is unknown.]
+
+???
+
+$\mu^\*$ is known only because the data are simulated. With real data, we never know whether our interval is one of the 47 or one of the 3.
+
+---
+
+class: middle
+
 Wilks' theorem can be replaced by simulation. For any candidate $\theta$, the forward model gives the distribution of $\lambda(\theta; \mathbf{x})$ when the data come from $p(\mathbf{x} \mid \theta)$:
 1. simulate data sets $\mathbf{x}\_1, \ldots, \mathbf{x}\_M \sim p(\mathbf{x} \mid \theta)$,
 2. compute $\lambda(\theta; \mathbf{x}\_m)$ for each of them,
@@ -232,20 +246,6 @@ On the observed data, we compute $\lambda(\theta; \mathbf{x}\_\text{obs})$ at ev
 
 Each candidate is tested against its own threshold. In general $c(\theta)$ varies with $\theta$; for this model it does not, and the red dots scatter around 3.84 by Monte Carlo noise only.
 
-
----
-
-class: middle
-
-.center.width-70[![](figures/lec4/confidence-intervals.svg)]
-
-.center[50 colonies simulated from the model with $\mu^\ast = 4200$ g. Three intervals miss $\mu^\ast$.]
-
-.alert[95% of the intervals built by $C$ contain $\mu^\ast$. Whether $[4117, 4287]$ g does is unknown.]
-
-???
-
-$\mu^\*$ is known only because the data are simulated. With real data, we never know whether our interval is one of the 47 or one of the 3.
 
 ---
 
