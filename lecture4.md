@@ -156,17 +156,17 @@ $C(\mathbf{x})$ collects the $\theta$ that a test at level 5% would not reject. 
 
 class: middle
 
-For the mean body mass, with $\sigma$ fixed to $\hat{\sigma} = 801$ g,
-$$\lambda(\mu; \mathbf{x}) = \frac{1}{\sigma^2} \sum\_{i=1}^N \left[ (x\_i - \mu)^2 - (x\_i - \hat{\mu})^2 \right] = \frac{N (\hat{\mu} - \mu)^2}{\sigma^2}.$$
+.bold[Likelihood ratio.] For the mean body mass, with $\sigma$ fixed to $\hat{\sigma} = 801$ g, it is the squared number of standard errors $\sigma / \sqrt{N}$ between $\mu$ and $\hat{\mu}$,
+$$\lambda(\mu; \mathbf{x}) = \frac{N (\hat{\mu} - \mu)^2}{\sigma^2} = \left( \frac{\hat{\mu} - \mu}{\sigma / \sqrt{N}} \right)^2.$$
 
-To choose $c$, we need the distribution of $\lambda(\mu^\*; \mathbf{x})$ over data sets. It is a square,
-$$\lambda(\mu^\*; \mathbf{x}) = \left( \frac{\hat{\mu} - \mu^\*}{\sigma / \sqrt{N}} \right)^2.$$
-If $\mathbf{x} \sim p(\mathbf{x} \mid \mu^\*)$, then $\hat{\mu} \sim \mathcal{N}(\mu^\*, \sigma^2 / N)$: inside the parentheses, $\hat{\mu}$ minus its mean, divided by its standard deviation, is a standard Gaussian. A squared standard Gaussian is, by definition, $\chi^2\_1$ distributed: Wilks' theorem is exact here, with $c = 1.96^2$. The construction gives
-$$C(\mathbf{x}) = \left\\{ \mu : \frac{N (\hat{\mu} - \mu)^2}{\sigma^2} \leq 1.96^2 \right\\} = \left[ \hat{\mu} - 1.96 \frac{\sigma}{\sqrt{N}}, \hat{\mu} + 1.96 \frac{\sigma}{\sqrt{N}} \right].$$
+.bold[Distribution at the true value.] If $\mathbf{x} \sim p(\mathbf{x} \mid \mu^\*)$, then $\hat{\mu} \sim \mathcal{N}(\mu^\*, \sigma^2 / N)$, so the number of standard errors between $\hat{\mu}$ and $\mu^\*$ is a standard Gaussian. Its square is $\chi^2\_1$ by definition: Wilks' theorem is exact, and $c = 1.96^2 = 3.84$.
+
+.bold[Interval.] $\lambda(\mu; \mathbf{x}) \leq 1.96^2$ keeps every $\mu$ within 1.96 standard errors of $\hat{\mu}$,
+$$C(\mathbf{x}) = \left[ \hat{\mu} - 1.96 \frac{\sigma}{\sqrt{N}}, \hat{\mu} + 1.96 \frac{\sigma}{\sqrt{N}} \right].$$
 
 ???
 
-The cross term vanishes since $\sum\_i (x\_i - \hat{\mu}) = 0$. Exact for a known $\sigma$; with $\hat{\sigma}$ plugged in, Student's $t$ is exact, within a gram here.
+Step 1: $\lambda(\mu; \mathbf{x}) = \frac{1}{\sigma^2} \sum\_i \left[ (x\_i - \mu)^2 - (x\_i - \hat{\mu})^2 \right]$, the constant of the log-likelihood cancelling; expanding $x\_i - \mu = (x\_i - \hat{\mu}) + (\hat{\mu} - \mu)$, the cross term vanishes since $\sum\_i (x\_i - \hat{\mu}) = 0$. The square of a standard Gaussian is $\chi^2\_1$ by definition of $\chi^2\_k$, a sum of $k$ squared independent standard Gaussians. Exact for a known $\sigma$; with $\hat{\sigma}$ plugged in, Student's $t$ is exact, within a gram here.
 
 ---
 
