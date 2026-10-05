@@ -265,6 +265,37 @@ where
 
 class: middle
 
+## Prior predictive checks
+
+Often, the forward model $p(\mathbf{x} \mid \theta)$ is understood, but the prior $p(\theta)$ is more subjective and harder to justify.
+
+The consequences of prior choices in the context of the generative model can be assessed through .bold[prior predictive checks], which involve simulating data from the model using only the prior distributions, without conditioning on any observed data.
+
+---
+
+class: middle
+
+The prior predictive distribution is given by
+$$p(\mathbf{x}) = \int p(\mathbf{x} \mid \theta) p(\theta) d\theta.$$
+
+This distribution defines the data that we expect to observe under the model assumptions encoded in the prior. It should be examined to ensure that it aligns with domain knowledge and expectations about the data.
+
+---
+
+class: middle
+
+.center.width-65[![](figures/lec4/prior-predictive-check.png)]
+
+.center[Five colonies of 342 penguins simulated from the prior (top), and from a wider<br> prior on $\sigma^2$ (bottom), against the penguins actually measured.]
+
+???
+
+$\text{Uniform}(\sigma^2 \mid 0, 100)$ caps $\sigma$ at 10 g: every simulated colony collapses to a point. The check catches it before any data are used.
+
+---
+
+class: middle
+
 Fitting a Bayesian model to observed data $\mathbf{x}\_\text{obs}$ consists in computing the posterior distribution of the parameters given the data. Using Bayes' rule,
 $$p(\theta \mid \mathbf{x}\_\text{obs}) = \frac{p(\mathbf{x}\_\text{obs} \mid \theta) p(\theta)}{p(\mathbf{x}\_\text{obs})}.$$
 
@@ -308,37 +339,6 @@ and its 95% credible interval is $[4117, 4287]$ g, the confidence interval again
 The common mistake is to read a confidence interval as a credible interval.
 
 A flat prior on $\mathbb{R}$ would make the two intervals coincide exactly, but it is improper. With an informative prior or few data, they part ways.
-
----
-
-class: middle
-
-## Prior predictive checks
-
-Often, the forward model $p(\mathbf{x} \mid \theta)$ is understood, but the prior $p(\theta)$ is more subjective and harder to justify.
-
-The consequences of prior choices in the context of the generative model can be assessed through .bold[prior predictive checks], which involve simulating data from the model using only the prior distributions, without conditioning on any observed data.
-
----
-
-class: middle
-
-The prior predictive distribution is given by
-$$p(\mathbf{x}) = \int p(\mathbf{x} \mid \theta) p(\theta) d\theta.$$
-
-This distribution defines the data that we expect to observe under the model assumptions encoded in the prior. It should be examined to ensure that it aligns with domain knowledge and expectations about the data.
-
----
-
-class: middle
-
-.center.width-65[![](figures/lec4/prior-predictive-check.png)]
-
-.center[Five colonies of 342 penguins simulated from the prior (top), and from a wider<br> prior on $\sigma^2$ (bottom), against the penguins actually measured.]
-
-???
-
-$\text{Uniform}(\sigma^2 \mid 0, 100)$ caps $\sigma$ at 10 g: every simulated colony collapses to a point. The check catches it before any data are used.
 
 ---
 
