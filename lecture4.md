@@ -159,7 +159,7 @@ class: middle
 For the mean body mass, with $\sigma$ fixed to $\hat{\sigma} = 801$ g,
 $$\lambda(\mu; \mathbf{x}) = \frac{1}{\sigma^2} \sum\_{i=1}^N \left[ (x\_i - \mu)^2 - (x\_i - \hat{\mu})^2 \right] = \frac{N (\hat{\mu} - \mu)^2}{\sigma^2}.$$
 
-If $\mathbf{x} \sim p(\mathbf{x} \mid \mu^\*)$, then $\hat{\mu} \sim \mathcal{N}(\mu^\*, \sigma^2 / N)$, so
+To choose $c$, we need the distribution of $\lambda(\mu^\*; \mathbf{x})$. It depends on the data only through $\hat{\mu}$, and if $\mathbf{x} \sim p(\mathbf{x} \mid \mu^\*)$, then $\hat{\mu} \sim \mathcal{N}(\mu^\*, \sigma^2 / N)$, so
 $$\lambda(\mu^\*; \mathbf{x}) = Z^2, \quad Z = \frac{\hat{\mu} - \mu^\*}{\sigma / \sqrt{N}} \sim \mathcal{N}(0, 1).$$
 The sum of the squares of $k$ independent standard Gaussians is, by definition, $\chi^2\_k$ distributed. Hence $\lambda(\mu^\*; \mathbf{x}) \sim \chi^2\_1$: Wilks' theorem is exact here, with $c = 1.96^2$. The construction gives
 $$C(\mathbf{x}) = \left\\{ \mu : \frac{N (\hat{\mu} - \mu)^2}{\sigma^2} \leq 1.96^2 \right\\} = \left[ \hat{\mu} - 1.96 \frac{\sigma}{\sqrt{N}}, \hat{\mu} + 1.96 \frac{\sigma}{\sqrt{N}} \right].$$
