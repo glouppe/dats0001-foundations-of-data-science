@@ -189,7 +189,7 @@ class: middle
 The distribution of $\lambda(\theta; \mathbf{x})$ can also be obtained by brute force, with the forward model. For each candidate $\theta$:
 1. simulate data sets $\mathbf{x}\_1, \ldots, \mathbf{x}\_M \sim p(\mathbf{x} \mid \theta)$,
 2. compute $\lambda(\theta; \mathbf{x}\_m)$ for each of them,
-3. take $c(\theta)$ as their empirical 95% quantile.
+3. denote their empirical 95% quantile as $c(\theta)$.
 
 Then $C(\mathbf{x}\_\text{obs}) = \\{ \theta : \lambda(\theta; \mathbf{x}\_\text{obs}) \leq c(\theta) \\}$. This needs only a simulator of the model, and is valid for any $N$.
 
