@@ -148,7 +148,7 @@ Taking $\theta = \theta^\*$,
 $$\theta^\* \in C(\mathbf{x}) \iff \lambda(\theta^\*; \mathbf{x}) \leq c.$$
 For every data set $\mathbf{x}$, the two statements are both true or both false. They are the same event, with the same probability,
 $$P\_{\mathbf{x} \sim p(\mathbf{x} \mid \theta^\*)}\left( \theta^\* \in C(\mathbf{x}) \right) = P\_{\mathbf{x} \sim p(\mathbf{x} \mid \theta^\*)}\left( \lambda(\theta^\*; \mathbf{x}) \leq c \right) \approx 0.95.$$
-$C(\mathbf{x})$ is a 95% confidence interval, up to the large-$N$ approximation of Wilks' theorem.
+Therefore $C(\mathbf{x})$ is a 95% confidence interval, approximately for large $N$.
 
 ???
 
