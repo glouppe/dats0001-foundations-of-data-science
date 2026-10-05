@@ -129,10 +129,9 @@ class: middle
 The standard error measures how much $\hat{\theta}$ varies over data sets. A .bold[confidence interval] turns the same variability into a statement about $\theta^\*$: at 95%, it is a set $C(\mathbf{x})$ computed from the data such that, for every $\theta^\*$,
 $$P\_{\mathbf{x} \sim p(\mathbf{x} \mid \theta^\*)}\left( \theta^\* \in C(\mathbf{x}) \right) = 0.95.$$
 
-The .bold[likelihood ratio] compares each $\theta$ with the maximum likelihood estimate,
-$$\lambda(\theta; \mathbf{x}) = -2 \log \frac{p(\mathbf{x} \mid \theta)}{p(\mathbf{x} \mid \hat{\theta}(\mathbf{x}))}.$$
-
-Wilks' theorem states that if $\mathbf{x} \sim p(\mathbf{x} \mid \theta^\*)$, then $\lambda(\theta^\*; \mathbf{x})$ converges in distribution to $\chi^2\_k$ as $N \to \infty$, for all $\theta^\*$.
+To build such a set, we score each candidate $\theta$ by how much worse it explains the data than the maximum likelihood estimate, with the .bold[likelihood ratio]
+$$\lambda(\theta; \mathbf{x}) = -2 \log \frac{p(\mathbf{x} \mid \theta)}{p(\mathbf{x} \mid \hat{\theta}(\mathbf{x}))},$$
+and keep the candidates with a small score. Wilks' theorem tells how small: if $\mathbf{x} \sim p(\mathbf{x} \mid \theta^\*)$, then $\lambda(\theta^\*; \mathbf{x})$ converges in distribution to $\chi^2\_k$ as $N \to \infty$, for all $\theta^\*$.
 
 ???
 
