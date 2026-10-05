@@ -132,7 +132,7 @@ $$P\_{\mathbf{x} \sim p(\mathbf{x} \mid \theta^\*)}\left( \theta^\* \in C(\mathb
 The .bold[likelihood ratio] compares each $\theta$ with the maximum likelihood estimate,
 $$\lambda(\theta; \mathbf{x}) = -2 \log \frac{p(\mathbf{x} \mid \theta)}{p(\mathbf{x} \mid \hat{\theta}(\mathbf{x}))}.$$
 
-Wilks' theorem states that if $\mathbf{x} \sim p(\mathbf{x} \mid \theta^\*)$, then $\lambda(\theta^\*; \mathbf{x})$ converges in distribution to $\chi^2\_k$ as $N \to \infty$, whatever $\theta^\*$.
+Wilks' theorem states that if $\mathbf{x} \sim p(\mathbf{x} \mid \theta^\*)$, then $\lambda(\theta^\*; \mathbf{x})$ converges in distribution to $\chi^2\_k$ as $N \to \infty$, for all $\theta^\*$.
 
 ???
 
@@ -143,7 +143,7 @@ $C(\mathbf{x})$ is random, $\theta^\*$ is fixed. Wilks' theorem also needs regul
 class: middle
 
 Wilks' theorem does not require knowing $\theta^\*$. With $c$ the 95% quantile of $\chi^2\_k$,
-$$P\_{\mathbf{x} \sim p(\mathbf{x} \mid \theta^\*)}\left( \lambda(\theta^\*; \mathbf{x}) \leq c \right) \approx 0.95 \quad \text{whatever } \theta^\*.$$
+$$P\_{\mathbf{x} \sim p(\mathbf{x} \mid \theta^\*)}\left( \lambda(\theta^\*; \mathbf{x}) \leq c \right) \approx 0.95 \quad \text{for all } \theta^\*.$$
 
 Define the set of all parameter values that satisfy the same inequality,
 $$C(\mathbf{x}) = \\{ \theta : \lambda(\theta; \mathbf{x}) \leq c \\}.$$
@@ -168,7 +168,7 @@ $$\lambda(\mu; \mathbf{x}) = -2 \log \frac{p(\mathbf{x} \mid \mu)}{p(\mathbf{x} 
 
 If $\mathbf{x} \sim p(\mathbf{x} \mid \mu^\*)$, then $\hat{\mu} \sim \mathcal{N}(\mu^\*, \sigma^2 / N)$, and
 $$\lambda(\mu^\*; \mathbf{x}) = \left( \frac{\hat{\mu} - \mu^\*}{\sigma / \sqrt{N}} \right)^2$$
-is the square of a standard Gaussian, whatever the value of $\mu^\*$: the argument only uses that the data were generated at $\mu^\*$. Wilks' theorem is exact here: $\lambda(\mu^\*; \mathbf{x})$ is $\chi^2\_1$ distributed for every $N$, and its 95% quantile is $c = 1.96^2 = 3.84$.
+is the square of a standard Gaussian, for all $\mu^\*$: the argument only uses that the data were generated at $\mu^\*$. Wilks' theorem is exact here: $\lambda(\mu^\*; \mathbf{x})$ is $\chi^2\_1$ distributed for every $N$, and its 95% quantile is $c = 1.96^2 = 3.84$.
 
 ???
 
