@@ -156,13 +156,18 @@ $C(\mathbf{x})$ collects the $\theta$ that a test at level 5% would not reject. 
 
 class: middle
 
-.bold[Likelihood ratio.] For the mean body mass, with $\sigma$ fixed to $\hat{\sigma} = 801$ g, it is the squared number of standard errors $\sigma / \sqrt{N}$ between $\mu$ and $\hat{\mu}$,
-$$\lambda(\mu; \mathbf{x}) = \frac{N (\hat{\mu} - \mu)^2}{\sigma^2} = \left( \frac{\hat{\mu} - \mu}{\sigma / \sqrt{N}} \right)^2.$$
+## Example: mean body mass
 
-.bold[Distribution at the true value.] If $\mathbf{x} \sim p(\mathbf{x} \mid \mu^\*)$, then $\hat{\mu} \sim \mathcal{N}(\mu^\*, \sigma^2 / N)$, so the number of standard errors between $\hat{\mu}$ and $\mu^\*$ is a standard Gaussian. Its square is $\chi^2\_1$ by definition: Wilks' theorem is exact, and $c = 1.96^2 = 3.84$.
+.bold[Model.] $x\_i \sim \mathcal{N}(\mu, \sigma^2)$, with $\theta = \mu$ (so $k = 1$) and $\sigma$ fixed to $\hat{\sigma} = 801$ g. The maximum likelihood estimate is $\hat{\mu} = \frac{1}{N} \sum\_i x\_i$.
 
-.bold[Interval.] $\lambda(\mu; \mathbf{x}) \leq 1.96^2$ keeps every $\mu$ within 1.96 standard errors of $\hat{\mu}$,
-$$C(\mathbf{x}) = \left[ \hat{\mu} - 1.96 \frac{\sigma}{\sqrt{N}}, \hat{\mu} + 1.96 \frac{\sigma}{\sqrt{N}} \right].$$
+.bold[Likelihood ratio.]
+$$\lambda(\mu; \mathbf{x}) = -2 \log \frac{p(\mathbf{x} \mid \mu)}{p(\mathbf{x} \mid \hat{\mu})} = \frac{N (\hat{\mu} - \mu)^2}{\sigma^2}.$$
+
+.bold[Wilks' theorem.] If $\mathbf{x} \sim p(\mathbf{x} \mid \mu^\*)$, then $\hat{\mu} \sim \mathcal{N}(\mu^\*, \sigma^2 / N)$, and
+$$\lambda(\mu^\*; \mathbf{x}) = \left( \frac{\hat{\mu} - \mu^\*}{\sigma / \sqrt{N}} \right)^2$$
+is the square of a standard Gaussian: exactly $\chi^2\_1$, for every $N$.
+
+.bold[Quantile.] The 95% quantile of $\chi^2\_1$ is $c = 1.96^2 = 3.84$.
 
 ???
 
@@ -172,10 +177,10 @@ Step 1: $\lambda(\mu; \mathbf{x}) = \frac{1}{\sigma^2} \sum\_i \left[ (x\_i - \m
 
 class: middle
 
-.center.width-70[![](figures/lec4/likelihood-ratio.svg)]
+.center.width-65[![](figures/lec4/likelihood-ratio.svg)]
 
-For the penguins, $c = 3.84$ cuts the parabola at
-$$C(\mathbf{x}) = 4202 \pm 1.96 \times \frac{801}{\sqrt{342}} = [4117, 4287] \text{ g}.$$
+.bold[Confidence interval.]
+$$C(\mathbf{x}) = \\{ \mu : \lambda(\mu; \mathbf{x}) \leq 3.84 \\} = \hat{\mu} \pm 1.96 \frac{\sigma}{\sqrt{N}} = [4117, 4287] \text{ g}.$$
 
 ???
 
