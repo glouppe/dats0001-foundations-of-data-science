@@ -193,10 +193,12 @@ class: middle
 
 A linear Gaussian state-space model (LGSSM) is a state-space model where both the transition and observation models are linear Gaussian. That is,
 $$\begin{aligned}
-p(\mathbf{z}\_t | \mathbf{z}\_{t-1}) &= \mathcal{N}(\mathbf{z}\_t | \mathbf{A} \mathbf{z}\_{t-1}, \mathbf{Q}), \\\\
+p(\mathbf{z}\_t | \mathbf{z}\_{t-1}) &= \mathcal{N}(\mathbf{z}\_t | \mathbf{A} \mathbf{z}\_{t-1} + \mathbf{b}, \mathbf{Q}), \\\\
 p(\mathbf{x}\_t | \mathbf{z}\_t) &= \mathcal{N}(\mathbf{x}\_t | \mathbf{H} \mathbf{z}\_t, \mathbf{R}),
 \end{aligned}$$
-where $\mathbf{A}$ is the state transition matrix, $\mathbf{Q}$ is the process noise covariance, $\mathbf{H}$ is the observation matrix, and $\mathbf{R}$ is the observation noise covariance.
+where $\mathbf{A}$ is the state transition matrix, $\mathbf{b}$ an offset, $\mathbf{Q}$ the process noise covariance, $\mathbf{H}$ the observation matrix, and $\mathbf{R}$ the observation noise covariance.
+
+The wolf model is of this form, with $\mathbf{A} = (1 - \kappa \Delta t) \mathbf{I}$, $\mathbf{b} = \kappa \Delta t \\, \boldsymbol{\mu}$, $\mathbf{Q} = \sigma^2 \Delta t \\, \mathbf{I}$ and $\mathbf{H} = \mathbf{I}$.
 
 If the prior distribution $p(\mathbf{z}\_1)$ is also Gaussian, then all filtering, prediction, and smoothing distributions are Gaussian.
 
@@ -218,11 +220,11 @@ class: middle
 For the prediction step, we have
 $$\begin{aligned}
 p(\mathbf{z}\_t | \mathbf{x}\_{1:t-1}) &= \int p(\mathbf{z}\_{t-1} | \mathbf{x}\_{1:t-1}) p(\mathbf{z}\_t | \mathbf{z}\_{t-1}) d\mathbf{z}\_{t-1} \\\\
-&= \int \mathcal{N}(\mathbf{z}\_{t-1} | \mathbf{m}\_{t-1}, \mathbf{P}\_{t-1}) \mathcal{N}(\mathbf{z}\_t | \mathbf{A} \mathbf{z}\_{t-1}, \mathbf{Q}) d\mathbf{z}\_{t-1} \\\\
-&= \int \mathcal{N}\left(\begin{pmatrix} \mathbf{z}\_{t-1} \\\\ \mathbf{z}\_t \end{pmatrix} | \begin{bmatrix} \mathbf{m}\_{t-1} \\\\ \mathbf{A} \mathbf{m}\_{t-1} \end{bmatrix}, \begin{bmatrix} \mathbf{P}\_{t-1} & \mathbf{P}\_{t-1} \mathbf{A}^T \\\\ \mathbf{A} \mathbf{P}\_{t-1} & \mathbf{A} \mathbf{P}\_{t-1} \mathbf{A}^T + \mathbf{Q} \end{bmatrix}\right) d\mathbf{z}\_{t-1} \\\\
+&= \int \mathcal{N}(\mathbf{z}\_{t-1} | \mathbf{m}\_{t-1}, \mathbf{P}\_{t-1}) \mathcal{N}(\mathbf{z}\_t | \mathbf{A} \mathbf{z}\_{t-1} + \mathbf{b}, \mathbf{Q}) d\mathbf{z}\_{t-1} \\\\
+&= \int \mathcal{N}\left(\begin{pmatrix} \mathbf{z}\_{t-1} \\\\ \mathbf{z}\_t \end{pmatrix} | \begin{bmatrix} \mathbf{m}\_{t-1} \\\\ \mathbf{A} \mathbf{m}\_{t-1} + \mathbf{b} \end{bmatrix}, \begin{bmatrix} \mathbf{P}\_{t-1} & \mathbf{P}\_{t-1} \mathbf{A}^T \\\\ \mathbf{A} \mathbf{P}\_{t-1} & \mathbf{A} \mathbf{P}\_{t-1} \mathbf{A}^T + \mathbf{Q} \end{bmatrix}\right) d\mathbf{z}\_{t-1} \\\\
 &= \mathcal{N}(\mathbf{z}\_t | \mathbf{m}^-\_t, \mathbf{P}^-\_t),
 \end{aligned}$$
-where $\mathbf{m}^-\_t = \mathbf{A} \mathbf{m}\_{t-1}$ and $\mathbf{P}^-\_t = \mathbf{A} \mathbf{P}\_{t-1} \mathbf{A}^T + \mathbf{Q}$.
+where $\mathbf{m}^-\_t = \mathbf{A} \mathbf{m}\_{t-1} + \mathbf{b}$ and $\mathbf{P}^-\_t = \mathbf{A} \mathbf{P}\_{t-1} \mathbf{A}^T + \mathbf{Q}$.
 
 ---
 
@@ -392,7 +394,8 @@ To add stochasticity to the ODE, we need a continuous-time stochastic process th
 
 We can model the noise term $\mathbf{w}(t)$ as a standard Brownian motion (Wiener process) $W(t)$, which has the following properties:
 - $W(0) = 0$.
-- $W(t)$ has independent increments: for $0 \leq s < t$, $W(t) - W(s) \sim \mathcal{N}(0, t-s)$.
+- For $0 \leq s < t$, the increment $W(t) - W(s) \sim \mathcal{N}(0, t-s)$.
+- Increments over disjoint intervals are independent.
 - $W(t)$ is continuous in $t$.
 
 A vector $\mathbf{W}(t)$ has independent Brownian components.
@@ -451,7 +454,7 @@ class: middle
 Observed at times $t\_1 < t\_2 < \ldots$, possibly irregular, the OU process can be discretized exactly. With $\Delta\_i = t\_i - t\_{i-1}$,
 $$p(\mathbf{z}(t\_i) \mid \mathbf{z}(t\_{i-1})) = \mathcal{N}\left(\boldsymbol{\mu} + e^{-\kappa \Delta\_i} (\mathbf{z}(t\_{i-1}) - \boldsymbol{\mu}), \\, \frac{\sigma^2}{2\kappa} \left(1 - e^{-2\kappa \Delta\_i}\right) \mathbf{I}\right).$$
 
-This is a linear Gaussian transition, with $\mathbf{A}\_i = e^{-\kappa \Delta\_i} \mathbf{I}$ and an offset towards $\boldsymbol{\mu}$. The Kalman filter and smoother apply unchanged, with matrices that change with the time step. The figures of this lecture use it, at $\Delta = 0.25$.
+This is a linear Gaussian transition, with $\mathbf{A}\_i = e^{-\kappa \Delta\_i} \mathbf{I}$ and $\mathbf{b}\_i = (1 - e^{-\kappa \Delta\_i}) \boldsymbol{\mu}$. The Kalman filter and smoother apply unchanged, with matrices that change with the time step. The figures of this lecture use it, at $\Delta = 0.25$.
 
 ???
 
