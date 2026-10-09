@@ -278,7 +278,7 @@ class: middle
 
 The smoothing distributions $p(\mathbf{z}\_t | \mathbf{x}\_{1:T}) = \mathcal{N}(\mathbf{z}\_t | \mathbf{m}^s\_t, \mathbf{P}^s\_t)$ are also Gaussian with mean $\mathbf{m}^s\_t$ and covariance $\mathbf{P}^s\_t$.
 
-The parameters can be computed recursively using the .bold[Rauch-Tung-Striebel smoother] equations (proof omitted for brevity),
+The parameters can be computed recursively using the .bold[Rauch-Tung-Striebel smoother] equations,
 $$\begin{aligned}
 \mathbf{C}\_t &= \mathbf{P}\_t \mathbf{A}^T (\mathbf{P}^-\_{t+1})^{-1}, \\\\
 \mathbf{m}^s\_t &= \mathbf{m}\_t + \mathbf{C}\_t (\mathbf{m}^s\_{t+1} - \mathbf{m}^-\_{t+1}), \\\\
@@ -288,7 +288,12 @@ for $t = T-1, T-2, \ldots, 1$, with the base case $\mathbf{m}^s\_T = \mathbf{m}\
 
 ???
 
-XXX Check Sarkka's book for the full derivation. Consider adding it for completeness.
+The derivation follows the Bayes smoother, with Gaussians:
+1. The joint $p(\mathbf{z}\_t, \mathbf{z}\_{t+1} \mid \mathbf{x}\_{1:t})$ is Gaussian, with mean $(\mathbf{m}\_t, \mathbf{m}^-\_{t+1})$ and cross-covariance $\mathbf{P}\_t \mathbf{A}^T$.
+2. Conditioning on $\mathbf{z}\_{t+1}$ gives $p(\mathbf{z}\_t \mid \mathbf{z}\_{t+1}, \mathbf{x}\_{1:t})$, with mean $\mathbf{m}\_t + \mathbf{C}\_t (\mathbf{z}\_{t+1} - \mathbf{m}^-\_{t+1})$ and covariance $\mathbf{P}\_t - \mathbf{C}\_t \mathbf{P}^-\_{t+1} \mathbf{C}\_t^T$. By the Markov property, adding $\mathbf{x}\_{t+1:T}$ to the conditioning changes nothing.
+3. Averaging over $\mathbf{z}\_{t+1} \sim \mathcal{N}(\mathbf{m}^s\_{t+1}, \mathbf{P}^s\_{t+1})$ gives the recursion.
+
+The full derivation is in Särkkä & Svensson (2023), Ch 12.
 
 ---
 
