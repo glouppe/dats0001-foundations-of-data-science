@@ -298,11 +298,22 @@ $$p(\mathbf{z}\_t, \mathbf{z}\_{t+1} | \mathbf{x}\_{1:t}) = p(\mathbf{z}\_t | \m
 Given $\mathbf{z}\_{t+1}$, the later observations $\mathbf{x}\_{t+1:T}$ carry no further information on $\mathbf{z}\_t$ (Markov property). Conditioning the joint on $\mathbf{z}\_{t+1}$ gives
 $$p(\mathbf{z}\_t | \mathbf{z}\_{t+1}, \mathbf{x}\_{1:T}) = \mathcal{N}(\mathbf{z}\_t | \mathbf{m}\_t + \mathbf{C}\_t (\mathbf{z}\_{t+1} - \mathbf{m}^-\_{t+1}), \mathbf{P}\_t - \mathbf{C}\_t \mathbf{P}^-\_{t+1} \mathbf{C}\_t^T).$$
 
-Averaging over $p(\mathbf{z}\_{t+1} | \mathbf{x}\_{1:T}) = \mathcal{N}(\mathbf{z}\_{t+1} | \mathbf{m}^s\_{t+1}, \mathbf{P}^s\_{t+1})$ gives the smoothing distribution of $\mathbf{z}\_t$, with
+---
+
+class: middle
+
+Multiplying by the smoothing distribution $p(\mathbf{z}\_{t+1} | \mathbf{x}\_{1:T}) = \mathcal{N}(\mathbf{z}\_{t+1} | \mathbf{m}^s\_{t+1}, \mathbf{P}^s\_{t+1})$, computed at the previous step of the recursion, gives the joint
+$$\begin{aligned}
+p(\mathbf{z}\_{t+1}, \mathbf{z}\_t | \mathbf{x}\_{1:T}) &= p(\mathbf{z}\_{t+1} | \mathbf{x}\_{1:T}) p(\mathbf{z}\_t | \mathbf{z}\_{t+1}, \mathbf{x}\_{1:T}) \\\\
+&= \mathcal{N}\left(\begin{pmatrix} \mathbf{z}\_{t+1} \\\\ \mathbf{z}\_t \end{pmatrix} | \begin{bmatrix} \mathbf{m}^s\_{t+1} \\\\ \mathbf{m}^s\_t \end{bmatrix}, \begin{bmatrix} \mathbf{P}^s\_{t+1} & \mathbf{P}^s\_{t+1} \mathbf{C}\_t^T \\\\ \mathbf{C}\_t \mathbf{P}^s\_{t+1} & \mathbf{P}^s\_t \end{bmatrix}\right),
+\end{aligned}$$
+where
 $$\begin{aligned}
 \mathbf{m}^s\_t &= \mathbf{m}\_t + \mathbf{C}\_t (\mathbf{m}^s\_{t+1} - \mathbf{m}^-\_{t+1}), \\\\
-\mathbf{P}^s\_t &= \mathbf{P}\_t - \mathbf{C}\_t \mathbf{P}^-\_{t+1} \mathbf{C}\_t^T + \mathbf{C}\_t \mathbf{P}^s\_{t+1} \mathbf{C}\_t^T.
+\mathbf{P}^s\_t &= \mathbf{P}\_t - \mathbf{C}\_t \mathbf{P}^-\_{t+1} \mathbf{C}\_t^T + \mathbf{C}\_t \mathbf{P}^s\_{t+1} \mathbf{C}\_t^T = \mathbf{P}\_t + \mathbf{C}\_t (\mathbf{P}^s\_{t+1} - \mathbf{P}^-\_{t+1}) \mathbf{C}\_t^T.
 \end{aligned}$$
+
+Its marginal over $\mathbf{z}\_t$ is the smoothing distribution $\mathcal{N}(\mathbf{z}\_t | \mathbf{m}^s\_t, \mathbf{P}^s\_t)$.
 
 ???
 
