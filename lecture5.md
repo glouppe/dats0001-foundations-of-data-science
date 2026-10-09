@@ -370,9 +370,10 @@ class: middle
 
 ## Learning the parameters
 
-So far, the parameters $\theta = (\kappa, \sigma, \mathbf{R}, \boldsymbol{\mu})$ of the wolf model were taken as known. The Bayes filter also gives their likelihood: its normalizers multiply to
+So far, the parameters $\theta = (\kappa, \sigma, \mathbf{R}, \boldsymbol{\mu})$ of the wolf model were taken as known. The Bayes filter also gives their likelihood. At each step, the update normalizes by
+$$p(\mathbf{x}\_t \mid \mathbf{x}\_{1:t-1}, \theta) = \int p(\mathbf{x}\_t \mid \mathbf{z}\_t, \theta) \\, p(\mathbf{z}\_t \mid \mathbf{x}\_{1:t-1}, \theta) \\, d\mathbf{z}\_t.$$
+The product of these normalizers is the marginal likelihood of the data,
 $$p(\mathbf{x}\_{1:T} \mid \theta) = \prod\_{t=1}^T p(\mathbf{x}\_t \mid \mathbf{x}\_{1:t-1}, \theta).$$
-This is the marginal likelihood of the data, in which all the states are integrated out.
 
 It can be maximized over $\theta$, or combined with a prior $p(\theta)$ into a posterior.
 
