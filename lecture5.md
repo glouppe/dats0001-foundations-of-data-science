@@ -351,13 +351,28 @@ class: middle
 
 With discrete states, the integrals of the Bayes filter become sums over the $K$ states. Writing $\alpha\_t(j) = p(z\_t = j \mid x\_{1:t})$,
 $$\alpha\_t(j) \propto p(x\_t \mid z\_t = j) \sum\_{i=1}^K \mathbf{A}\_{i, j} \, \alpha\_{t-1}(i),$$
-normalized over $j$. This is the .bold[forward algorithm]. Each step costs $K^2$ operations.
+normalized over $j$. This is the .bold[forward algorithm].
 
-A similar backward recursion gives the smoothing distributions. The two recursions form the .bold[forward-backward algorithm].
+A backward recursion then gives the smoothing distributions. Together, the two recursions form the .bold[forward-backward algorithm].
+
+---
+
+class: middle
+
+The .bold[forward-backward algorithm], with the prior $\pi\_j = p(z\_1 = j)$:
+1. Forward pass. Set $\alpha\_1(j) \propto \pi\_j \\, p(x\_1 \mid z\_1 = j)$. For $t = 2, \ldots, T$,
+$$\alpha\_t(j) \propto p(x\_t \mid z\_t = j) \sum\_{i=1}^K \mathbf{A}\_{i, j} \\, \alpha\_{t-1}(i).$$
+2. Backward pass. Set $\beta\_T(i) = 1$. For $t = T-1, \ldots, 1$,
+$$\beta\_t(i) \propto \sum\_{j=1}^K \mathbf{A}\_{i, j} \\, p(x\_{t+1} \mid z\_{t+1} = j) \\, \beta\_{t+1}(j).$$
+3. Smoothing. For $t = 1, \ldots, T$, $p(z\_t = j \mid x\_{1:T}) \propto \alpha\_t(j) \\, \beta\_t(j)$.
+
+Each pass costs $K^2 T$ operations.
 
 ???
 
-In matrix form, $\boldsymbol{\alpha}\_t \propto \mathbf{O}\_t \mathbf{A}^T \boldsymbol{\alpha}\_{t-1}$, with $\mathbf{O}\_t$ the diagonal matrix of $p(x\_t \mid z\_t = j)$ and $\boldsymbol{\alpha}\_1 \propto \mathbf{O}\_1 \boldsymbol{\pi}$ for the prior $\boldsymbol{\pi}$. Backward: $\boldsymbol{\beta}\_t \propto \mathbf{A} \mathbf{O}\_{t+1} \boldsymbol{\beta}\_{t+1}$ from $\boldsymbol{\beta}\_T = \mathbf{1}$, and the smoothing distributions are $\boldsymbol{\gamma}\_t \propto \boldsymbol{\alpha}\_t \odot \boldsymbol{\beta}\_t$.
+$\alpha\_t(j)$ is the filtering distribution $p(z\_t = j \mid x\_{1:t})$; $\beta\_t(i)$ is proportional to $p(x\_{t+1:T} \mid z\_t = i)$, the probability of the future observations. Their product is proportional to $p(z\_t = j \mid x\_{1:T})$ by Bayes' rule. The normalizations only keep the numbers in range.
+
+In matrix form, $\boldsymbol{\alpha}\_t \propto \mathbf{O}\_t \mathbf{A}^T \boldsymbol{\alpha}\_{t-1}$, with $\mathbf{O}\_t$ the diagonal matrix of $p(x\_t \mid z\_t = j)$ and $\boldsymbol{\alpha}\_1 \propto \mathbf{O}\_1 \boldsymbol{\pi}$; $\boldsymbol{\beta}\_t \propto \mathbf{A} \mathbf{O}\_{t+1} \boldsymbol{\beta}\_{t+1}$ from $\boldsymbol{\beta}\_T = \mathbf{1}$; and the smoothing distributions are $\boldsymbol{\gamma}\_t \propto \boldsymbol{\alpha}\_t \odot \boldsymbol{\beta}\_t$.
 ---
 
 class: middle
