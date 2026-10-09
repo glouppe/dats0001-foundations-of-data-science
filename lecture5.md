@@ -13,7 +13,7 @@ Prof. Gilles Louppe<br>
 class: middle
 
 .center.width-70[![](figures/lec5/wolf-gps-observations.png)]
-.center[Today's case study: .bold[tracking] the location of a wolf<br> over time using noisy GPS observations.]
+.center[Today's case study: .bold[tracking] the location of a wolf<br> over time from noisy GPS observations, here simulated.]
 
 ---
 
@@ -175,9 +175,15 @@ class: middle
 
 .center.width-10[![](figures/lec5/tractor.png)]
 
-Although the Bayes filter and Bayes smoother provide a general framework for inference in state-space models, they are .bold[rarely tractable in practice] as they involve integrals that are difficult to compute.
+The Bayes filter and smoother apply to any state-space model, but their integrals have no closed form in general.
 
-Further assumptions on the transition and observation models are required for closed-form solutions.
+Two classes of models are exceptions:
+- linear Gaussian models, where the integrals are Gaussian (Kalman filter and smoother);
+- hidden Markov models, where they are finite sums (forward-backward algorithm).
+
+???
+
+Other models need approximate inference, by sampling (L6) or optimization (L9).
 
 ---
 
@@ -302,56 +308,25 @@ class: middle
 
 ## Hidden Markov models
 
-A hidden Markov model (HMM) is a state-space model where all  variables are discrete and the transition and observation models are categorical distributions. That is,
-$$\begin{aligned}
-p(z\_t=j | z\_{t-1}=i) &= \mathbf{A}\_{i, j}, \\\\
-p(x\_t=k | z\_t=j) &= \mathbf{B}\_{j, k},
-\end{aligned}$$
-where $\mathbf{A}$ is the state transition matrix and $\mathbf{B}$ is the observation matrix.
+A .bold[hidden Markov model] (HMM) is a state-space model whose states are discrete, $z\_t \in \\{1, \ldots, K\\}$, with transition probabilities
+$$p(z\_t = j \mid z\_{t-1} = i) = \mathbf{A}\_{i, j},$$
+and any observation model $p(x\_t \mid z\_t = j)$ for each state $j$. It is the mixture model of Lecture 4, with a component that switches over time.
 
-If the prior distribution $p(z\_1)$ is also categorical, then all filtering, prediction, and smoothing distributions are categorical and can be computed exactly by enumeration.
+.italic[Example.] The behavior of a wolf (resting, foraging, traveling) as the state, its speed as the observation. $\mathbf{A}$ says how often the wolf switches from one behavior to another.
 
 ---
 
 class: middle
 
-.italic[Example.] Modeling the behavior of a wolf.
+With discrete states, the integrals of the Bayes filter become sums over the $K$ states. Writing $\alpha\_t(j) = p(z\_t = j \mid x\_{1:t})$,
+$$\alpha\_t(j) \propto p(x\_t \mid z\_t = j) \sum\_{i=1}^K \mathbf{A}\_{i, j} \, \alpha\_{t-1}(i),$$
+normalized over $j$. This is the .bold[forward algorithm], at a cost of $K^2$ operations per step.
 
-- States $z\_t \in \\{1, \ldots, K\\}$ represent the behavior of the animal at time $t$ (e.g., resting, foraging, traveling).
-- Observations $x\_t \in \\{1, \ldots, M\\}$ represent discrete measurements related to the animal's behavior (e.g., GPS speed categories, activity levels).
-- Transition model $p(z\_t | z\_{t-1})$ captures the probabilities of switching between different behaviors.
-- Observation model $p(x\_t | z\_t)$ captures the probabilities of observing certain measurements given the animal's behavior.
-
----
-
-class: middle
-
-The .bold[forward algorithm] provides a closed-form expression for the filtering distributions in hidden Markov models.
-
-At each time step $t$, $p(z\_t | x\_{1:t})$ is categorical with parameters $\alpha\_t(j) = p(z\_t=j | x\_{1:t})$. These parameters can be computed recursively using the forward algorithm equations
-$$\boldsymbol{\alpha}\_t \propto \mathbf{O}\_t \mathbf{A}^T \boldsymbol{\alpha}\_{t-1},$$
-for $t = 1, 2, \ldots, T$, with the base case $\boldsymbol{\alpha}\_1 \propto \mathbf{O}\_1 \boldsymbol{\pi}$, where $\boldsymbol{\pi}$ are the parameters of the prior distribution $p(z\_1)$ and $\mathbf{O}\_t$ is a diagonal matrix with entries $\mathbf{B}\_{:, x\_t}$ (the $x\_t$-th column of $\mathbf{B}$). The proportionality constant is obtained by normalizing $\boldsymbol{\alpha}\_t$ so that its entries sum to 1.
-
----
-
-class: middle
-
-The smoothing distributions $p(z\_t | x\_{1:T})$ are also categorical with parameters $\gamma\_t(j) = p(z\_t=j | x\_{1:T})$. The parameters can be computed recursively using the .bold[backward algorithm] equations
-$$\boldsymbol{\beta}\_t \propto \mathbf{A} \mathbf{O}\_{t+1} \boldsymbol{\beta}\_{t+1},$$
-for $t = T-1, T-2, \ldots, 1$, with the base case $\boldsymbol{\beta}\_T = \mathbf{1}$, where $\mathbf{1}$ is a vector of ones. The proportionality constant is obtained by normalizing $\boldsymbol{\beta}\_t$ so that its entries sum to 1.
-
-The smoothing parameters are then given by $\boldsymbol{\gamma}\_t \propto \boldsymbol{\alpha}\_t \odot \boldsymbol{\beta}\_t$, where $\odot$ denotes the element-wise product.
-
----
-
-class: middle
-
-Linear Gaussian state-space models and hidden Markov models are the two classes of state-space models in which the Bayes filter and smoother have closed forms.
+A similar backward recursion gives the smoothing distributions: together, the .bold[forward-backward algorithm].
 
 ???
 
-Both are restrictive: linear dynamics with Gaussian noise, or a finite number of states. Other models need approximate inference, by sampling (L6) or optimization (L9).
-
+In matrix form, $\boldsymbol{\alpha}\_t \propto \mathbf{O}\_t \mathbf{A}^T \boldsymbol{\alpha}\_{t-1}$, with $\mathbf{O}\_t$ the diagonal matrix of $p(x\_t \mid z\_t = j)$ and $\boldsymbol{\alpha}\_1 \propto \mathbf{O}\_1 \boldsymbol{\pi}$ for the prior $\boldsymbol{\pi}$. Backward: $\boldsymbol{\beta}\_t \propto \mathbf{A} \mathbf{O}\_{t+1} \boldsymbol{\beta}\_{t+1}$ from $\boldsymbol{\beta}\_T = \mathbf{1}$, and the smoothing distributions are $\boldsymbol{\gamma}\_t \propto \boldsymbol{\alpha}\_t \odot \boldsymbol{\beta}\_t$.
 ---
 
 class: middle
@@ -369,6 +344,10 @@ We have so far assumed that time is discretized regularly with a fixed time step
 However, 
 - physical processes are often more naturally modeled in .bold[continuous time];
 - observations may be collected at .bold[irregular time intervals], triggered by events rather than a clock, or at multiple time scales.
+
+???
+
+Filtering at scale is called .bold[data assimilation]: weather forecasts, at ECMWF or the RMI, update a model of the atmosphere with new observations every few hours.
 
 ---
 
@@ -390,32 +369,18 @@ where $\mathbf{z}(t)$ is the state at time $t$ and $\mathbf{w}(t)$ is continuous
 
 class: middle
 
-Omitting $\frac{d\mathbf{w}(t)}{dt}$ (for now), we get a .bold[deterministic] dynamical system described by an .bold[ordinary differential equation] (ODE)
+Without the noise, we get a .bold[deterministic] system, an .bold[ordinary differential equation] (ODE),
 $$\frac{d\mathbf{z}(t)}{dt} = f(\mathbf{z}(t)).$$
 
-The solution of this ODE with initial condition $\mathbf{z}(0) = \mathbf{z}\_0$ is given by
-$$\mathbf{z}(t) = \mathbf{z}\_0 + \int\_0^t f(\mathbf{z}(\tau)) d\tau.$$
-
----
-
-class: middle
-
-## Example: Exponential decay to an equilibrium point
-
-$$\frac{dz(t)}{dt} = -\kappa (z(t) - \mu),$$
-where $\kappa > 0$ is the rate of decay and $\mu$ is the equilibrium point.
-
-- If $z(0) > \mu$, then $z(t)$ decreases towards $\mu$ as $t$ increases.
-- If $z(0) < \mu$, then $z(t)$ increases towards $\mu$ as $t$ increases.
-- Solution: $$z(t) = \mu + (z(0) - \mu) e^{-\kappa t}.$$
-
-This is deterministic: given $z(0)$, the state $z(t)$ is fully determined for all $t \geq 0$.
+.italic[Example.] Exponential decay to an equilibrium point $\mu$,
+$$\frac{dz(t)}{dt} = -\kappa (z(t) - \mu), \quad \text{with solution} \quad z(t) = \mu + (z(0) - \mu) e^{-\kappa t}.$$
+The state moves towards $\mu$ from either side, and is fully determined by $z(0)$.
 
 ???
 
-The decay is 'exponential' because the difference $z(t) - \mu$ decreases exponentially fast.
+The solution of an ODE with initial condition $\mathbf{z}\_0$ is $\mathbf{z}(t) = \mathbf{z}\_0 + \int\_0^t f(\mathbf{z}(\tau)) d\tau$.
 
-... although the system approaches the equilibrium point $\mu$ asymptotically, it never actually reaches it in finite time.
+The decay is exponential because the difference $z(t) - \mu$ shrinks exponentially fast; the state approaches $\mu$ without reaching it in finite time.
 
 ---
 
@@ -436,32 +401,15 @@ A vector $\mathbf{W}(t)$ has independent Brownian components.
 
 class: middle
 
-Adding Brownian motion to the ODE, we get a .bold[stochastic differential equation] (SDE)
-$$\frac{d\mathbf{z}(t)}{dt} = f(\mathbf{z}(t)) + \frac{d\mathbf{W}(t)}{dt},$$
-where $\frac{d\mathbf{W}(t)}{dt}$ is an informal notation for white noise.
+Adding Brownian motion to the ODE, scaled by a .bold[diffusion term] $g$, gives a .bold[stochastic differential equation] (SDE),
+$$d\mathbf{z}(t) = f(\mathbf{z}(t)) \\, dt + g(\mathbf{z}(t)) \\, d\mathbf{W}(t).$$
+Over an infinitesimal interval $dt$, the drift $f \\, dt$ is the deterministic change of the state, and the diffusion $g \\, d\mathbf{W}$ its random change.
 
-More rigorously, Brownian motion is nowhere differentiable and the notation $\frac{d\mathbf{W}(t)}{dt}$ is only symbolic. The SDE can instead be defined in differential form as
-$$d\mathbf{z}(t) = f(\mathbf{z}(t)) dt + d\mathbf{W}(t).$$
-
-???
-
-The "differential form" means that the change in $\mathbf{z}(t)$ over an infinitesimal time interval $dt$ is given by the sum of a deterministic term $f(\mathbf{z}(t), t) dt$ and a stochastic term $d\mathbf{W}(t)$.
-
----
-
-class: middle
-
-For more generality, we can extend $f(\mathbf{z}(t))$ to depend on time $t$ as well, leading to a time-inhomogeneous SDE
-$$d\mathbf{z}(t) = f(\mathbf{z}(t), t) dt + d\mathbf{W}(t).$$
-
-We can also introduce a .bold[diffusion term] $g(\mathbf{z}(t), t)$ to scale the noise, leading to the SDE
-$$d\mathbf{z}(t) = f(\mathbf{z}(t), t) dt + g(\mathbf{z}(t), t) d\mathbf{W}(t).$$
-
-In this form, the SDE describes the infinitesimal change in the state $\mathbf{z}(t)$ over an infinitesimal time interval $dt$.
-- The drift term $f(\mathbf{z}(t), t) dt$ represents the deterministic change in the state.
-- The diffusion term $g(\mathbf{z}(t), t) d\mathbf{W}(t)$ represents the stochastic change in the state due to Brownian motion.
+The differential form is needed because Brownian motion is nowhere differentiable: $d\mathbf{W}(t)/dt$, white noise, is only symbolic.
 
 ???
+
+The differential form needs a choice of stochastic integral to have a meaning; the standard one is Itô's. Both $f$ and $g$ may also depend on $t$.
 
 Teaser: this equation is the basis of modern generative models such as .bold[diffusion models] used in image synthesis (e.g., DALL-E 2, Stable Diffusion).
 
@@ -488,40 +436,28 @@ The discrete-time model is the Euler-Maruyama discretization of the OU process w
 class: middle
 
 .center.width-70[![](figures/lec5/wolf-true-trajectory.png)]
-.center[Example of continuous trajectory generated from the Ornstein-Uhlenbeck process.<br>(This is the true trajectory used throughout the lecture.)]
+.center[The true trajectory behind the GPS observations: an Ornstein-Uhlenbeck process,<br> simulated on a fine grid and observed every 0.25 time units.]
+
+???
+
+The discrete-time model of Part I is an approximation of the process that generated the data. The next slide makes it exact.
 
 ---
 
 class: middle
 
-## Observations in continuous time
+## Exact discretization
 
-In continuous-time state-space models, the observation model can be defined as a conditional distribution $p(\mathbf{x}({t\_i}) | \mathbf{z}(t\_i))$ at any (continuous) time point $t\_i$.
+Observed at times $t\_1 < t\_2 < \ldots$, possibly irregular, the OU process can be discretized exactly. With $\Delta\_i = t\_i - t\_{i-1}$,
+$$p(\mathbf{z}(t\_i) \mid \mathbf{z}(t\_{i-1})) = \mathcal{N}\left(\boldsymbol{\mu} + e^{-\kappa \Delta\_i} (\mathbf{z}(t\_{i-1}) - \boldsymbol{\mu}), \\, \frac{\sigma^2}{2\kappa} \left(1 - e^{-2\kappa \Delta\_i}\right) \mathbf{I}\right).$$
 
-This is similar to the discrete-time case, except that observations can be collected at .bold[irregular time intervals] $t\_1 < t\_2 < \ldots < t\_N$ rather than at fixed time steps.
+This is a linear Gaussian transition, with $\mathbf{A}\_i = e^{-\kappa \Delta\_i} \mathbf{I}$ and an offset towards $\boldsymbol{\mu}$. The Kalman filter and smoother apply unchanged, with matrices that change with the time step. The figures of this lecture use it, at $\Delta = 0.25$.
 
----
+???
 
-class: middle
+For a small $\Delta\_i$, $e^{-\kappa \Delta\_i} \approx 1 - \kappa \Delta\_i$ and the variance is close to $\sigma^2 \Delta\_i$: the Euler-Maruyama model of Part I.
 
-## Linear Gaussian continuous-time state-space models
-
-Linear Gaussian continuous-time state-space models are continuous-time analogs of linear Gaussian state-space models.
-
-They are defined by linear SDEs for the state dynamics and linear Gaussian observation models,
-$$\begin{aligned}
-d\mathbf{z}(t) &= \mathbf{F} \mathbf{z}(t) dt + \mathbf{Q}^{1/2} d\mathbf{W}(t), \\\\
-\mathbf{x}(t\_i) &\sim \mathcal{N}(\mathbf{x}(t\_i) | \mathbf{H} \mathbf{z}(t\_i), \mathbf{R}),
-\end{aligned}$$
-where $\mathbf{F}$ is the feedback matrix, $\mathbf{Q}$ is the spectral density of the noise, $\mathbf{H}$ is the observation matrix, and $\mathbf{R}$ is the observation noise covariance.
-
----
-
-class: middle
-
-Filtering and smoothing distributions $p(\mathbf{z}(t\_i) | \mathbf{x}(t\_{1:i}))$ and $p(\mathbf{z}(t) | \mathbf{x}(t\_{1:N}))$ can be computed exactly using continuous-time analogs of the Kalman filter and Rauch-Tung-Striebel smoother.
-
-Both now correspond to stochastic processes over continuous time rather than sequences over discrete time steps.
+Any linear SDE $d\mathbf{z} = \mathbf{F} \mathbf{z} \\, dt + \mathbf{L} \\, d\mathbf{W}$ discretizes the same way, with $\mathbf{A}\_i = e^{\mathbf{F} \Delta\_i}$ (Särkkä & Svensson 2023, Ch 4).
 
 ---
 
