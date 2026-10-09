@@ -384,7 +384,7 @@ class: middle
 
 .center.width-80[![](figures/lec5/hmm-wolf.svg)]
 
-.center[A simulated wolf switching between three behaviors, observed through its speed.<br> The most probable state is right 94% of the time when filtering, 97% when smoothing.]
+.center[A simulated wolf switching between three behaviors, observed through its speed.<br> Its most probable state is right 94% of the time filtering, 97% smoothing.]
 
 ???
 
