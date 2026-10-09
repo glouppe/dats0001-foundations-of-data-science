@@ -288,14 +288,25 @@ $$\begin{aligned}
 \end{aligned}$$
 for $t = T-1, T-2, \ldots, 1$, with the base case $\mathbf{m}^s\_T = \mathbf{m}\_T$ and $\mathbf{P}^s\_T = \mathbf{P}\_T$.
 
+---
+
+class: middle
+
+.italic[Proof.] Given $\mathbf{x}\_{1:t}$, the states $\mathbf{z}\_t$ and $\mathbf{z}\_{t+1} = \mathbf{A} \mathbf{z}\_t + \mathbf{b} + \text{noise}$ are jointly Gaussian,
+$$p(\mathbf{z}\_t, \mathbf{z}\_{t+1} | \mathbf{x}\_{1:t}) = \mathcal{N}\left(\begin{pmatrix} \mathbf{z}\_t \\\\ \mathbf{z}\_{t+1} \end{pmatrix} | \begin{bmatrix} \mathbf{m}\_t \\\\ \mathbf{m}^-\_{t+1} \end{bmatrix}, \begin{bmatrix} \mathbf{P}\_t & \mathbf{P}\_t \mathbf{A}^T \\\\ \mathbf{A} \mathbf{P}\_t & \mathbf{P}^-\_{t+1} \end{bmatrix}\right).$$
+
+Given $\mathbf{z}\_{t+1}$, the later observations $\mathbf{x}\_{t+1:T}$ carry no further information on $\mathbf{z}\_t$ (Markov property). Conditioning the joint on $\mathbf{z}\_{t+1}$ gives
+$$p(\mathbf{z}\_t | \mathbf{z}\_{t+1}, \mathbf{x}\_{1:T}) = \mathcal{N}(\mathbf{z}\_t | \mathbf{m}\_t + \mathbf{C}\_t (\mathbf{z}\_{t+1} - \mathbf{m}^-\_{t+1}), \mathbf{P}\_t - \mathbf{C}\_t \mathbf{P}^-\_{t+1} \mathbf{C}\_t^T).$$
+
+Averaging over $p(\mathbf{z}\_{t+1} | \mathbf{x}\_{1:T}) = \mathcal{N}(\mathbf{z}\_{t+1} | \mathbf{m}^s\_{t+1}, \mathbf{P}^s\_{t+1})$ gives the smoothing distribution of $\mathbf{z}\_t$, with
+$$\begin{aligned}
+\mathbf{m}^s\_t &= \mathbf{m}\_t + \mathbf{C}\_t (\mathbf{m}^s\_{t+1} - \mathbf{m}^-\_{t+1}), \\\\
+\mathbf{P}^s\_t &= \mathbf{P}\_t - \mathbf{C}\_t \mathbf{P}^-\_{t+1} \mathbf{C}\_t^T + \mathbf{C}\_t \mathbf{P}^s\_{t+1} \mathbf{C}\_t^T.
+\end{aligned}$$
+
 ???
 
-The derivation follows the Bayes smoother, with Gaussians:
-1. The joint $p(\mathbf{z}\_t, \mathbf{z}\_{t+1} \mid \mathbf{x}\_{1:t})$ is Gaussian, with mean $(\mathbf{m}\_t, \mathbf{m}^-\_{t+1})$ and cross-covariance $\mathbf{P}\_t \mathbf{A}^T$.
-2. Conditioning on $\mathbf{z}\_{t+1}$ gives $p(\mathbf{z}\_t \mid \mathbf{z}\_{t+1}, \mathbf{x}\_{1:t})$, with mean $\mathbf{m}\_t + \mathbf{C}\_t (\mathbf{z}\_{t+1} - \mathbf{m}^-\_{t+1})$ and covariance $\mathbf{P}\_t - \mathbf{C}\_t \mathbf{P}^-\_{t+1} \mathbf{C}\_t^T$. By the Markov property, adding $\mathbf{x}\_{t+1:T}$ to the conditioning changes nothing.
-3. Averaging over $\mathbf{z}\_{t+1} \sim \mathcal{N}(\mathbf{m}^s\_{t+1}, \mathbf{P}^s\_{t+1})$ gives the recursion.
-
-The full derivation is in Särkkä & Svensson (2023), Ch 12.
+The conditioning and the averaging are the two formulas of the Gaussian cheat sheet at the end of Lecture 4. The full derivation is in Särkkä & Svensson (2023), Ch 12.
 
 ---
 
