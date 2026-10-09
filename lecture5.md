@@ -25,7 +25,7 @@ class: middle
 
 class: middle
 
-.center[![](figures/lec5/lvm.svg)]
+.center.width-50[![](figures/lec5/lvm.svg)]
 
 ## Static latent variable models 
 
@@ -53,7 +53,7 @@ In this context, a .bold[state-space model] is a latent variable model that expl
 
 class: middle
 
-.center[![](figures/lec5/sm.svg)]
+.center.width-50[![](figures/lec5/sm.svg)]
 
 In a Markovian state-space model, the latent variables form a Markov chain $$p(\mathbf{z}\_t | \mathbf{z}\_{1:t-1}) = p(\mathbf{z}\_t | \mathbf{z}\_{t-1}),$$ where the conditional distribution $p(\mathbf{z}\_t | \mathbf{z}\_{t-1})$ is called the .bold[transition model].
 
