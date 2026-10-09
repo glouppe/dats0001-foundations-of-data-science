@@ -529,8 +529,6 @@ The discrete-time model of Part I is an approximation of the process that genera
 
 class: middle
 
-## Exact discretization
-
 The OU process can be discretized exactly, even at irregular observation times $t\_1 < t\_2 < \ldots$. With $\Delta\_i = t\_i - t\_{i-1}$,
 $$p(\mathbf{z}(t\_i) \mid \mathbf{z}(t\_{i-1})) = \mathcal{N}\left(\boldsymbol{\mu} + e^{-\kappa \Delta\_i} (\mathbf{z}(t\_{i-1}) - \boldsymbol{\mu}), \\, \frac{\sigma^2}{2\kappa} \left(1 - e^{-2\kappa \Delta\_i}\right) \mathbf{I}\right).$$
 
