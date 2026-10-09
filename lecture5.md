@@ -445,13 +445,15 @@ $$\frac{dz\_1}{dt} = s (z\_2 - z\_1), \quad \frac{dz\_2}{dt} = z\_1 (r - z\_3) -
 
 .center.width-90[![](figures/lec5/ode-discretization.svg)]
 
-.center[In continuous and in discrete time, the trajectories fill the same butterfly but part after about two time units.]
+.center[The continuous-time trajectory and its discrete-time version part after about two time units.]
 
 ???
 
 With $s = 10$, $r = 28$ and $b = 8/3$. Lorenz (1963) derived these equations as a crude model of convection in the atmosphere, and found that two nearby starting points end up far apart. This is why weather forecasts lose their skill after a few days, and why data assimilation keeps correcting them with observations.
 
 Here the discretization error plays the role of the perturbation: chaos amplifies it until the two trajectories have nothing in common, while both stay on the attractor.
+
+A computer cannot draw a continuous path either. The grey curve comes from a high-order solver (DOP853) at a relative tolerance of $10^{-12}$, whose error stays negligible over these 8 time units. A plain Euler scheme, even with a step of $10^{-4}$, would itself part from the true trajectory before $t = 15$.
 ---
 
 class: middle
@@ -498,6 +500,8 @@ $$d\mathbf{z} = f(\mathbf{z}) \\, dt + \sigma \\, d\mathbf{W}.$$
 ???
 
 The discrete model sees the noise only summed over each step, $\mathbf{w}\_t = \sigma (\mathbf{W}(t) - \mathbf{W}(t - \Delta t))$. Here $\sigma = 3$.
+
+There is no exact way to simulate this SDE. The grey curve uses Euler-Maruyama with a step of $10^{-4}$, 100 times finer than the discrete model, on the same Brownian path.
 ---
 
 class: middle

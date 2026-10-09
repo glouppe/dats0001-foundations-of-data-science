@@ -16,6 +16,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 import matplotlib.pyplot as plt  # noqa: E402
 import numpy as np  # noqa: E402
+from scipy.integrate import solve_ivp  # noqa: E402
 from matplotlib.patches import Circle  # noqa: E402
 
 from figures_lec4 import (FS, GREY, MARGIN, OBSERVED, R, STEP, UNIT, arrow, box,  # noqa: E402
@@ -68,7 +69,7 @@ LIGHT = "#b8c0c6"
 
 # Lorenz system: a chaotic flow, whose trajectories fill a butterfly-shaped attractor.
 S, RHO, B = 10.0, 28.0, 8 / 3
-T, DT, FINE, SIGMA = 15.0, .01, 1e-4, 3.0     # horizon, discrete step, simulation step, noise
+T, DT, FINE, SIGMA = 8.0, .01, 1e-4, 3.0      # horizon, discrete step, simulation step, noise
 
 
 def drift(z):
@@ -76,18 +77,24 @@ def drift(z):
 
 
 def lorenz(noise):
-    """The Lorenz system: a continuous path, simulated on a very fine grid, and the
-    discrete-time model with step DT, driven by the same noise; in 3d, and z1 over time."""
-    z0 = np.array([1.0, 1.0, 1.0])
-    for _ in range(int(5 / FINE)):            # burn-in, to start on the attractor
-        z0 = z0 + drift(z0) * FINE
+    """The Lorenz system and its discrete-time model with step DT, in 3d and z1 over time.
+
+    The continuous path is computed by a high-order solver at tight tolerance without
+    noise (its error stays negligible over T, even under chaos), and by Euler-Maruyama
+    on a grid 100 times finer than DT with noise, driven by the same Brownian path."""
+    ode = dict(method="DOP853", rtol=1e-12, atol=1e-12)
+    z0 = solve_ivp(lambda t, z: drift(z), (0, 5), [1.0, 1.0, 1.0], **ode).y[:, -1]  # burn-in
     rng = np.random.default_rng(0)
     n = int(round(T / FINE))
     dw = rng.normal(0, np.sqrt(FINE), (n, 3)) * (SIGMA if noise else 0)
-    z = np.empty((n + 1, 3))
-    z[0] = z0
-    for k in range(n):                        # Euler-Maruyama on a very fine grid
-        z[k + 1] = z[k] + drift(z[k]) * FINE + dw[k]
+    if noise:
+        z = np.empty((n + 1, 3))
+        z[0] = z0
+        for k in range(n):                    # Euler-Maruyama on a very fine grid
+            z[k + 1] = z[k] + drift(z[k]) * FINE + dw[k]
+    else:
+        z = solve_ivp(lambda t, z: drift(z), (0, T), z0, t_eval=np.arange(n + 1) * FINE,
+                      **ode).y.T
     every = int(round(DT / FINE))
     w = np.add.reduceat(dw, np.arange(0, n, every), axis=0)   # the same noise, per step
     zd = np.empty((len(w) + 1, 3))
