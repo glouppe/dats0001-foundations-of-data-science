@@ -415,7 +415,9 @@ class: middle
 
 .center.width-80[![](figures/lec5/likelihood-kappa.svg)]
 
-.center[The log-likelihood of $\kappa$ for the GPS observations, one Kalman pass per value.<br> It peaks at 0.20; the data were simulated with $\kappa = 0.25$.]
+$$\log p(\mathbf{x}\_{1:T} \mid \kappa) = \sum\_{t=1}^T \log p(\mathbf{x}\_t \mid \mathbf{x}\_{1:t-1}, \kappa)$$
+
+.center[The log-likelihood of the GPS observations, as a function of $\kappa$.<br> It peaks at 0.20; the data were simulated with $\kappa = 0.25$.]
 
 ???
 
