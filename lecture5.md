@@ -440,6 +440,18 @@ The decay is exponential because the difference $z(t) - \mu$ shrinks exponential
 
 class: middle
 
+.center.width-80[![](figures/lec5/ode-discretization.svg)]
+
+.center[The exponential decay $z(t)$ and its discrete-time version, with the same $\kappa$ and $\mu$.]
+
+???
+
+The discrete steps run slightly below the curve. Each step follows the slope at the start of its interval, which overestimates the decay: $1 - \kappa \Delta t < e^{-\kappa \Delta t}$. The gap closes as $\Delta t \to 0$.
+
+---
+
+class: middle
+
 ## Brownian motion
 
 To add stochasticity to the ODE, we need a continuous-time stochastic process that can model random noise.
@@ -467,6 +479,18 @@ Brownian motion is nowhere differentiable, so the white noise $d\mathbf{W}(t)/dt
 The differential form needs a choice of stochastic integral to have a meaning; the standard one is Itô's. Both $f$ and $g$ may also depend on $t$.
 
 Teaser: this equation is the basis of modern generative models such as .bold[diffusion models] used in image synthesis (e.g., DALL-E 2, Stable Diffusion).
+
+---
+
+class: middle
+
+.center.width-80[![](figures/lec5/sde-discretization.svg)]
+
+.center[The same decay with noise: a path $z(t)$ of the SDE and its discrete-time version, driven by the same Brownian motion.]
+
+???
+
+The discrete model sees the noise only summed over each step, $w\_t = \sigma (W(t) - W(t - \Delta t))$. Between two steps, the continuous path keeps moving.
 
 ---
 
