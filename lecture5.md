@@ -328,9 +328,9 @@ class: middle
 
 With discrete states, the integrals of the Bayes filter become sums over the $K$ states. Writing $\alpha\_t(j) = p(z\_t = j \mid x\_{1:t})$,
 $$\alpha\_t(j) \propto p(x\_t \mid z\_t = j) \sum\_{i=1}^K \mathbf{A}\_{i, j} \, \alpha\_{t-1}(i),$$
-normalized over $j$. This is the .bold[forward algorithm], at a cost of $K^2$ operations per step.
+normalized over $j$. This is the .bold[forward algorithm]. Each step costs $K^2$ operations.
 
-A similar backward recursion gives the smoothing distributions: together, the .bold[forward-backward algorithm].
+A similar backward recursion gives the smoothing distributions. The two recursions form the .bold[forward-backward algorithm].
 
 ???
 
@@ -342,8 +342,8 @@ class: middle
 ## Learning the parameters
 
 So far, the parameters $\theta = (\kappa, \sigma, \mathbf{R}, \boldsymbol{\mu})$ of the wolf model were taken as known. The Bayes filter also gives their likelihood: its normalizers multiply to
-$$p(\mathbf{x}\_{1:T} \mid \theta) = \prod\_{t=1}^T p(\mathbf{x}\_t \mid \mathbf{x}\_{1:t-1}, \theta),$$
-the marginal likelihood, with all the states integrated out.
+$$p(\mathbf{x}\_{1:T} \mid \theta) = \prod\_{t=1}^T p(\mathbf{x}\_t \mid \mathbf{x}\_{1:t-1}, \theta).$$
+This is the marginal likelihood of the data, in which all the states are integrated out.
 
 It can be maximized over $\theta$, or combined with a prior $p(\theta)$ into a posterior.
 
@@ -432,7 +432,7 @@ Adding Brownian motion to the ODE, scaled by a .bold[diffusion term] $g$, gives 
 $$d\mathbf{z}(t) = f(\mathbf{z}(t)) \\, dt + g(\mathbf{z}(t)) \\, d\mathbf{W}(t).$$
 Over an infinitesimal interval $dt$, the drift $f \\, dt$ is the deterministic change of the state, and the diffusion $g \\, d\mathbf{W}$ its random change.
 
-The differential form is needed because Brownian motion is nowhere differentiable: $d\mathbf{W}(t)/dt$, white noise, is only symbolic.
+Brownian motion is nowhere differentiable, so the white noise $d\mathbf{W}(t)/dt$ is only symbolic. The differential form avoids it.
 
 ???
 
@@ -475,7 +475,7 @@ class: middle
 
 ## Exact discretization
 
-Observed at times $t\_1 < t\_2 < \ldots$, possibly irregular, the OU process can be discretized exactly. With $\Delta\_i = t\_i - t\_{i-1}$,
+The OU process can be discretized exactly, even at irregular observation times $t\_1 < t\_2 < \ldots$. With $\Delta\_i = t\_i - t\_{i-1}$,
 $$p(\mathbf{z}(t\_i) \mid \mathbf{z}(t\_{i-1})) = \mathcal{N}\left(\boldsymbol{\mu} + e^{-\kappa \Delta\_i} (\mathbf{z}(t\_{i-1}) - \boldsymbol{\mu}), \\, \frac{\sigma^2}{2\kappa} \left(1 - e^{-2\kappa \Delta\_i}\right) \mathbf{I}\right).$$
 
 This is a linear Gaussian transition, with $\mathbf{A}\_i = e^{-\kappa \Delta\_i} \mathbf{I}$ and $\mathbf{b}\_i = (1 - e^{-\kappa \Delta\_i}) \boldsymbol{\mu}$. The Kalman filter and smoother apply unchanged, with matrices that change with the time step. The figures of this lecture use it, at $\Delta = 0.25$.
