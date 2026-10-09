@@ -204,7 +204,7 @@ p(x\_t | z\_t) &= \mathcal{N}(x\_t | H z\_t, R),
 \end{aligned}$$
 where $A$ is the state transition matrix, $Q$ is the process noise covariance, $H$ is the observation matrix, and $R$ is the observation noise covariance.
 
-.success[If the prior distribution $p(z\_1)$ is also Gaussian, then all filtering, prediction, and smoothing distributions are Gaussian.]
+If the prior distribution $p(z\_1)$ is also Gaussian, then all filtering, prediction, and smoothing distributions are Gaussian.
 
 ---
 
@@ -321,13 +321,13 @@ p(x\_t=k | z\_t=j) &= B\_{j, k},
 \end{aligned}$$
 where $A$ is the state transition matrix and $B$ is the observation matrix.
 
-.success[If the prior distribution $p(z\_1)$ is also categorical, then all filtering, prediction, and smoothing distributions are categorical and can be computed exactly by enumeration.]
+If the prior distribution $p(z\_1)$ is also categorical, then all filtering, prediction, and smoothing distributions are categorical and can be computed exactly by enumeration.
 
 ---
 
 class: middle
 
-Example&#58; Wolf behavior modeling
+.italic[Example.] Modeling the behavior of a wolf.
 
 - States $z\_t \in \{1, ..., K\}$ represent the behavior of the animal at time $t$ (e.g., resting, foraging, traveling).
 - Observations $x\_t \in \{1, ..., M\}$ represent discrete measurements related to the animal's behavior (e.g., GPS speed categories, activity levels).
@@ -358,9 +358,11 @@ The smoothing parameters are then given by $\gamma\_t \propto \alpha\_t \odot \b
 
 class: middle
 
-.success[Both linear Gaussian state-space models and hidden Markov models are special cases of state-space models where exact inference is tractable.]
+Linear Gaussian state-space models and hidden Markov models are the two classes of state-space models in which the Bayes filter and smoother have closed forms.
 
-.alert[However, they are limited in their expressiveness and may not capture the complexity of real-world dynamical systems.]
+???
+
+Both are restrictive: linear dynamics with Gaussian noise, or a finite number of states. Other models need approximate inference, by sampling (L6) or optimization (L9).
 
 ---
 
@@ -419,7 +421,7 @@ where $\kappa > 0$ is the rate of decay and $\mu$ is the equilibrium point.
 - If $z(0) < \mu$, then $z(t)$ increases towards $\mu$ as $t$ increases.
 - Solution: $$z(t) = \mu + (z(0) - \mu) e^{-\kappa t}.$$
 
-.alert[This is deterministic: given $z(0)$, the state $z(t)$ is fully determined for all $t \geq 0$!]
+This is deterministic: given $z(0)$, the state $z(t)$ is fully determined for all $t \geq 0$.
 
 ???
 
@@ -489,7 +491,7 @@ where $\kappa > 0$ is the strength of attraction to the home location $\mu$ and 
 
 This process is known as the .bold[Ornstein-Uhlenbeck process], which describes a mean-reverting behavior with Gaussian noise.
 
-.success[The discrete-time model is the Euler-Maruyama discretization of the OU process with step size $\Delta t$!]
+The discrete-time model is the Euler-Maruyama discretization of the OU process with step size $\Delta t$.
 
 ---
 
@@ -537,17 +539,11 @@ class: middle
 
 ## When to use continuous vs discrete time?
 
-.bold[Continuous-time] is natural when:
-- Observations at irregular intervals
-- Physical/mechanistic interpretation important
-- Parameters have continuous-time meaning (rates, time constants)
+Continuous time suits observations at irregular intervals, mechanistic models, and parameters that are rates or time constants.
 
-.bold[Discrete-time] is practical when:
-- Regular sampling
-- Computational simplicity preferred
-- No strong mechanistic model
+Discrete time suits regular sampling and models without a mechanistic interpretation, and is simpler to compute with.
 
-.italic[Common approach: Model in continuous time for interpretability, discretize for computation.]
+A common approach is to model in continuous time, for interpretability, and to discretize for computation.
 
 ---
 
