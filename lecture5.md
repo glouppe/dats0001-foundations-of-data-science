@@ -637,11 +637,13 @@ background-size: cover
 
 class: middle
 
-Every 12 hours, the forecast is updated with the latest observations: this predict and update cycle is called .bold[data assimilation]. A toy version, on the Lorenz system of Example 1:
+Forecasting centres run the Bayes filter continuously. Every 12 hours, they update the forecast with the latest observations, then predict the next 12 hours. This cycle is called .bold[data assimilation].
+
+On the Lorenz system, with only $z\_1$ observed:
 
 .center.width-80[![](figures/lec5/assimilation-lorenz.svg)]
 
-.center[Only $z\_1$ is observed. With data assimilation, the forecast tracks the unobserved $z\_3$.<br> Without observations, it spreads over the whole attractor.]
+.center[With data assimilation, the forecast tracks the unobserved $z\_3$.<br> Without observations, it spreads over the attractor.]
 
 ???
 
