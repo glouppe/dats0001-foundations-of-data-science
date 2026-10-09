@@ -292,7 +292,7 @@ for $t = T-1, T-2, \ldots, 1$, with the base case $\mathbf{m}^s\_T = \mathbf{m}\
 
 class: middle
 
-.italic[Proof.] Given $\mathbf{x}\_{1:t}$, the states $\mathbf{z}\_t$ and $\mathbf{z}\_{t+1} = \mathbf{A} \mathbf{z}\_t + \mathbf{b} + \text{noise}$ are jointly Gaussian,
+.italic[Proof.] Given $\mathbf{x}\_{1:t}$, the states $\mathbf{z}\_t$ and $\mathbf{z}\_{t+1}$ are jointly Gaussian,
 $$p(\mathbf{z}\_t, \mathbf{z}\_{t+1} | \mathbf{x}\_{1:t}) = \mathcal{N}\left(\begin{pmatrix} \mathbf{z}\_t \\\\ \mathbf{z}\_{t+1} \end{pmatrix} | \begin{bmatrix} \mathbf{m}\_t \\\\ \mathbf{m}^-\_{t+1} \end{bmatrix}, \begin{bmatrix} \mathbf{P}\_t & \mathbf{P}\_t \mathbf{A}^T \\\\ \mathbf{A} \mathbf{P}\_t & \mathbf{P}^-\_{t+1} \end{bmatrix}\right).$$
 
 Given $\mathbf{z}\_{t+1}$, the later observations $\mathbf{x}\_{t+1:T}$ carry no further information on $\mathbf{z}\_t$ (Markov property). Conditioning the joint on $\mathbf{z}\_{t+1}$ gives
