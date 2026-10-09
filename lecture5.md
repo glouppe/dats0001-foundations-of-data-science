@@ -175,7 +175,7 @@ class: middle
 
 .center.width-10[![](figures/lec5/tractor.png)]
 
-The Bayes filter and smoother apply to any state-space model, but their integrals have no closed form in general.
+In general, the integrals of the Bayes filter and smoother have no closed form.
 
 Two classes of models are exceptions:
 - linear Gaussian models, where the integrals are Gaussian (Kalman filter and smoother);
@@ -339,11 +339,11 @@ class: middle
 
 .center.width-10[![](figures/lec5/squiggle.png)]
 
-We have so far assumed that time is discretized regularly with a fixed time step $\Delta t$ and that both the transition and observation models are defined at these discrete time steps.
+So far, time was discretized with a fixed step $\Delta t$, and the transition and observation models were defined at these steps.
 
-However, 
-- physical processes are often more naturally modeled in .bold[continuous time];
-- observations may be collected at .bold[irregular time intervals], triggered by events rather than a clock, or at multiple time scales.
+Two reasons to model in .bold[continuous time]:
+- physical processes are naturally described by rates of change;
+- observations may arrive at .bold[irregular times], triggered by events, or at several time scales.
 
 ???
 
