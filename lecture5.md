@@ -29,7 +29,7 @@ class: middle
 
 ## Static latent variable models
 
-In Lecture 4, a latent variable model explains $N$ observations $\mathbf{x}\_i$ with one latent variable $\mathbf{z}\_i$ each, the local variables, and parameters $\theta$ shared by all, the global ones,
+A latent variable model explains $N$ observations $\mathbf{x}\_i$ with one latent variable $\mathbf{z}\_i$ each, the local variables, and parameters $\theta$ shared by all, the global ones,
 $$p(\mathbf{x}\_{1:N}, \mathbf{z}\_{1:N}, \theta) = p(\theta) \prod\_{i=1}^N p(\mathbf{x}\_i | \mathbf{z}\_i, \theta) p(\mathbf{z}\_i | \theta).$$
 
 ---
@@ -48,7 +48,7 @@ class: middle
 
 To model a dynamical system, we can first assume a discretization of time and introduce a sequence of latent variables $\mathbf{z}\_t$ that represent the state of the system at each time step $t$.
 
-In this context, a .bold[state-space model] is a latent variable model that explains a sequence $\mathbf{x}\_{1:T} = (\mathbf{x}\_1, \ldots, \mathbf{x}\_T)$ of observations in terms of a sequence $\mathbf{z}\_{1:T} = (\mathbf{z}\_1, \ldots, \mathbf{z}\_T)$ of latent variables. Each latent variable now depends on the previous one: the plate of Lecture 4 becomes a chain.
+In this context, a .bold[state-space model] is a latent variable model that explains a sequence $\mathbf{x}\_{1:T} = (\mathbf{x}\_1, \ldots, \mathbf{x}\_T)$ of observations in terms of a sequence $\mathbf{z}\_{1:T} = (\mathbf{z}\_1, \ldots, \mathbf{z}\_T)$ of latent variables. Each latent variable now depends on the previous one: the plate becomes a chain.
 
 ---
 
@@ -318,7 +318,7 @@ class: middle
 
 A .bold[hidden Markov model] (HMM) is a state-space model whose states are discrete, $z\_t \in \\{1, \ldots, K\\}$, with transition probabilities
 $$p(z\_t = j \mid z\_{t-1} = i) = \mathbf{A}\_{i, j},$$
-and any observation model $p(x\_t \mid z\_t = j)$ for each state $j$. It is the mixture model of Lecture 4, with a component that switches over time.
+and any observation model $p(x\_t \mid z\_t = j)$ for each state $j$. It is a mixture model whose component switches over time.
 
 .italic[Example.] The behavior of a wolf (resting, foraging, traveling) as the state, its speed as the observation. $\mathbf{A}$ says how often the wolf switches from one behavior to another.
 
@@ -343,13 +343,15 @@ class: middle
 
 So far, the parameters $\theta = (\kappa, \sigma, \mathbf{R}, \boldsymbol{\mu})$ of the wolf model were taken as known. The Bayes filter also gives their likelihood: its normalizers multiply to
 $$p(\mathbf{x}\_{1:T} \mid \theta) = \prod\_{t=1}^T p(\mathbf{x}\_t \mid \mathbf{x}\_{1:t-1}, \theta),$$
-the marginal likelihood of Lecture 4, with all the states integrated out.
+the marginal likelihood, with all the states integrated out.
 
-It can be maximized over $\theta$, as in the frequentist inference of Lecture 4, or combined with a prior $p(\theta)$ into a posterior, sampled in Lecture 6.
+It can be maximized over $\theta$, or combined with a prior $p(\theta)$ into a posterior.
 
 ???
 
-For a linear Gaussian model, each factor is Gaussian, $p(\mathbf{x}\_t \mid \mathbf{x}\_{1:t-1}, \theta) = \mathcal{N}(\mathbf{x}\_t \mid \mathbf{H} \mathbf{m}^-\_t, \mathbf{H} \mathbf{P}^-\_t \mathbf{H}^T + \mathbf{R})$, so one pass of the Kalman filter evaluates the likelihood. EM (Lecture 8) is another way to maximize it.
+For a linear Gaussian model, each factor is Gaussian, $p(\mathbf{x}\_t \mid \mathbf{x}\_{1:t-1}, \theta) = \mathcal{N}(\mathbf{x}\_t \mid \mathbf{H} \mathbf{m}^-\_t, \mathbf{H} \mathbf{P}^-\_t \mathbf{H}^T + \mathbf{R})$, so one pass of the Kalman filter evaluates the likelihood.
+
+Maximizing it is the frequentist inference of Lecture 4; sampling the posterior is Lecture 6; EM (Lecture 8) is another way to maximize it.
 
 ---
 
