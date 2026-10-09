@@ -199,9 +199,10 @@ p(\mathbf{x}\_t | \mathbf{z}\_t) &= \mathcal{N}(\mathbf{x}\_t | \mathbf{H} \math
 \end{aligned}$$
 where $\mathbf{A}$ is the state transition matrix, $\mathbf{b}$ an offset, $\mathbf{Q}$ the process noise covariance, $\mathbf{H}$ the observation matrix, and $\mathbf{R}$ the observation noise covariance.
 
-The wolf model is of this form, with $\mathbf{A} = (1 - \kappa \Delta t) \mathbf{I}$, $\mathbf{b} = \kappa \Delta t \\, \boldsymbol{\mu}$, $\mathbf{Q} = \sigma^2 \Delta t \\, \mathbf{I}$ and $\mathbf{H} = \mathbf{I}$.
-
 If the prior distribution $p(\mathbf{z}\_1)$ is also Gaussian, then all filtering, prediction, and smoothing distributions are Gaussian.
+
+.info[The wolf model is the case
+$$\mathbf{A} = (1 - \kappa \Delta t) \mathbf{I}, \quad \mathbf{b} = \kappa \Delta t \\, \boldsymbol{\mu}, \quad \mathbf{Q} = \sigma^2 \Delta t \\, \mathbf{I}, \quad \mathbf{H} = \mathbf{I}.$$]
 
 ---
 
