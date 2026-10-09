@@ -129,7 +129,7 @@ def lorenz(noise):
                ncols=2, fontsize=10)
     fig.tight_layout(rect=(0, 0, 1, .9))
     path = "figures/lec5/%s.svg" % ("sde-discretization" if noise else "ode-discretization")
-    fig.savefig(path, facecolor="white")
+    fig.savefig(path, facecolor="white", bbox_inches="tight", pad_inches=.02)
     gap = np.abs(z[::every, 0] - zd[:, 0])
     print("wrote", path, "trajectories part at t = %.2f" % td[np.argmax(gap > 5)])
 
@@ -305,16 +305,18 @@ def likelihood_kappa():
           % (best, kappa_true))
 
 
-def assimilation(members=40, obs_every=.25, obs_sd=2.0, horizon=12.0):
+def assimilation(members=40, obs_every=.25, obs_sd=2.0, horizon=12.0, ahead=3.0):
     """Data assimilation on the Lorenz system: only z1 is observed, every obs_every time
     units with noise; an ensemble Kalman filter tracks the unobserved z3, while a forecast
-    from the same uncertain start, without observations, loses it."""
+    from the same uncertain start, without observations, loses it. After the last
+    observation, both ensembles run on for `ahead` time units: the prediction."""
     rng = np.random.default_rng(7)
     ode = dict(method="DOP853", rtol=1e-10, atol=1e-10)
     z0 = solve_ivp(lambda t, z: drift(z), (0, 5), [1.0, 1.0, 1.0], **ode).y[:, -1]
     t_obs = np.arange(obs_every, horizon + 1e-9, obs_every)
-    grid = np.linspace(0, horizon, 3001)
-    truth = solve_ivp(lambda t, z: drift(z), (0, horizon), z0, t_eval=grid, **ode).y.T
+    end = horizon + ahead
+    grid_t = np.linspace(0, end, 4001)
+    truth = solve_ivp(lambda t, z: drift(z), (0, end), z0, t_eval=grid_t, **ode).y.T
     truth_obs = solve_ivp(lambda t, z: drift(z), (0, horizon), z0, t_eval=t_obs, **ode).y.T
     y = truth_obs[:, 0] + rng.normal(0, obs_sd, len(t_obs))
 
@@ -328,8 +330,8 @@ def assimilation(members=40, obs_every=.25, obs_sd=2.0, horizon=12.0):
     n_sub = int(round(obs_every / .01))
     start = z0 + rng.normal(0, 2.0, (members, 3))       # an uncertain initial state
     ens, free = start.copy(), start.copy()
-    t_plot, mean, sd = [0.0], [ens.mean(0)], [ens.std(0)]
-    free_mean, free_sd = [free.mean(0)], [free.std(0)]
+    q = lambda e: np.percentile(e, [5, 50, 95], axis=0)   # 5th percentile, median, 95th
+    t_plot, band, free_band = [0.0], [q(ens)], [q(free)]
     record = 5                             # record the forecasts every 0.05 time units
     for k, t in enumerate(t_obs):
         for r in range(n_sub // record):
@@ -337,42 +339,69 @@ def assimilation(members=40, obs_every=.25, obs_sd=2.0, horizon=12.0):
             free = np.array([step(e, n=record) for e in free])
             if r < n_sub // record - 1:
                 t_plot.append(t - obs_every + (r + 1) * record * .01)
-                mean.append(ens.mean(0)), sd.append(ens.std(0))
-                free_mean.append(free.mean(0)), free_sd.append(free.std(0))
+                band.append(q(ens)), free_band.append(q(free))
         ens = ens + rng.normal(0, .1, ens.shape)
         P = np.cov(ens.T)                  # update with the observation of z1 alone
         gain = P[:, 0] / (P[0, 0] + obs_sd ** 2)
         innovations = y[k] + rng.normal(0, obs_sd, members) - ens[:, 0]
         ens = ens + innovations[:, None] * gain[None, :]
-        t_plot.append(t), mean.append(ens.mean(0)), sd.append(ens.std(0))
-        free_mean.append(free.mean(0)), free_sd.append(free.std(0))
-    t_plot, mean, sd, free_mean, free_sd = map(np.array, (t_plot, mean, sd, free_mean, free_sd))
+        t_plot.append(t), band.append(q(ens)), free_band.append(q(free))
+    ens_now, free_now = ens.copy(), free.copy()   # the two ensembles at the last observation
+    for r in range(int(round(ahead / (record * .01)))):   # prediction: no more updates
+        ens = np.array([step(e, n=record) for e in ens])
+        free = np.array([step(e, n=record) for e in free])
+        t_plot.append(horizon + (r + 1) * record * .01)
+        band.append(q(ens)), free_band.append(q(free))
+    t_plot, band, free_band = np.array(t_plot), np.array(band), np.array(free_band)
 
-    fig, axes = plt.subplots(2, 1, figsize=(6.4, 3.6), dpi=200, sharex=True)
+    fig = plt.figure(figsize=(8.4, 3.6), dpi=200)
+    grid = fig.add_gridspec(2, 2, width_ratios=[1, 1.4], wspace=.5)
+    ax3d = fig.add_subplot(grid[:, 0], projection="3d")
+    ax3d.plot(*truth[:np.argmin(np.abs(grid_t - horizon)) + 1].T, color=GREY, lw=.5, alpha=.8)
+    ax3d.scatter(*free_now.T, color=ORANGE, s=9, alpha=.8, depthshade=False)
+    ax3d.scatter(*ens_now.T, color=BLUE, s=9, alpha=.9, depthshade=False)
+    now = np.argmin(np.abs(grid_t - horizon))
+    ax3d.scatter(*truth[now], color=GREY, marker="*", s=90, depthshade=False, zorder=5)
+    ax3d.set_title("the two ensembles at $t = %g$" % horizon, fontsize=9, pad=-2)
+    ax3d.view_init(18, -58)
+    ax3d.set_box_aspect(None, zoom=1.2)
+    ax3d.set_xticks([]), ax3d.set_yticks([]), ax3d.set_zticks([])
+    for axis in (ax3d.xaxis, ax3d.yaxis, ax3d.zaxis):
+        axis.set_pane_color((1, 1, 1, 0))
+        axis.line.set_color(LIGHT)
+    ax3d.set_xlabel("$z_1$", labelpad=-12), ax3d.set_ylabel("$z_2$", labelpad=-12)
+    ax3d.set_zlabel("$z_3$", labelpad=-14)
+
+    axes = [fig.add_subplot(grid[0, 1])]
+    axes.append(fig.add_subplot(grid[1, 1], sharex=axes[0]))
     for ax, j, name in ((axes[0], 0, "$z_1$, observed"), (axes[1], 2, "$z_3$, not observed")):
-        ax.plot(grid, truth[:, j], color=GREY, lw=1.1, label="truth")
-        ax.fill_between(t_plot, free_mean[:, j] - 2 * free_sd[:, j],
-                        free_mean[:, j] + 2 * free_sd[:, j], color=ORANGE, alpha=.15, lw=0)
-        ax.plot(t_plot, free_mean[:, j], color=ORANGE, lw=1, ls=(0, (4, 2)),
+        ax.plot(grid_t, truth[:, j], color=GREY, lw=1.1, label="truth")
+        ax.fill_between(t_plot, free_band[:, 0, j], free_band[:, 2, j], color=ORANGE,
+                        alpha=.15, lw=0)
+        ax.plot(t_plot, free_band[:, 1, j], color=ORANGE, lw=1, ls=(0, (4, 2)),
                 label="forecast without observations")
-        ax.fill_between(t_plot, mean[:, j] - 2 * sd[:, j], mean[:, j] + 2 * sd[:, j],
-                        color=BLUE, alpha=.2, lw=0)
-        ax.plot(t_plot, mean[:, j], color=BLUE, lw=1.3, label="with data assimilation")
+        ax.fill_between(t_plot, band[:, 0, j], band[:, 2, j], color=BLUE, alpha=.2, lw=0)
+        ax.plot(t_plot, band[:, 1, j], color=BLUE, lw=1.3, label="with data assimilation")
+        ax.axvline(horizon, color=GREY, lw=.8, ls=":")
         ax.set_ylabel(name, fontsize=10)
         tidy(ax)
+    axes[0].tick_params(labelbottom=False)
     axes[0].plot(t_obs, y, "o", color=GREY, mfc="white", ms=3, mew=.8, zorder=4,
                  label="observations")
     axes[1].set_xlabel("$t$")
-    axes[1].set_xlim(0, horizon)
+    axes[1].set_xlim(0, end)
+    axes[1].set_xticks(np.arange(0, end + 1e-9, 3))
+    axes[0].text(horizon + ahead / 2, 1.02, "prediction", transform=axes[0].get_xaxis_transform(),
+                 ha="center", va="bottom", fontsize=8.5)
     handles, labels = axes[0].get_legend_handles_labels()
     fig.legend(handles, labels, frameon=False, ncols=4, loc="upper center", fontsize=8.5)
     fig.tight_layout(rect=(0, 0, 1, .93))
-    fig.savefig("figures/lec5/assimilation-lorenz.svg", facecolor="white")
+    fig.savefig("figures/lec5/assimilation-lorenz.svg", facecolor="white", bbox_inches="tight", pad_inches=.02)
     at_obs = np.isin(np.round(t_plot, 6), np.round(t_obs, 6))
     h = len(t_obs) // 2
     rmse = lambda a: np.sqrt(np.mean((a[at_obs][h:, 2] - truth_obs[h:, 2]) ** 2))
-    print("wrote figures/lec5/assimilation-lorenz.svg: z3 error, second half: "
-          "assimilation %.1f, free forecast %.1f" % (rmse(mean), rmse(free_mean)))
+    print("wrote figures/lec5/assimilation-lorenz.svg: z3 error of the median, second half: "
+          "assimilation %.1f, free forecast %.1f" % (rmse(band[:, 1]), rmse(free_band[:, 1])))
 
 
 if __name__ == "__main__":

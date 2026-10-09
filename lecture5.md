@@ -479,7 +479,7 @@ class: middle
 .italic[Example 1.] The .bold[Lorenz system] is a chaotic ODE in three variables,
 $$\frac{dz\_1}{dt} = s (z\_2 - z\_1), \quad \frac{dz\_2}{dt} = z\_1 (r - z\_3) - z\_2, \quad \frac{dz\_3}{dt} = z\_1 z\_2 - b z\_3.$$
 
-.center.width-90[![](figures/lec5/ode-discretization.svg)]
+.center.width-100[![](figures/lec5/ode-discretization.svg)]
 
 .center[The continuous-time trajectory and its discrete-time version part after about two time units.]
 
@@ -530,7 +530,7 @@ class: middle
 .italic[Example 1, with noise.] The Lorenz system becomes the SDE
 $$d\mathbf{z} = f(\mathbf{z}) \\, dt + \sigma \\, d\mathbf{W}.$$
 
-.center.width-90[![](figures/lec5/sde-discretization.svg)]
+.center.width-100[![](figures/lec5/sde-discretization.svg)]
 
 .center[In continuous and in discrete time, driven by the same Brownian motion.]
 
@@ -635,17 +635,15 @@ background-size: cover
 
 class: middle
 
-Forecasting centres run the Bayes filter continuously. Every 12 hours, they update the forecast with the latest observations, then predict the next 12 hours. This cycle is called .bold[data assimilation].
+Forecasting centres run the Bayes filter continuously: every 12 hours, they update the forecast with the latest observations, then predict. This cycle is called .bold[data assimilation]. On the Lorenz system, with only $z\_1$ observed:
 
-On the Lorenz system, with only $z\_1$ observed:
+.center.width-100[![](figures/lec5/assimilation-lorenz.svg)]
 
-.center.width-80[![](figures/lec5/assimilation-lorenz.svg)]
-
-.center[With data assimilation, the forecast tracks the unobserved $z\_3$.<br> Without observations, it spreads over the attractor.]
+.center[With data assimilation, the forecast tracks $z\_3$, then predicts after $t = 12$.<br> Without observations, it spreads over the attractor.]
 
 ???
 
-The figure uses an ensemble Kalman filter with 40 members: each member is propagated through the model, and the update uses the covariance estimated from the members. Observations come every 0.25 time units, with a noise standard deviation of 2. Both curves are ensemble means, with bands of two standard deviations. Over the second half, the error on $z\_3$ is 2.8 with assimilation and 9.7 without.
+The figure uses an ensemble Kalman filter with 40 members: each member is propagated through the model, and the update uses the covariance estimated from the members. Observations come every 0.25 time units, with a noise standard deviation of 2. Both curves are ensemble medians, with bands from the 5th to the 95th percentile. Over the second half, the error of the median on $z\_3$ is 2.3 with assimilation and 9.6 without. On the left, the 40 members of each ensemble at $t = 12$, with the true state as a star. After $t = 12$, there are no more observations: the assimilated ensemble only runs forward, and gives the prediction $p(\mathbf{z}\_{t+k} \mid \mathbf{x}\_{1:t})$. Its band widens again, as chaos amplifies the uncertainty left at $t = 12$.
 
 At the scale of the atmosphere, the Kalman filter cannot be used as is: with $10^9$ numbers in the state, $\mathbf{P}\_t$ would have $10^{18}$ entries. Forecasting centres combine ensembles, as in the figure, with variational methods, which optimize the state over a 12-hour window (4D-Var at ECMWF). Chaos is also why forecasts are issued as ensembles, of about 50 members.
 

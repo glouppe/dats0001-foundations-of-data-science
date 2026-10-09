@@ -560,20 +560,12 @@ img {
     }
 }
 
-/* footnotes over a full-bleed background image stay readable */
-.black-slide .footnote {
-    color: #ddd;
-    background-color: rgba(0, 0, 0, 0.55);
-    padding: 0.15em 0.5em;
-    border-radius: 3px;
-}
-
 /* text over a full-bleed background image */
 .overlay {
     position: absolute;
     left: 2.5em;
     right: 2.5em;
-    bottom: 2.5em;
+    bottom: 4em;
     padding: 0.8em 1.1em;
     border-radius: 5px;
     background-color: rgba(0, 0, 0, 0.65);
