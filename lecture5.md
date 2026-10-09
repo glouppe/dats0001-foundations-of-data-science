@@ -349,20 +349,21 @@ and any observation model $p(x\_t \mid z\_t = j)$ for each state $j$. It is a mi
 
 class: middle
 
-With discrete states, the integrals of the Bayes filter and smoother become sums over the $K$ states. This gives the .bold[forward-backward algorithm], with the prior $\pi\_j = p(z\_1 = j)$:
-1. Forward pass. Set $\alpha\_1(j) \propto \pi\_j \\, p(x\_1 \mid z\_1 = j)$. For $t = 2, \ldots, T$,
-$$\alpha\_t(j) \propto p(x\_t \mid z\_t = j) \sum\_{i=1}^K \mathbf{A}\_{i, j} \\, \alpha\_{t-1}(i).$$
-2. Backward pass. Set $\beta\_T(i) = 1$. For $t = T-1, \ldots, 1$,
-$$\beta\_t(i) \propto \sum\_{j=1}^K \mathbf{A}\_{i, j} \\, p(x\_{t+1} \mid z\_{t+1} = j) \\, \beta\_{t+1}(j).$$
-3. Smoothing. For $t = 1, \ldots, T$, $p(z\_t = j \mid x\_{1:T}) \propto \alpha\_t(j) \\, \beta\_t(j)$.
+With discrete states, the integrals of the Bayes filter and smoother become sums over the $K$ states.
+1. Forward pass, the Bayes filter. For $t = 1, \ldots, T$,
+$$p(z\_t = j \mid x\_{1:t}) \propto p(x\_t \mid z\_t = j) \sum\_{i=1}^K \mathbf{A}\_{i, j} \\, p(z\_{t-1} = i \mid x\_{1:t-1}),$$
+where the sum is the prior $p(z\_1 = j)$ at $t = 1$.
+2. Backward pass, the Bayes smoother. For $t = T-1, \ldots, 1$,
+$$p(z\_t = i \mid x\_{1:T}) = p(z\_t = i \mid x\_{1:t}) \sum\_{j=1}^K \frac{\mathbf{A}\_{i, j} \\, p(z\_{t+1} = j \mid x\_{1:T})}{p(z\_{t+1} = j \mid x\_{1:t})},$$
+where $p(z\_{t+1} = j \mid x\_{1:t}) = \sum\_{i} \mathbf{A}\_{i, j} \\, p(z\_t = i \mid x\_{1:t})$.
 
-Each pass costs $K^2 T$ operations.
+Together, the two passes form the .bold[forward-backward algorithm]. Each costs $K^2 T$ operations.
 
 ???
 
-$\alpha\_t(j)$ is the filtering distribution $p(z\_t = j \mid x\_{1:t})$; $\beta\_t(i)$ is proportional to $p(x\_{t+1:T} \mid z\_t = i)$, the probability of the future observations. Their product is proportional to $p(z\_t = j \mid x\_{1:T})$ by Bayes' rule. The normalizations only keep the numbers in range.
+The literature writes the same algorithm with $\alpha\_t(j) = p(z\_t = j \mid x\_{1:t})$ and a backward variable $\beta\_t(i) \propto p(x\_{t+1:T} \mid z\_t = i)$, computed by $\beta\_t(i) \propto \sum\_j \mathbf{A}\_{i, j} \\, p(x\_{t+1} \mid z\_{t+1} = j) \\, \beta\_{t+1}(j)$ from $\beta\_T = 1$; the smoothing distribution is then $p(z\_t = j \mid x\_{1:T}) \propto \alpha\_t(j) \\, \beta\_t(j)$. Both forms give the same result.
 
-In matrix form, $\boldsymbol{\alpha}\_t \propto \mathbf{O}\_t \mathbf{A}^T \boldsymbol{\alpha}\_{t-1}$, with $\mathbf{O}\_t$ the diagonal matrix of $p(x\_t \mid z\_t = j)$ and $\boldsymbol{\alpha}\_1 \propto \mathbf{O}\_1 \boldsymbol{\pi}$; $\boldsymbol{\beta}\_t \propto \mathbf{A} \mathbf{O}\_{t+1} \boldsymbol{\beta}\_{t+1}$ from $\boldsymbol{\beta}\_T = \mathbf{1}$; and the smoothing distributions are $\boldsymbol{\gamma}\_t \propto \boldsymbol{\alpha}\_t \odot \boldsymbol{\beta}\_t$.
+In matrix form, $\boldsymbol{\alpha}\_t \propto \mathbf{O}\_t \mathbf{A}^T \boldsymbol{\alpha}\_{t-1}$, with $\mathbf{O}\_t$ the diagonal matrix of $p(x\_t \mid z\_t = j)$.
 ---
 
 class: middle
