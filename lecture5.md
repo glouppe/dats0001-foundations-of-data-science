@@ -594,15 +594,32 @@ A common approach is to model in continuous time, for interpretability, and to d
 
 ---
 
+class: middle
+
+# Application: weather forecasting
+
+---
+
+class: middle
+
+.center.width-50[![](figures/lec5/sm.svg)]
+
+Weather forecasting is a state-space model:
+- the state $\mathbf{z}\_t$ is the atmosphere on a three-dimensional grid (temperature, wind, pressure, humidity), about $10^9$ numbers;
+- the transition model $p(\mathbf{z}\_t | \mathbf{z}\_{t-1})$ is the physics of the atmosphere, discretized in time with steps of a few minutes;
+- the observations $\mathbf{x}\_t$ come from satellites, weather stations, balloons and aircraft, tens of millions every day, through an observation model $p(\mathbf{x}\_t | \mathbf{z}\_t)$.
+
+???
+
+At ECMWF, the global model runs at about 9 km, with 137 levels in the vertical: of the order of $10^9$ grid points. A satellite measures radiances, not temperatures: the observation model links the state to what the instrument sees.
+
+---
+
 class: black-slide
 background-image: url(figures/lec5/atmosphere.jpg)
 background-size: cover
 
-.overlay[Weather forecasting is filtering at the scale of the planet. The state $\mathbf{z}\_t$ is the atmosphere on a three-dimensional grid: temperature, wind, pressure and humidity, about a billion numbers.]
-
-???
-
-At ECMWF, the global model runs at about 9 km, with 137 levels in the vertical: of the order of $10^9$ grid points. The transition model is the physics of the atmosphere, discretized in space and in time, with steps of a few minutes.
+.overlay[The state $\mathbf{z}\_t$: one snapshot of the atmosphere, over the whole planet.]
 
 ---
 
@@ -610,43 +627,25 @@ class: black-slide
 background-image: url(figures/lec5/satellite.gif)
 background-size: cover
 
-.overlay[The observations $\mathbf{x}\_t$ come from satellites, weather stations, balloons, aircraft and buoys: tens of millions every day, sparse, noisy, and often indirect.]
-
-???
-
-A satellite measures radiances, not temperatures: the observation model links the state to what the instrument sees.
+.overlay[The observations $\mathbf{x}\_t$: sparse, noisy, and often indirect.]
 
 ---
 
 class: middle
 
-.center.width-90[![](figures/lec5/assimilation-lorenz.svg)]
+Every 12 hours, the forecast is updated with the latest observations: this predict and update cycle is called .bold[data assimilation]. A toy version, on the Lorenz system of Example 1:
 
-.center[Data assimilation on the Lorenz system, with only $z\_1$ observed. The ensemble<br> tracks the unobserved $z\_3$; the forecast without observations loses it.]
+.center.width-80[![](figures/lec5/assimilation-lorenz.svg)]
 
-???
-
-The ensemble Kalman filter replaces the mean and covariance of the Kalman filter by a set of samples: each member is propagated through the model, and the update uses the covariance estimated from the members. Here the observations come every 0.25 time units, with a noise standard deviation of 2. Over the second half, the error on $z\_3$ is 2.8 with assimilation and 9.7 without. Both curves are ensemble means, with bands of two standard deviations. Without observations, the members spread over the attractor: the mean flattens and the band covers both wings.
-
----
-
-class: middle
-
-## Data assimilation at scale
-
-Every 12 hours, the forecast is corrected by the observations of the last hours, then run forward again: a predict and update cycle, as in the Bayes filter.
-
-The Kalman filter cannot be used as is. With $10^9$ numbers in the state, the covariance $\mathbf{P}\_t$ would have $10^{18}$ entries. Forecasting centres combine two approximations:
-- ensembles, which represent the distribution by tens of samples;
-- variational methods, which optimize the state over a window of observations.
-
-The atmosphere is chaotic, like the Lorenz system. Forecasts are therefore issued as ensembles too, which estimate their own uncertainty.
+.center[Only $z\_1$ is observed. With data assimilation, the forecast tracks the unobserved $z\_3$.<br> Without observations, it spreads over the whole attractor.]
 
 ???
 
-ECMWF uses 4D-Var, a variational method over 12-hour windows, together with an ensemble of data assimilations to estimate the uncertainty, and issues ensemble forecasts of about 50 members. The RMI runs its own model over Belgium, at higher resolution, nested in the global forecasts.
+The figure uses an ensemble Kalman filter with 40 members: each member is propagated through the model, and the update uses the covariance estimated from the members. Observations come every 0.25 time units, with a noise standard deviation of 2. Both curves are ensemble means, with bands of two standard deviations. Over the second half, the error on $z\_3$ is 2.8 with assimilation and 9.7 without.
 
-Data assimilation also produces reanalyses: the best estimate of the past state of the atmosphere, such as ERA5, from 1940 to today.
+At the scale of the atmosphere, the Kalman filter cannot be used as is: with $10^9$ numbers in the state, $\mathbf{P}\_t$ would have $10^{18}$ entries. Forecasting centres combine ensembles, as in the figure, with variational methods, which optimize the state over a 12-hour window (4D-Var at ECMWF). Chaos is also why forecasts are issued as ensembles, of about 50 members.
+
+The same machinery produces reanalyses, the best estimate of the past atmosphere, such as ERA5 from 1940 to today. The RMI runs its own model over Belgium, nested in the global forecasts.
 
 ---
 
