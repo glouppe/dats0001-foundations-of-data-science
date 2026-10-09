@@ -12,7 +12,7 @@ Prof. Gilles Louppe<br>
 
 class: middle
 
-.center.width-70[![](figures/lec5/wolf-gps-observations.png)]
+.center.width-70[![](figures/lec5/wolf-gps-observations.svg)]
 .center[Today's case study: .bold[tracking] the location of a wolf<br> over time from noisy GPS observations, here simulated.]
 
 ---
@@ -94,7 +94,7 @@ where $\mathbf{R}$ is the observation noise covariance.
 
 class: middle
 
-.center.width-70[![](figures/lec5/wolf-dummy-trajectory.png)]
+.center.width-70[![](figures/lec5/wolf-dummy-trajectory.svg)]
 .center[Example of trajectory and observations<br> generated from the discrete-time state-space model ($\Delta t=0.25$).]
 
 ---
@@ -276,15 +276,15 @@ Kalman gain:
 
 class: middle
 
-.center.width-70[![](figures/lec5/wolf-kalman-filter.png)]
-.center[Mean estimate of the wolf's trajectory using the Kalman filter.]
+.center.width-70[![](figures/lec5/wolf-kalman-filter.svg)]
+.center[The median of the filtering distribution at each time step.]
 
 ---
 
 class: middle
 
-.center.width-70[![](figures/lec5/wolf-kalman-filter-time-series.png)]
-.center[Filtering distribution at each time step using the Kalman filter.]
+.center.width-70[![](figures/lec5/wolf-kalman-filter-time-series.svg)]
+.center[The filtering distribution at each time step: median and 5-95% band.]
 
 ---
 
@@ -335,15 +335,15 @@ The conditioning and the averaging are the two formulas of the Gaussian cheat sh
 
 class: middle
 
-.center.width-70[![](figures/lec5/wolf-kalman-smoother.png)]
-.center[Mean estimate of the wolf's trajectory using the Kalman smoother.]
+.center.width-70[![](figures/lec5/wolf-kalman-smoother.svg)]
+.center[The median of the smoothing distribution at each time step.]
 
 ---
 
 class: middle
 
-.center.width-70[![](figures/lec5/wolf-kalman-smoother-time-series.png)]
-.center[Smoothing distribution at each time step using the Kalman smoother.]
+.center.width-70[![](figures/lec5/wolf-kalman-smoother-time-series.svg)]
+.center[The smoothing distribution at each time step: median and 5-95% band.]
 
 ---
 
@@ -556,7 +556,7 @@ is its Euler-Maruyama discretization with step $\Delta t$.
 
 class: middle
 
-.center.width-70[![](figures/lec5/wolf-true-trajectory.png)]
+.center.width-70[![](figures/lec5/wolf-true-trajectory.svg)]
 .center[The true trajectory behind the GPS observations: an Ornstein-Uhlenbeck process,<br> simulated on a fine grid and observed every 0.25 time units.]
 
 ???

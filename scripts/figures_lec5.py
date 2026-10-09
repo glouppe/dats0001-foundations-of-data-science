@@ -250,8 +250,9 @@ def hmm():
           "%.0f%% (smoothing)" % (100 * acc_f, 100 * acc_s))
 
 
-def wolf_data():
-    """The simulated GPS observations of nb05, reproduced with the same seed and calls."""
+def wolf_data(full=False):
+    """The simulated GPS observations of nb05, reproduced with the same seed and calls.
+    With full=True, also the true path on its fine grid and nb05's dummy trajectory."""
     np.random.seed(42)
     dt, Delta, T = .01, .25, 20.0
     n_steps, every = int(T / dt), int(Delta / dt)
@@ -264,7 +265,42 @@ def wolf_data():
         z[i + 1] = z[i] - kappa * (z[i] - mu) * dt + sigma * dB
     obs = z[np.arange(0, n_steps + 1, every)]
     x = obs + np.random.normal(size=obs.shape) @ np.sqrt(R)
-    return x, Delta, mu, sigma[0], R, kappa[0]
+    if not full:
+        return x, Delta, mu, sigma[0], R, kappa[0]
+    a = np.exp(-kappa * Delta)                 # nb05's dummy trajectory, from the exact model
+    A, b = np.diag(a), (1 - a) * mu
+    Q = np.diag(sigma ** 2 / (2 * kappa) * (1 - a ** 2))
+    dummy = np.zeros_like(obs)
+    dummy[0] = obs[0]
+    for i in range(1, len(obs)):
+        dummy[i] = A @ dummy[i - 1] + b + np.random.normal(size=2) @ np.sqrt(Q)
+    dummy_x = dummy + np.random.normal(size=dummy.shape) @ np.sqrt(R)
+    return dict(x=x, Delta=Delta, mu=mu, sigma=sigma[0], R=R, kappa=kappa[0],
+                t_fine=np.arange(n_steps + 1) * dt, z=z, t_obs=np.arange(len(obs)) * Delta,
+                dummy=dummy, dummy_x=dummy_x)
+
+
+def kalman(x, kappa, Delta, mu, sigma, R):
+    """The Kalman filter and RTS smoother of the lecture, with the exact OU transition and
+    the prior N(mu, I) of nb05: filtering and smoothing means and covariances."""
+    a = np.exp(-kappa * Delta)
+    A, b = a * np.eye(2), (1 - a) * mu
+    Q = sigma ** 2 / (2 * kappa) * (1 - a ** 2) * np.eye(2)
+    m, P = mu.copy(), np.eye(2)
+    mf, Pf, mp, Pp = [], [], [], []
+    for xt in x:
+        m, P = A @ m + b, A @ P @ A.T + Q
+        mp.append(m), Pp.append(P)
+        K = P @ np.linalg.inv(P + R)
+        m, P = m + K @ (xt - m), (np.eye(2) - K) @ P
+        mf.append(m), Pf.append(P)
+    mf, Pf, mp, Pp = map(np.array, (mf, Pf, mp, Pp))
+    ms, Ps = mf.copy(), Pf.copy()
+    for t in range(len(x) - 2, -1, -1):
+        C = Pf[t] @ A.T @ np.linalg.inv(Pp[t + 1])
+        ms[t] = mf[t] + C @ (ms[t + 1] - mp[t + 1])
+        Ps[t] = Pf[t] + C @ (Ps[t + 1] - Pp[t + 1]) @ C.T
+    return mf, Pf, ms, Ps
 
 
 def kalman_loglik(x, kappa, Delta, mu, sigma, R):
@@ -404,6 +440,82 @@ def assimilation(members=40, obs_every=.25, obs_sd=2.0, horizon=12.0, ahead=3.0)
           "assimilation %.1f, free forecast %.1f" % (rmse(band[:, 1]), rmse(free_band[:, 1])))
 
 
+RED = "#c0392b"
+GREEN = "#029e73"
+Z90 = 1.6449                                  # the 5th and 95th percentiles of N(0, 1)
+
+
+def wolf_figures():
+    """The wolf figures of the lecture, from the data of nb05: the GPS observations, a
+    trajectory simulated from the model, the Kalman filter and smoother, and the truth."""
+    d = wolf_data(full=True)
+    x, t_obs = d["x"], d["t_obs"]
+    mf, Pf, ms, Ps = kalman(x, d["kappa"], d["Delta"], d["mu"], d["sigma"], d["R"])
+
+    def plane(points, label, numbers=True, extra=(), truth=None, name=""):
+        fig, ax = plt.subplots(figsize=(5.2, 4.6), dpi=200)
+        if truth is not None:
+            ax.plot(*truth.T, color=GREY, lw=.8, alpha=.6, label="true trajectory")
+        ax.scatter(*points.T, s=14, color=ORANGE, alpha=.75, lw=0, label=label, zorder=3)
+        if numbers:
+            for i, (u, v) in enumerate(points):
+                ax.text(u, v, str(i), fontsize=5.5, color=GREY, alpha=.7, ha="left",
+                        va="bottom", zorder=4)
+        for xy, color, lab in extra:
+            ax.plot(*xy.T, color=color, lw=1.6, label=lab, zorder=5)
+        ax.plot(*d["mu"], "*", color=RED, ms=13, label="den", zorder=6)
+        ax.set_aspect("equal", adjustable="datalim")
+        ax.set_xlabel("$x$ position")
+        ax.set_ylabel("$y$ position")
+        ax.legend(frameon=False, fontsize=9, loc="upper left")
+        tidy(ax)
+        fig.tight_layout()
+        fig.savefig("figures/lec5/%s.svg" % name, facecolor="white", bbox_inches="tight",
+                    pad_inches=.02)
+        print("wrote figures/lec5/%s.svg" % name)
+
+    def series(curves, name, truth=False):
+        fig, axes = plt.subplots(2, 1, figsize=(5.8, 4.2), dpi=200, sharex=True)
+        for j, ax in enumerate(axes):
+            if truth:
+                ax.plot(d["t_fine"], d["z"][:, j], color=GREY, lw=.8, alpha=.6,
+                        label="true position")
+            ax.scatter(t_obs, x[:, j], s=12, color=ORANGE, alpha=.75, lw=0,
+                       label="GPS observations", zorder=3)
+            for m, P, color, lab in curves:
+                sd = np.sqrt(P[:, j, j])
+                ax.fill_between(t_obs, m[:, j] - Z90 * sd, m[:, j] + Z90 * sd, color=color,
+                                alpha=.2, lw=0)
+                ax.plot(t_obs, m[:, j], color=color, lw=1.5, label=lab, zorder=4)
+            ax.set_ylabel("$%s$ position" % "xy"[j])
+            tidy(ax)
+        axes[1].set_xlabel("$t$")
+        axes[1].set_xlim(t_obs[0], t_obs[-1])
+        handles, labels = axes[0].get_legend_handles_labels()
+        fig.legend(handles, labels, frameon=False, fontsize=9, loc="upper center",
+                   ncols=len(labels))
+        fig.tight_layout(rect=(0, 0, 1, .93))
+        fig.savefig("figures/lec5/%s.svg" % name, facecolor="white", bbox_inches="tight",
+                    pad_inches=.02)
+        print("wrote figures/lec5/%s.svg" % name)
+
+    filt = (mf, BLUE, "filtering")
+    smooth = (ms, GREEN, "smoothing")
+    plane(x, "GPS observations", name="wolf-gps-observations")
+    plane(d["dummy_x"], "simulated observations", extra=[(d["dummy"], GREY, "simulated trajectory")],
+          name="wolf-dummy-trajectory")
+    plane(x, "GPS observations", extra=[(mf, BLUE, "filtering median")], name="wolf-kalman-filter")
+    plane(x, "GPS observations", extra=[(mf, BLUE, "filtering median"),
+                                        (ms, GREEN, "smoothing median")],
+          name="wolf-kalman-smoother")
+    plane(x, "GPS observations", numbers=False, truth=d["z"],
+          extra=[(mf, BLUE, "filtering median"), (ms, GREEN, "smoothing median")],
+          name="wolf-true-trajectory")
+    series([(mf, Pf, BLUE, "filtering")], "wolf-kalman-filter-time-series")
+    series([(mf, Pf, BLUE, "filtering"),
+            (ms, Ps, GREEN, "smoothing")], "wolf-kalman-smoother-time-series")
+
+
 if __name__ == "__main__":
     lorenz(noise=False)
     lorenz(noise=True)
@@ -412,6 +524,7 @@ if __name__ == "__main__":
     hmm()
     likelihood_kappa()
     assimilation()
+    wolf_figures()
     for fig, ax, path in [static(), chain()]:
         x0, y0, x1, y1 = measure(fig, ax)
         width = max(WIDTH, x1 - x0 + 2 * MARGIN)
