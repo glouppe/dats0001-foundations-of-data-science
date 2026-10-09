@@ -349,17 +349,7 @@ and any observation model $p(x\_t \mid z\_t = j)$ for each state $j$. It is a mi
 
 class: middle
 
-With discrete states, the integrals of the Bayes filter become sums over the $K$ states. Writing $\alpha\_t(j) = p(z\_t = j \mid x\_{1:t})$,
-$$\alpha\_t(j) \propto p(x\_t \mid z\_t = j) \sum\_{i=1}^K \mathbf{A}\_{i, j} \, \alpha\_{t-1}(i),$$
-normalized over $j$. This is the .bold[forward algorithm].
-
-A backward recursion then gives the smoothing distributions. Together, the two recursions form the .bold[forward-backward algorithm].
-
----
-
-class: middle
-
-The .bold[forward-backward algorithm], with the prior $\pi\_j = p(z\_1 = j)$:
+With discrete states, the integrals of the Bayes filter and smoother become sums over the $K$ states. This gives the .bold[forward-backward algorithm], with the prior $\pi\_j = p(z\_1 = j)$:
 1. Forward pass. Set $\alpha\_1(j) \propto \pi\_j \\, p(x\_1 \mid z\_1 = j)$. For $t = 2, \ldots, T$,
 $$\alpha\_t(j) \propto p(x\_t \mid z\_t = j) \sum\_{i=1}^K \mathbf{A}\_{i, j} \\, \alpha\_{t-1}(i).$$
 2. Backward pass. Set $\beta\_T(i) = 1$. For $t = T-1, \ldots, 1$,
