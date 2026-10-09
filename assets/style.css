@@ -559,3 +559,19 @@ img {
         page-break-inside: avoid;
     }
 }
+
+/* text over a full-bleed background image */
+.overlay {
+    position: absolute;
+    left: 2.5em;
+    right: 2.5em;
+    bottom: 2.5em;
+    padding: 0.8em 1.1em;
+    border-radius: 5px;
+    background-color: rgba(0, 0, 0, 0.65);
+    color: #fff;
+}
+
+.overlay .katex {
+    color: #fff;
+}

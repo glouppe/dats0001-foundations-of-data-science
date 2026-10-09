@@ -305,6 +305,72 @@ def likelihood_kappa():
           % (best, kappa_true))
 
 
+def assimilation(members=40, obs_every=.25, obs_sd=2.0, horizon=12.0):
+    """Data assimilation on the Lorenz system: only z1 is observed, every obs_every time
+    units with noise; an ensemble Kalman filter tracks the unobserved z3, while a forecast
+    from the same uncertain start, without observations, loses it."""
+    rng = np.random.default_rng(7)
+    ode = dict(method="DOP853", rtol=1e-10, atol=1e-10)
+    z0 = solve_ivp(lambda t, z: drift(z), (0, 5), [1.0, 1.0, 1.0], **ode).y[:, -1]
+    t_obs = np.arange(obs_every, horizon + 1e-9, obs_every)
+    grid = np.linspace(0, horizon, 3001)
+    truth = solve_ivp(lambda t, z: drift(z), (0, horizon), z0, t_eval=grid, **ode).y.T
+    truth_obs = solve_ivp(lambda t, z: drift(z), (0, horizon), z0, t_eval=t_obs, **ode).y.T
+    y = truth_obs[:, 0] + rng.normal(0, obs_sd, len(t_obs))
+
+    def step(z, dt=.01, n=None):          # RK4, the forecast model of every member
+        for _ in range(n):
+            k1 = drift(z); k2 = drift(z + dt / 2 * k1)
+            k3 = drift(z + dt / 2 * k2); k4 = drift(z + dt * k3)
+            z = z + dt / 6 * (k1 + 2 * k2 + 2 * k3 + k4)
+        return z
+
+    n_sub = int(round(obs_every / .01))
+    start = z0 + rng.normal(0, 2.0, (members, 3))       # an uncertain initial state
+    ens, free = start.copy(), start.copy()
+    t_plot, mean, sd, free_mean = [0.0], [ens.mean(0)], [ens.std(0)], [free.mean(0)]
+    record = 5                             # record the forecasts every 0.05 time units
+    for k, t in enumerate(t_obs):
+        for r in range(n_sub // record):
+            ens = np.array([step(e, n=record) for e in ens])
+            free = np.array([step(e, n=record) for e in free])
+            if r < n_sub // record - 1:
+                t_plot.append(t - obs_every + (r + 1) * record * .01)
+                mean.append(ens.mean(0)), sd.append(ens.std(0)), free_mean.append(free.mean(0))
+        ens = ens + rng.normal(0, .1, ens.shape)
+        P = np.cov(ens.T)                  # update with the observation of z1 alone
+        gain = P[:, 0] / (P[0, 0] + obs_sd ** 2)
+        innovations = y[k] + rng.normal(0, obs_sd, members) - ens[:, 0]
+        ens = ens + innovations[:, None] * gain[None, :]
+        t_plot.append(t), mean.append(ens.mean(0)), sd.append(ens.std(0))
+        free_mean.append(free.mean(0))
+    t_plot, mean, sd, free_mean = map(np.array, (t_plot, mean, sd, free_mean))
+
+    fig, axes = plt.subplots(2, 1, figsize=(6.4, 3.6), dpi=200, sharex=True)
+    for ax, j, name in ((axes[0], 0, "$z_1$, observed"), (axes[1], 2, "$z_3$, not observed")):
+        ax.plot(grid, truth[:, j], color=GREY, lw=1.1, label="truth")
+        ax.plot(t_plot, free_mean[:, j], color=ORANGE, lw=1, ls=(0, (4, 2)),
+                label="forecast without observations")
+        ax.fill_between(t_plot, mean[:, j] - 2 * sd[:, j], mean[:, j] + 2 * sd[:, j],
+                        color=BLUE, alpha=.2, lw=0)
+        ax.plot(t_plot, mean[:, j], color=BLUE, lw=1.3, label="with data assimilation")
+        ax.set_ylabel(name, fontsize=10)
+        tidy(ax)
+    axes[0].plot(t_obs, y, "o", color=GREY, mfc="white", ms=3, mew=.8, zorder=4,
+                 label="observations")
+    axes[1].set_xlabel("$t$")
+    axes[1].set_xlim(0, horizon)
+    handles, labels = axes[0].get_legend_handles_labels()
+    fig.legend(handles, labels, frameon=False, ncols=4, loc="upper center", fontsize=8.5)
+    fig.tight_layout(rect=(0, 0, 1, .93))
+    fig.savefig("figures/lec5/assimilation-lorenz.svg", facecolor="white")
+    at_obs = np.isin(np.round(t_plot, 6), np.round(t_obs, 6))
+    h = len(t_obs) // 2
+    rmse = lambda a: np.sqrt(np.mean((a[at_obs][h:, 2] - truth_obs[h:, 2]) ** 2))
+    print("wrote figures/lec5/assimilation-lorenz.svg: z3 error, second half: "
+          "assimilation %.1f, free forecast %.1f" % (rmse(mean), rmse(free_mean)))
+
+
 if __name__ == "__main__":
     lorenz(noise=False)
     lorenz(noise=True)
@@ -312,6 +378,7 @@ if __name__ == "__main__":
     predict_update()
     hmm()
     likelihood_kappa()
+    assimilation()
     for fig, ax, path in [static(), chain()]:
         x0, y0, x1, y1 = measure(fig, ax)
         width = max(WIDTH, x1 - x0 + 2 * MARGIN)
