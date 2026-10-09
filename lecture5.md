@@ -395,15 +395,13 @@ class: middle
 
 .center.width-10[![](figures/lec5/squiggle.png)]
 
-So far, time was discretized with a fixed step $\Delta t$, and the transition and observation models were defined at these steps.
+So far, time advanced in fixed steps $\Delta t$, at which the transition and observation models were defined.
 
-Two reasons to model in .bold[continuous time]:
-- physical processes are naturally described by rates of change;
-- observations may arrive at .bold[irregular times], triggered by events, or at several time scales.
+We now model the state in .bold[continuous time]. Physical processes are naturally described by rates of change. Observations often arrive at irregular times, triggered by events or collected at several time scales.
 
 ???
 
-Filtering at scale is called .bold[data assimilation]: weather forecasts, at ECMWF or the RMI, update a model of the atmosphere with new observations every few hours.
+Filtering at scale is known as .bold[data assimilation]. Weather centres such as ECMWF and the RMI update a model of the atmosphere with new observations every few hours.
 
 ---
 
