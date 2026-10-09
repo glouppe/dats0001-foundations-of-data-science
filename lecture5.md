@@ -426,7 +426,7 @@ class: middle
 Without the noise, we get a .bold[deterministic] system, an .bold[ordinary differential equation] (ODE),
 $$\frac{d\mathbf{z}(t)}{dt} = f(\mathbf{z}(t)).$$
 
-.italic[Example.] Exponential decay to an equilibrium point $\mu$,
+The simplest example is the exponential decay to an equilibrium point $\mu$,
 $$\frac{dz(t)}{dt} = -\kappa (z(t) - \mu), \quad \text{with solution} \quad z(t) = \mu + (z(0) - \mu) e^{-\kappa t}.$$
 The state moves towards $\mu$ from either side, and is fully determined by $z(0)$.
 
@@ -440,14 +440,18 @@ The decay is exponential because the difference $z(t) - \mu$ shrinks exponential
 
 class: middle
 
-.center.width-80[![](figures/lec5/ode-discretization.svg)]
+.italic[Example 1.] The .bold[Lorenz system] is a chaotic ODE in three variables,
+$$\frac{dz\_1}{dt} = s (z\_2 - z\_1), \quad \frac{dz\_2}{dt} = z\_1 (r - z\_3) - z\_2, \quad \frac{dz\_3}{dt} = z\_1 z\_2 - b z\_3.$$
 
-.center[The exponential decay $z(t)$ and its discrete-time version, with the same $\kappa$ and $\mu$.]
+.center.width-90[![](figures/lec5/ode-discretization.svg)]
+
+.center[In continuous and in discrete time, the trajectories fill the same butterfly but part after about two time units.]
 
 ???
 
-The discrete steps run slightly below the curve. Each step follows the slope at the start of its interval, which overestimates the decay: $1 - \kappa \Delta t < e^{-\kappa \Delta t}$. The gap closes as $\Delta t \to 0$.
+With $s = 10$, $r = 28$ and $b = 8/3$. Lorenz (1963) derived these equations as a crude model of convection in the atmosphere, and found that two nearby starting points end up far apart. This is why weather forecasts lose their skill after a few days, and why data assimilation keeps correcting them with observations.
 
+Here the discretization error plays the role of the perturbation: chaos amplifies it until the two trajectories have nothing in common, while both stay on the attractor.
 ---
 
 class: middle
@@ -484,31 +488,27 @@ Teaser: this equation is the basis of modern generative models such as .bold[dif
 
 class: middle
 
-.center.width-80[![](figures/lec5/sde-discretization.svg)]
+.italic[Example 1, with noise.] The Lorenz system becomes the SDE
+$$d\mathbf{z} = f(\mathbf{z}) \\, dt + \sigma \\, d\mathbf{W}.$$
 
-.center[The same decay with noise: a path $z(t)$ of the SDE and its discrete-time version, driven by the same Brownian motion.]
+.center.width-90[![](figures/lec5/sde-discretization.svg)]
+
+.center[In continuous and in discrete time, driven by the same Brownian motion.]
 
 ???
 
-The discrete model sees the noise only summed over each step, $w\_t = \sigma (W(t) - W(t - \Delta t))$. Between two steps, the continuous path keeps moving.
-
+The discrete model sees the noise only summed over each step, $\mathbf{w}\_t = \sigma (\mathbf{W}(t) - \mathbf{W}(t - \Delta t))$. Here $\sigma = 3$.
 ---
 
 class: middle
 
-## Example: Ornstein-Uhlenbeck process
+.italic[Example 2.] The wolf model in continuous time is the exponential decay towards the home location $\boldsymbol{\mu}$, with noise,
+$$d\mathbf{z}(t) = -\kappa (\mathbf{z}(t) - \boldsymbol{\mu}) \\, dt + \sigma \\, d\mathbf{W}(t),$$
+where $\kappa > 0$ is the strength of the attraction and $\sigma$ the diffusion coefficient. This SDE is the .bold[Ornstein-Uhlenbeck process].
 
-Recall our animal movement example in discrete time:
-$$\mathbf{z}\_t = \mathbf{z}\_{t-1} - \kappa (\mathbf{z}\_{t-1} - \boldsymbol{\mu}) \Delta t + \mathbf{w}\_t,$$
-where $\mathbf{w}\_t \sim \mathcal{N}(\mathbf{0}, \sigma^2 \Delta t \mathbf{I})$.
-
-In continuous time, this becomes the SDE
-$$d\mathbf{z}(t) = -\kappa (\mathbf{z}(t) - \boldsymbol{\mu}) dt + \sigma d\mathbf{W}(t),$$
-where $\kappa > 0$ is the strength of attraction to the home location $\boldsymbol{\mu}$ and $\sigma$ is the diffusion coefficient.
-
-This process is known as the .bold[Ornstein-Uhlenbeck process], which describes a mean-reverting behavior with Gaussian noise.
-
-The discrete-time model is the Euler-Maruyama discretization of the OU process with step size $\Delta t$.
+The discrete-time model of Part I,
+$$\mathbf{z}\_t = \mathbf{z}\_{t-1} - \kappa (\mathbf{z}\_{t-1} - \boldsymbol{\mu}) \Delta t + \mathbf{w}\_t, \quad \mathbf{w}\_t \sim \mathcal{N}(\mathbf{0}, \sigma^2 \Delta t \\, \mathbf{I}),$$
+is its Euler-Maruyama discretization with step $\Delta t$.
 
 ---
 

@@ -1,5 +1,5 @@
 """Figures of lecture 5: the two graphical models, redrawn in the style of
-lecture 4, and two plots comparing a continuous-time process with its
+lecture 4, and two plots comparing the continuous-time Lorenz system with its
 discrete-time version, without noise (an ODE) and with noise (an SDE).
 
 The drawing functions and constants come from figures_lec4.py, and the canvas
@@ -65,50 +65,71 @@ def chain():
 
 BLUE = "#0173b2"
 LIGHT = "#b8c0c6"
-KAPPA, MU, SIGMA, Z0 = .8, 0.0, .6, 2.0     # decay rate, equilibrium, diffusion, start
-T, DT, FINE = 6.0, .5, 1e-3                  # horizon, discrete step, simulation step
+
+# Lorenz system: a chaotic flow, whose trajectories fill a butterfly-shaped attractor.
+S, RHO, B = 10.0, 28.0, 8 / 3
+T, DT, FINE, SIGMA = 15.0, .01, 1e-4, 3.0     # horizon, discrete step, simulation step, noise
 
 
-def discretization(noise):
-    """A continuous path and the discrete-time model with step DT, driven by the same
-    noise: the decay ODE when noise is False, the Ornstein-Uhlenbeck SDE otherwise."""
-    rng = np.random.default_rng(3)
+def drift(z):
+    return np.array([S * (z[1] - z[0]), z[0] * (RHO - z[2]) - z[1], z[0] * z[1] - B * z[2]])
+
+
+def lorenz(noise):
+    """The Lorenz system: a continuous path, simulated on a very fine grid, and the
+    discrete-time model with step DT, driven by the same noise; in 3d, and z1 over time."""
+    z0 = np.array([1.0, 1.0, 1.0])
+    for _ in range(int(5 / FINE)):            # burn-in, to start on the attractor
+        z0 = z0 + drift(z0) * FINE
+    rng = np.random.default_rng(0)
     n = int(round(T / FINE))
-    t = np.arange(n + 1) * FINE
-    dw = rng.normal(0, np.sqrt(FINE), n) * (SIGMA if noise else 0)
-    z = np.empty(n + 1)
-    z[0] = Z0
-    for k in range(n):                       # Euler-Maruyama on a very fine grid
-        z[k + 1] = z[k] - KAPPA * (z[k] - MU) * FINE + dw[k]
+    dw = rng.normal(0, np.sqrt(FINE), (n, 3)) * (SIGMA if noise else 0)
+    z = np.empty((n + 1, 3))
+    z[0] = z0
+    for k in range(n):                        # Euler-Maruyama on a very fine grid
+        z[k + 1] = z[k] + drift(z[k]) * FINE + dw[k]
     every = int(round(DT / FINE))
-    td = t[::every]
-    w = np.add.reduceat(dw, np.arange(0, n, every))   # the same noise, summed per step
-    zd = np.empty(len(td))
-    zd[0] = Z0
-    for k in range(1, len(td)):
-        zd[k] = zd[k - 1] - KAPPA * (zd[k - 1] - MU) * DT + w[k - 1]
+    w = np.add.reduceat(dw, np.arange(0, n, every), axis=0)   # the same noise, per step
+    zd = np.empty((len(w) + 1, 3))
+    zd[0] = z0
+    for k in range(len(w)):
+        zd[k + 1] = zd[k] + drift(zd[k]) * DT + w[k]
+    t, td = np.arange(n + 1) * FINE, np.arange(len(zd)) * DT
 
-    fig, ax = plt.subplots(figsize=(5.8, 2.6), dpi=200)
-    ax.axhline(MU, color=LIGHT, lw=.8, ls=(0, (4, 3)))
-    ax.plot(t, z, color=GREY, lw=1.2, label=r"continuous time, $z(t)$")
-    ax.plot(td, zd, "o-", color=BLUE, ms=4, lw=.9,
-            label=r"discrete time, $z_t$, $\Delta t = %g$" % DT)
-    ax.set_xlabel("$t$")
-    ax.set_xlim(0, T)
-    ax.set_ylim(-1.2, 2.3)
-    ax.set_yticks([MU], [r"$\mu$"])
-    ax.legend(frameon=False, loc="upper right", fontsize=10)
+    fig = plt.figure(figsize=(7.6, 3.0), dpi=200)
+    grid = fig.add_gridspec(1, 2, width_ratios=[1.15, 1])
+    ax = fig.add_subplot(grid[0], projection="3d")
+    ax.plot(*z.T, color=GREY, lw=.45, label="continuous time")
+    ax.plot(*zd.T, color=BLUE, lw=.45, alpha=.85, label=r"discrete time, $\Delta t = %g$" % DT)
+    ax.view_init(18, -58)
+    ax.set_box_aspect(None, zoom=1.25)
+    ax.set_xticks([]), ax.set_yticks([]), ax.set_zticks([])
+    for axis in (ax.xaxis, ax.yaxis, ax.zaxis):
+        axis.set_pane_color((1, 1, 1, 0))
+        axis.line.set_color(LIGHT)
+    ax.set_xlabel("$z_1$", labelpad=-12), ax.set_ylabel("$z_2$", labelpad=-12)
+    ax.set_zlabel("$z_3$", labelpad=-12)
+
+    ax2 = fig.add_subplot(grid[1])
+    ax2.plot(t, z[:, 0], color=GREY, lw=.8)
+    ax2.plot(td, zd[:, 0], color=BLUE, lw=.8)
+    ax2.set_xlabel("$t$")
+    ax2.set_ylabel("$z_1$")
+    ax2.set_xlim(0, T)
     for side in ("right", "top"):
-        ax.spines[side].set_visible(False)
-    fig.tight_layout()
+        ax2.spines[side].set_visible(False)
+    fig.legend(*ax.get_legend_handles_labels(), frameon=False, loc="upper center",
+               ncols=2, fontsize=10)
+    fig.tight_layout(rect=(0, 0, 1, .9))
     path = "figures/lec5/%s.svg" % ("sde-discretization" if noise else "ode-discretization")
     fig.savefig(path, facecolor="white")
-    print("wrote", path)
+    gap = np.abs(z[::every, 0] - zd[:, 0])
+    print("wrote", path, "trajectories part at t = %.2f" % td[np.argmax(gap > 5)])
 
 
 if __name__ == "__main__":
-    discretization(noise=False)
-    discretization(noise=True)
+    lorenz(noise=False)
+    lorenz(noise=True)
     for fig, ax, path in [static(), chain()]:
         x0, y0, x1, y1 = measure(fig, ax)
         width = max(WIDTH, x1 - x0 + 2 * MARGIN)
