@@ -452,8 +452,10 @@ def wolf_figures():
     x, t_obs = d["x"], d["t_obs"]
     mf, Pf, ms, Ps = kalman(x, d["kappa"], d["Delta"], d["mu"], d["sigma"], d["R"])
 
-    def plane(points, label, numbers=True, extra=(), truth=None, name=""):
+    def plane(points, label, numbers=True, extra=(), truth=None, name="", connect=False):
         fig, ax = plt.subplots(figsize=(5.2, 4.6), dpi=200)
+        if connect:                            # join the dots, in the order of the fixes
+            ax.plot(*points.T, color=ORANGE, lw=.9, alpha=.8, zorder=2)
         if truth is not None:
             ax.plot(*truth.T, color=GREY, lw=.8, alpha=.6, label="true trajectory")
         ax.scatter(*points.T, s=14, color=ORANGE, alpha=.75, lw=0, label=label, zorder=3)
@@ -502,6 +504,7 @@ def wolf_figures():
     filt = (mf, BLUE, "filtering")
     smooth = (ms, GREEN, "smoothing")
     plane(x, "GPS observations", name="wolf-gps-observations")
+    plane(x, "GPS observations", name="wolf-gps-connected", connect=True)
     plane(d["dummy_x"], "simulated observations", extra=[(d["dummy"], GREY, "simulated trajectory")],
           name="wolf-dummy-trajectory")
     plane(x, "GPS observations", extra=[(mf, BLUE, "filtering median")], name="wolf-kalman-filter")

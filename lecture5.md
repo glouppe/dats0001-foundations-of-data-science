@@ -19,6 +19,17 @@ class: middle
 
 class: middle
 
+.center.width-70[![](figures/lec5/wolf-gps-connected.svg)]
+.center[The same observations, joined in the order they were recorded.]
+
+???
+
+Joining the dots takes each GPS fix at face value. The path zigzags back and forth between consecutive fixes, with jumps far larger than the wolf moves in one time step: the zigzags are the noise of the GPS. A model of how a wolf moves, and of how the GPS errs, separates the two.
+
+---
+
+class: middle
+
 # Discrete-time models
 
 ---
