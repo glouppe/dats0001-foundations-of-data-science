@@ -31,7 +31,6 @@ class: middle
 
 In Lecture 4, a latent variable model explains $N$ observations $\mathbf{x}\_i$ with one latent variable $\mathbf{z}\_i$ each, the local variables, and parameters $\theta$ shared by all, the global ones,
 $$p(\mathbf{x}\_{1:N}, \mathbf{z}\_{1:N}, \theta) = p(\theta) \prod\_{i=1}^N p(\mathbf{x}\_i | \mathbf{z}\_i, \theta) p(\mathbf{z}\_i | \theta).$$
-Given $\theta$, the $\mathbf{z}\_i$ are independent.
 
 ---
 
