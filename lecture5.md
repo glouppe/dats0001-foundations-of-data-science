@@ -176,7 +176,7 @@ class: middle
 
 .center.width-10[![](figures/lec5/tractor.png)]
 
-In general, the integrals of the Bayes filter and smoother have no closed form.
+.alert[In general, the integrals of the Bayes filter and smoother have no closed form.]
 
 Two classes of models are exceptions:
 - linear Gaussian models, where the integrals are Gaussian (Kalman filter and smoother);
