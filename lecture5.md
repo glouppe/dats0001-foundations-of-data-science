@@ -39,7 +39,7 @@ class: middle
 .center.width-10[![](figures/lec5/hourglass.png)]
 
 What if the system evolves over time and we have a sequence of observations $\mathbf{x}\_{1:T} = (\mathbf{x}\_1, \ldots, \mathbf{x}\_T)$ collected at discrete time steps $t = 1, \ldots, T$?
- 
+
 ---
 
 class: middle
@@ -66,7 +66,7 @@ class: middle
 
 .center.width-10[![](figures/lec5/wolf-detection.png)]
 
-## Example
+## Example: tracking a wolf
 
 We want to track the location of a wild animal (e.g., a wolf) over time using noisy GPS observations.
 
@@ -119,9 +119,9 @@ class: middle
 
 ## Bayes filter
 
-The Bayes filter is a recursive algorithm for estimating the filtering distributions $p(\mathbf{z}\_t | \mathbf{x}\_{1:t})$ as 
+The Bayes filter is a recursive algorithm that computes the filtering distributions $p(\mathbf{z}\_t | \mathbf{x}\_{1:t})$ as 
 $$p(\mathbf{z}\_t | \mathbf{x}\_{1:t}) = \frac{p(\mathbf{x}\_t | \mathbf{z}\_t) \int p(\mathbf{z}\_t | \mathbf{z}\_{t-1}) p(\mathbf{z}\_{t-1} | \mathbf{x}\_{1:t-1}) d\mathbf{z}\_{t-1}}{p(\mathbf{x}\_t | \mathbf{x}\_{1:t-1})},$$
-for $t = 1, 2, \ldots, T$, with the base case $p(\mathbf{z}\_1 | \mathbf{x}\_1) = \frac{p(\mathbf{x}\_1 | \mathbf{z}\_1) p(\mathbf{z}\_1)}{p(\mathbf{x}\_1)}$.
+for $t = 2, \ldots, T$, with the base case $p(\mathbf{z}\_1 | \mathbf{x}\_1) = \frac{p(\mathbf{x}\_1 | \mathbf{z}\_1) p(\mathbf{z}\_1)}{p(\mathbf{x}\_1)}$.
 
 ---
 
@@ -270,7 +270,7 @@ Mean update:
 - $\mathbf{x}\_t - \mathbf{H} \mathbf{m}^-\_t$ is the innovation or measurement residual, i.e., the difference between the actual observation and the predicted observation.
 - The Kalman gain $\mathbf{K}\_t$ determines how much we adjust our prediction based on the new observation.
 
-Covariance update:
+Kalman gain:
 - If the observation noise $\mathbf{R}$ is small compared to the prediction uncertainty $\mathbf{P}^-\_t$, then $\mathbf{K}\_t$ approaches $\mathbf{H}^{-1}$ (if $\mathbf{H}$ is invertible), and we rely heavily on the new observation.
 - Conversely, if $\mathbf{R}$ is large, then $\mathbf{K}\_t$ approaches zero, and we rely more on our prediction. 
 
@@ -378,6 +378,7 @@ Together, the two passes form the .bold[forward-backward algorithm]. Each costs 
 The literature writes the same algorithm with $\alpha\_t(j) = p(z\_t = j \mid x\_{1:t})$ and a backward variable $\beta\_t(i) \propto p(x\_{t+1:T} \mid z\_t = i)$, computed by $\beta\_t(i) \propto \sum\_j \mathbf{A}\_{i, j} \\, p(x\_{t+1} \mid z\_{t+1} = j) \\, \beta\_{t+1}(j)$ from $\beta\_T = 1$; the smoothing distribution is then $p(z\_t = j \mid x\_{1:T}) \propto \alpha\_t(j) \\, \beta\_t(j)$. Both forms give the same result.
 
 In matrix form, $\boldsymbol{\alpha}\_t \propto \mathbf{O}\_t \mathbf{A}^T \boldsymbol{\alpha}\_{t-1}$, with $\mathbf{O}\_t$ the diagonal matrix of $p(x\_t \mid z\_t = j)$.
+
 ---
 
 class: middle
@@ -439,9 +440,6 @@ So far, time advanced in fixed steps $\Delta t$, at which the transition and obs
 
 We now model the state in .bold[continuous time]. Physical processes are naturally described by rates of change. Observations often arrive at irregular times, triggered by events or collected at several time scales.
 
-???
-
-Filtering at scale is known as .bold[data assimilation]. Weather centres such as ECMWF and the RMI update a model of the atmosphere with new observations every few hours.
 
 ---
 
@@ -472,7 +470,7 @@ The state moves towards $\mu$ from either side, and is fully determined by $z(0)
 
 ???
 
-The solution of an ODE with initial condition $\mathbf{z}\_0$ is $\mathbf{z}(t) = \mathbf{z}\_0 + \int\_0^t f(\mathbf{z}(\tau)) d\tau$.
+The solution of an ODE with initial condition $\mathbf{z}\_0$ satisfies $\mathbf{z}(t) = \mathbf{z}\_0 + \int\_0^t f(\mathbf{z}(\tau)) d\tau$. It has a closed form only in simple cases, such as this one.
 
 The decay is exponential because the difference $z(t) - \mu$ shrinks exponentially fast; the state approaches $\mu$ without reaching it in finite time.
 
@@ -489,11 +487,12 @@ $$\frac{dz\_1}{dt} = s (z\_2 - z\_1), \quad \frac{dz\_2}{dt} = z\_1 (r - z\_3) -
 
 ???
 
-With $s = 10$, $r = 28$ and $b = 8/3$. Lorenz (1963) derived these equations as a crude model of convection in the atmosphere, and found that two nearby starting points end up far apart. This is why weather forecasts lose their skill after a few days, and why data assimilation keeps correcting them with observations.
+With $s = 10$, $r = 28$ and $b = 8/3$. Lorenz (1963) derived these equations as a crude model of convection in the atmosphere, and found that two nearby starting points end up far apart. This is why weather forecasts lose their skill after one to two weeks, and why data assimilation keeps correcting them with observations.
 
 Here the discretization error plays the role of the perturbation: chaos amplifies it until the two trajectories have nothing in common, while both stay on the attractor.
 
 A computer cannot draw a continuous path either. The grey curve comes from a high-order solver (DOP853) at a relative tolerance of $10^{-12}$, whose error stays negligible over these 8 time units. A plain Euler scheme, even with a step of $10^{-4}$, would itself part from the true trajectory before $t = 15$.
+
 ---
 
 class: middle
@@ -542,6 +541,7 @@ $$d\mathbf{z} = f(\mathbf{z}) \\, dt + \sigma \\, d\mathbf{W}.$$
 The discrete model sees the noise only summed over each step, $\mathbf{w}\_t = \sigma (\mathbf{W}(t) - \mathbf{W}(t - \Delta t))$. Here $\sigma = 3$.
 
 There is no exact way to simulate this SDE. The grey curve uses Euler-Maruyama with a step of $10^{-4}$, 100 times finer than the discrete model, on the same Brownian path.
+
 ---
 
 class: middle
@@ -578,7 +578,7 @@ This is a linear Gaussian transition, with $\mathbf{A}\_i = e^{-\kappa \Delta\_i
 
 For a small $\Delta\_i$, $e^{-\kappa \Delta\_i} \approx 1 - \kappa \Delta\_i$ and the variance is close to $\sigma^2 \Delta\_i$: the Euler-Maruyama model of Part I.
 
-Any linear SDE $d\mathbf{z} = \mathbf{F} \mathbf{z} \\, dt + \mathbf{L} \\, d\mathbf{W}$ discretizes the same way, with $\mathbf{A}\_i = e^{\mathbf{F} \Delta\_i}$ (Särkkä & Svensson 2023, Ch 4).
+Any linear SDE $d\mathbf{z} = \mathbf{F} \mathbf{z} \\, dt + \mathbf{L} \\, d\mathbf{W}$ discretizes the same way, with $\mathbf{A}\_i = e^{\mathbf{F} \Delta\_i}$ (Särkkä & Svensson 2023).
 
 ---
 
@@ -611,7 +611,7 @@ Weather forecasting is a state-space model:
 
 ???
 
-At ECMWF, the global model runs at about 9 km, with 137 levels in the vertical: of the order of $10^9$ grid points. A satellite measures radiances, not temperatures: the observation model links the state to what the instrument sees.
+At ECMWF, the global model runs at about 9 km, with 137 levels in the vertical: of the order of $10^9$ grid points. A satellite measures radiances: the observation model maps the temperature and humidity of the state to what the instrument sees.
 
 ---
 
