@@ -621,6 +621,8 @@ background-size: cover
 
 .overlay[The state $\mathbf{z}\_t$: one snapshot of the atmosphere, over the whole planet.]
 
+.footnote[Data: [ERA5](https://doi.org/10.1002/qj.3803) reanalysis, 10 m wind speed, March 21, 2021.]
+
 ---
 
 class: black-slide
@@ -628,6 +630,8 @@ background-image: url(figures/lec5/satellite.gif)
 background-size: cover
 
 .overlay[The observations $\mathbf{x}\_t$: sparse, noisy, and often indirect.]
+
+.footnote[Animation: [ESA/ATG medialab](https://www.esa.int/ESA_Multimedia), Sentinel-1.]
 
 ---
 
