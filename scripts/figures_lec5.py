@@ -328,7 +328,8 @@ def assimilation(members=40, obs_every=.25, obs_sd=2.0, horizon=12.0):
     n_sub = int(round(obs_every / .01))
     start = z0 + rng.normal(0, 2.0, (members, 3))       # an uncertain initial state
     ens, free = start.copy(), start.copy()
-    t_plot, mean, sd, free_mean = [0.0], [ens.mean(0)], [ens.std(0)], [free.mean(0)]
+    t_plot, mean, sd = [0.0], [ens.mean(0)], [ens.std(0)]
+    free_mean, free_sd = [free.mean(0)], [free.std(0)]
     record = 5                             # record the forecasts every 0.05 time units
     for k, t in enumerate(t_obs):
         for r in range(n_sub // record):
@@ -336,19 +337,22 @@ def assimilation(members=40, obs_every=.25, obs_sd=2.0, horizon=12.0):
             free = np.array([step(e, n=record) for e in free])
             if r < n_sub // record - 1:
                 t_plot.append(t - obs_every + (r + 1) * record * .01)
-                mean.append(ens.mean(0)), sd.append(ens.std(0)), free_mean.append(free.mean(0))
+                mean.append(ens.mean(0)), sd.append(ens.std(0))
+                free_mean.append(free.mean(0)), free_sd.append(free.std(0))
         ens = ens + rng.normal(0, .1, ens.shape)
         P = np.cov(ens.T)                  # update with the observation of z1 alone
         gain = P[:, 0] / (P[0, 0] + obs_sd ** 2)
         innovations = y[k] + rng.normal(0, obs_sd, members) - ens[:, 0]
         ens = ens + innovations[:, None] * gain[None, :]
         t_plot.append(t), mean.append(ens.mean(0)), sd.append(ens.std(0))
-        free_mean.append(free.mean(0))
-    t_plot, mean, sd, free_mean = map(np.array, (t_plot, mean, sd, free_mean))
+        free_mean.append(free.mean(0)), free_sd.append(free.std(0))
+    t_plot, mean, sd, free_mean, free_sd = map(np.array, (t_plot, mean, sd, free_mean, free_sd))
 
     fig, axes = plt.subplots(2, 1, figsize=(6.4, 3.6), dpi=200, sharex=True)
     for ax, j, name in ((axes[0], 0, "$z_1$, observed"), (axes[1], 2, "$z_3$, not observed")):
         ax.plot(grid, truth[:, j], color=GREY, lw=1.1, label="truth")
+        ax.fill_between(t_plot, free_mean[:, j] - 2 * free_sd[:, j],
+                        free_mean[:, j] + 2 * free_sd[:, j], color=ORANGE, alpha=.15, lw=0)
         ax.plot(t_plot, free_mean[:, j], color=ORANGE, lw=1, ls=(0, (4, 2)),
                 label="forecast without observations")
         ax.fill_between(t_plot, mean[:, j] - 2 * sd[:, j], mean[:, j] + 2 * sd[:, j],

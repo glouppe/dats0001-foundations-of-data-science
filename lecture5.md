@@ -626,7 +626,7 @@ class: middle
 
 ???
 
-The ensemble Kalman filter replaces the mean and covariance of the Kalman filter by a set of samples: each member is propagated through the model, and the update uses the covariance estimated from the members. Here the observations come every 0.25 time units, with a noise standard deviation of 2. Over the second half, the error on $z\_3$ is 2.8 with assimilation and 9.7 without.
+The ensemble Kalman filter replaces the mean and covariance of the Kalman filter by a set of samples: each member is propagated through the model, and the update uses the covariance estimated from the members. Here the observations come every 0.25 time units, with a noise standard deviation of 2. Over the second half, the error on $z\_3$ is 2.8 with assimilation and 9.7 without. Both curves are ensemble means, with bands of two standard deviations. Without observations, the members spread over the attractor: the mean flattens and the band covers both wings.
 
 ---
 
