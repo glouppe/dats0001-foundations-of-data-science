@@ -649,6 +649,22 @@ The same machinery produces reanalyses, the best estimate of the past atmosphere
 
 ---
 
+class: middle
+
+On the real atmosphere, the transition model can be a machine-learning forecaster such as GenCast, and the filter an ensemble of states updated with each new observation (a particle filter):
+
+.center.width-100[![](figures/lec5/faapf.png)]
+
+.center[10 m zonal wind: truth (ERA5), filter with observations, forecast alone.<br> Without observations, the forecast drifts away within a week.]
+
+.footnote[Credits: [Savary et al](https://arxiv.org/abs/2605.20028), ICML 2026.]
+
+???
+
+GenCast, from Google DeepMind, samples the next state of the atmosphere given the current one: it was built to forecast, and has never seen an observation. In the filter, each member of the ensemble is moved forward by GenCast and conditioned on the new observations, without retraining. The rows show the ensemble means after 3, 7 and 15 days.
+
+---
+
 class: end-slide, center
 count: false
 
