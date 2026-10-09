@@ -27,9 +27,11 @@ class: middle
 
 .center.width-50[![](figures/lec5/lvm.svg)]
 
-## Static latent variable models 
+## Static latent variable models
 
-We previously defined latent variable models as probabilistic models that explain observed data $\mathbf{x}$ in terms of unobserved (latent) variables $\mathbf{z}$ and parameters $\theta$, $$p(\mathbf{x}, \mathbf{z}, \theta) = p(\mathbf{x} | \mathbf{z}, \theta) p(\mathbf{z} | \theta) p(\theta).$$
+In Lecture 4, a latent variable model explains $N$ observations $\mathbf{x}\_i$ with one latent variable $\mathbf{z}\_i$ each, the local variables, and parameters $\theta$ shared by all, the global ones,
+$$p(\mathbf{x}\_{1:N}, \mathbf{z}\_{1:N}, \theta) = p(\theta) \prod\_{i=1}^N p(\mathbf{x}\_i | \mathbf{z}\_i, \theta) p(\mathbf{z}\_i | \theta).$$
+Given $\theta$, the $\mathbf{z}\_i$ are independent.
 
 ---
 
@@ -47,7 +49,7 @@ class: middle
 
 To model a dynamical system, we can first assume a discretization of time and introduce a sequence of latent variables $\mathbf{z}\_t$ that represent the state of the system at each time step $t$.
 
-In this context, a .bold[state-space model] is a latent variable model that explains a sequence $\mathbf{x}\_{1:T} = (\mathbf{x}\_1, \ldots, \mathbf{x}\_T)$ of observations in terms of a sequence $\mathbf{z}\_{1:T} = (\mathbf{z}\_1, \ldots, \mathbf{z}\_T)$ of latent variables.
+In this context, a .bold[state-space model] is a latent variable model that explains a sequence $\mathbf{x}\_{1:T} = (\mathbf{x}\_1, \ldots, \mathbf{x}\_T)$ of observations in terms of a sequence $\mathbf{z}\_{1:T} = (\mathbf{z}\_1, \ldots, \mathbf{z}\_T)$ of latent variables. Each latent variable now depends on the previous one: the plate of Lecture 4 becomes a chain.
 
 ---
 
@@ -334,6 +336,22 @@ A similar backward recursion gives the smoothing distributions: together, the .b
 ???
 
 In matrix form, $\boldsymbol{\alpha}\_t \propto \mathbf{O}\_t \mathbf{A}^T \boldsymbol{\alpha}\_{t-1}$, with $\mathbf{O}\_t$ the diagonal matrix of $p(x\_t \mid z\_t = j)$ and $\boldsymbol{\alpha}\_1 \propto \mathbf{O}\_1 \boldsymbol{\pi}$ for the prior $\boldsymbol{\pi}$. Backward: $\boldsymbol{\beta}\_t \propto \mathbf{A} \mathbf{O}\_{t+1} \boldsymbol{\beta}\_{t+1}$ from $\boldsymbol{\beta}\_T = \mathbf{1}$, and the smoothing distributions are $\boldsymbol{\gamma}\_t \propto \boldsymbol{\alpha}\_t \odot \boldsymbol{\beta}\_t$.
+---
+
+class: middle
+
+## Learning the parameters
+
+So far, the parameters $\theta = (\kappa, \sigma, \mathbf{R}, \boldsymbol{\mu})$ of the wolf model were taken as known. The Bayes filter also gives their likelihood: its normalizers multiply to
+$$p(\mathbf{x}\_{1:T} \mid \theta) = \prod\_{t=1}^T p(\mathbf{x}\_t \mid \mathbf{x}\_{1:t-1}, \theta),$$
+the marginal likelihood of Lecture 4, with all the states integrated out.
+
+It can be maximized over $\theta$, as in the frequentist inference of Lecture 4, or combined with a prior $p(\theta)$ into a posterior, sampled in Lecture 6.
+
+???
+
+For a linear Gaussian model, each factor is Gaussian, $p(\mathbf{x}\_t \mid \mathbf{x}\_{1:t-1}, \theta) = \mathcal{N}(\mathbf{x}\_t \mid \mathbf{H} \mathbf{m}^-\_t, \mathbf{H} \mathbf{P}^-\_t \mathbf{H}^T + \mathbf{R})$, so one pass of the Kalman filter evaluates the likelihood. EM (Lecture 8) is another way to maximize it.
+
 ---
 
 class: middle
