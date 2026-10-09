@@ -66,9 +66,7 @@ class: middle
 
 .center.width-10[![](figures/lec5/wolf-detection.png)]
 
-## Example: tracking a wolf
-
-We want to track the location of a wild animal (e.g., a wolf) over time using noisy GPS observations.
+.italic[Example.] We want to track the location of a wild animal (e.g., a wolf) over time using noisy GPS observations.
 
 Assumptions:
 - The animal has a home location (den, nest) at $\boldsymbol{\mu} \in \mathbb{R}^2$.
