@@ -111,6 +111,8 @@ Given a state-space model and a sequence of observations $\mathbf{x}\_{1:T}$, we
 - Filtering: $p(\mathbf{z}\_t | \mathbf{x}\_{1:t})$.
 - Smoothing: $p(\mathbf{z}\_t | \mathbf{x}\_{1:T})$.
 
+.center.width-80[![](figures/lec5/inference-problems.svg)]
+
 ---
 
 class: middle
@@ -133,6 +135,18 @@ class: middle
    $$p(\mathbf{z}\_t | \mathbf{x}\_{1:t}) = \frac{p(\mathbf{x}\_t | \mathbf{z}\_t) p(\mathbf{z}\_t | \mathbf{x}\_{1:t-1})}{p(\mathbf{x}\_t | \mathbf{x}\_{1:t-1})},$$
    where the marginal likelihood $p(\mathbf{x}\_t | \mathbf{x}\_{1:t-1})$ is given by
    $$p(\mathbf{x}\_t | \mathbf{x}\_{1:t-1}) = \int p(\mathbf{x}\_t | \mathbf{z}\_t) p(\mathbf{z}\_t | \mathbf{x}\_{1:t-1}) d\mathbf{z}\_t.$$
+
+---
+
+class: middle
+
+.center.width-80[![](figures/lec5/predict-update.svg)]
+
+.center[One step of the Bayes filter, in one dimension. The prediction spreads the previous filtering distribution; the update pulls it towards the new observation.]
+
+???
+
+The numbers are illustrative. The updated distribution sits between the prediction and the observation, closer to whichever is more precise, and it is narrower than both.
 
 ---
 
@@ -368,6 +382,18 @@ In matrix form, $\boldsymbol{\alpha}\_t \propto \mathbf{O}\_t \mathbf{A}^T \bold
 
 class: middle
 
+.center.width-80[![](figures/lec5/hmm-wolf.svg)]
+
+.center[A simulated wolf switching between three behaviors, observed through its speed.<br> The most probable state is right 94% of the time when filtering, 97% when smoothing.]
+
+???
+
+Smoothing uses the whole sequence: a single slow speed in the middle of a long run of travel is read as noise, which the filter, seeing only the past, cannot do as well.
+
+---
+
+class: middle
+
 ## Learning the parameters
 
 So far, the parameters $\theta = (\kappa, \sigma, \mathbf{R}, \boldsymbol{\mu})$ of the wolf model were taken as known. The Bayes filter also gives their likelihood. At each step, the update normalizes by
@@ -382,6 +408,18 @@ It can be maximized over $\theta$, or combined with a prior $p(\theta)$ into a p
 For a linear Gaussian model, each factor is Gaussian, $p(\mathbf{x}\_t \mid \mathbf{x}\_{1:t-1}, \theta) = \mathcal{N}(\mathbf{x}\_t \mid \mathbf{H} \mathbf{m}^-\_t, \mathbf{H} \mathbf{P}^-\_t \mathbf{H}^T + \mathbf{R})$, so one pass of the Kalman filter evaluates the likelihood.
 
 Maximizing it is the frequentist inference of Lecture 4; sampling the posterior is Lecture 6; EM (Lecture 8) is another way to maximize it.
+
+---
+
+class: middle
+
+.center.width-80[![](figures/lec5/likelihood-kappa.svg)]
+
+.center[The log-likelihood of $\kappa$ for the GPS observations, one Kalman pass per value.<br> It peaks at 0.20; the data were simulated with $\kappa = 0.25$.]
+
+???
+
+The other parameters are fixed at their true values. The gap between 0.20 and 0.25 is sampling variability: another simulated sequence would give another maximum. A confidence interval or a posterior for $\kappa$ quantifies it, as in Lecture 4.
 
 ---
 

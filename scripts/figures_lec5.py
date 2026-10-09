@@ -134,9 +134,184 @@ def lorenz(noise):
     print("wrote", path, "trajectories part at t = %.2f" % td[np.argmax(gap > 5)])
 
 
+ORANGE = "#de8f05"
+STATES = ["resting", "foraging", "traveling"]
+STATE_COLORS = ["#b8c0c6", "#029e73", "#0173b2"]
+
+
+def tidy(ax, left=True):
+    for side in ("right", "top") if left else ("right", "top", "left"):
+        ax.spines[side].set_visible(False)
+
+
+def timeline():
+    """Which observations each inference problem conditions on, and which state it targets."""
+    T, t, k = 10, 6, 2
+    rows = [("prediction", "$p(\\mathbf{z}_{t+k} \\mid \\mathbf{x}_{1:t})$", t, t + k),
+            ("filtering", "$p(\\mathbf{z}_t \\mid \\mathbf{x}_{1:t})$", t, t),
+            ("smoothing", "$p(\\mathbf{z}_t \\mid \\mathbf{x}_{1:T})$", T, t)]
+    fig, ax = plt.subplots(figsize=(5.8, 2.2), dpi=200)
+    for r, (name, formula, used, target) in enumerate(rows):
+        y = len(rows) - 1 - r
+        for s_ in range(1, T + 1):
+            ax.plot(s_, y, "o", ms=7, color=BLUE if s_ <= used else "white",
+                    markeredgecolor=BLUE if s_ <= used else LIGHT, zorder=2)
+        ax.plot(target, y, "o", ms=15, mfc="none", mec=ORANGE, mew=1.6, zorder=3)
+        ax.text(0.2, y, name, ha="right", va="center", fontsize=10)
+        ax.text(T + .8, y, formula, ha="left", va="center", fontsize=11)
+    ax.set_xticks([1, t, t + k, T], ["$1$", "$t$", "$t+k$", "$T$"])
+    ax.set_yticks([])
+    ax.set_xlim(-2.3, T + 4.6)
+    ax.set_ylim(-.6, len(rows) - .4)
+    ax.set_xlabel("time")
+    tidy(ax, left=False)
+    fig.tight_layout()
+    fig.savefig("figures/lec5/inference-problems.svg", facecolor="white")
+    print("wrote figures/lec5/inference-problems.svg")
+
+
+def predict_update():
+    """One step of the Bayes filter in one dimension, with illustrative numbers."""
+    m, P = 1.0, .02                       # filtering distribution at t - 1
+    A, Q = .9, .03                        # transition
+    x, R = .6, .04                        # observation and its noise variance
+    m_pred, P_pred = A * m, A ** 2 * P + Q
+    K = P_pred / (P_pred + R)
+    m_new, P_new = m_pred + K * (x - m_pred), (1 - K) * P_pred
+    z = np.linspace(-.2, 1.8, 600)
+    pdf = lambda mean, var: np.exp(-.5 * (z - mean) ** 2 / var) / np.sqrt(2 * np.pi * var)
+    fig, ax = plt.subplots(figsize=(5.8, 2.6), dpi=200)
+    ax.plot(z, pdf(m, P), color=LIGHT, lw=1.6, label="filtering at $t-1$")
+    ax.plot(z, pdf(m_pred, P_pred), color=GREY, lw=1.4, ls=(0, (4, 2)), label="prediction")
+    ax.plot(z, pdf(x, R), color=ORANGE, lw=1.4, label="likelihood of $x_t$")
+    ax.plot(z, pdf(m_new, P_new), color=BLUE, lw=2, label="filtering at $t$")
+    ax.axvline(x, color=ORANGE, lw=.8, ls=":")
+    ax.set_xlabel("$z$")
+    ax.set_yticks([])
+    ax.set_xlim(z[0], z[-1])
+    ax.set_ylim(0, None)
+    ax.legend(frameon=False, fontsize=9, loc="upper right")
+    tidy(ax)
+    fig.tight_layout()
+    fig.savefig("figures/lec5/predict-update.svg", facecolor="white")
+    print("wrote figures/lec5/predict-update.svg: gain %.2f" % K)
+
+
+def hmm():
+    """A wolf switching between three behaviors, seen through its noisy speed, and the
+    filtering and smoothing distributions of the forward-backward algorithm."""
+    rng = np.random.default_rng(4)
+    T = 200
+    A = np.array([[.95, .04, .01], [.03, .93, .04], [.02, .06, .92]])
+    mean, sd = np.array([.1, .7, 1.6]), np.array([.15, .3, .4])
+    prior = np.array([1, 0, 0])
+    z = np.empty(T, dtype=int)
+    z[0] = 0
+    for t in range(1, T):
+        z[t] = rng.choice(3, p=A[z[t - 1]])
+    x = rng.normal(mean[z], sd[z])
+    like = np.exp(-.5 * ((x[:, None] - mean) / sd) ** 2) / sd
+    filt = np.empty((T, 3))
+    filt[0] = prior * like[0] / (prior * like[0]).sum()
+    for t in range(1, T):                 # forward pass: the Bayes filter with sums
+        f = like[t] * (A.T @ filt[t - 1])
+        filt[t] = f / f.sum()
+    smooth = np.empty((T, 3))
+    smooth[-1] = filt[-1]
+    for t in range(T - 2, -1, -1):        # backward pass: the Bayes smoother with sums
+        pred = A.T @ filt[t]
+        smooth[t] = filt[t] * (A @ (smooth[t + 1] / pred))
+    acc_f, acc_s = (filt.argmax(1) == z).mean(), (smooth.argmax(1) == z).mean()
+
+    fig, axes = plt.subplots(4, 1, figsize=(6.4, 4.4), dpi=200, sharex=True,
+                             gridspec_kw=dict(height_ratios=[.35, 1, .8, .8]))
+    tt = np.arange(T)
+    for j in range(3):
+        axes[0].fill_between(tt, 0, 1, where=z == j, step="mid", color=STATE_COLORS[j],
+                             lw=0, label=STATES[j])
+    axes[0].set_yticks([])
+    axes[0].set_ylabel("true", rotation=0, ha="right", va="center", fontsize=10)
+    axes[0].legend(frameon=False, ncols=3, loc="lower center", bbox_to_anchor=(.5, 1),
+                   fontsize=9)
+    axes[1].plot(tt, x, ".", color=GREY, ms=3)
+    axes[1].set_ylabel("speed $x_t$", fontsize=10)
+    for ax, probs, name in ((axes[2], filt, "filtering"), (axes[3], smooth, "smoothing")):
+        ax.stackplot(tt, probs.T, colors=STATE_COLORS, lw=0, step="mid")
+        ax.set_ylim(0, 1)
+        ax.set_yticks([0, 1])
+        ax.set_ylabel(name, fontsize=10)
+    axes[3].set_xlabel("$t$")
+    axes[3].set_xlim(0, T - 1)
+    for ax in axes:
+        tidy(ax, left=ax is not axes[0])
+    fig.tight_layout()
+    fig.savefig("figures/lec5/hmm-wolf.svg", facecolor="white")
+    print("wrote figures/lec5/hmm-wolf.svg: most probable state right %.0f%% (filtering), "
+          "%.0f%% (smoothing)" % (100 * acc_f, 100 * acc_s))
+
+
+def wolf_data():
+    """The simulated GPS observations of nb05, reproduced with the same seed and calls."""
+    np.random.seed(42)
+    dt, Delta, T = .01, .25, 20.0
+    n_steps, every = int(T / dt), int(Delta / dt)
+    mu, kappa, sigma = np.zeros(2), np.array([.25, .25]), np.array([.1, .1])
+    R = np.eye(2) * .2 ** 2
+    z = np.zeros((n_steps + 1, 2))
+    z[0] = [2.0, 1.0]
+    for i in range(n_steps):
+        dB = np.random.normal(size=2) * np.sqrt(dt)
+        z[i + 1] = z[i] - kappa * (z[i] - mu) * dt + sigma * dB
+    obs = z[np.arange(0, n_steps + 1, every)]
+    x = obs + np.random.normal(size=obs.shape) @ np.sqrt(R)
+    return x, Delta, mu, sigma[0], R, kappa[0]
+
+
+def kalman_loglik(x, kappa, Delta, mu, sigma, R):
+    """log p(x_1:T | kappa), one pass of the Kalman filter with the exact transition."""
+    a = np.exp(-kappa * Delta)
+    A, b = a * np.eye(2), (1 - a) * mu
+    Q = sigma ** 2 / (2 * kappa) * (1 - a ** 2) * np.eye(2)
+    m, P, ll = mu.copy(), np.eye(2), 0.0
+    for xt in x:
+        m, P = A @ m + b, A @ P @ A.T + Q
+        S = P + R
+        r = xt - m
+        ll += -.5 * (r @ np.linalg.solve(S, r) + np.log(np.linalg.det(2 * np.pi * S)))
+        K = P @ np.linalg.inv(S)
+        m, P = m + K @ r, (np.eye(2) - K) @ P
+    return ll
+
+
+def likelihood_kappa():
+    """The log-likelihood of the attraction strength kappa for the wolf data."""
+    x, Delta, mu, sigma, R, kappa_true = wolf_data()
+    kappas = np.linspace(.02, 1.0, 300)
+    ll = np.array([kalman_loglik(x, k, Delta, mu, sigma, R) for k in kappas])
+    best = kappas[ll.argmax()]
+    fig, ax = plt.subplots(figsize=(5.8, 2.6), dpi=200)
+    ax.plot(kappas, ll, color=BLUE, lw=1.8)
+    ax.axvline(kappa_true, color=GREY, lw=1, ls=(0, (4, 3)))
+    ax.text(kappa_true + .015, ll.min() + .1 * (ll.max() - ll.min()), "true $\\kappa$",
+            fontsize=10)
+    ax.plot(best, ll.max(), "o", color=BLUE, ms=5)
+    ax.set_xlabel("$\\kappa$")
+    ax.set_ylabel("$\\log p(\\mathbf{x}_{1:T} \\mid \\kappa)$")
+    ax.set_xlim(kappas[0], kappas[-1])
+    tidy(ax)
+    fig.tight_layout()
+    fig.savefig("figures/lec5/likelihood-kappa.svg", facecolor="white")
+    print("wrote figures/lec5/likelihood-kappa.svg: maximum at kappa = %.3f (true %.2f)"
+          % (best, kappa_true))
+
+
 if __name__ == "__main__":
     lorenz(noise=False)
     lorenz(noise=True)
+    timeline()
+    predict_update()
+    hmm()
+    likelihood_kappa()
     for fig, ax, path in [static(), chain()]:
         x0, y0, x1, y1 = measure(fig, ax)
         width = max(WIDTH, x1 - x0 + 2 * MARGIN)
