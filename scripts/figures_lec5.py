@@ -69,7 +69,7 @@ LIGHT = "#b8c0c6"
 
 # Lorenz system: a chaotic flow, whose trajectories fill a butterfly-shaped attractor.
 S, RHO, B = 10.0, 28.0, 8 / 3
-T, DT, FINE, SIGMA = 8.0, .01, 1e-4, 3.0      # horizon, discrete step, simulation step, noise
+T, DT, FINE, SIGMA = 8.0, .025, 1e-4, 3.0     # horizon, discrete step, simulation step, noise
 
 
 def drift(z):
@@ -119,7 +119,7 @@ def lorenz(noise):
 
     ax2 = fig.add_subplot(grid[1])
     ax2.plot(t, z[:, 0], color=GREY, lw=.8)
-    ax2.plot(td, zd[:, 0], color=BLUE, lw=.8)
+    ax2.plot(td, zd[:, 0], "o-", color=BLUE, lw=.6, ms=1.6)
     ax2.set_xlabel("$t$")
     ax2.set_ylabel("$z_1$")
     ax2.set_xlim(0, T)
@@ -519,7 +519,30 @@ def wolf_figures():
             (ms, Ps, GREEN, "smoothing")], "wolf-kalman-smoother-time-series")
 
 
+def decay(kappa=.8, mu=0.0, dt=.5, horizon=6.0):
+    """Exponential decay to an equilibrium: exact solutions from two starting points,
+    and their discrete-time (Euler) versions with step dt."""
+    t = np.linspace(0, horizon, 400)
+    fig, ax = plt.subplots(figsize=(5.8, 2.6), dpi=200)
+    ax.axhline(mu, color=LIGHT, lw=.8, ls=(0, (4, 3)))
+    td = np.arange(0, horizon + 1e-9, dt)
+    for z0 in (2.0, -1.5):
+        ax.plot(t, mu + (z0 - mu) * np.exp(-kappa * t), color=GREY, lw=1.3,
+                label="continuous time" if z0 > 0 else None)
+        ax.plot(td, mu + (z0 - mu) * (1 - kappa * dt) ** np.arange(len(td)), "o-", color=BLUE,
+                lw=.8, ms=3.5, label=r"discrete time, $\Delta t = %g$" % dt if z0 > 0 else None)
+    ax.set_xlabel("$t$")
+    ax.set_xlim(0, horizon)
+    ax.set_yticks([mu], [r"$\mu$"])
+    ax.legend(frameon=False, fontsize=10, loc="upper right")
+    tidy(ax)
+    fig.tight_layout()
+    fig.savefig("figures/lec5/decay.svg", facecolor="white", bbox_inches="tight", pad_inches=.02)
+    print("wrote figures/lec5/decay.svg")
+
+
 if __name__ == "__main__":
+    decay()
     lorenz(noise=False)
     lorenz(noise=True)
     timeline()

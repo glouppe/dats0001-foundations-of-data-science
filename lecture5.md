@@ -392,6 +392,25 @@ In matrix form, $\boldsymbol{\alpha}\_t \propto \mathbf{O}\_t \mathbf{A}^T \bold
 
 class: middle
 
+.italic[Example.] A wolf switches between $K = 3$ behaviors, resting, foraging and traveling, and we observe its speed $x\_t$.
+- The transition matrix keeps each behavior for a while,
+$$\mathbf{A} = \begin{bmatrix} 0.95 & 0.04 & 0.01 \\\\ 0.03 & 0.93 & 0.04 \\\\ 0.02 & 0.06 & 0.92 \end{bmatrix}.$$
+- The speed is Gaussian given the behavior,
+$$p(x\_t \mid z\_t = j) = \mathcal{N}(x\_t \mid \mu\_j, \sigma\_j^2), \quad \boldsymbol{\mu} = (0.1, 0.7, 1.6), \quad \boldsymbol{\sigma} = (0.15, 0.3, 0.4).$$
+- The wolf starts at rest, $p(z\_1 = 1) = 1$.
+
+We simulate $T = 200$ steps from this model, then run the forward-backward algorithm on the speeds alone.
+
+???
+
+Row $i$ of $\mathbf{A}$ gives the probabilities of the next behavior when the current one is $i$. The diagonal entries make each behavior last about $1 / (1 - \mathbf{A}\_{i,i})$ steps on average: 20 steps of rest, 14 of foraging, 12 of travel.
+
+The speed distributions overlap, foraging especially: a single speed does not tell the behavior, a sequence of them does.
+
+---
+
+class: middle
+
 .center.width-80[![](figures/lec5/hmm-wolf.svg)]
 
 .center[A simulated wolf switching between three behaviors, observed through its speed.<br> Its most probable state is right 94% of the time filtering, 97% smoothing.]
@@ -473,26 +492,29 @@ class: middle
 Without the noise, we get a .bold[deterministic] system, an .bold[ordinary differential equation] (ODE),
 $$\frac{d\mathbf{z}(t)}{dt} = f(\mathbf{z}(t)).$$
 
-The simplest example is the exponential decay to an equilibrium point $\mu$,
+.italic[Example 1.] Exponential decay to an equilibrium point $\mu$,
 $$\frac{dz(t)}{dt} = -\kappa (z(t) - \mu), \quad \text{with solution} \quad z(t) = \mu + (z(0) - \mu) e^{-\kappa t}.$$
-The state moves towards $\mu$ from either side, and is fully determined by $z(0)$.
+
+.center.width-80[![](figures/lec5/decay.svg)]
 
 ???
 
 The solution of an ODE with initial condition $\mathbf{z}\_0$ satisfies $\mathbf{z}(t) = \mathbf{z}\_0 + \int\_0^t f(\mathbf{z}(\tau)) d\tau$. It has a closed form only in simple cases, such as this one.
 
-The decay is exponential because the difference $z(t) - \mu$ shrinks exponentially fast; the state approaches $\mu$ without reaching it in finite time.
+The state moves towards $\mu$ from either side, and is fully determined by $z(0)$. The decay is exponential because the difference $z(t) - \mu$ shrinks exponentially fast; the state approaches $\mu$ without reaching it in finite time.
+
+The discrete steps, $z\_t = z\_{t-1} - \kappa (z\_{t-1} - \mu) \Delta t$, decay slightly faster than the curve: each step follows the slope at the start of its interval, and $1 - \kappa \Delta t < e^{-\kappa \Delta t}$. Here $\kappa = 0.8$ and $\Delta t = 0.5$.
 
 ---
 
 class: middle
 
-.italic[Example 1.] The .bold[Lorenz system] is a chaotic ODE in three variables,
+.italic[Example 2.] The .bold[Lorenz system] is a chaotic ODE in three variables,
 $$\frac{dz\_1}{dt} = s (z\_2 - z\_1), \quad \frac{dz\_2}{dt} = z\_1 (r - z\_3) - z\_2, \quad \frac{dz\_3}{dt} = z\_1 z\_2 - b z\_3.$$
 
 .center.width-100[![](figures/lec5/ode-discretization.svg)]
 
-.center[The continuous-time trajectory and its discrete-time version part after about two time units.]
+.center[The two trajectories part after about one time unit.]
 
 ???
 
@@ -538,7 +560,7 @@ Teaser: this equation is the basis of modern generative models such as .bold[dif
 
 class: middle
 
-.italic[Example 1, with noise.] The Lorenz system becomes the SDE
+.italic[Example 2, with noise.] The Lorenz system becomes the SDE
 $$d\mathbf{z} = f(\mathbf{z}) \\, dt + \sigma \\, d\mathbf{W}.$$
 
 .center.width-100[![](figures/lec5/sde-discretization.svg)]
@@ -549,13 +571,13 @@ $$d\mathbf{z} = f(\mathbf{z}) \\, dt + \sigma \\, d\mathbf{W}.$$
 
 The discrete model sees the noise only summed over each step, $\mathbf{w}\_t = \sigma (\mathbf{W}(t) - \mathbf{W}(t - \Delta t))$. Here $\sigma = 3$.
 
-There is no exact way to simulate this SDE. The grey curve uses Euler-Maruyama with a step of $10^{-4}$, 100 times finer than the discrete model, on the same Brownian path.
+There is no exact way to simulate this SDE. The grey curve uses Euler-Maruyama with a step of $10^{-4}$, 250 times finer than the discrete model, on the same Brownian path.
 
 ---
 
 class: middle
 
-.italic[Example 2.] The wolf model in continuous time is the exponential decay towards the home location $\boldsymbol{\mu}$, with noise,
+.italic[Example 3.] The wolf model in continuous time is Example 1 in two dimensions, towards the home location $\boldsymbol{\mu}$, with noise,
 $$d\mathbf{z}(t) = -\kappa (\mathbf{z}(t) - \boldsymbol{\mu}) \\, dt + \sigma \\, d\mathbf{W}(t),$$
 where $\kappa > 0$ is the strength of the attraction and $\sigma$ the diffusion coefficient. This SDE is the .bold[Ornstein-Uhlenbeck process].
 
