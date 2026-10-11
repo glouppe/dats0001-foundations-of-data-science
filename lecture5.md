@@ -615,13 +615,28 @@ Any linear SDE $d\mathbf{z} = \mathbf{F} \mathbf{z} \\, dt + \mathbf{L} \\, d\ma
 
 class: middle
 
-## When to use continuous vs discrete time?
+## Continuous or discrete time?
 
-Continuous time suits observations at irregular intervals, mechanistic models, and parameters that are rates or time constants.
+.grid[
+.kol-1-2[
+.bold[Continuous time]
+- irregular observations
+- physical laws, rates of change
+- parameters are rates, such as $\kappa$
+]
+.kol-1-2[
+.bold[Discrete time]
+- regular sampling
+- no mechanistic model
+- simpler to compute
+]
+]
 
-Discrete time suits regular sampling and models without a mechanistic interpretation, and is simpler to compute with.
+.success[Model in continuous time, discretize for computation, exactly when possible.]
 
-A common approach is to model in continuous time, for interpretability, and to discretize for computation.
+???
+
+The wolf is the case in point: the OU process is the model, and its exact discretization at the observation times is what the Kalman filter runs on. Weather forecasting works the same way: the equations of the atmosphere are continuous, their solver steps through time.
 
 ---
 
