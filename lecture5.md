@@ -668,6 +668,20 @@ background-size: cover
 
 class: middle
 
+.center.width-90[![](figures/lec5/ecmwf-observations.png)]
+
+.center[The observations assimilated every day in the ECMWF forecasting system.]
+
+.footnote[Credits: [ECMWF](https://www.ecmwf.int/en/research/data-assimilation/observations), CC BY 4.0.]
+
+???
+
+Each type of observation comes with its own observation model $p(\mathbf{x}\_t \mid \mathbf{z}\_t)$: a surface station measures temperature where it stands, an aircraft along its route, a satellite radiances integrated over a column of the atmosphere. ECMWF receives about 800 million observations a day and uses about 60 million of them after quality control.
+
+---
+
+class: middle
+
 Forecasting centres run the Bayes filter continuously: every 12 hours, they update the forecast with the latest observations, then predict. This cycle is called .bold[data assimilation]. On the Lorenz system, with only $z\_1$ observed:
 
 .center.width-100[![](figures/lec5/assimilation-lorenz.svg)]
