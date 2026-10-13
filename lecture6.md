@@ -8,12 +8,6 @@ Lecture 6: Markov chain Monte Carlo
 Prof. Gilles Louppe<br>
 [g.louppe@uliege.be](mailto:g.louppe@uliege.be)
 
-???
-
-XXX Modern MCMC methods? HMC, NUTS, etc.
-XXX Next year: add HMC.
-XXX include calibration diagnostics! 
-
 ---
 
 class: middle
@@ -57,13 +51,11 @@ When the transition model does not depend on $t$, i.e., $p(x\_{t+1} \mid x\_t) =
 
 class: middle
 
-## Example: Gaussian random walk
-
 .center.width-60[![](figures/lec6/gaussian_random_walk_1d.png)]
 
 .center[
-    
-Gaussian random walk with $p(x\_1) = \mathcal{N}(x\_1 | 0, 1)$ and transition model $p(x\_{t+1} \mid x\_t) = \mathcal{N}(x\_{t+1} | x\_t, \sigma^2)$.
+
+.italic[Example 1.] Gaussian random walk with $p(x\_1) = \mathcal{N}(x\_1 | 0, 1)$ and transition model $p(x\_{t+1} \mid x\_t) = \mathcal{N}(x\_{t+1} | x\_t, \sigma^2)$.
 
 ]
 
@@ -84,13 +76,11 @@ Therefore, if $x\_t \sim \pi(x)$, then $x\_{t+1} \sim \pi(x)$.
 
 class: middle
 
-## Example: Gaussian random walk (continued)
-
 .center.width-60[![](figures/lec6/gaussian_random_walk_1d_variance.png)]
 
 .center[
 
-The Gaussian random walk does not have a stationary distribution since its variance increases indefinitely over time.
+.italic[Example 1, continued.] The Gaussian random walk does not have a stationary distribution since its variance increases indefinitely over time.
 
 ]
 
@@ -102,13 +92,11 @@ The marginal $p(x\_t)$ is Gaussian with mean 0 and variance $1 + (t-1)\sigma^2$.
 
 class: middle
 
-## Example: Gaussian random walk with drift
-
 .center.width-60[![](figures/lec6/gaussian_random_walk_1d_drift.png)]
 
 .center[
 
-Gaussian random walk with $p(x\_1) = \mathcal{N}(x\_1 | 0, 1)$ and transition model $p(x\_{t+1} \mid x\_t) = \mathcal{N}(x\_{t+1} | x\_t - \kappa(x\_t - \mu), \sigma^2)$.
+.italic[Example 2.] Gaussian random walk with $p(x\_1) = \mathcal{N}(x\_1 | 0, 1)$ and transition model $p(x\_{t+1} \mid x\_t) = \mathcal{N}(x\_{t+1} | x\_t - \kappa(x\_t - \mu), \sigma^2)$.
 
 ]
 
@@ -152,13 +140,13 @@ class: middle
 
 ## Basic limit theorem for Markov chains
 
-.italic[Theorem]. If a time-homogeneous Markov chain is irreducible, aperiodic, and (positive/Harris) recurrent, then it satisfies the following properties:
+.italic[Theorem.] If a time-homogeneous Markov chain is irreducible, aperiodic, and (positive/Harris) recurrent, then it satisfies the following properties:
 
 - (Existence and uniqueness) There exists a .bold[unique] stationary distribution $\pi$;
 - (Convergence) For any initial distribution of $p(x\_1)$, $p(x\_t) \to \pi(x)$ as $t \to \infty$;
 - (Ergodic theorem) For any function $f$ with $\mathbb{E}\_{\pi}[|f(x)|] < \infty$, $$\lim\_{T \to \infty} \frac{1}{T} \sum\_{t=1}^T f(x\_t) = \mathbb{E}\_{\pi}[f(x)]$$ almost surely.
 
-.italic[Proof]. (Omitted and beyond scope.)
+.italic[Proof.] (Omitted and beyond scope.)
 
 ???
 
@@ -171,9 +159,9 @@ The three conditions each play a role:
 
 class: middle
 
-.success[This result implies that if a Markov chain satisfies the regularity conditions, then it has a unique stationary distribution and converges to it regardless of the initial distribution.]
+The theorem leaves two questions open: how to build a chain whose stationary distribution is a given target, and how fast the chain converges to it.
 
-.alert[However, the theorem does not provide a method to construct a Markov chain with a desired stationary distribution, nor does it specify the rate of convergence to the stationary distribution.]
+Detailed balance and Metropolis-Hastings answer the first. Diagnostics, at the end of the lecture, address the second.
 
 ---
 
@@ -195,9 +183,9 @@ Intuitively, detailed balance means that the flow of probability from $x$ to $x'
 
 class: middle
 
-.italic[Proposition]. If a transition model $p(x' \mid x)$ satisfies detailed balance with respect to a distribution $\pi$, then $\pi$ is a stationary distribution of $p(x' \mid x)$.
+.italic[Proposition.] If a transition model $p(x' \mid x)$ satisfies detailed balance with respect to a distribution $\pi$, then $\pi$ is a stationary distribution of $p(x' \mid x)$.
 
-.italic[Proof]. Integrating both sides of the detailed balance equation over $x$, we get
+.italic[Proof.] Integrating both sides of the detailed balance equation over $x$, we get
 $$\begin{aligned}
 \int \pi(x) p(x' \mid x) dx &= \int \pi(x') p(x \mid x') dx \\\\
 &= \pi(x') \int p(x \mid x') dx \\\\
@@ -208,9 +196,9 @@ $$\begin{aligned}
 
 class: middle
 
-The detailed balance condition is a .bold[sufficient] but not necessary condition for stationarity.
+Detailed balance is a .bold[sufficient] condition for stationarity.
 
-However, it is often easier to verify than the stationarity condition, especially when constructing Markov chains with a desired stationary distribution.
+It is easier to check than stationarity itself, which makes it the tool of choice to construct a Markov chain with a given stationary distribution.
 
 ---
 
@@ -240,9 +228,9 @@ This process generates a sequence of samples $x\_1, x\_2, \ldots$ that form a Ma
 
 class: middle
 
-.italic[Proposition]. The Metropolis-Hastings algorithm constructs a Markov chain whose stationary distribution is $\pi(x)$.
+.italic[Proposition.] The Metropolis-Hastings algorithm constructs a Markov chain whose stationary distribution is $\pi(x)$.
 
-.italic[Proof]. The transition model of the Markov chain is given by
+.italic[Proof.] The transition model of the Markov chain is given by
 $$p(x' \mid x) = \begin{cases}
 q(x' \mid x) \alpha(x' \mid x) & \text{if } x' \neq x, \\\\
 r(x) & \text{if } x' = x,
@@ -269,9 +257,9 @@ For $x' = x$, detailed balance holds trivially.
 
 class: middle
 
-.italic[Proposition]. The Markov chain constructed by the Metropolis-Hastings algorithm satisfies the regularity conditions under appropriate conditions on $q$.
+.italic[Proposition.] The Markov chain constructed by the Metropolis-Hastings algorithm satisfies the regularity conditions under appropriate conditions on $q$.
 
-.italic[Sketch of proof]:
+.italic[Sketch of proof.]
 - Aperiodicity: The chain can stay at the same state when proposals are rejected, so $p(x|x) > 0$. This breaks any periodic cycles.
 
 - Irreducibility: If the proposal $q$ has appropriate support, then for any $x, x'$ where $\pi(x), \pi(x') > 0$, there exists a sequence of proposals with positive probability connecting them.
@@ -316,7 +304,7 @@ class: middle
 
 ## Beyond Metropolis-Hastings
 
-While Metropolis-Hastings is foundational, several extensions improve efficiency:
+Several extensions of Metropolis-Hastings explore the target more efficiently:
 
 - .bold[Hamiltonian Monte Carlo (HMC)]: Uses Hamiltonian dynamics to propose 
   new states, enabling larger, informed jumps through parameter space. 
@@ -329,8 +317,6 @@ While Metropolis-Hastings is foundational, several extensions improve efficiency
 - .bold[Gibbs sampling]: Updates variables one at a time from conditional 
   distributions. A special case of MH with acceptance probability = 1 
   when conditionals are tractable.
-
-.center[.italic[These advanced methods are widely used in practice and build on MH principles!]]
 
 ---
 
@@ -354,7 +340,7 @@ class: middle
 
 In Bayesian inference, we are often interested in computing the posterior distribution $$p(z, \theta \mid x) = \frac{p(x \mid z, \theta) p(z, \theta)}{p(x)}$$ of latent variables $z$ and parameters $\theta$ given observed data $x$.
 
-.alert[The posterior density is often .bold[intractable] due to the marginal density $p(x) = \int p(x \mid z, \theta) p(z, \theta) dz d\theta$.]
+.alert[In general, the normalizer $p(x) = \int p(x \mid z, \theta) p(z, \theta) dz d\theta$ has no closed form.]
 
 ---
 
@@ -370,9 +356,7 @@ Since MCMC methods only require an unnormalized density $\tilde{p}$, .bold[we ca
 
 class: middle
 
-## Example: Bayesian linear regression
-
-Consider a data set of $N$ observations $x = \\{(x\_i, y\_i)\\}\_{i=1}^N$, where $x\_i \in \mathbb{R}^d$ are input features and $y\_i \in \mathbb{R}$ are target values.
+.italic[Example 3.] Bayesian linear regression. Consider a data set of $N$ observations $x = \\{(x\_i, y\_i)\\}\_{i=1}^N$, where $x\_i \in \mathbb{R}^d$ are input features and $y\_i \in \mathbb{R}$ are target values.
 .center.width-60[![](figures/lec6/example1-data.png)]
 
 ---
@@ -499,7 +483,7 @@ quantifies the number of correlated samples equivalent to one independent sample
 
 A smaller $\tau\_{\text{int}}$ indicates better mixing and more efficient sampling.
 
-.success[Note that $\text{ESS} = \frac{T}{\tau\_{\text{int}}}$.]
+The effective sample size is therefore $\text{ESS} = T / \tau\_{\text{int}}$.
 
 ---
 
