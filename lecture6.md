@@ -33,8 +33,6 @@ Use cases:
 - Computing expectations $\mathbb{E}\_{p(x)}[f(x)]$ or integrals $\int f(x) p(x) dx$.
 - Computing posterior distributions $p(\mathbf{z} \mid \mathbf{x})$ in Bayesian inference.
 
-Markov chain Monte Carlo (MCMC) builds a Markov chain whose states are eventually distributed as $p(x)$.
-
 ---
 
 class: middle 
