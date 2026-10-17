@@ -678,11 +678,13 @@ class: middle
 
 ## Effective sample size
 
-The .bold[autocorrelation at lag $k$] of a quantity $f(x)$ along the chain is
+The autocorrelation at lag $k$ of a quantity $f(x)$ along the chain is
 $$\rho\_k = \frac{\text{Cov}(f(x\_t), f(x\_{t+k}))}{\text{Var}(f(x\_t))}.$$
-The .bold[integrated autocorrelation time] $\tau\_\text{int} = 1 + 2\sum\_{k=1}^{\infty} \rho\_k$ sets the variance of the average of $T$ samples,
+
+The integrated autocorrelation time $\tau\_\text{int} = 1 + 2\sum\_{k=1}^{\infty} \rho\_k$ sets the variance of the average of $T$ samples:
 $$\text{Var}\left[\frac{1}{T} \sum\_{t=1}^T f(x\_t)\right] \approx \frac{\tau\_\text{int}}{T} \text{Var}(f(x\_t)).$$
-This is the variance of the average of $\text{ESS} = T / \tau\_\text{int}$ independent samples, the .bold[effective sample size].
+
+The .bold[effective sample size] $\text{ESS} = T / \tau\_\text{int}$ is the number of independent samples whose average has the same variance.
 
 ???
 
