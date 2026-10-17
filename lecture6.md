@@ -116,7 +116,7 @@ class: middle
 
 .center[
 
-The mean-reverting random walk has the stationary distribution
+For $0 < \kappa < 2$, the mean-reverting random walk has the stationary distribution
 $$\pi(x) = \mathcal{N}\left(x \Big| \mu, \frac{\sigma^2}{2\kappa - \kappa^2}\right).$$
 
 ]
@@ -132,8 +132,8 @@ class: middle
 ## Regularity conditions
 
 A Markov chain is said to be:
-- .bold[irreducible] if any state $x'$ can be reached from any state $x$, i.e., for any $x$, $x'$, there exists $t$ such that $p(x\_t = x' \mid x\_1 = x) > 0$.
-- .bold[aperiodic] if there is no deterministic cycle, i.e., for all $x$, the greatest common divisor of the set $\\{t : p(x\_t = x \mid x\_1 = x) > 0\\}$ is 1.
+- .bold[irreducible] if any set $A$ with positive measure can be reached from any state $x$, i.e., there exists $t$ such that $p(x\_t \in A \mid x\_1 = x) > 0$.
+- .bold[aperiodic] if there is no deterministic cycle, i.e., the state space cannot be split into $d \geq 2$ disjoint sets that the chain visits in turn. For discrete state spaces, the greatest common divisor of $\\{t : p(x\_t = x \mid x\_1 = x) > 0\\}$ is 1 for all $x$.
 - for discrete state spaces, .bold[positive recurrent] if the expected return time to any state is finite; for continuous state spaces, .bold[positive Harris recurrent] if the chain returns to any set $A$ with positive measure infinitely often with probability 1 and has a stationary distribution that integrates to one.
 
 ???
@@ -166,17 +166,17 @@ class: middle
 
 ## Doeblin condition
 
-A Markov chain satisfies the .bold[Doeblin condition] if there exist $m \geq 1$, $\delta > 0$ and a distribution $\nu$ such that
+A Markov chain satisfies the .bold[Doeblin condition] if there exist $m \geq 1$, $0 < \delta < 1$ and a distribution $\nu$ such that
 $$p(x\_{t+m} \in A \mid x\_t = x) \geq \delta \nu(A)$$
 for all states $x$ and sets $A$.
 
 The $m$-step transition model then splits into
-$$p(x\_{t+m} \mid x\_t) = \delta \nu(x\_{t+m}) + (1 - \delta) r(x\_{t+m} \mid x\_t),$$
-where $r$ is another transition model. Every $m$ steps, the chain restarts from $\nu$ with probability $\delta$, whatever its current state.
+$$p(x\_{t+m} \mid x\_t) = \delta \nu(x\_{t+m}) + (1 - \delta) \bar{p}(x\_{t+m} \mid x\_t),$$
+where $\bar{p}$ is another transition model. Every $m$ steps, the chain restarts from $\nu$ with probability $\delta$, whatever its current state.
 
 ???
 
-The remainder $r = (p - \delta \nu) / (1 - \delta)$ is non-negative by the condition and integrates to one, so it is a transition model. The split can be read as a coin flip every $m$ steps: with probability $\delta$, draw the next state from $\nu$; otherwise, move with $r$. After a restart, the state no longer depends on $x\_1$.
+The remainder $\bar{p} = (p - \delta \nu) / (1 - \delta)$ is non-negative by the condition and integrates to one, so it is a transition model. The split can be read as a coin flip every $m$ steps: with probability $\delta$, draw the next state from $\nu$; otherwise, move with $\bar{p}$. After a restart, the state no longer depends on $x\_1$.
 
 A finite chain that is irreducible and aperiodic satisfies the condition: some power $P^m$ of its transition matrix has only positive entries, and $\delta = \sum\_y \min\_x P^m(x, y)$. So does an independence sampler whose ratio $\pi / q$ is bounded. Random-walk Metropolis-Hastings on an unbounded space does not: from far away, the chain needs more steps to come back. It still converges at a geometric rate, but the rate depends on the starting point, and the proof is beyond scope.
 
@@ -206,17 +206,17 @@ class: middle
 $$\\| p(x\_{t}) - \pi \\|\_\text{TV} \leq (1 - \delta)^{\lfloor (t-1)/m \rfloor},$$
 where $\\| \mu - \mu' \\|\_\text{TV} = \sup\_A |\mu(A) - \mu'(A)|$ is the total variation distance.
 
-.italic[Proof.] Write $\mu P^m$ and $\mu R$ for the distributions of $x\_{t+m}$ when $x\_t \sim \mu$, under $p$ and $r$. For two distributions $\mu$ and $\mu'$, the restart terms cancel:
+.italic[Proof.] Write $\mu P^n$ for the distribution of $x\_{t+n}$ when $x\_t \sim \mu$, and $\mu \bar{P}$ for the distribution of one move of $\bar{p}$ from $\mu$. For two distributions $\mu$ and $\mu'$, the restart terms cancel:
 $$\begin{aligned}
-\mu P^m - \mu' P^m &= \delta \nu + (1 - \delta) \mu R - \delta \nu - (1 - \delta) \mu' R \\\\
-&= (1 - \delta)(\mu R - \mu' R).
+\mu P^m - \mu' P^m &= \delta \nu + (1 - \delta) \mu \bar{P} - \delta \nu - (1 - \delta) \mu' \bar{P} \\\\
+&= (1 - \delta)(\mu \bar{P} - \mu' \bar{P}).
 \end{aligned}$$
 A transition model does not increase the total variation distance, hence
 $$\\| \mu P^m - \mu' P^m \\|\_\text{TV} \leq (1 - \delta) \\| \mu - \mu' \\|\_\text{TV}.$$
 
 ???
 
-$\mu R(A) - \mu' R(A) = \int r(A \mid x) (\mu - \mu')(dx)$, and $r(A \mid x)$ lies in $[0, 1]$, so this is at most $\sup\_A |\mu(A) - \mu'(A)|$.
+$\mu \bar{P}(A) - \mu' \bar{P}(A) = \int \bar{p}(x' \in A \mid x) (\mu - \mu')(dx)$, and $\bar{p}(x' \in A \mid x)$ lies in $[0, 1]$, so this is at most $\sup\_A |\mu(A) - \mu'(A)|$.
 
 Every $m$ steps, any two distributions get closer by a factor $1 - \delta$: $P^m$ is a contraction.
 
@@ -224,15 +224,15 @@ Every $m$ steps, any two distributions get closer by a factor $1 - \delta$: $P^m
 
 class: middle
 
-The contraction gives the three results:
+With this notation, a distribution $\pi$ is stationary if and only if $\pi P = \pi$. The contraction gives the three results:
 
-- (Uniqueness) Two stationary distributions $\pi$ and $\pi'$ satisfy
+- (Uniqueness) Two stationary distributions $\pi$ and $\pi'$ satisfy $\pi P^m = \pi$ and $\pi' P^m = \pi'$, so
 $$\\| \pi - \pi' \\|\_\text{TV} = \\| \pi P^m - \pi' P^m \\|\_\text{TV} \leq (1 - \delta) \\| \pi - \pi' \\|\_\text{TV},$$
 hence $\pi = \pi'$.
 - (Existence) The distributions $\mu P^{km}$ form a Cauchy sequence, since
 $$\\| \mu P^{(k+1)m} - \mu P^{km} \\|\_\text{TV} \leq (1 - \delta)^k.$$
-Their limit $\pi$ satisfies $\pi P^m = \pi$. Then $\pi P$ is also a fixed point of $P^m$, hence $\pi P = \pi$.
-- (Convergence) Since the total variation distance is at most 1,
+Their limit $\pi$ satisfies $\pi P^m = \pi$. Then $(\pi P) P^m = (\pi P^m) P = \pi P$, so $\pi P$ is also a fixed point of $P^m$, and $\pi P = \pi$ by uniqueness of the fixed point.
+- (Convergence) Applying the contraction $\lfloor (t-1)/m \rfloor$ times, and since the total variation distance is at most 1,
 $$\\| p(x\_t) - \pi \\|\_\text{TV} = \\| p(x\_1) P^{t-1} - \pi P^{t-1} \\|\_\text{TV} \leq (1 - \delta)^{\lfloor (t-1)/m \rfloor}.$$
 
 ???
@@ -245,27 +245,42 @@ class: middle
 
 ## What the theorem means
 
-The chain .bold[forgets its initial state] at a geometric rate. After a warm-up of a few multiples of $m / \delta$ steps, $x\_t$ is distributed as $\pi$, whatever $x\_1$.
+The chain .bold[forgets its initial state] at a geometric rate: after $t$ steps, the distance to $\pi$ is at most $(1 - \delta)^{\lfloor (t-1)/m \rfloor} \approx e^{-\delta t / m}$, whatever $x\_1$.
 
-Two states of the chain also become independent as they get far apart. For a bounded $f$ and $x\_1 \sim \pi$,
-$$|\text{Cov}(f(x\_s), f(x\_{s+k}))| \leq 2 \\|f\\|\_\infty^2 (1 - \delta)^{\lfloor k/m \rfloor},$$
-and the variance of the average vanishes:
-$$\mathbb{V}\left[\frac{1}{T} \sum\_{t=1}^T f(x\_t)\right] \approx \frac{\tau\_\text{int}}{T} \mathbb{V}\_\pi[f(x)] \to 0.$$
-The average converges to $\mathbb{E}\_\pi[f(x)]$, as fast as for $T / \tau\_\text{int}$ independent samples.
+A .bold[warm-up] discards the first states of the chain. After a few multiples of $m / \delta$ steps, the remaining states are distributed as $\pi$, up to a negligible error.
 
 ???
 
-The covariance bound: conditionally on $x\_s = x$, the distribution of $x\_{s+k}$ is $(1-\delta)^{\lfloor k/m \rfloor}$-close to $\pi$ in total variation, so $|\mathbb{E}[f(x\_{s+k}) \mid x\_s] - \mathbb{E}\_\pi[f]| \leq 2 \\|f\\|\_\infty (1-\delta)^{\lfloor k/m \rfloor}$. Under $\pi$, $\mathbb{E}[f(x\_{s+k}) \mid x\_s] - \mathbb{E}\_\pi[f]$ has mean zero, so the covariance is the expectation of its product with $f(x\_s)$, and $|f(x\_s)| \leq \\|f\\|\_\infty$.
+Each block of $m$ steps restarts the chain with probability $\delta$, so a restart takes about $m / \delta$ steps on average.
 
-Expanding the variance of the average gives $\frac{1}{T} \mathbb{V}\_\pi[f] (1 + 2 \sum\_{k \geq 1} (1 - k/T) \rho\_k)$, where $\rho\_k$ is the autocorrelation at lag $k$. The geometric decay makes the sum converge, to $\tau\_\text{int}$, the integrated autocorrelation time defined with the diagnostics. This is convergence in mean square, hence in probability; the almost sure convergence of the theorem needs more work.
-
-Warm-up and effective sample size, used at the end of the lecture, are these two results put to work. In practice $\delta$ and $m$ are unknown, which is why convergence is checked with diagnostics.
+In practice $\delta$ and $m$ are unknown, which is why the length of the warm-up is chosen with diagnostics.
 
 ---
 
 class: middle
 
-The theorem leaves two questions open: how to build a chain whose stationary distribution is a given target, and how fast the chain converges to it.
+Two states of the chain also become independent as they get far apart. For a bounded $f$, with $\\|f\\|\_\infty = \sup\_x |f(x)|$, and $x\_1 \sim \pi$,
+$$|\text{Cov}(f(x\_s), f(x\_{s+k}))| \leq 2 \\|f\\|\_\infty^2 (1 - \delta)^{\lfloor k/m \rfloor}.$$
+
+The variance of the average then vanishes as
+$$\text{Var}\left[\frac{1}{T} \sum\_{t=1}^T f(x\_t)\right] \approx \frac{\tau\_\text{int}}{T} \text{Var}\_\pi[f(x)] \to 0,$$
+where $\tau\_\text{int} = 1 + 2 \sum\_{k=1}^\infty \rho\_k$ is the .bold[integrated autocorrelation time] and $\rho\_k = \text{Cov}(f(x\_t), f(x\_{t+k})) / \text{Var}\_\pi[f(x)]$ is the .bold[autocorrelation at lag $k$].
+
+The average converges to $\mathbb{E}\_\pi[f(x)]$, as fast as for $T / \tau\_\text{int}$ independent samples.
+
+???
+
+The covariance bound: conditionally on $x\_s = x$, the distribution of $x\_{s+k}$ is $(1-\delta)^{\lfloor k/m \rfloor}$-close to $\pi$ in total variation, so $|\mathbb{E}[f(x\_{s+k}) \mid x\_s] - \mathbb{E}\_\pi[f]| \leq 2 \\|f\\|\_\infty (1-\delta)^{\lfloor k/m \rfloor}$. Under $\pi$, this difference has mean zero, so the covariance is the expectation of its product with $f(x\_s)$, and $|f(x\_s)| \leq \\|f\\|\_\infty$.
+
+Expanding the variance of the average gives $\frac{1}{T} \text{Var}\_\pi[f] (1 + 2 \sum\_{k=1}^{T-1} (1 - k/T) \rho\_k)$. The geometric decay of $\rho\_k$ makes the sum converge to $\tau\_\text{int} - 1$ as $T$ grows. For independent samples, $\tau\_\text{int} = 1$. This is convergence in mean square, hence in probability; the almost sure convergence of the theorem needs more work.
+
+The effective sample size of the diagnostics is $T / \tau\_\text{int}$.
+
+---
+
+class: middle
+
+Two questions remain: how to build a chain whose stationary distribution is a given target, and how long to run it when $m$ and $\delta$ are unknown.
 
 Detailed balance and Metropolis-Hastings answer the first. Diagnostics, at the end of the lecture, address the second.
 
@@ -366,7 +381,7 @@ class: middle
 .italic[Proposition.] The Markov chain constructed by the Metropolis-Hastings algorithm satisfies the regularity conditions under appropriate conditions on $q$.
 
 .italic[Sketch of proof.]
-- Aperiodicity: The chain can stay at the same state when proposals are rejected, so $p(x|x) > 0$. This breaks any periodic cycles.
+- Aperiodicity: The chain stays at the same state when a proposal is rejected, which happens with probability $r(x) > 0$. This breaks any periodic cycles.
 
 - Irreducibility: If the proposal $q$ has appropriate support, then for any $x, x'$ where $\pi(x), \pi(x') > 0$, there exists a sequence of proposals with positive probability connecting them.
 
@@ -410,14 +425,14 @@ class: middle
 
 Random-walk proposals explore the target by small, undirected steps. .bold[Hamiltonian Monte Carlo] (HMC) proposes distant states by following the gradient of $\log \tilde{\pi}$.
 
-The state $x \in \mathbb{R}^d$ is augmented with a momentum $p \in \mathbb{R}^d$, and the chain targets the joint distribution
-$$\pi(x, p) \propto \tilde{\pi}(x) \mathcal{N}(p | 0, I) \propto \exp(-H(x, p))$$
+The state $x \in \mathbb{R}^d$ is augmented with a momentum $v \in \mathbb{R}^d$, and the chain targets the joint distribution
+$$\pi(x, v) \propto \tilde{\pi}(x) \mathcal{N}(v | 0, I) \propto \exp(-H(x, v))$$
 defined by the .bold[Hamiltonian]
-$$H(x, p) = -\log \tilde{\pi}(x) + \frac{1}{2} p^T p.$$
+$$H(x, v) = -\log \tilde{\pi}(x) + \frac{1}{2} v^T v.$$
 
 ???
 
-Think of a ball rolling on the surface $-\log \tilde{\pi}(x)$: this is its potential energy, and $\frac{1}{2} p^T p$ is its kinetic energy. The marginal of $x$ under $\pi(x, p)$ is $\pi(x)$, so the momenta are discarded after sampling.
+Think of a ball rolling on the surface $-\log \tilde{\pi}(x)$: this is its potential energy, and $\frac{1}{2} v^T v$ is its kinetic energy. The marginal of $x$ under $\pi(x, v)$ is $\pi(x)$, so the momenta are discarded after sampling.
 
 ---
 
@@ -425,15 +440,15 @@ class: middle
 
 ## Hamiltonian dynamics
 
-The Hamiltonian dynamics
-$$\frac{dx}{ds} = \frac{\partial H}{\partial p} = p, \quad \frac{dp}{ds} = -\frac{\partial H}{\partial x} = \nabla \log \tilde{\pi}(x)$$
-conserve $H$, preserve volume and are reversible. A proposal made by following them would be accepted with probability 1.
+The Hamiltonian dynamics move $(x, v)$ along a fictitious time $s$,
+$$\frac{dx}{ds} = \frac{\partial H}{\partial v} = v, \quad \frac{dv}{ds} = -\frac{\partial H}{\partial x} = \nabla \log \tilde{\pi}(x).$$
+They conserve $H$, preserve volume and are reversible. Following them leaves $\pi(x, v)$ invariant.
 
 The dynamics are integrated numerically by the .bold[leapfrog] scheme, which repeats $L$ steps of size $\epsilon$:
 $$\begin{aligned}
-p &\leftarrow p + \frac{\epsilon}{2} \nabla \log \tilde{\pi}(x) \\\\
-x &\leftarrow x + \epsilon p \\\\
-p &\leftarrow p + \frac{\epsilon}{2} \nabla \log \tilde{\pi}(x).
+v &\leftarrow v + \frac{\epsilon}{2} \nabla \log \tilde{\pi}(x) \\\\
+x &\leftarrow x + \epsilon v \\\\
+v &\leftarrow v + \frac{\epsilon}{2} \nabla \log \tilde{\pi}(x).
 \end{aligned}$$
 
 ???
@@ -446,15 +461,15 @@ class: middle
 
 The HMC algorithm proceeds as follows:
 
-1. Given the current state $x\_t$, draw a momentum $p \sim \mathcal{N}(0, I)$.
-2. Starting from $(x\_t, p)$, run $L$ leapfrog steps of size $\epsilon$ to obtain $(x', p')$.
+1. Given the current state $x\_t$, draw a momentum $v \sim \mathcal{N}(0, I)$.
+2. Starting from $(x\_t, v)$, run $L$ leapfrog steps of size $\epsilon$ to obtain $(x', v')$.
 3. Accept $x\_{t+1} = x'$ with probability
-$$\alpha = \min\left(1, \exp(H(x\_t, p) - H(x', p'))\right).$$
+$$\alpha = \min\left(1, \exp(H(x\_t, v) - H(x', v'))\right).$$
 Otherwise, set $x\_{t+1} = x\_t$.
 
 ???
 
-Step 3 is the Metropolis-Hastings acceptance for the joint target $\pi(x, p)$. The proposal is deterministic given $p$, reversible and volume preserving, so its densities cancel in the ratio. Only the integration error remains, and it corrects it exactly.
+Step 3 is the Metropolis-Hastings acceptance for the joint target $\pi(x, v)$. The proposal is deterministic given $v$, reversible and volume preserving, so its densities cancel in the ratio. Only the integration error remains, and it corrects it exactly.
 
 The step size $\epsilon$ controls the integration error, hence the acceptance rate. The number of steps $L$ controls how far the proposal travels. Too large an $\epsilon$ makes $H$ blow up and every proposal is rejected. With $L = 1$, HMC is the Langevin proposal of the previous slides with a Metropolis-Hastings correction.
 
@@ -598,7 +613,7 @@ class: middle
 class: middle
 
 .center.width-70[![](figures/lec6/trace-autocorrelation.png)]
-.center[High vs. low autocorrelation. For highly autocorrelated chains, <br> mixing is poor and effective sample size is low.]
+.center[High vs. low autocorrelation. Highly autocorrelated chains mix poorly.]
 
 ---
 
@@ -636,29 +651,13 @@ These values are derived for targets with independent components (Roberts, Gelma
 
 class: middle
 
-## Effective Sample Size
+## Effective sample size
 
-Quantitatively, the .bold[effective sample size] 
-$$\text{ESS} = \frac{T}{1 + 2\sum\_{k=1}^{\infty} \rho\_k}$$ 
-accounts for autocorrelation in MCMC samples, where $T$ is the number of samples in the chain and 
-$$\rho\_k = \frac{\text{Cov}(X\_t, X\_{t+k})}{\text{Var}(X\_t)}$$ 
-is the .bold[autocorrelation at lag $k$] computed over the samples.
+The average of $T$ correlated samples has the variance of the average of
+$$\text{ESS} = \frac{T}{\tau\_\text{int}} = \frac{T}{1 + 2\sum\_{k=1}^{\infty} \rho\_k}$$
+independent samples, the .bold[effective sample size]. The autocorrelations $\rho\_k$, hence $\tau\_\text{int}$, are estimated from the chain.
 
-A higher ESS indicates more independent samples and better mixing.
-
----
-
-class: middle
-
-## Integrated Autocorrelation Time
-
-The .bold[integrated autocorrelation time] 
-$$\tau\_{\text{int}} = 1 + 2\sum\_{k=1}^{\infty} \rho\_k$$ 
-quantifies the number of correlated samples equivalent to one independent sample.
-
-A smaller $\tau\_{\text{int}}$ indicates better mixing and more efficient sampling.
-
-The effective sample size is therefore $\text{ESS} = T / \tau\_{\text{int}}$.
+A smaller $\tau\_{\text{int}}$ means better mixing and a larger effective sample size.
 
 ???
 
@@ -670,7 +669,7 @@ class: middle
 
 ## Gelman-Rubin Statistic
 
-The .bold[Gelman-Rubin statistic] $\hat{R}$ serves as a convergence diagnostic when running $M$ chains in parallel, each with $T$ samples (after burn-in). 
+The .bold[Gelman-Rubin statistic] $\hat{R}$ serves as a convergence diagnostic when running $M$ independent chains in parallel, each with $T$ samples of a scalar quantity $x$ (after warm-up). 
 Let 
 $$W = \frac{1}{M} \sum\_{m=1}^M s\_m^2$$ 
 be the within-chain variance, where $s\_m^2$ is the sample variance of chain $m$, and 
@@ -707,7 +706,7 @@ class: middle
 
 Diagnostics check that the chains have converged. They do not check that they converged to the right posterior: a bug in the log density goes unnoticed.
 
-Let $\theta^\* \sim p(\theta)$ and $\mathcal{D} \sim p(\mathcal{D} \mid \theta^\*)$. The exact posterior is .bold[calibrated]: a credible region $C\_\alpha(\mathcal{D})$ of level $\alpha$ contains $\theta^\*$ with probability $\alpha$,
+Let $\theta$ denote the parameters of a model, $\theta^\* \sim p(\theta)$ and $\mathcal{D} \sim p(\mathcal{D} \mid \theta^\*)$. A credible region $C\_\alpha(\mathcal{D})$ of level $\alpha$ has posterior probability $\alpha$. The exact posterior is .bold[calibrated]: $C\_\alpha(\mathcal{D})$ contains $\theta^\*$ with probability $\alpha$,
 $$P(\theta^\* \in C\_\alpha(\mathcal{D})) = \alpha.$$
 
 ???
@@ -722,14 +721,14 @@ class: middle
 
 ## Simulation-based calibration
 
-For $s = 1, \ldots, S$:
+For a scalar parameter $\theta$, repeat for $s = 1, \ldots, S$:
 1. Draw $\theta^\*\_s \sim p(\theta)$ and $\mathcal{D}\_s \sim p(\mathcal{D} \mid \theta^\*\_s)$.
 2. Draw $L$ samples $\theta\_1, \ldots, \theta\_L$ with the sampler targeting $p(\theta \mid \mathcal{D}\_s)$.
-3. Compute the rank $r\_s = \sum\_{l=1}^L 1[\theta\_l < \theta^\*\_s] \in \\{0, \ldots, L\\}$.
+3. Compute the rank $r\_s = \sum\_{l=1}^L 1[\theta\_l < \theta^\*\_s] \in \\{0, \ldots, L\\}$, where $1[\cdot]$ is 1 if the condition holds and 0 otherwise.
 
 .italic[Proposition.] If the sampler draws independent samples from the exact posterior, the ranks $r\_s$ are uniformly distributed over $\\{0, \ldots, L\\}$.
 
-.italic[Proof.] Given $\mathcal{D}\_s$, $\theta^\*\_s, \theta\_1, \ldots, \theta\_L$ are $L + 1$ independent draws from $p(\theta \mid \mathcal{D}\_s)$. By symmetry, $\theta^\*\_s$ takes any of the $L + 1$ positions in their sorted order with the same probability.
+.italic[Proof.] The pair $(\theta^\*\_s, \mathcal{D}\_s)$ is drawn from the joint $p(\theta, \mathcal{D})$, so given $\mathcal{D}\_s$, $\theta^\*\_s$ is distributed as $p(\theta \mid \mathcal{D}\_s)$. Then $\theta^\*\_s, \theta\_1, \ldots, \theta\_L$ are $L + 1$ independent draws from $p(\theta \mid \mathcal{D}\_s)$. By symmetry, $\theta^\*\_s$ takes any of the $L + 1$ positions in their sorted order with the same probability.
 
 ???
 
