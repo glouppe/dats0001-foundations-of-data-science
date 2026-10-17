@@ -168,7 +168,7 @@ class: middle
 
 .center[
 
-$m$-step transition densities of a Gaussian random walk truncated to $[-3, 3]$, from three starting states. The shaded area lies under all of them: it is the common part $\delta \nu$, and $\delta$ is its area.
+Top: densities of $x\_{t+m}$ given $x\_t = -3, \ldots, 3$, for a random walk on $[-3, 3]$. <br>All lie above the shaded common part $\delta \nu$, of area $\delta$, as the condition requires. <br>Bottom: $\nu$, the common part rescaled to area 1.
 
 ]
 

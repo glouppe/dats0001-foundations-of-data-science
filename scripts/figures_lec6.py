@@ -48,35 +48,51 @@ def save(fig, name):
 # Doeblin condition ---------------------------------------------------------------------
 
 def doeblin_overlap():
-    """m-step transition densities of a Gaussian random walk truncated to [-3, 3], from three
-    starting states, for m = 1 and m = 4. Their pointwise minimum over all starting states is
-    delta * nu, shaded; delta is its area."""
+    """m-step transition densities of a Gaussian random walk truncated to [-3, 3], from the starting
+    states -3, -2, ..., 3, for m = 1 and m = 4 (top). Their pointwise minimum over all starting states
+    is delta * nu, shaded; delta is its area. Below, nu itself, the common part rescaled to area 1,
+    on its own scale."""
     g = np.linspace(-3, 3, 601)
     dx = g[1] - g[0]
     K = np.exp(-.5 * (g[None, :] - g[:, None]) ** 2)
     K /= K.sum(1, keepdims=True) * dx                # rows are densities on the grid
-    starts = [-3.0, 0.0, 3.0]
-    colors = [BLUE, GREY, ORANGE]
-    fig, axes = plt.subplots(1, 2, figsize=(5.8, 2.5), dpi=200, sharey=True)
+    starts = np.arange(-3, 4)
+    fig, axes = plt.subplots(2, 2, figsize=(5.8, 3.9), dpi=200, sharex=True,
+                             gridspec_kw=dict(height_ratios=[2, 1.2]))
     Pm = np.eye(len(g)) / dx
-    for m, ax in zip(range(1, 5), [axes[0], None, None, axes[1]]):
+    for m, col in zip(range(1, 5), [0, None, None, 1]):
         Pm = Pm @ K * dx
-        if ax is None:
+        if col is None:
             continue
+        ax, axn = axes[0, col], axes[1, col]
         common = Pm.min(0)
         delta = common.sum() * dx
         ax.fill_between(g, common, color=LIGHT, lw=0, label=r"common part $\delta \nu$")
-        for x0, c in zip(starts, colors):
-            ax.plot(g, Pm[np.argmin(np.abs(g - x0))], color=c, lw=1.4, label="$x_t = %g$" % x0)
+        for x0 in starts:
+            row = Pm[np.argmin(np.abs(g - x0))]
+            if x0 == -3:
+                ax.plot(g, row, color=BLUE, lw=1.4, label="$x_t = -3$")
+            elif x0 == 3:
+                ax.plot(g, row, color=ORANGE, lw=1.4, label="$x_t = 3$")
+            else:
+                ax.plot(g, row, color=GREY, lw=.6, alpha=.6,
+                        label="$x_t = -2, \\ldots, 2$" if x0 == -2 else None)
         ax.set_title(r"$m = %d$, $\delta = %.2g$" % (m, delta), fontsize=10, pad=3)
-        ax.set_xlabel("$x_{t+m}$")
-        ax.set_xlim(-3, 3)
-        ax.set_yticks([])
-        tidy(ax)
-        ax.spines["left"].set_visible(False)
-        print("  m = %d: delta = %.3f" % (m, delta))
-    axes[1].legend(frameon=False, fontsize=9, loc="upper right", bbox_to_anchor=(1.08, 1.05))
-    fig.tight_layout()
+        axn.fill_between(g, common / delta, color=GREEN, alpha=.25, lw=0)
+        axn.plot(g, common / delta, color=GREEN, lw=1.2)
+        axn.set_xlabel("$x_{t+m}$")
+        axn.text(.02, .95, r"$\nu$", transform=axn.transAxes, ha="left", va="top", fontsize=11, color=GREEN)
+        for a in (ax, axn):
+            a.set_xlim(-3, 3)
+            a.set_yticks([])
+            tidy(a)
+            a.spines["left"].set_visible(False)
+        print("  m = %d: delta = %.4f" % (m, delta))
+    axes[0, 1].sharey(axes[0, 0])
+    axes[1, 1].sharey(axes[1, 0])
+    handles, labels = axes[0, 0].get_legend_handles_labels()
+    fig.legend(handles, labels, frameon=False, fontsize=9, loc="lower center", ncol=4)
+    fig.tight_layout(rect=(0, .07, 1, 1))
     save(fig, "doeblin-overlap.png")
 
 
