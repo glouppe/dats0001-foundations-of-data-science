@@ -1,7 +1,8 @@
 """Figures of lecture 6: the two graphical models, in the style and at the scale of
 lectures 4 and 5, and the plots of the lecture, redrawn from the data and seeds of
 nb06a (random walks) and nb06b (Bayesian linear regression with Metropolis-Hastings).
-The three trace figures of the diagnostics are simulated here, on known targets.
+The three trace figures of the diagnostics and the HMC figure are simulated here, on
+known targets; simulation-based calibration is run on the regression model of nb06b.
 
 Usage: uv run python scripts/figures_lec6.py
 """
@@ -326,8 +327,148 @@ def diagnostics():
     save(fig, "trace-convergence.png")
 
 
+# Hamiltonian Monte Carlo ----------------------------------------------------------------
+
+def hmc():
+    """HMC and random-walk MH on a correlated Gaussian, for the same number of evaluations of
+    the target: 30 HMC iterations of 20 leapfrog steps, 600 MH iterations."""
+    rng = np.random.default_rng(1)
+    cov = np.array([[1, .95], [.95, 1]])
+    prec = np.linalg.inv(cov)
+    log_p = lambda x: -.5 * x @ prec @ x
+    grad = lambda x: -prec @ x
+    x0, n = np.array([-2.0, -2.5]), 30
+
+    eps, L = .15, 20
+    rw, x = [x0], x0
+    for _ in range(n * L):
+        prop = x + .3 * rng.standard_normal(2)
+        if np.log(rng.random()) < log_p(prop) - log_p(x):
+            x = prop
+        rw.append(x)
+    rw = np.array(rw)
+
+    samples, paths, x = [x0], [], x0
+    for _ in range(n):
+        p = rng.standard_normal(2)
+        xs, ps = x.copy(), p + eps / 2 * grad(x)
+        path = [xs.copy()]
+        for i in range(L):
+            xs = xs + eps * ps
+            ps = ps + (eps if i < L - 1 else eps / 2) * grad(xs)
+            path.append(xs.copy())
+        h0 = -log_p(x) + .5 * p @ p
+        h1 = -log_p(xs) + .5 * ps @ ps
+        if np.log(rng.random()) < h0 - h1:
+            x = xs
+        paths.append(np.array(path))
+        samples.append(x)
+    samples = np.array(samples)
+
+    g = np.linspace(-3.2, 3.2, 200)
+    G = np.stack(np.meshgrid(g, g), -1)
+    Z = np.exp(-.5 * np.einsum("...i,ij,...j", G, prec, G))
+    fig, axes = plt.subplots(1, 2, figsize=(5.8, 3.0), dpi=200, sharey=True)
+    for ax, title in zip(axes, ["random-walk Metropolis-Hastings", "Hamiltonian Monte Carlo"]):
+        ax.contour(g, g, Z, levels=np.exp(-.5 * np.array([4, 1, .25])), colors=LIGHT, linewidths=.8)
+        ax.set_title(title, fontsize=10, pad=3)
+        ax.set_aspect("equal")
+        ax.set_xlim(-3.2, 3.2)
+        ax.set_ylim(-3.2, 3.2)
+        ax.set_xlabel("$x_1$")
+        tidy(ax)
+    axes[0].set_ylabel("$x_2$")
+    axes[0].plot(rw[:, 0], rw[:, 1], color=BLUE, lw=.5, marker="o", ms=1.5)
+    for path in paths:
+        axes[1].plot(path[:, 0], path[:, 1], color=ORANGE, lw=.5, alpha=.5)
+    axes[1].plot(samples[:, 0], samples[:, 1], "o", color=BLUE, ms=2.5)
+    fig.tight_layout()
+    save(fig, "hmc.png")
+
+
+# Simulation-based calibration ------------------------------------------------------------
+
+def log_posterior_batch(theta, x, y, bug=False):
+    """Unnormalized log posterior of the regression for S data sets at once, theta (S, 3), y (S, N).
+    With bug=True, the likelihood takes sigma^2 as its scale, a common mistake with scipy."""
+    w0, w1, log_s = theta[:, :1], theta[:, 1:2], theta[:, 2:3]
+    scale = np.exp(2 * log_s) if bug else np.exp(log_s)
+    log_lik = (-.5 * ((y - w0 * x - w1) / scale) ** 2 - np.log(scale)).sum(1)
+    return log_lik - .5 * (theta[:, :2] ** 2).sum(1) / TAU1 ** 2 - .5 * theta[:, 2] ** 2 / TAU2 ** 2
+
+
+def sbc_ranks(S=1000, L=99, thin=100, warm=4000, bug=False, seed=0):
+    """Ranks of the true parameters among L posterior draws, for S simulations. Each simulation
+    draws theta from the prior and y at the inputs of nb06b, then runs random-walk MH whose
+    proposal is adapted during the warm-up only, and keeps one draw in `thin`."""
+    rng = np.random.default_rng(seed)
+    x, _ = regression_data()
+    N = len(x)
+    truth = np.column_stack([rng.normal(0, TAU1, (S, 2)), rng.normal(0, TAU2, S)])
+    y = truth[:, :1] * x + truth[:, 1:2] + np.exp(truth[:, 2:3]) * rng.standard_normal((S, N))
+
+    # start at least squares, with a proposal from its covariance
+    X = np.column_stack([x, np.ones(N)])
+    w = np.linalg.lstsq(X, y.T, rcond=None)[0].T
+    s2 = ((y - w @ X.T) ** 2).sum(1) / (N - 2)
+    theta = np.column_stack([w, .5 * np.log(s2)])
+    cov = np.zeros((S, 3, 3))
+    cov[:, :2, :2] = np.linalg.inv((X.T @ X)[None] / s2[:, None, None] + np.eye(2) / TAU1 ** 2)
+    cov[:, 2, 2] = 1 / (2 * N)
+    chol = np.linalg.cholesky(2.38 ** 2 / 3 * cov)
+
+    lp = log_posterior_batch(theta, x, y, bug)
+    window, draws = [], []
+    for k in range(warm + L * thin):
+        if k in (500, 1000, 2000, 3000):
+            W = np.stack(window, 1)
+            ok = (np.diff(W, axis=1) != 0).any(2).mean(1) > .1
+            Wc = W - W.mean(1, keepdims=True)
+            emp = np.einsum("ski,skj->sij", Wc, Wc) / (W.shape[1] - 1)
+            emp = np.where(ok[:, None, None], emp + 1e-12 * np.eye(3), np.eye(3))
+            chol = np.where(ok[:, None, None], np.linalg.cholesky(2.38 ** 2 / 3 * emp), .3 * chol)
+            window = []
+        prop = theta + np.einsum("sij,sj->si", chol, rng.standard_normal((S, 3)))
+        lp_prop = log_posterior_batch(prop, x, y, bug)
+        accept = np.log(rng.random(S)) < lp_prop - lp
+        theta[accept], lp[accept] = prop[accept], lp_prop[accept]
+        if k < warm:
+            window.append(theta.copy())
+        elif (k - warm) % thin == thin - 1:
+            draws.append(theta.copy())
+    return (np.stack(draws, 1) < truth[:, None, :]).sum(1)
+
+
+def calibration():
+    from scipy.stats import binom
+    S, L, bins = 1000, 99, 20
+    labels = [r"$w_0$ (slope)", r"$w_1$ (intercept)", r"$\log \sigma$"]
+    rows = [(sbc_ranks(S, L), "correct likelihood"),
+            (sbc_ranks(S, L, bug=True), r"bug: $\sigma^2$ in place of $\sigma$ in the likelihood")]
+    lo, hi = binom.ppf([.005, .995], S, 1 / bins)
+    fig, axes = plt.subplots(2, 3, figsize=(5.8, 3.6), dpi=200, sharex=True, sharey="row")
+    for (ranks, title), row in zip(rows, axes):
+        for j, ax in enumerate(row):
+            ax.hist(ranks[:, j], bins=bins, range=(0, L + 1), color=BLUE)
+            ax.axhspan(lo, hi, color=GREY, alpha=.2, lw=0, zorder=3)
+            ax.axhline(S / bins, color=GREY, lw=.8, ls=(0, (4, 3)))
+            ax.set_xlim(0, L + 1)
+            ax.set_yticks([])
+            ax.tick_params(labelsize=9)
+            tidy(ax)
+            ax.spines["left"].set_visible(False)
+        row[0].set_title(title, loc="left", fontsize=10, pad=3)
+    axes[0, 0].set_ylim(0, 2.5 * S / bins)
+    for ax, label in zip(axes[-1], labels):
+        ax.set_xlabel("rank of " + label, fontsize=9)
+    fig.tight_layout()
+    save(fig, "sbc.png")
+
+
 if __name__ == "__main__":
     graphical_models()
     random_walks()
     regression()
     diagnostics()
+    hmc()
+    calibration()

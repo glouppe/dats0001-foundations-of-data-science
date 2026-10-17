@@ -100,7 +100,7 @@ class: middle
 
 .center[
 
-.italic[Example 2.] Gaussian random walk with $p(x\_1) = \mathcal{N}(x\_1 | 0, 1)$ and transition model $p(x\_{t+1} \mid x\_t) = \mathcal{N}(x\_{t+1} | x\_t - \kappa(x\_t - \mu), \sigma^2)$.
+.italic[Example 2.] Mean-reverting random walk with $p(x\_1) = \mathcal{N}(x\_1 | 0, 1)$ and transition model $p(x\_{t+1} \mid x\_t) = \mathcal{N}(x\_{t+1} | x\_t - \kappa(x\_t - \mu), \sigma^2)$.
 
 ]
 
@@ -116,7 +116,7 @@ class: middle
 
 .center[
 
-The Gaussian random walk with drift has a stationary distribution $\pi(x) = \mathcal{N}(x | \mu, \frac{\sigma^2}{2\kappa - \kappa^2})$.
+The mean-reverting random walk has a stationary distribution $\pi(x) = \mathcal{N}(x | \mu, \frac{\sigma^2}{2\kappa - \kappa^2})$.
 
 ]
 
@@ -130,14 +130,16 @@ class: middle
 
 ## Regularity conditions
 
-A markov chain is said to be:
+A Markov chain is said to be:
 - .bold[irreducible] if any state $x'$ can be reached from any state $x$, i.e., for any $x$, $x'$, there exists $t$ such that $p(x\_t = x' \mid x\_1 = x) > 0$.
 - .bold[aperiodic] if there is no deterministic cycle, i.e., for all $x$, the greatest common divisor of the set $\\{t : p(x\_t = x \mid x\_1 = x) > 0\\}$ is 1.
-- for discrete state spaces, .bold[positive recurrent] if the expected return time to any state is finite; for continuous state spaces, .bold[Harris recurrent] if the chain returns to any set $A$ with positive measure infinitely often with probability 1.
+- for discrete state spaces, .bold[positive recurrent] if the expected return time to any state is finite; for continuous state spaces, .bold[positive Harris recurrent] if the chain returns to any set $A$ with positive measure infinitely often with probability 1 and has a stationary distribution that integrates to one.
 
 ???
 
-Irreducibility lets the chain reach every part of the state space. Aperiodicity rules out deterministic cycles. Recurrence keeps the chain from drifting away to infinity; without it, the stationary distribution may not integrate to one.
+Irreducibility lets the chain reach every part of the state space. Aperiodicity rules out deterministic cycles. Recurrence keeps the chain from drifting away to infinity.
+
+Recurrence alone is not enough. The Gaussian random walk of Example 1 is Harris recurrent: in one dimension, it returns to any interval infinitely often. Its only invariant measure is uniform over the real line, which does not integrate to one, so the walk has no stationary distribution. Positivity rules out this case.
 
 ---
 
@@ -145,17 +147,17 @@ class: middle
 
 ## Basic limit theorem for Markov chains
 
-.italic[Theorem.] If a time-homogeneous Markov chain is irreducible, aperiodic, and (positive/Harris) recurrent, then it satisfies the following properties:
+.italic[Theorem.] If a time-homogeneous Markov chain is irreducible, aperiodic, and positive (Harris) recurrent, then it satisfies the following properties:
 
 - (Existence and uniqueness) There exists a .bold[unique] stationary distribution $\pi$;
-- (Convergence) For any initial distribution of $p(x\_1)$, $p(x\_t) \to \pi(x)$ as $t \to \infty$;
+- (Convergence) For any initial distribution $p(x\_1)$, $p(x\_t) \to \pi(x)$ as $t \to \infty$;
 - (Ergodic theorem) For any function $f$ with $\mathbb{E}\_{\pi}[|f(x)|] < \infty$, $$\lim\_{T \to \infty} \frac{1}{T} \sum\_{t=1}^T f(x\_t) = \mathbb{E}\_{\pi}[f(x)]$$ almost surely.
 
 .italic[Proof.] (Omitted and beyond scope.)
 
 ???
 
-Each condition has a role: irreducibility gives uniqueness, aperiodicity gives convergence, and recurrence gives a stationary distribution that integrates to one.
+Each condition has a role: irreducibility gives uniqueness, aperiodicity gives convergence, and positive recurrence gives a stationary distribution that integrates to one.
 
 ---
 
@@ -266,7 +268,7 @@ class: middle
 
 - Irreducibility: If the proposal $q$ has appropriate support, then for any $x, x'$ where $\pi(x), \pi(x') > 0$, there exists a sequence of proposals with positive probability connecting them.
 
-- Recurrence: If $\pi$ is a proper probability distribution, the chain is positive/Harris recurrent. (Proof beyond scope)
+- Recurrence: If $\pi$ is a proper probability distribution, the chain is positive Harris recurrent. (Proof beyond scope)
 
 These conditions ensure convergence to $\pi(x)$ by the basic limit theorem.
 
@@ -285,7 +287,7 @@ The efficiency of the Metropolis-Hastings algorithm heavily depends on the choic
 Common choices include:
 - .bold[Random walk]: $q(x' \mid x) = \mathcal{N}(x' | x, \sigma^2 I)$ for continuous state spaces. 
   Simple and general, but efficiency depends on tuning $\sigma$ 
-  (optimal acceptance rate: ~20-40%).
+  (optimal acceptance rate: about 44% in one dimension, 23% in high dimension).
   
 - .bold[Langevin]: $q(x' \mid x) = \mathcal{N}(x' | x + \frac{\epsilon^2}{2} \nabla \log \tilde{\pi}(x), \epsilon^2 I)$, 
   which uses gradient information to guide proposals toward high-probability regions. 
@@ -302,16 +304,84 @@ The random walk is the most common choice, with $\sigma$ setting the step size. 
 
 class: middle
 
-## Beyond Metropolis-Hastings
+## Hamiltonian Monte Carlo
 
-Several extensions of Metropolis-Hastings explore the target more efficiently:
+Random-walk proposals explore the target by small, undirected steps. .bold[Hamiltonian Monte Carlo] (HMC) proposes distant states by following the gradient of $\log \tilde{\pi}$.
 
-- .bold[Hamiltonian Monte Carlo (HMC)]: Uses Hamiltonian dynamics to propose 
-  new states, enabling larger, informed jumps through parameter space. 
-  Requires gradient $\nabla \log \pi(x)$.
+The state $x \in \mathbb{R}^d$ is augmented with a momentum $p \in \mathbb{R}^d$, and the chain targets the joint distribution
+$$\pi(x, p) \propto \tilde{\pi}(x) \mathcal{N}(p | 0, I) \propto \exp(-H(x, p))$$
+defined by the .bold[Hamiltonian]
+$$H(x, p) = -\log \tilde{\pi}(x) + \frac{1}{2} p^T p.$$
+
+???
+
+Think of a ball rolling on the surface $-\log \tilde{\pi}(x)$: this is its potential energy, and $\frac{1}{2} p^T p$ is its kinetic energy. The marginal of $x$ under $\pi(x, p)$ is $\pi(x)$, so the momenta are discarded after sampling.
+
+---
+
+class: middle
+
+## Hamiltonian dynamics
+
+The Hamiltonian dynamics
+$$\frac{dx}{ds} = \frac{\partial H}{\partial p} = p, \quad \frac{dp}{ds} = -\frac{\partial H}{\partial x} = \nabla \log \tilde{\pi}(x)$$
+conserve $H$, preserve volume and are reversible. A proposal made by following them would be accepted with probability 1.
+
+The dynamics are integrated numerically by the .bold[leapfrog] scheme, which repeats $L$ steps of size $\epsilon$:
+$$\begin{aligned}
+p &\leftarrow p + \frac{\epsilon}{2} \nabla \log \tilde{\pi}(x) \\\\
+x &\leftarrow x + \epsilon p \\\\
+p &\leftarrow p + \frac{\epsilon}{2} \nabla \log \tilde{\pi}(x).
+\end{aligned}$$
+
+???
+
+The momentum accelerates the ball downhill, towards regions of high density, and carries it across them. Leapfrog preserves volume and is reversible, like the exact dynamics, but it conserves $H$ only approximately: the error grows with $\epsilon$.
+
+---
+
+class: middle
+
+The HMC algorithm proceeds as follows:
+
+1. Given the current state $x\_t$, draw a momentum $p \sim \mathcal{N}(0, I)$.
+2. Starting from $(x\_t, p)$, run $L$ leapfrog steps of size $\epsilon$ to obtain $(x', p')$.
+3. Accept $x\_{t+1} = x'$ with probability
+$$\alpha = \min\left(1, \exp(H(x\_t, p) - H(x', p'))\right).$$
+Otherwise, set $x\_{t+1} = x\_t$.
+
+???
+
+Step 3 is the Metropolis-Hastings acceptance for the joint target $\pi(x, p)$. The proposal is deterministic given $p$, reversible and volume preserving, so its densities cancel in the ratio. Only the integration error remains, and it corrects it exactly.
+
+The step size $\epsilon$ controls the integration error, hence the acceptance rate. The number of steps $L$ controls how far the proposal travels. Too large an $\epsilon$ makes $H$ blow up and every proposal is rejected. With $L = 1$, HMC is the Langevin proposal of the previous slides with a Metropolis-Hastings correction.
+
+---
+
+class: middle
+
+.center.width-80[![](figures/lec6/hmc.png)]
+
+.center[
+
+Random-walk Metropolis-Hastings (600 iterations) and HMC (30 iterations of 20 leapfrog steps, in orange) on a correlated Gaussian, for the same number of evaluations of the target.
+
+]
+
+???
+
+Each HMC iteration costs $L$ gradient evaluations, so the fair comparison is at equal cost. The random walk is still in the lower half of the target; HMC draws almost independent samples along the whole ellipse. The advantage grows with the dimension.
+
+The gradients come from automatic differentiation: `nb06b` computes them with JAX.
+
+---
+
+class: middle
+
+## Other samplers
 
 - .bold[No-U-Turn Sampler (NUTS)]: An adaptive variant of HMC that automatically 
-  tunes trajectory length, eliminating manual parameter tuning.
+  tunes the trajectory length $L$.
   Default sampler in Stan and PyMC.
 
 - .bold[Gibbs sampling]: Updates variables one at a time from conditional 
@@ -452,11 +522,13 @@ The first quantitative diagnostic to monitor is the .bold[acceptance rate], defi
 
 - A very low acceptance rate (e.g., < 10%) indicates that the proposal distribution is making too large jumps, leading to many rejections.
 - A very high acceptance rate (e.g., > 80%) suggests that the proposal distribution is making too small jumps, resulting in slow exploration of the state space.
-- An optimal acceptance rate often lies between 20% and 40%, depending on the dimensionality of the target distribution.
+- For a Gaussian random-walk proposal, the optimal acceptance rate is about 44% in one dimension and decreases to 23.4% as the dimension grows.
 
 ???
 
 Optimal means that the chain explores the target fastest, as measured by the effective sample size per iteration.
+
+These values are derived for targets with independent components (Roberts, Gelman and Gilks, 1997), and they hold approximately beyond. The demos of `nb06b` sample one-dimensional targets, where 44% is the value to aim for.
 
 ---
 
@@ -486,6 +558,10 @@ A smaller $\tau\_{\text{int}}$ indicates better mixing and more efficient sampli
 
 The effective sample size is therefore $\text{ESS} = T / \tau\_{\text{int}}$.
 
+???
+
+$\tau\_{\text{int}}$ is itself estimated from the chain, and the estimate is reliable only for chains much longer than $\tau\_{\text{int}}$. This is why `emcee` refuses to return it for chains shorter than 50 $\tau\_{\text{int}}$: the `AutocorrError` met in `nb01`.
+
 ---
 
 class: middle
@@ -505,9 +581,79 @@ $$\hat{R} = \sqrt{\frac{\frac{T-1}{T} W + \frac{1}{T} B}{W}}.$$
 
 class: middle
 
-Typically,
-- values of $\hat{R}$ approximately 1 indicate convergence across chains;
-- values greater than 1.1 suggest lack of convergence.
+## Rank-normalized split-$\hat{R}$
+
+In practice, $\hat{R}$ is computed with two modifications:
+- each chain is split into two halves, which detects a chain that drifts during the run;
+- each draw is replaced by the normal quantile of its rank among all draws, which makes $\hat{R}$ robust to heavy tails.
+
+Values of $\hat{R}$ below 1.01 indicate convergence across chains.
+
+The effective sample size is computed on the same rank-normalized draws (.bold[bulk ESS]) and on the indicators of the 5% and 95% quantiles (.bold[tail ESS]). Both should exceed 100 per chain.
+
+???
+
+These are the recommendations of Vehtari et al. (2021), used by Stan, ArviZ and PyMC. The older threshold of 1.1 lets non-converged chains through. Bulk ESS measures the precision of the mean and the median, tail ESS that of the 5% and 95% quantiles.
+
+$\hat{R}$ needs independent chains started from dispersed points. The walkers of `emcee` are not independent chains: they move using each other's positions. `nb06b` computes $\hat{R}$ on independent runs of Metropolis-Hastings.
+
+---
+
+class: middle
+
+## Calibration
+
+Diagnostics check that the chains have converged. They do not check that they converged to the right posterior: a bug in the log density goes unnoticed.
+
+Let $\theta^\* \sim p(\theta)$ and $\mathcal{D} \sim p(\mathcal{D} \mid \theta^\*)$. The exact posterior is .bold[calibrated]: a credible region $C\_\alpha(\mathcal{D})$ of level $\alpha$ contains $\theta^\*$ with probability $\alpha$,
+$$P(\theta^\* \in C\_\alpha(\mathcal{D})) = \alpha.$$
+
+???
+
+The pair $(\theta^\*, \mathcal{D})$ is drawn from the joint $p(\theta, \mathcal{D})$, so given $\mathcal{D}$, $\theta^\*$ is distributed as the posterior $p(\theta \mid \mathcal{D})$. The probability is over both $\theta^\*$ and $\mathcal{D}$: calibration holds on average over data sets, not for each of them.
+
+A buggy or unconverged sampler breaks calibration. Overconfident regions are too narrow and contain $\theta^\*$ less often than $\alpha$.
+
+---
+
+class: middle
+
+## Simulation-based calibration
+
+For $s = 1, \ldots, S$:
+1. Draw $\theta^\*\_s \sim p(\theta)$ and $\mathcal{D}\_s \sim p(\mathcal{D} \mid \theta^\*\_s)$.
+2. Draw $L$ samples $\theta\_1, \ldots, \theta\_L$ with the sampler targeting $p(\theta \mid \mathcal{D}\_s)$.
+3. Compute the rank $r\_s = \sum\_{l=1}^L 1[\theta\_l < \theta^\*\_s] \in \\{0, \ldots, L\\}$.
+
+.italic[Proposition.] If the sampler draws independent samples from the exact posterior, the ranks $r\_s$ are uniformly distributed over $\\{0, \ldots, L\\}$.
+
+.italic[Proof.] Given $\mathcal{D}\_s$, $\theta^\*\_s, \theta\_1, \ldots, \theta\_L$ are $L + 1$ independent draws from $p(\theta \mid \mathcal{D}\_s)$. By symmetry, $\theta^\*\_s$ takes any of the $L + 1$ positions in their sorted order with the same probability.
+
+???
+
+For several parameters, ranks are computed for each parameter separately, or for any function of the parameters.
+
+The draws must be nearly independent: MCMC samples are thinned by more than $\tau\_{\text{int}}$, otherwise autocorrelation alone makes the histogram non-uniform. Each simulation runs a full MCMC, so SBC is expensive. The method is due to Talts et al. (2018).
+
+---
+
+class: middle
+
+.center.width-80[![](figures/lec6/sbc.png)]
+
+.center[
+
+Rank histograms of simulation-based calibration for the Bayesian linear regression, with $S = 1000$ simulations and $L = 99$ draws of random-walk Metropolis-Hastings each. The grey band holds 99% of the counts of uniform ranks.
+
+]
+
+???
+
+The correct sampler gives flat histograms. The bug uses the variance where scipy expects the standard deviation, `norm.logpdf(y, mu, sigma**2)`. The slope and the intercept are still calibrated, but the posterior of $\log \sigma$ sits away from $\theta^\*$: the ranks pile up at both ends.
+
+Other shapes are typical. A U shape means an overconfident posterior, a hump an underconfident one, a slope a biased one.
+
+The chains start at the least-squares fit, adapt their proposal during the warm-up only, and keep one draw in 100.
 
 ---
 
