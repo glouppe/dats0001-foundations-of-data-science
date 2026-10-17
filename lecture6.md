@@ -806,13 +806,13 @@ class: middle
 
 .center[
 
-Rank histograms of simulation-based calibration for the Bayesian linear regression, with $S = 1000$ simulations and $L = 99$ draws of random-walk Metropolis-Hastings each. The grey band holds 99% of the counts of uniform ranks.
+Rank histograms of simulation-based calibration for the Bayesian linear regression. <br>The grey band holds 99% of the counts of uniform ranks.
 
 ]
 
 ???
 
-The correct sampler gives flat histograms. The bug uses the variance where scipy expects the standard deviation, `norm.logpdf(y, mu, sigma**2)`. The slope and the intercept are still calibrated, but the posterior of $\log \sigma$ sits away from $\theta^\*$: the ranks pile up at both ends.
+SBC runs $S = 1000$ simulations, each with $L = 99$ draws of random-walk Metropolis-Hastings. The correct sampler gives flat histograms. The bug uses the variance where scipy expects the standard deviation, `norm.logpdf(y, mu, sigma**2)`. The slope and the intercept are still calibrated, but the posterior of $\log \sigma$ sits away from $\theta^\*$: the ranks pile up at both ends.
 
 Other shapes are typical. A U shape means an overconfident posterior, a hump an underconfident one, a slope a biased one.
 
