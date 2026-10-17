@@ -235,17 +235,19 @@ A mixture is sampled by first picking a component, then drawing from it. Picking
 
 class: middle
 
+At each step, a chain restarts from $\nu = \mathcal{N}(0, 1)$ with probability $\delta = 0.05$, and otherwise takes a Gaussian random-walk step. Two copies of it, started at $-10$ and $10$, use the same coin flips and the same random draws.
+
 .center.width-80[![](figures/lec6/doeblin.png)]
 
 .center[
 
-Two copies of a chain that restarts from $\nu = \mathcal{N}(0, 1)$ with probability $\delta = 0.05$ and otherwise takes a Gaussian random-walk step. Driven by the same random numbers, they coincide from the first restart on.
+At the first restart, both copies draw the same state from $\nu$, wherever they were. <br>From then on, they move together.
 
 ]
 
 ???
 
-This chain satisfies the Doeblin condition with $m = 1$; the Gaussian random walk alone does not. The two copies stay 20 apart until the first restart, at $t = 21$, close to its mean $1 / \delta = 20$. From then on, they share their whole future: the chain has forgotten where it started.
+Each copy, on its own, is a correct simulation of the chain: sharing the random numbers only ties the two copies together, a construction called a .italic[coupling]. This chain satisfies the Doeblin condition with $m = 1$; the Gaussian random walk alone does not. The two copies stay 20 apart until the first restart, at $t = 21$, close to its mean $1 / \delta = 20$. From then on, they share their whole future: the chain has forgotten where it started.
 
 The probability that no restart has happened by step $t$ is $(1 - \delta)^{t - 1}$. If the second copy starts from $\pi$, it stays distributed as $\pi$, and the first copy differs from it only on runs without a restart. This gives the bound of the next slide, by a second route.
 
