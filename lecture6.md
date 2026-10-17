@@ -261,7 +261,7 @@ The probability that no restart has happened by step $t$ is $(1 - \delta)^{t - 1
 
 class: middle
 
-The coupling suggests that the distance to $\pi$ shrinks with the probability $(1 - \delta)^{t-1}$ of no restart.
+In the example, the two copies differ only until the first restart, and no restart happens before step $t$ with probability $(1 - \delta)^{t-1}$. The theorem gives the same bound for the distance between $p(x\_t)$ and $\pi$.
 
 .italic[Theorem.] Under the Doeblin condition, there exists a unique stationary distribution $\pi$, and for any initial distribution $p(x\_1)$,
 $$\\| p(x\_{t}) - \pi \\|\_\text{TV} \leq (1 - \delta)^{\lfloor (t-1)/m \rfloor},$$
@@ -285,20 +285,20 @@ Every $m$ steps, any two distributions get closer by a factor $1 - \delta$: $P^m
 
 class: middle
 
-With this notation, a distribution $\pi$ is stationary if and only if $\pi P = \pi$. The contraction gives the three results:
+Every $m$ steps, any two distributions get closer by a factor $1 - \delta$. With this notation, a distribution $\pi$ is stationary if and only if $\pi P = \pi$. The three results follow:
 
 - (Uniqueness) Two stationary distributions $\pi$ and $\pi'$ satisfy $\pi P^m = \pi$ and $\pi' P^m = \pi'$, so
 $$\\| \pi - \pi' \\|\_\text{TV} = \\| \pi P^m - \pi' P^m \\|\_\text{TV} \leq (1 - \delta) \\| \pi - \pi' \\|\_\text{TV},$$
 hence $\pi = \pi'$.
-- (Existence) The distributions $\mu P^{km}$ form a Cauchy sequence, since
+- (Existence) The distributions $\mu P^{km}$ get closer and closer to each other,
 $$\\| \mu P^{(k+1)m} - \mu P^{km} \\|\_\text{TV} \leq (1 - \delta)^k.$$
-Their limit $\pi$ satisfies $\pi P^m = \pi$. Then $(\pi P) P^m = (\pi P^m) P = \pi P$, so $\pi P$ is also a fixed point of $P^m$, and $\pi P = \pi$ by uniqueness of the fixed point.
-- (Convergence) Applying the contraction $\lfloor (t-1)/m \rfloor$ times, and since the total variation distance is at most 1,
+so they converge to a limit $\pi$, with $\pi P^m = \pi$. Then $(\pi P) P^m = (\pi P^m) P = \pi P$, so $\pi P$ is also unchanged by $P^m$, and $\pi P = \pi$ by uniqueness.
+- (Convergence) Applying the inequality $\lfloor (t-1)/m \rfloor$ times, and since the total variation distance is at most 1,
 $$\\| p(x\_t) - \pi \\|\_\text{TV} = \\| p(x\_1) P^{t-1} - \pi P^{t-1} \\|\_\text{TV} \leq (1 - \delta)^{\lfloor (t-1)/m \rfloor}.$$
 
 ???
 
-Existence is the Banach fixed-point theorem: the space of distributions with the total variation distance is complete, and a contraction on it has a unique fixed point.
+In mathematical terms, $P^m$ is a contraction for the total variation distance, and existence is the Banach fixed-point theorem: the distributions $\mu P^{km}$ form a Cauchy sequence in a complete space.
 
 The chain forgets its initial state at a geometric rate, $(1 - \delta)^{\lfloor (t-1)/m \rfloor} \approx e^{-\delta t / m}$: a restart takes about $m / \delta$ steps on average. This is why the first states of the chain are discarded as a warm-up. In practice $\delta$ and $m$ are unknown, so the length of the warm-up is chosen with diagnostics.
 
@@ -484,7 +484,7 @@ class: middle
 
 The Hamiltonian dynamics move $(\mathbf{x}, \mathbf{v})$ along a fictitious time $s$,
 $$\frac{d\mathbf{x}}{ds} = \frac{\partial H}{\partial \mathbf{v}} = \mathbf{v}, \quad \frac{d\mathbf{v}}{ds} = -\frac{\partial H}{\partial \mathbf{x}} = \nabla \log \tilde{\pi}(\mathbf{x}).$$
-They conserve $H$, preserve volume and are reversible. Following them leaves $\pi(\mathbf{x}, \mathbf{v})$ invariant.
+Following them keeps $H$ constant, and leaves $\pi(\mathbf{x}, \mathbf{v})$ stationary.
 
 The dynamics are integrated numerically by the .bold[leapfrog] scheme, which repeats $L$ steps of size $\epsilon$:
 $$\begin{aligned}
@@ -495,7 +495,7 @@ $$\begin{aligned}
 
 ???
 
-The momentum accelerates the ball downhill, towards regions of high density, and carries it across them. Leapfrog preserves volume and is reversible, like the exact dynamics, but it conserves $H$ only approximately: the error grows with $\epsilon$.
+The momentum accelerates the ball downhill, towards regions of high density, and carries it across them. The exact dynamics conserve $H$, preserve volume and are reversible, which together leave $\pi(\mathbf{x}, \mathbf{v})$ stationary. Leapfrog preserves volume and is reversible too, but it conserves $H$ only approximately: the error grows with $\epsilon$.
 
 ---
 
