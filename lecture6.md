@@ -12,9 +12,33 @@ Prof. Gilles Louppe<br>
 
 class: middle
 
+.center.width-55[![](figures/lec5/wolf-gps-observations.svg)]
+
+.center[
+
+Noisy GPS observations $\mathbf{x}\_{1:T}$ of a wolf, here simulated.
+
+]
+
+.question[
+
+The Kalman filter gives the likelihood $p(\mathbf{x}\_{1:T} \mid \theta)$ of the parameters $\theta$ of the wolf model. How do we obtain their posterior $p(\theta \mid \mathbf{x}\_{1:T})$?
+
+]
+
+???
+
+This is the wolf of Lecture 5, with $\theta = (\kappa, \sigma, \mathbf{R})$: the attraction to the den, the diffusion of the wolf and the GPS noise. Lecture 5 maximized the likelihood over $\kappa$ alone, at 0.20, while the data were simulated with $\kappa = 0.25$.
+
+The posterior $p(\theta \mid \mathbf{x}\_{1:T}) \propto p(\mathbf{x}\_{1:T} \mid \theta) p(\theta)$ needs the normalizer $\int p(\mathbf{x}\_{1:T} \mid \theta) p(\theta) d\theta$, a three-dimensional integral with no closed form. MCMC samples the posterior without it. `nb06b` ends with this case study.
+
+---
+
+class: middle
+
 .center.width-10[![](figures/lec6/dices.png)]
 
-How to sample from a distribution $p(x)$ for which we can only evaluate an unnormalized version $\tilde{p}(x)$ of its density?
+More generally, how to sample from a distribution $p(x)$ when only an unnormalized version $\tilde{p}(x)$ of its density can be evaluated?
 
 Use cases:
 - Generating data points $x$ from a generative model $p(x)$.
@@ -833,6 +857,14 @@ SBC runs $S = 1000$ simulations, each with $L = 99$ draws of random-walk Metropo
 Other shapes are typical. A U shape means an overconfident posterior, a hump an underconfident one, a slope a biased one.
 
 The chains start at the least-squares fit, adapt their proposal during the warm-up only, and keep one draw in 100.
+
+---
+
+class: middle, center
+
+.center.width-10[![](figures/lec6/laptop.png)]
+
+Run the end of `nb06b-mcmc.ipynb` to sample the posterior of the wolf's parameters.
 
 ---
 
