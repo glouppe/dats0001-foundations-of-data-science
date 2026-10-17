@@ -59,7 +59,7 @@ class: middle
 
 .center[
 
-.italic[Example 1.] Gaussian random walk with $p(x\_1) = \mathcal{N}(x\_1 | 0, 1)$ and transition model $p(x\_{t+1} \mid x\_t) = \mathcal{N}(x\_{t+1} | x\_t, \sigma^2)$.
+.italic[Example 1.] Gaussian random walk with $p(x\_1) = \mathcal{N}(x\_1 \mid 0, 1)$ and transition model $p(x\_{t+1} \mid x\_t) = \mathcal{N}(x\_{t+1} \mid x\_t, \sigma^2)$.
 
 ]
 
@@ -100,7 +100,7 @@ class: middle
 
 .center[
 
-.italic[Example 2.] Mean-reverting random walk with $p(x\_1) = \mathcal{N}(x\_1 | 0, 1)$ and transition model $p(x\_{t+1} \mid x\_t) = \mathcal{N}(x\_{t+1} | x\_t - \kappa(x\_t - \mu), \sigma^2)$.
+.italic[Example 2.] Mean-reverting random walk with $p(x\_1) = \mathcal{N}(x\_1 \mid 0, 1)$ and transition model $p(x\_{t+1} \mid x\_t) = \mathcal{N}(x\_{t+1} \mid x\_t - \kappa(x\_t - \mu), \sigma^2)$.
 
 ]
 
@@ -117,7 +117,7 @@ class: middle
 .center[
 
 For $0 < \kappa < 2$, the mean-reverting random walk has the stationary distribution
-$$\pi(x) = \mathcal{N}\left(x \Big| \mu, \frac{\sigma^2}{2\kappa - \kappa^2}\right).$$
+$$\pi(x) = \mathcal{N}\left(x \,\middle|\, \mu, \frac{\sigma^2}{2\kappa - \kappa^2}\right).$$
 
 ]
 
@@ -353,7 +353,7 @@ class: middle
 
 .center[
 
-Metropolis-Hastings on a mixture of two Gaussians, with the random-walk proposal $q(x' \mid x) = \mathcal{N}(x' \mid x, \sigma^2 I)$. Proposals are accepted (green) or rejected (red), and the histograms of the chain approach the marginals of the target.
+Metropolis-Hastings on a mixture of two Gaussians, with the random-walk proposal $q(\mathbf{x}' \mid \mathbf{x}) = \mathcal{N}(\mathbf{x}' \mid \mathbf{x}, \sigma^2 \mathbf{I})$. Proposals are accepted (green) or rejected (red), and the histograms of the chain approach the marginals of the target.
 
 ]
 
@@ -435,16 +435,16 @@ class: middle
 
 Random-walk proposals explore the target by small, undirected steps. .bold[Hamiltonian Monte Carlo] (HMC) proposes distant states by following the gradient of $\log \tilde{\pi}$.
 
-The state $x \in \mathbb{R}^d$ is augmented with a momentum $v \in \mathbb{R}^d$, and the chain targets the joint distribution
-$$\pi(x, v) \propto \tilde{\pi}(x) \mathcal{N}(v | 0, I) \propto \exp(-H(x, v))$$
+The state $\mathbf{x} \in \mathbb{R}^d$ is augmented with a momentum $\mathbf{v} \in \mathbb{R}^d$, and the chain targets the joint distribution
+$$\pi(\mathbf{x}, \mathbf{v}) \propto \tilde{\pi}(\mathbf{x}) \mathcal{N}(\mathbf{v} \mid \mathbf{0}, \mathbf{I}) \propto \exp(-H(\mathbf{x}, \mathbf{v}))$$
 defined by the .bold[Hamiltonian]
-$$H(x, v) = -\log \tilde{\pi}(x) + \frac{1}{2} v^T v.$$
+$$H(\mathbf{x}, \mathbf{v}) = -\log \tilde{\pi}(\mathbf{x}) + \frac{1}{2} \mathbf{v}^T \mathbf{v}.$$
 
 .footnote[Credits: [Duane et al.](https://doi.org/10.1016/0370-2693%2887%2991197-X), 1987; [Neal](https://arxiv.org/abs/1206.1901), 2011.]
 
 ???
 
-Think of a ball rolling on the surface $-\log \tilde{\pi}(x)$: this is its potential energy, and $\frac{1}{2} v^T v$ is its kinetic energy. The marginal of $x$ under $\pi(x, v)$ is $\pi(x)$, so the momenta are discarded after sampling.
+Think of a ball rolling on the surface $-\log \tilde{\pi}(\mathbf{x})$: this is its potential energy, and $\frac{1}{2} \mathbf{v}^T \mathbf{v}$ is its kinetic energy. The marginal of $\mathbf{x}$ under $\pi(\mathbf{x}, \mathbf{v})$ is $\pi(\mathbf{x})$, so the momenta are discarded after sampling.
 
 ---
 
@@ -452,15 +452,15 @@ class: middle
 
 ## Hamiltonian dynamics
 
-The Hamiltonian dynamics move $(x, v)$ along a fictitious time $s$,
-$$\frac{dx}{ds} = \frac{\partial H}{\partial v} = v, \quad \frac{dv}{ds} = -\frac{\partial H}{\partial x} = \nabla \log \tilde{\pi}(x).$$
-They conserve $H$, preserve volume and are reversible. Following them leaves $\pi(x, v)$ invariant.
+The Hamiltonian dynamics move $(\mathbf{x}, \mathbf{v})$ along a fictitious time $s$,
+$$\frac{d\mathbf{x}}{ds} = \frac{\partial H}{\partial \mathbf{v}} = \mathbf{v}, \quad \frac{d\mathbf{v}}{ds} = -\frac{\partial H}{\partial \mathbf{x}} = \nabla \log \tilde{\pi}(\mathbf{x}).$$
+They conserve $H$, preserve volume and are reversible. Following them leaves $\pi(\mathbf{x}, \mathbf{v})$ invariant.
 
 The dynamics are integrated numerically by the .bold[leapfrog] scheme, which repeats $L$ steps of size $\epsilon$:
 $$\begin{aligned}
-v &\leftarrow v + \frac{\epsilon}{2} \nabla \log \tilde{\pi}(x) \\\\
-x &\leftarrow x + \epsilon v \\\\
-v &\leftarrow v + \frac{\epsilon}{2} \nabla \log \tilde{\pi}(x).
+\mathbf{v} &\leftarrow \mathbf{v} + \frac{\epsilon}{2} \nabla \log \tilde{\pi}(\mathbf{x}) \\\\
+\mathbf{x} &\leftarrow \mathbf{x} + \epsilon \mathbf{v} \\\\
+\mathbf{v} &\leftarrow \mathbf{v} + \frac{\epsilon}{2} \nabla \log \tilde{\pi}(\mathbf{x}).
 \end{aligned}$$
 
 ???
@@ -473,15 +473,15 @@ class: middle
 
 The HMC algorithm proceeds as follows:
 
-1. Given the current state $x\_t$, draw a momentum $v \sim \mathcal{N}(0, I)$.
-2. Starting from $(x\_t, v)$, run $L$ leapfrog steps of size $\epsilon$ to obtain $(x', v')$.
-3. Accept $x\_{t+1} = x'$ with probability
-$$\alpha = \min\left(1, \exp(H(x\_t, v) - H(x', v'))\right).$$
-Otherwise, set $x\_{t+1} = x\_t$.
+1. Given the current state $\mathbf{x}\_t$, draw a momentum $\mathbf{v} \sim \mathcal{N}(\mathbf{0}, \mathbf{I})$.
+2. Starting from $(\mathbf{x}\_t, \mathbf{v})$, run $L$ leapfrog steps of size $\epsilon$ to obtain $(\mathbf{x}', \mathbf{v}')$.
+3. Accept $\mathbf{x}\_{t+1} = \mathbf{x}'$ with probability
+$$\alpha = \min\left(1, \exp(H(\mathbf{x}\_t, \mathbf{v}) - H(\mathbf{x}', \mathbf{v}'))\right).$$
+Otherwise, set $\mathbf{x}\_{t+1} = \mathbf{x}\_t$.
 
 ???
 
-Step 3 is the Metropolis-Hastings acceptance for the joint target $\pi(x, v)$. The proposal is deterministic given $v$, reversible and volume preserving, so its densities cancel in the ratio. Only the integration error remains, and it corrects it exactly.
+Step 3 is the Metropolis-Hastings acceptance for the joint target $\pi(\mathbf{x}, \mathbf{v})$. The proposal is deterministic given $\mathbf{v}$, reversible and volume preserving, so its densities cancel in the ratio. Only the integration error remains, and it corrects it exactly.
 
 The step size $\epsilon$ controls the integration error, hence the acceptance rate. The number of steps $L$ controls how far the proposal travels. Too large an $\epsilon$ makes $H$ blow up and every proposal is rejected. With $L = 1$, HMC is the Metropolis-adjusted Langevin algorithm, whose proposal takes one noisy gradient step.
 
@@ -522,6 +522,8 @@ Traces of $x\_1$ and $x\_2$ for Metropolis-Hastings and HMC.
 ???
 
 HMC switches between the modes every few iterations, and its trace looks like noise around the two levels: its samples are almost independent. The trace of Metropolis-Hastings keeps the slow switches of the previous traces.
+
+This is the multimodality announced with label switching in the mixture models of Lecture 4. A chain that switches rarely between modes reports their relative weights badly, and a mixture posterior has $K!$ equivalent modes, one per labelling of the components: averaging the draws of a component mean across modes is meaningless.
 
 ---
 
@@ -798,7 +800,7 @@ class: middle
 For a scalar parameter $\theta$, repeat for $s = 1, \ldots, S$:
 1. Draw $\theta^\*\_s \sim p(\theta)$ and $\mathcal{D}\_s \sim p(\mathcal{D} \mid \theta^\*\_s)$.
 2. Draw $L$ samples $\theta\_1, \ldots, \theta\_L$ with the sampler targeting $p(\theta \mid \mathcal{D}\_s)$.
-3. Compute the rank $r\_s = \sum\_{l=1}^L 1[\theta\_l < \theta^\*\_s] \in \\{0, \ldots, L\\}$, where $1[\cdot]$ is 1 if the condition holds and 0 otherwise.
+3. Compute the rank $r\_s = \sum\_{l=1}^L \mathbb{1}[\theta\_l < \theta^\*\_s] \in \\{0, \ldots, L\\}$, where $\mathbb{1}[\cdot]$ is 1 if the condition holds and 0 otherwise.
 
 .italic[Proposition.] If the sampler draws independent samples from the exact posterior, the ranks $r\_s$ are uniformly distributed over $\\{0, \ldots, L\\}$.
 
