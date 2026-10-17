@@ -564,6 +564,7 @@ can therefore be used as the target, without the normalizer $p(\mathbf{x}\_\text
 class: middle
 
 .italic[Example 3.] Bayesian linear regression. Consider a data set $\mathcal{D} = \\{(x\_i, y\_i)\\}\_{i=1}^N$ of $N$ pairs of an input $x\_i \in \mathbb{R}$ and a target $y\_i \in \mathbb{R}$.
+
 .center.width-70[![](figures/lec6/example1-data.png)]
 
 ---
