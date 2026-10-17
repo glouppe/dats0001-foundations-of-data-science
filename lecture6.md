@@ -39,6 +39,8 @@ Use cases:
 - Computing expectations $\mathbb{E}\_{p(x)}[f(x)]$ or integrals $\int f(x) p(x) dx$.
 - Computing posterior distributions $p(\mathbf{z} \mid \mathbf{x})$ in Bayesian inference.
 
+Markov chain Monte Carlo (MCMC) builds a Markov chain whose states are eventually distributed as $p(x)$.
+
 ---
 
 class: middle 
@@ -92,7 +94,7 @@ A stationary distribution $\pi$ is a distribution that remains unchanged when pa
 Formally, $\pi(x)$ is stationary for the transition model $p(x' \mid x)$ if
 $$\pi(x') = \int \pi(x) p(x' \mid x) dx.$$
 
-Therefore, if $x\_t \sim \pi(x)$, then $x\_{t+1} \sim \pi(x)$.
+Therefore, if $x\_t \sim \pi(x)$, then $x\_{t+1} \sim \pi(x)$. MCMC builds chains whose stationary distribution is the target.
 
 ---
 
@@ -235,7 +237,7 @@ A mixture is sampled by first picking a component, then drawing from it. Picking
 
 class: middle
 
-At each step, a chain restarts from $\nu = \mathcal{N}(0, 1)$ with probability $\delta = 0.05$, and otherwise takes a Gaussian random-walk step. Two copies of it, started at $-10$ and $10$, use the same coin flips and the same random draws.
+The chain with transition model $p(x' \mid x) = \delta \nu(x') + (1 - \delta) \mathcal{N}(x' \mid x, 1)$ is the split with $m = 1$: at each step, it restarts from $\nu = \mathcal{N}(0, 1)$ with probability $\delta = 0.05$, and otherwise takes a random-walk step. Two copies of it, started at $-10$ and $10$, use the same coin flips and the same random draws.
 
 .center.width-80[![](figures/lec6/doeblin.png)]
 
@@ -254,6 +256,8 @@ The probability that no restart has happened by step $t$ is $(1 - \delta)^{t - 1
 ---
 
 class: middle
+
+The coupling suggests that the distance to $\pi$ shrinks with the probability $(1 - \delta)^{t-1}$ of no restart.
 
 .italic[Theorem.] Under the Doeblin condition, there exists a unique stationary distribution $\pi$, and for any initial distribution $p(x\_1)$,
 $$\\| p(x\_{t}) - \pi \\|\_\text{TV} \leq (1 - \delta)^{\lfloor (t-1)/m \rfloor},$$
@@ -297,6 +301,8 @@ The chain forgets its initial state at a geometric rate, $(1 - \delta)^{\lfloor 
 ---
 
 class: middle
+
+The first states of a chain still depend on $x\_1$. They are discarded as a .bold[warm-up].
 
 Two questions remain: how to build a chain whose stationary distribution is a given target, and how long to run it when $m$ and $\delta$ are unknown.
 
@@ -424,7 +430,7 @@ $$\begin{aligned}
 &= \tilde{\pi}(x') q(x \mid x') \min\\left(\frac{\tilde{\pi}(x) q(x' \mid x)}{\tilde{\pi}(x') q(x \mid x')}, 1\right) \\\\
 &= \tilde{\pi}(x') p(x \mid x').
 \end{aligned}$$
-Since $\pi(x) = \frac{\tilde{\pi}(x)}{Z}$ for some normalization constant $Z$, the detailed balance condition also holds for $\pi(x)$. Hence, $\pi(x)$ is a stationary distribution of the Markov chain.
+Since $\pi(x) = \frac{\tilde{\pi}(x)}{Z}$ for some normalization constant $Z$, the detailed balance condition also holds for $\pi(x)$. By the proposition on detailed balance, $\pi(x)$ is a stationary distribution of the Markov chain.
 
 For $x' = x$, detailed balance holds trivially.
 
@@ -453,7 +459,7 @@ class: middle
 
 ## Hamiltonian Monte Carlo
 
-Random-walk proposals explore the target by small, undirected steps. .bold[Hamiltonian Monte Carlo] (HMC) proposes distant states by following the gradient of $\log \tilde{\pi}$.
+The traces show that random-walk proposals explore the target by small, undirected steps. .bold[Hamiltonian Monte Carlo] (HMC) proposes distant states by following the gradient of $\log \tilde{\pi}$.
 
 The state $\mathbf{x} \in \mathbb{R}^d$ is augmented with a momentum $\mathbf{v} \in \mathbb{R}^d$, and the chain targets the joint distribution
 $$\pi(\mathbf{x}, \mathbf{v}) \propto \tilde{\pi}(\mathbf{x}) \mathcal{N}(\mathbf{v} \mid \mathbf{0}, \mathbf{I}) \propto \exp(-H(\mathbf{x}, \mathbf{v}))$$
@@ -498,6 +504,8 @@ The HMC algorithm proceeds as follows:
 3. Accept $\mathbf{x}\_{t+1} = \mathbf{x}'$ with probability
 $$\alpha = \min\left(1, \exp(H(\mathbf{x}\_t, \mathbf{v}) - H(\mathbf{x}', \mathbf{v}'))\right).$$
 Otherwise, set $\mathbf{x}\_{t+1} = \mathbf{x}\_t$.
+
+Step 3 is the Metropolis-Hastings acceptance for the target $\pi(\mathbf{x}, \mathbf{v})$, with a proposal whose densities cancel in the ratio.
 
 ???
 
@@ -585,7 +593,7 @@ MCMC methods, such as Metropolis-Hastings, generate samples from the posterior $
 
 MCMC methods only require an unnormalized density. The .bold[joint density]
 $$p(\mathbf{x}\_\text{obs}, \mathbf{z}, \theta) = p(\mathbf{x}\_\text{obs} \mid \mathbf{z}, \theta) p(\mathbf{z}, \theta)$$
-can therefore be used as the target, without the normalizer $p(\mathbf{x}\_\text{obs})$.
+can therefore be used as the unnormalized target $\tilde{\pi}$ of Metropolis-Hastings, without the normalizer $p(\mathbf{x}\_\text{obs})$.
 
 ---
 
@@ -649,7 +657,7 @@ class: middle
 
 ## Diagnostics for MCMC
 
-MCMC algorithms produce only approximate samples from the target distribution. It is important to assess the quality of these samples using diagnostics in terms of .bold[autocorrelation], .bold[mixing] and .bold[convergence].
+The limit theorem guarantees that a chain converges to the target, but not how fast, since $m$ and $\delta$ are unknown. Diagnostics check the chains themselves in terms of .bold[autocorrelation], .bold[mixing] and .bold[convergence].
 
 ---
 
@@ -708,7 +716,7 @@ class: middle
 
 ## Effective sample size
 
-The autocorrelation at lag $k$ of a quantity $f(x)$ along the chain is
+By the ergodic theorem, the average of $f(x\_t)$ along the chain converges to $\mathbb{E}\_\pi[f(x)]$. Its precision depends on the autocorrelation at lag $k$,
 $$\rho\_k = \frac{\text{Cov}(f(x\_t), f(x\_{t+k}))}{\text{Var}(f(x\_t))}.$$
 
 The integrated autocorrelation time $\tau\_\text{int} = 1 + 2\sum\_{k=1}^{\infty} \rho\_k$ sets the variance of the average of $T$ samples:
@@ -817,7 +825,7 @@ class: middle
 
 ## Simulation-based calibration
 
-For a scalar parameter $\theta$, repeat for $s = 1, \ldots, S$:
+Simulation-based calibration tests whether a sampler is calibrated. For a scalar parameter $\theta$, repeat for $s = 1, \ldots, S$:
 1. Draw $\theta^\*\_s \sim p(\theta)$ and $\mathcal{D}\_s \sim p(\mathcal{D} \mid \theta^\*\_s)$.
 2. Draw $L$ samples $\theta\_1, \ldots, \theta\_L$ with the sampler targeting $p(\theta \mid \mathcal{D}\_s)$.
 3. Compute the rank $r\_s = \sum\_{l=1}^L \mathbb{1}[\theta\_l < \theta^\*\_s] \in \\{0, \ldots, L\\}$, where $\mathbb{1}[\cdot]$ is 1 if the condition holds and 0 otherwise.
