@@ -509,7 +509,7 @@ class: middle
 
 .center[
 
-Traces of $x\_1$ and $x\_2$ for Metropolis-Hastings and HMC, over the same number of iterations.
+Traces of $x\_1$ and $x\_2$ for Metropolis-Hastings and HMC.
 
 ]
 
