@@ -170,15 +170,48 @@ A Markov chain satisfies the .bold[Doeblin condition] if there exist $m \geq 1$,
 $$p(x\_{t+m} \in A \mid x\_t = x) \geq \delta \nu(A)$$
 for all states $x$ and sets $A$.
 
-The $m$-step transition model then splits into
-$$p(x\_{t+m} \mid x\_t) = \delta \nu(x\_{t+m}) + (1 - \delta) \bar{p}(x\_{t+m} \mid x\_t),$$
-where $\bar{p}$ is another transition model. Every $m$ steps, the chain restarts from $\nu$ with probability $\delta$, whatever its current state.
+Wherever the chain is, the distribution of its state $m$ steps later contains a .bold[common part] $\delta \nu$. A fraction $\delta$ of the probability goes to the same places, whatever the current state.
 
 ???
 
-The remainder $\bar{p} = (p - \delta \nu) / (1 - \delta)$ is non-negative by the condition and integrates to one, so it is a transition model. The split can be read as a coin flip every $m$ steps: with probability $\delta$, draw the next state from $\nu$; otherwise, move with $\bar{p}$. After a restart, the state no longer depends on $x\_1$.
+The condition says that the starting state never fully controls where the chain goes $m$ steps later. Two chains started anywhere have a chance of at least $\delta$ to land on the same distribution $\nu$.
 
 A finite chain that is irreducible and aperiodic satisfies the condition: some power $P^m$ of its transition matrix has only positive entries, and $\delta = \sum\_y \min\_x P^m(x, y)$. So does an independence sampler whose ratio $\pi / q$ is bounded. Random-walk Metropolis-Hastings on an unbounded space does not: from far away, the chain needs more steps to come back. It still converges at a geometric rate, but the rate depends on the starting point, and the proof is beyond scope.
+
+---
+
+class: middle
+
+.center.width-80[![](figures/lec6/doeblin-overlap.png)]
+
+.center[
+
+$m$-step transition densities of a Gaussian random walk truncated to $[-3, 3]$, from three starting states. The shaded area lies under all of them: it is the common part $\delta \nu$, and $\delta$ is its area.
+
+]
+
+???
+
+The common part is the pointwise minimum of the densities over all starting states; $\delta \nu$ can always be taken to be this minimum. After one step, the densities from $-3$ and $3$ barely overlap, and $\delta = 0.0054$. After four steps, they share a common part of area $\delta = 0.31$. A larger $m$ gives the chain time to spread out from its starting state, which is why the condition allows $m > 1$.
+
+---
+
+class: middle
+
+## Splitting the transition model
+
+Remove the common part from the $m$-step transition model and rescale what remains:
+$$\bar{p}(x\_{t+m} \mid x\_t) = \frac{p(x\_{t+m} \mid x\_t) - \delta \nu(x\_{t+m})}{1 - \delta}.$$
+By the Doeblin condition, $\bar{p}$ is non-negative. It integrates to $\frac{1 - \delta}{1 - \delta} = 1$, since $p$ and $\nu$ both integrate to 1. So $\bar{p}$ is a transition model, and
+$$p(x\_{t+m} \mid x\_t) = \delta \nu(x\_{t+m}) + (1 - \delta) \bar{p}(x\_{t+m} \mid x\_t).$$
+
+The $m$-step transition is a mixture. Every $m$ steps, the chain draws its next state from $\nu$ with probability $\delta$, whatever its current state, and moves with $\bar{p}$ otherwise.
+
+???
+
+In the figure, each density is the shaded common part plus a remainder above it; $\bar{p}$ is that remainder, rescaled to integrate to one.
+
+A mixture is sampled by first picking a component, then drawing from it. Picking $\nu$ is a .italic[restart]: the new state does not depend on the current one, so the chain forgets where it was.
 
 ---
 

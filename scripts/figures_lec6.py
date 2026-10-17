@@ -47,6 +47,39 @@ def save(fig, name):
 
 # Doeblin condition ---------------------------------------------------------------------
 
+def doeblin_overlap():
+    """m-step transition densities of a Gaussian random walk truncated to [-3, 3], from three
+    starting states, for m = 1 and m = 4. Their pointwise minimum over all starting states is
+    delta * nu, shaded; delta is its area."""
+    g = np.linspace(-3, 3, 601)
+    dx = g[1] - g[0]
+    K = np.exp(-.5 * (g[None, :] - g[:, None]) ** 2)
+    K /= K.sum(1, keepdims=True) * dx                # rows are densities on the grid
+    starts = [-3.0, 0.0, 3.0]
+    colors = [BLUE, GREY, ORANGE]
+    fig, axes = plt.subplots(1, 2, figsize=(5.8, 2.5), dpi=200, sharey=True)
+    Pm = np.eye(len(g)) / dx
+    for m, ax in zip(range(1, 5), [axes[0], None, None, axes[1]]):
+        Pm = Pm @ K * dx
+        if ax is None:
+            continue
+        common = Pm.min(0)
+        delta = common.sum() * dx
+        ax.fill_between(g, common, color=LIGHT, lw=0, label=r"common part $\delta \nu$")
+        for x0, c in zip(starts, colors):
+            ax.plot(g, Pm[np.argmin(np.abs(g - x0))], color=c, lw=1.4, label="$x_t = %g$" % x0)
+        ax.set_title(r"$m = %d$, $\delta = %.2g$" % (m, delta), fontsize=10, pad=3)
+        ax.set_xlabel("$x_{t+m}$")
+        ax.set_xlim(-3, 3)
+        ax.set_yticks([])
+        tidy(ax)
+        ax.spines["left"].set_visible(False)
+        print("  m = %d: delta = %.3f" % (m, delta))
+    axes[1].legend(frameon=False, fontsize=9, loc="upper right", bbox_to_anchor=(1.08, 1.05))
+    fig.tight_layout()
+    save(fig, "doeblin-overlap.png")
+
+
 def doeblin():
     """Two copies of a chain that restarts from nu = N(0, 1) with probability delta at each step
     and otherwise takes a Gaussian random-walk step, started at -10 and 10 and driven by the
@@ -500,6 +533,7 @@ def calibration():
 if __name__ == "__main__":
     graphical_models()
     random_walks()
+    doeblin_overlap()
     doeblin()
     regression()
     diagnostics()
