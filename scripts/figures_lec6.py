@@ -1,7 +1,7 @@
 """Figures of lecture 6: the two graphical models, in the style and at the scale of
 lectures 4 and 5, and the plots of the lecture, redrawn from the data and seeds of
 nb06a (random walks) and nb06b (Bayesian linear regression with Metropolis-Hastings).
-The three trace figures of the diagnostics and the HMC figure are simulated here, on
+The three trace figures of the diagnostics and the animations of MH and HMC are simulated here, on
 known targets; simulation-based calibration is run on the regression model of nb06b.
 
 Usage: uv run python scripts/figures_lec6.py
@@ -394,147 +394,159 @@ def diagnostics():
 
 # Metropolis-Hastings at work ---------------------------------------------------------------
 
-def mh_animation():
-    """Animated corner plot of random-walk MH on a mixture of two 2-D Gaussians: one iteration per
-    frame at first, with the proposal accepted (green) or rejected (red), then faster up to 5000
-    iterations. The path of the chain is drawn in full while short, then its last 100 moves; the
-    marginal histograms fill up against the exact marginals."""
-    from PIL import Image
-    from scipy.stats import multivariate_normal as mvn
-    w = np.array([.4, .6])
-    mu = np.array([[-1.5, -1.0], [1.5, 1.2]])
-    cov = np.array([[[.5, .3], [.3, .5]], [[.6, -.2], [-.2, .4]]])
-    comps = [mvn(mu[k], cov[k]) for k in range(2)]
-    log_target = lambda x: np.logaddexp(np.log(w[0]) + comps[0].logpdf(x), np.log(w[1]) + comps[1].logpdf(x))
+# Two-mode target, shared by the Metropolis-Hastings and HMC animations
+MIX_W = np.array([.4, .6])
+MIX_MU = np.array([[-1.5, -1.0], [1.5, 1.2]])
+MIX_COV = np.array([[[.5, .3], [.3, .5]], [[.6, -.2], [-.2, .4]]])
+MIX_PREC = np.linalg.inv(MIX_COV)
+MIX_START = np.array([0.0, 3.0])
 
-    rng = np.random.default_rng(1)
-    n, step = 5000, 1.0
-    x = np.array([0.0, 3.0])
+
+def mix_comp_logs(x):
+    """log w_k + log N(x | mu_k, cov_k) for both components, x of shape (..., 2)."""
+    d = x[..., None, :] - MIX_MU
+    return (np.log(MIX_W) - .5 * np.einsum("...ki,kij,...kj->...k", d, MIX_PREC, d)
+            - .5 * np.log(np.linalg.det(MIX_COV)) - np.log(2 * np.pi))
+
+
+def mix_log_target(x):
+    return np.logaddexp.reduce(mix_comp_logs(x), axis=-1)
+
+
+def mix_grad_log_target(x):
+    logs = mix_comp_logs(x)
+    resp = np.exp(logs - np.logaddexp.reduce(logs))
+    return -np.einsum("k,kij,kj->i", resp, MIX_PREC, x - MIX_MU)
+
+
+def run_mh(n=5000, step=1.0, seed=1):
+    rng = np.random.default_rng(seed)
+    x = MIX_START
     chain, props, accepted = [x], [], []
     for _ in range(n):
         prop = x + step * rng.standard_normal(2)
-        acc = np.log(rng.random()) < log_target(prop) - log_target(x)
+        acc = np.log(rng.random()) < mix_log_target(prop) - mix_log_target(x)
         props.append(prop)
         accepted.append(acc)
         if acc:
             x = prop
         chain.append(x)
-    chain, props, accepted = np.array(chain), np.array(props), np.array(accepted)
-    print("  MH animation: acceptance rate %.2f" % accepted.mean())
+    return dict(name="Metropolis-Hastings", chain=np.array(chain), props=np.array(props),
+                accepted=np.array(accepted), paths=None)
 
+
+def run_hmc(n=5000, eps=.2, L=15, seed=1):
+    rng = np.random.default_rng(seed)
+    x = MIX_START
+    chain, props, accepted, paths = [x], [], [], []
+    for _ in range(n):
+        v = rng.standard_normal(2)
+        xs, vs = x.copy(), v + eps / 2 * mix_grad_log_target(x)
+        path = [xs]
+        for i in range(L):
+            xs = xs + eps * vs
+            vs = vs + (eps if i < L - 1 else eps / 2) * mix_grad_log_target(xs)
+            path.append(xs)
+        h0 = -mix_log_target(x) + .5 * v @ v
+        h1 = -mix_log_target(xs) + .5 * vs @ vs
+        acc = np.log(rng.random()) < h0 - h1
+        props.append(xs)
+        accepted.append(acc)
+        paths.append(np.array(path))
+        if acc:
+            x = xs
+        chain.append(x)
+    return dict(name="Hamiltonian Monte Carlo", chain=np.array(chain), props=np.array(props),
+                accepted=np.array(accepted), paths=paths)
+
+
+def draw_corner(ax, ax1, ax2, run, t, step_by_step):
+    """Corner plot of the first t iterations of a run: contours of the target, samples, path of
+    the chain, and, when step_by_step, the last proposal accepted (green) or rejected (red)."""
     lim = (-4, 4)
     g = np.linspace(*lim, 200)
     G = np.stack(np.meshgrid(g, g), -1)
-    Z = np.exp(log_target(G))
-    marg = [sum(w[k] * norm.pdf(g, mu[k, d], np.sqrt(cov[k, d, d])) for k in range(2)) for d in range(2)]
-    frames_t = list(range(1, 41)) + sorted(set(np.geomspace(41, n, 50).astype(int)))
-    durations = [500] * 40 + [120] * (len(frames_t) - 41) + [3000]
+    ax.contour(g, g, np.exp(mix_log_target(G)), levels=5, colors=LIGHT, linewidths=.8)
+    seen = run["chain"][:t + 1]
+    ax.plot(seen[:, 0], seen[:, 1], ".", color=BLUE, ms=3 if t < 300 else 1.5, alpha=.5 if t < 300 else .25)
+    path = seen if t <= 300 else seen[-100:]
+    ax.plot(path[:, 0], path[:, 1], color=BLUE, lw=.8 if step_by_step else .5, alpha=.9 if step_by_step else .6)
+    ax.plot(*seen[-1], "o", color=BLUE, ms=6)
+    if step_by_step:
+        cur, prop, acc = run["chain"][t - 1], run["props"][t - 1], run["accepted"][t - 1]
+        c = GREEN if acc else RED
+        if run["paths"] is None:
+            ax.plot([cur[0], prop[0]], [cur[1], prop[1]], color=c, lw=1, ls=(0, (3, 2)))
+        else:
+            traj = run["paths"][t - 1]
+            ax.plot(traj[:, 0], traj[:, 1], color=ORANGE, lw=2, zorder=5)
+        ax.plot(*prop, "o" if acc else "x", color=c, ms=6, mew=1.5, mfc="none" if acc else None, zorder=6)
+    ax.set_xlim(*lim)
+    ax.set_ylim(*lim)
+    ax.set_xlabel("$x_1$")
+    ax.set_ylabel("$x_2$")
+    tidy(ax)
+    bins = np.linspace(*lim, 41)
+    for d, a in ((0, ax1), (1, ax2)):
+        marg = sum(MIX_W[k] * norm.pdf(g, MIX_MU[k, d], np.sqrt(MIX_COV[k, d, d])) for k in range(2))
+        if d == 0:
+            a.hist(seen[:, 0], bins=bins, density=True, color=LIGHT)
+            a.plot(g, marg, color=GREY, lw=1.2)
+            a.set_ylim(0, .8)
+        else:
+            a.hist(seen[:, 1], bins=bins, density=True, color=LIGHT, orientation="horizontal")
+            a.plot(marg, g, color=GREY, lw=1.2)
+            a.set_xlim(0, .8)
+        a.axis("off")
 
-    fig = plt.figure(figsize=(4.6, 4.6), dpi=100)
-    gs = fig.add_gridspec(2, 2, width_ratios=[3, 1], height_ratios=[1, 3], wspace=.05, hspace=.05)
-    ax = fig.add_subplot(gs[1, 0])
-    ax1 = fig.add_subplot(gs[0, 0], sharex=ax)
-    ax2 = fig.add_subplot(gs[1, 1], sharey=ax)
+
+def animate(runs, path, n=5000, slow=40):
+    """GIF of corner plots of several runs side by side, iteration by iteration for the first
+    `slow` iterations, then faster up to n."""
+    from PIL import Image
+    frames_t = list(range(1, slow + 1)) + sorted(set(np.geomspace(slow + 1, n, 50).astype(int)))
+    durations = [500] * slow + [120] * (len(frames_t) - slow - 1) + [3000]
+    fig = plt.figure(figsize=(4.6 * len(runs), 4.6), dpi=100)
+    outer = fig.add_gridspec(1, len(runs), wspace=.25)
+    panels = []
+    for k in range(len(runs)):
+        gs = outer[k].subgridspec(2, 2, width_ratios=[3, 1], height_ratios=[1, 3], wspace=.05, hspace=.05)
+        ax = fig.add_subplot(gs[1, 0])
+        panels.append((ax, fig.add_subplot(gs[0, 0], sharex=ax), fig.add_subplot(gs[1, 1], sharey=ax)))
     images = []
     for t in frames_t:
-        for a in (ax, ax1, ax2):
-            a.cla()
-        ax.contour(g, g, Z, levels=5, colors=LIGHT, linewidths=.8)
-        seen = chain[:t + 1]
-        ax.plot(seen[:, 0], seen[:, 1], ".", color=BLUE, ms=3 if t < 300 else 1.5, alpha=.5 if t < 300 else .25)
-        path = seen if t <= 300 else seen[-100:]
-        ax.plot(path[:, 0], path[:, 1], color=BLUE, lw=.8 if t <= 40 else .5, alpha=.9 if t <= 40 else .6)
-        ax.plot(*seen[-1], "o", color=BLUE, ms=6)
-        if t <= 40:
-            cur, prop, acc = chain[t - 1], props[t - 1], accepted[t - 1]
-            c = GREEN if acc else RED
-            ax.plot([cur[0], prop[0]], [cur[1], prop[1]], color=c, lw=1, ls=(0, (3, 2)))
-            ax.plot(*prop, "o" if acc else "x", color=c, ms=6, mew=1.5, mfc="none" if acc else None)
-        ax.set_xlim(*lim)
-        ax.set_ylim(*lim)
-        ax.set_xlabel("$x_1$")
-        ax.set_ylabel("$x_2$")
-        tidy(ax)
-        bins = np.linspace(*lim, 41)
-        ax1.hist(seen[:, 0], bins=bins, density=True, color=LIGHT)
-        ax1.plot(g, marg[0], color=GREY, lw=1.2)
-        ax2.hist(seen[:, 1], bins=bins, density=True, color=LIGHT, orientation="horizontal")
-        ax2.plot(marg[1], g, color=GREY, lw=1.2)
-        ax1.set_ylim(0, .8)
-        ax2.set_xlim(0, .8)
-        for a in (ax1, ax2):
-            a.axis("off")
-        rate = accepted[:t].mean()
-        fig.text(.73, .86, "$t = %d$\nacceptance\nrate %.0f%%" % (t, 100 * rate), ha="left", va="top",
-                 fontsize=11, color=GREY)
+        for run, (ax, ax1, ax2) in zip(runs, panels):
+            for a in (ax, ax1, ax2):
+                a.cla()
+            draw_corner(ax, ax1, ax2, run, t, t <= slow)
+            label = "$t = %d$\nacceptance\nrate %.0f%%" % (t, 100 * run["accepted"][:t].mean())
+            if len(runs) > 1:
+                label = run["name"].replace(" ", "\n", 1) + "\n\n" + label
+            ax2.text(.05, 1.33, label, transform=ax2.transAxes, ha="left", va="top", fontsize=10, color=GREY)
         fig.canvas.draw()
-        images.append(Image.frombuffer("RGBA", fig.canvas.get_width_height(),
-                                       fig.canvas.buffer_rgba()).convert("RGB")
-                      .quantize(colors=64, method=Image.Quantize.MEDIANCUT))
-        fig.texts.clear()
+        images.append(Image.frombuffer("RGBA", fig.canvas.get_width_height(), fig.canvas.buffer_rgba())
+                      .convert("RGB").quantize(colors=64, method=Image.Quantize.MEDIANCUT))
     plt.close(fig)
-    path = "figures/lec6/mh.gif"
     images[0].save(path, save_all=True, append_images=images[1:], duration=durations, loop=0, optimize=True)
     print("wrote", path, "(%d frames)" % len(images))
 
 
-# Hamiltonian Monte Carlo ----------------------------------------------------------------
+def mh_animation():
+    """Random-walk MH on the two-mode target, as an animated corner plot."""
+    mh = run_mh()
+    print("  MH: acceptance rate %.2f" % mh["accepted"].mean())
+    animate([mh], "figures/lec6/mh.gif")
 
-def hmc():
-    """HMC and random-walk MH on a correlated Gaussian, for the same number of evaluations of
-    the target: 30 HMC iterations of 20 leapfrog steps, 600 MH iterations."""
-    rng = np.random.default_rng(1)
-    cov = np.array([[1, .95], [.95, 1]])
-    prec = np.linalg.inv(cov)
-    log_p = lambda x: -.5 * x @ prec @ x
-    grad = lambda x: -prec @ x
-    x0, n = np.array([-2.0, -2.5]), 30
 
-    eps, L = .15, 20
-    rw, x = [x0], x0
-    for _ in range(n * L):
-        prop = x + .3 * rng.standard_normal(2)
-        if np.log(rng.random()) < log_p(prop) - log_p(x):
-            x = prop
-        rw.append(x)
-    rw = np.array(rw)
-
-    samples, paths, x = [x0], [], x0
-    for _ in range(n):
-        p = rng.standard_normal(2)
-        xs, ps = x.copy(), p + eps / 2 * grad(x)
-        path = [xs.copy()]
-        for i in range(L):
-            xs = xs + eps * ps
-            ps = ps + (eps if i < L - 1 else eps / 2) * grad(xs)
-            path.append(xs.copy())
-        h0 = -log_p(x) + .5 * p @ p
-        h1 = -log_p(xs) + .5 * ps @ ps
-        if np.log(rng.random()) < h0 - h1:
-            x = xs
-        paths.append(np.array(path))
-        samples.append(x)
-    samples = np.array(samples)
-
-    g = np.linspace(-3.2, 3.2, 200)
-    G = np.stack(np.meshgrid(g, g), -1)
-    Z = np.exp(-.5 * np.einsum("...i,ij,...j", G, prec, G))
-    fig, axes = plt.subplots(1, 2, figsize=(5.8, 3.0), dpi=200, sharey=True)
-    for ax, title in zip(axes, ["random-walk Metropolis-Hastings", "Hamiltonian Monte Carlo"]):
-        ax.contour(g, g, Z, levels=np.exp(-.5 * np.array([4, 1, .25])), colors=LIGHT, linewidths=.8)
-        ax.set_title(title, fontsize=10, pad=3)
-        ax.set_aspect("equal")
-        ax.set_xlim(-3.2, 3.2)
-        ax.set_ylim(-3.2, 3.2)
-        ax.set_xlabel("$x_1$")
-        tidy(ax)
-    axes[0].set_ylabel("$x_2$")
-    axes[0].plot(rw[:, 0], rw[:, 1], color=BLUE, lw=.5, marker="o", ms=1.5)
-    for path in paths:
-        axes[1].plot(path[:, 0], path[:, 1], color=ORANGE, lw=.5, alpha=.5)
-    axes[1].plot(samples[:, 0], samples[:, 1], "o", color=BLUE, ms=2.5)
-    fig.tight_layout()
-    save(fig, "hmc.png")
+def mh_hmc_animation():
+    """The same MH chain next to HMC (eps = 0.2, L = 15) on the same target, from the same start,
+    with the leapfrog trajectories of the first iterations in orange."""
+    mh, hmc = run_mh(), run_hmc()
+    for r in (mh, hmc):
+        right = (r["chain"][1:].sum(1) > 0).mean()
+        print("  %s: acceptance rate %.2f, fraction in the mode of weight 0.6: %.2f"
+              % (r["name"], r["accepted"].mean(), right))
+    animate([mh, hmc], "figures/lec6/mh-hmc.gif")
 
 
 # Simulation-based calibration ------------------------------------------------------------
@@ -624,5 +636,5 @@ if __name__ == "__main__":
     mh_animation()
     regression()
     diagnostics()
-    hmc()
+    mh_hmc_animation()
     calibration()

@@ -467,19 +467,21 @@ The step size $\epsilon$ controls the integration error, hence the acceptance ra
 
 class: middle
 
-.center.width-80[![](figures/lec6/hmc.png)]
+.center.width-100[![](figures/lec6/mh-hmc.gif)]
 
 .center[
 
-Random-walk Metropolis-Hastings (600 iterations) and HMC (30 iterations of 20 leapfrog steps, in orange) on a correlated Gaussian, for the same number of evaluations of the target.
+Metropolis-Hastings and HMC on the same target, from the same starting point. <br>Each HMC iteration follows a leapfrog trajectory (orange).
 
 ]
 
 ???
 
-Each HMC iteration costs $L$ gradient evaluations, so the fair comparison is at equal cost. The random walk is still in the lower half of the target; HMC draws almost independent samples along the whole ellipse. The advantage grows with the dimension.
+HMC runs $L = 15$ leapfrog steps of size $\epsilon = 0.2$. The two chains run for the same number of iterations, but an HMC iteration costs $L = 15$ gradient evaluations where Metropolis-Hastings evaluates the target once.
 
-The gradients come from automatic differentiation: `nb06b` computes them with JAX.
+Metropolis-Hastings accepts 40% of its proposals and moves by small steps; its samples are strongly autocorrelated. HMC accepts 99% of its proposals, travels across a mode in one iteration, and crosses between the modes far more often. Both chains end up with about 60% of their samples in the larger mode, as the target says.
+
+The gradients come from automatic differentiation in general: `nb06b` computes them with JAX.
 
 ---
 
