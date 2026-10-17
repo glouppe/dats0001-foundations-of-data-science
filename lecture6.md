@@ -507,7 +507,9 @@ class: middle
 
 In Bayesian inference, we are often interested in computing the posterior distribution $$p(\mathbf{z}, \theta \mid \mathbf{x}\_\text{obs}) = \frac{p(\mathbf{x}\_\text{obs} \mid \mathbf{z}, \theta) p(\mathbf{z}, \theta)}{p(\mathbf{x}\_\text{obs})}$$ of latent variables $\mathbf{z}$ and parameters $\theta$ given observed data $\mathbf{x}\_\text{obs}$.
 
-.alert[In general, the normalizer $p(\mathbf{x}\_\text{obs}) = \int p(\mathbf{x}\_\text{obs} \mid \mathbf{z}, \theta) p(\mathbf{z}, \theta) d\mathbf{z} d\theta$ has no closed form.]
+In general, the normalizer
+$$p(\mathbf{x}\_\text{obs}) = \int p(\mathbf{x}\_\text{obs} \mid \mathbf{z}, \theta) p(\mathbf{z}, \theta) d\mathbf{z} d\theta$$
+has no closed form.
 
 ???
 
@@ -521,7 +523,9 @@ class: middle
 
 MCMC methods, such as Metropolis-Hastings, generate samples from the posterior $p(\mathbf{z}, \theta \mid \mathbf{x}\_\text{obs})$ even when the normalizer $p(\mathbf{x}\_\text{obs})$ has no closed form.
 
-Since MCMC methods only require an unnormalized density $\tilde{p}$, .bold[the joint density $p(\mathbf{x}\_\text{obs}, \mathbf{z}, \theta) = p(\mathbf{x}\_\text{obs} \mid \mathbf{z}, \theta) p(\mathbf{z}, \theta)$ can be used as the target], without the normalizer $p(\mathbf{x}\_\text{obs})$.
+MCMC methods only require an unnormalized density. The .bold[joint density]
+$$p(\mathbf{x}\_\text{obs}, \mathbf{z}, \theta) = p(\mathbf{x}\_\text{obs} \mid \mathbf{z}, \theta) p(\mathbf{z}, \theta)$$
+can therefore be used as the target, without the normalizer $p(\mathbf{x}\_\text{obs})$.
 
 ---
 
@@ -552,7 +556,11 @@ We can use Metropolis-Hastings to sample from this posterior distribution using 
 class: middle
 
 .center.width-70[![](figures/lec6/example1-traces.png)]
-.center[Traces of $w\_0$, $w\_1$ and $\log \sigma$ along the Markov chain of Metropolis-Hastings.]
+.center[
+
+Traces of $w\_0$, $w\_1$ and $\log \sigma$ along the Markov chain of Metropolis-Hastings.
+
+]
 
 ---
 
