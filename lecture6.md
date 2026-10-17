@@ -395,23 +395,20 @@ class: middle
 
 ## Proposal distributions
 
-The efficiency of the Metropolis-Hastings algorithm heavily depends on the choice of the proposal distribution $q(x' \mid x)$.
+The efficiency of Metropolis-Hastings depends on the proposal $q(x' \mid x)$.
 
-Common choices include:
-- .bold[Random walk]: $q(x' \mid x) = \mathcal{N}(x' | x, \sigma^2 I)$ for continuous state spaces. 
-  Simple and general, but efficiency depends on tuning $\sigma$ 
-  (optimal acceptance rate: about 44% in one dimension, 23% in high dimension).
-  
-- .bold[Langevin]: $q(x' \mid x) = \mathcal{N}(x' | x + \frac{\epsilon^2}{2} \nabla \log \tilde{\pi}(x), \epsilon^2 I)$, 
-  which uses gradient information to guide proposals toward high-probability regions. 
-  Requires differentiable $\tilde{\pi}(x)$.
+The .bold[random walk] proposal moves by a Gaussian step of size $\sigma$:
+$$q(x' \mid x) = \mathcal{N}(x' \mid x, \sigma^2 I).$$
 
-- .bold[Independence]: $q(x' \mid x) = q(x')$, independent of current state.
-  Can be efficient if $q(x')$ closely approximates $\pi(x)$.
+The .bold[Langevin] proposal adds a step along the gradient of $\log \tilde{\pi}$:
+$$q(x' \mid x) = \mathcal{N}(x' \mid x + \frac{\epsilon^2}{2} \nabla \log \tilde{\pi}(x), \epsilon^2 I).$$
+
+The .bold[independence] proposal ignores the current state:
+$$q(x' \mid x) = q(x').$$
 
 ???
 
-The random walk is the most common choice, with $\sigma$ setting the step size. The Langevin proposal adds a step along the gradient of $\log \tilde{\pi}$, like gradient ascent with noise. The independence proposal works when a good approximation of $\pi$ is available, such as a Laplace approximation.
+The random walk is the most common choice. It is simple and general, but its efficiency depends on $\sigma$: the optimal acceptance rate is about 44% in one dimension and 23% in high dimension. The Langevin proposal is gradient ascent with noise. It requires a differentiable $\tilde{\pi}$. The independence proposal works when a good approximation of $\pi$ is available, such as a Laplace approximation.
 
 ---
 
