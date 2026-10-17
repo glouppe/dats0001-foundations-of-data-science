@@ -746,6 +746,30 @@ def calibration():
     fig.tight_layout()
     save(fig, "sbc.png")
 
+    # expected coverage of the central credible intervals, read off the same ranks: theta* lies in
+    # the central interval of level alpha when its rank is within the central fraction alpha of 0..L
+    alphas = np.linspace(0, 1, 101)
+    band = np.array([binom.ppf([.005, .995], S, a) / S for a in alphas])
+    fig, axes = plt.subplots(1, 3, figsize=(5.8, 2.7), dpi=200, sharey=True)
+    for j, ax in enumerate(axes):
+        ax.fill_between(alphas, band[:, 0], band[:, 1], color=GREY, alpha=.2, lw=0)
+        ax.plot([0, 1], [0, 1], color=GREY, lw=.8, ls=(0, (4, 3)))
+        for (ranks, title), color in zip(rows, [BLUE, ORANGE]):
+            u = (ranks[:, j] + .5) / (L + 1)              # position of theta* among the draws, in (0, 1)
+            cover = [(np.abs(u - .5) <= a / 2).mean() for a in alphas]
+            ax.plot(alphas, cover, color=color, lw=1.4, label=title if j == 0 else None)
+        ax.set_xlim(0, 1)
+        ax.set_ylim(0, 1)
+        ax.set_aspect("equal")
+        ax.set_xlabel(r"credible level $\alpha$", fontsize=9)
+        ax.set_title(labels[j], fontsize=10, pad=3)
+        ax.tick_params(labelsize=8)
+        tidy(ax)
+    axes[0].set_ylabel("coverage", fontsize=9)
+    fig.legend(frameon=False, loc="lower center", fontsize=9, ncol=2)
+    fig.tight_layout(rect=(0, .13, 1, 1))
+    save(fig, "coverage.png")
+
 
 if __name__ == "__main__":
     graphical_models()

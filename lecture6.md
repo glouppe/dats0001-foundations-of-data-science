@@ -689,6 +689,18 @@ Rank histograms of simulation-based calibration for the Bayesian linear regressi
 
 ---
 
+class: middle
+
+.center.width-80[![](figures/lec6/coverage.png)]
+
+.center[
+
+Coverage of the central credible intervals of level $\alpha$, read from the same ranks. <br>A calibrated sampler follows the diagonal, $P(\theta^\* \in C\_\alpha(\mathcal{D})) = \alpha$.
+
+]
+
+---
+
 class: middle, center
 
 .center.width-10[![](figures/lec6/laptop.png)]
