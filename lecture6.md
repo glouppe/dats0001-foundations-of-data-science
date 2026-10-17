@@ -198,8 +198,6 @@ The common part is the pointwise minimum of the densities over all starting stat
 
 class: middle
 
-## Splitting the transition model
-
 Remove the common part from the $m$-step transition model and rescale what remains:
 $$\bar{p}(x\_{t+m} \mid x\_t) = \frac{p(x\_{t+m} \mid x\_t) - \delta \nu(x\_{t+m})}{1 - \delta}.$$
 By the Doeblin condition, $\bar{p}$ is non-negative. It integrates to $\frac{1 - \delta}{1 - \delta} = 1$, since $p$ and $\nu$ both integrate to 1. So $\bar{p}$ is a transition model, and
@@ -272,42 +270,7 @@ $$\\| p(x\_t) - \pi \\|\_\text{TV} = \\| p(x\_1) P^{t-1} - \pi P^{t-1} \\|\_\tex
 
 Existence is the Banach fixed-point theorem: the space of distributions with the total variation distance is complete, and a contraction on it has a unique fixed point.
 
----
-
-class: middle
-
-## What the theorem means
-
-The chain .bold[forgets its initial state] at a geometric rate: after $t$ steps, the distance to $\pi$ is at most $(1 - \delta)^{\lfloor (t-1)/m \rfloor} \approx e^{-\delta t / m}$, whatever $x\_1$.
-
-A .bold[warm-up] discards the first states of the chain. After a few multiples of $m / \delta$ steps, the remaining states are distributed as $\pi$, up to a negligible error.
-
-???
-
-Each block of $m$ steps restarts the chain with probability $\delta$, so a restart takes about $m / \delta$ steps on average.
-
-In practice $\delta$ and $m$ are unknown, which is why the length of the warm-up is chosen with diagnostics.
-
----
-
-class: middle
-
-Two states of the chain also become independent as they get far apart. For a bounded $f$, with $\\|f\\|\_\infty = \sup\_x |f(x)|$, and $x\_1 \sim \pi$,
-$$|\text{Cov}(f(x\_s), f(x\_{s+k}))| \leq 2 \\|f\\|\_\infty^2 (1 - \delta)^{\lfloor k/m \rfloor}.$$
-
-The variance of the average then vanishes as
-$$\text{Var}\left[\frac{1}{T} \sum\_{t=1}^T f(x\_t)\right] \approx \frac{\tau\_\text{int}}{T} \text{Var}\_\pi[f(x)] \to 0,$$
-where $\tau\_\text{int} = 1 + 2 \sum\_{k=1}^\infty \rho\_k$ is the .bold[integrated autocorrelation time] and $\rho\_k = \text{Cov}(f(x\_t), f(x\_{t+k})) / \text{Var}\_\pi[f(x)]$ is the .bold[autocorrelation at lag $k$].
-
-The average converges to $\mathbb{E}\_\pi[f(x)]$, as fast as for $T / \tau\_\text{int}$ independent samples.
-
-???
-
-The covariance bound: conditionally on $x\_s = x$, the distribution of $x\_{s+k}$ is $(1-\delta)^{\lfloor k/m \rfloor}$-close to $\pi$ in total variation, so $|\mathbb{E}[f(x\_{s+k}) \mid x\_s] - \mathbb{E}\_\pi[f]| \leq 2 \\|f\\|\_\infty (1-\delta)^{\lfloor k/m \rfloor}$. Under $\pi$, this difference has mean zero, so the covariance is the expectation of its product with $f(x\_s)$, and $|f(x\_s)| \leq \\|f\\|\_\infty$.
-
-Expanding the variance of the average gives $\frac{1}{T} \text{Var}\_\pi[f] (1 + 2 \sum\_{k=1}^{T-1} (1 - k/T) \rho\_k)$. The geometric decay of $\rho\_k$ makes the sum converge to $\tau\_\text{int} - 1$ as $T$ grows. For independent samples, $\tau\_\text{int} = 1$. This is convergence in mean square, hence in probability; the almost sure convergence of the theorem needs more work.
-
-The effective sample size of the diagnostics is $T / \tau\_\text{int}$.
+The chain forgets its initial state at a geometric rate, $(1 - \delta)^{\lfloor (t-1)/m \rfloor} \approx e^{-\delta t / m}$: a restart takes about $m / \delta$ steps on average. This is why the first states of the chain are discarded as a warm-up. In practice $\delta$ and $m$ are unknown, so the length of the warm-up is chosen with diagnostics.
 
 ---
 
@@ -686,15 +649,19 @@ class: middle
 
 ## Effective sample size
 
-The average of $T$ correlated samples has the variance of the average of
-$$\text{ESS} = \frac{T}{\tau\_\text{int}} = \frac{T}{1 + 2\sum\_{k=1}^{\infty} \rho\_k}$$
-independent samples, the .bold[effective sample size]. The autocorrelations $\rho\_k$, hence $\tau\_\text{int}$, are estimated from the chain.
-
-A smaller $\tau\_{\text{int}}$ means better mixing and a larger effective sample size.
+The .bold[autocorrelation at lag $k$] of a quantity $f(x)$ along the chain is
+$$\rho\_k = \frac{\text{Cov}(f(x\_t), f(x\_{t+k}))}{\text{Var}(f(x\_t))}.$$
+The .bold[integrated autocorrelation time] $\tau\_\text{int} = 1 + 2\sum\_{k=1}^{\infty} \rho\_k$ sets the variance of the average of $T$ samples,
+$$\text{Var}\left[\frac{1}{T} \sum\_{t=1}^T f(x\_t)\right] \approx \frac{\tau\_\text{int}}{T} \text{Var}(f(x\_t)).$$
+This is the variance of the average of $\text{ESS} = T / \tau\_\text{int}$ independent samples, the .bold[effective sample size].
 
 ???
 
 $\tau\_{\text{int}}$ is itself estimated from the chain, and the estimate is reliable only for chains much longer than $\tau\_{\text{int}}$. This is why `emcee` refuses to return it for chains shorter than 50 $\tau\_{\text{int}}$: the `AutocorrError` met in `nb01`.
+
+Expanding the variance of the average of a stationary chain gives $\frac{1}{T} \text{Var}(f(x\_t)) (1 + 2 \sum\_{k=1}^{T-1} (1 - k/T) \rho\_k)$, and the sum tends to $\tau\_\text{int} - 1$ as $T$ grows. For independent samples, $\tau\_\text{int} = 1$. Under the Doeblin condition, $\rho\_k$ decays as $(1 - \delta)^{\lfloor k/m \rfloor}$, so $\tau\_\text{int}$ is finite and the average converges to $\mathbb{E}\_\pi[f(x)]$: this is the ergodic theorem, in mean square. A smaller $\tau\_\text{int}$ means better mixing and a larger effective sample size.
+
+In the autocorrelation figure, the two chains of 10000 iterations have $\tau\_\text{int} \approx 506$ and $4.3$, hence effective sample sizes of about 20 and 2300.
 
 ---
 

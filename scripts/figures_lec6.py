@@ -366,8 +366,8 @@ def diagnostics():
     fast = rw_mh(gauss, 0.0, 2.4, n, rng)
     t_slow, t_fast = autocorrelation_time(slow), autocorrelation_time(fast)
     two_traces([slow, fast],
-               [r"proposal std 0.1: high autocorrelation, $\tau_\mathrm{int} \approx %.0f$" % t_slow,
-                r"proposal std 2.4: low autocorrelation, $\tau_\mathrm{int} \approx %.0f$" % t_fast],
+               ["proposal std 0.1: high autocorrelation",
+                "proposal std 2.4: low autocorrelation"],
                "trace-autocorrelation.png", ylim=(-4.5, 4.5))
     print("  tau_int: %.0f and %.1f, ESS %.0f and %.0f" % (t_slow, t_fast, n / t_slow, n / t_fast))
 
