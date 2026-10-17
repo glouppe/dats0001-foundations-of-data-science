@@ -376,7 +376,7 @@ where $r(x) = 1 - \int q(x' \mid x) \alpha(x' \mid x) dx'$ is the probability of
 
 class: middle
 
-To show that $\pi(x)$ is stationary, we verify the detailed balance condition for $x' \neq x$:
+For $x' \neq x$, the chain satisfies detailed balance with respect to $\pi$:
 $$\begin{aligned}
 \tilde{\pi}(x) p(x' \mid x) &= \tilde{\pi}(x) q(x' \mid x) \alpha(x' \mid x) \\\\
 &= \tilde{\pi}(x) q(x' \mid x) \min\\left(\frac{\tilde{\pi}(x') q(x \mid x')}{\tilde{\pi}(x) q(x' \mid x)}, 1\right) \\\\
