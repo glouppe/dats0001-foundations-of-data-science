@@ -237,13 +237,17 @@ A mixture is sampled by first picking a component, then drawing from it. Picking
 
 class: middle
 
-The chain with transition model $p(x' \mid x) = \delta \nu(x') + (1 - \delta) \mathcal{N}(x' \mid x, 1)$ is the split with $m = 1$: at each step, it restarts from $\nu = \mathcal{N}(0, 1)$ with probability $\delta = 0.05$, and otherwise takes a random-walk step. Two copies of it, started at $-10$ and $10$, use the same coin flips and the same random draws.
+.italic[Example.] The chain
+$$p(x' \mid x) = \delta \nu(x') + (1 - \delta) \mathcal{N}(x' \mid x, 1),$$
+with $\nu = \mathcal{N}(0, 1)$ and $\delta = 0.05$, satisfies the Doeblin condition with $m = 1$.
+
+We simulate two copies of this chain from $x\_1 = -10$ and $x\_1 = 10$, with the same random numbers.
 
 .center.width-80[![](figures/lec6/doeblin.png)]
 
 .center[
 
-At the first restart, both copies draw the same state from $\nu$, wherever they were. <br>From then on, they move together.
+The two copies coincide from the first restart on.
 
 ]
 
