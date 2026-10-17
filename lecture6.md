@@ -82,7 +82,7 @@ A stationary distribution $\pi$ is a distribution that remains unchanged when pa
 Formally, $\pi(x)$ is stationary for the transition model $p(x' \mid x)$ if
 $$\pi(x') = \int \pi(x) p(x' \mid x) dx.$$
 
-Therefore, if $x\_t \sim \pi(x)$, then $x\_{t+1} \sim \pi(x)$. MCMC builds chains whose stationary distribution is the target.
+Therefore, if $x\_t \sim \pi(x)$, then $x\_{t+1} \sim \pi(x)$.
 
 ---
 
