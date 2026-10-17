@@ -116,7 +116,8 @@ class: middle
 
 .center[
 
-The mean-reverting random walk has a stationary distribution $\pi(x) = \mathcal{N}(x | \mu, \frac{\sigma^2}{2\kappa - \kappa^2})$.
+The mean-reverting random walk has the stationary distribution
+$$\pi(x) = \mathcal{N}\left(x \Big| \mu, \frac{\sigma^2}{2\kappa - \kappa^2}\right).$$
 
 ]
 
