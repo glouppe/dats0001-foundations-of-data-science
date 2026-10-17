@@ -209,12 +209,12 @@ class: middle
 
 .italic[Theorem.] Under the Doeblin condition, there is a unique stationary distribution $\pi$. For any $p(x\_1)$,
 $$\\| p(x\_{t}) - \pi \\|\_\text{TV} \leq (1 - \delta)^{\lfloor (t-1)/m \rfloor},$$
-the probability of no restart in $t - 1$ steps, as in the example. The total variation distance is $\\| \mu - \mu' \\|\_\text{TV} = \sup\_A |\mu(A) - \mu'(A)|$.
+the probability of no restart in $t - 1$ steps, as in the example. The total variation distance is $\\| p\_1 - p\_1' \\|\_\text{TV} = \sup\_A |p\_1(A) - p\_1'(A)|$.
 
-.italic[Proof.] Let $\mu P^n$ be the distribution of $x\_{t+n}$ when $x\_t \sim \mu$, and $\mu \bar{P}$ likewise for one move of $\bar{p}$. The terms in $\delta \nu$ cancel:
-$$\mu P^m - \mu' P^m = (1 - \delta)(\mu \bar{P} - \mu' \bar{P}).$$
+.italic[Proof.] Let $p\_1 P^n$ be the distribution of $x\_{t+n}$ when $x\_t \sim p\_1$, and $p\_1 \bar{P}$ likewise for one move of $\bar{p}$. The terms in $\delta \nu$ cancel:
+$$p\_1 P^m - p\_1' P^m = (1 - \delta)(p\_1 \bar{P} - p\_1' \bar{P}).$$
 Since $\bar{p}$ does not increase the total variation distance,
-$$\\| \mu P^m - \mu' P^m \\|\_\text{TV} \leq (1 - \delta) \\| \mu - \mu' \\|\_\text{TV}.$$
+$$\\| p\_1 P^m - p\_1' P^m \\|\_\text{TV} \leq (1 - \delta) \\| p\_1 - p\_1' \\|\_\text{TV}.$$
 
 ---
 
@@ -225,8 +225,8 @@ Every $m$ steps, any two distributions get closer by a factor $1 - \delta$. With
 - (Uniqueness) Two stationary distributions $\pi$ and $\pi'$ satisfy $\pi P^m = \pi$ and $\pi' P^m = \pi'$, so
 $$\\| \pi - \pi' \\|\_\text{TV} = \\| \pi P^m - \pi' P^m \\|\_\text{TV} \leq (1 - \delta) \\| \pi - \pi' \\|\_\text{TV},$$
 hence $\pi = \pi'$.
-- (Existence) The distributions $\mu P^{km}$ get closer and closer to each other,
-$$\\| \mu P^{(k+1)m} - \mu P^{km} \\|\_\text{TV} \leq (1 - \delta)^k.$$
+- (Existence) The distributions $p\_1 P^{km}$ get closer and closer to each other,
+$$\\| p\_1 P^{(k+1)m} - p\_1 P^{km} \\|\_\text{TV} \leq (1 - \delta)^k.$$
 so they converge to a limit $\pi$, with $\pi P^m = \pi$. Then $(\pi P) P^m = (\pi P^m) P = \pi P$, so $\pi P$ is also unchanged by $P^m$, and $\pi P = \pi$ by uniqueness.
 - (Convergence) Applying the inequality $\lfloor (t-1)/m \rfloor$ times, and since the total variation distance is at most 1,
 $$\\| p(x\_t) - \pi \\|\_\text{TV} = \\| p(x\_1) P^{t-1} - \pi P^{t-1} \\|\_\text{TV} \leq (1 - \delta)^{\lfloor (t-1)/m \rfloor}.$$
