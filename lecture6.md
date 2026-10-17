@@ -209,18 +209,13 @@ The two copies coincide from the first restart on.
 
 class: middle
 
-In the example, the two copies differ only until the first restart, and no restart happens before step $t$ with probability $(1 - \delta)^{t-1}$. The theorem gives the same bound for the distance between $p(x\_t)$ and $\pi$.
-
-.italic[Theorem.] Under the Doeblin condition, there exists a unique stationary distribution $\pi$, and for any initial distribution $p(x\_1)$,
+.italic[Theorem.] Under the Doeblin condition, there is a unique stationary distribution $\pi$. For any $p(x\_1)$,
 $$\\| p(x\_{t}) - \pi \\|\_\text{TV} \leq (1 - \delta)^{\lfloor (t-1)/m \rfloor},$$
-where $\\| \mu - \mu' \\|\_\text{TV} = \sup\_A |\mu(A) - \mu'(A)|$ is the total variation distance.
+the probability of no restart in $t - 1$ steps, as in the example. The total variation distance is $\\| \mu - \mu' \\|\_\text{TV} = \sup\_A |\mu(A) - \mu'(A)|$.
 
-.italic[Proof.] Write $\mu P^n$ for the distribution of $x\_{t+n}$ when $x\_t \sim \mu$, and $\mu \bar{P}$ for the distribution of one move of $\bar{p}$ from $\mu$. For two distributions $\mu$ and $\mu'$, the terms in $\delta \nu$ cancel:
-$$\begin{aligned}
-\mu P^m - \mu' P^m &= \delta \nu + (1 - \delta) \mu \bar{P} - \delta \nu - (1 - \delta) \mu' \bar{P} \\\\
-&= (1 - \delta)(\mu \bar{P} - \mu' \bar{P}).
-\end{aligned}$$
-A transition model does not increase the total variation distance, hence
+.italic[Proof.] Let $\mu P^n$ be the distribution of $x\_{t+n}$ when $x\_t \sim \mu$, and $\mu \bar{P}$ likewise for one move of $\bar{p}$. The terms in $\delta \nu$ cancel:
+$$\mu P^m - \mu' P^m = (1 - \delta)(\mu \bar{P} - \mu' \bar{P}).$$
+Since $\bar{p}$ does not increase the total variation distance,
 $$\\| \mu P^m - \mu' P^m \\|\_\text{TV} \leq (1 - \delta) \\| \mu - \mu' \\|\_\text{TV}.$$
 
 ---
