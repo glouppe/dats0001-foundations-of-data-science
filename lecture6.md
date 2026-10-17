@@ -227,11 +227,13 @@ $$p(x\_{t+m} \mid x\_t) = \delta \nu(x\_{t+m}) + (1 - \delta) \bar{p}(x\_{t+m} \
 
 The $m$-step transition is a mixture. Every $m$ steps, the chain draws its next state from $\nu$ with probability $\delta$, whatever its current state, and moves with $\bar{p}$ otherwise.
 
+A draw from $\nu$ is a .bold[restart]: the new state does not depend on the current one.
+
 ???
 
 In the figure, each density is the shaded common part plus a remainder above it; $\bar{p}$ is that remainder, rescaled to integrate to one.
 
-A mixture is sampled by first picking a component, then drawing from it. Picking $\nu$ is a .italic[restart]: the new state does not depend on the current one, so the chain forgets where it was.
+A mixture is sampled by first picking a component, then drawing from it. After a restart, the chain has forgotten where it was.
 
 ---
 
@@ -267,7 +269,7 @@ In the example, the two copies differ only until the first restart, and no resta
 $$\\| p(x\_{t}) - \pi \\|\_\text{TV} \leq (1 - \delta)^{\lfloor (t-1)/m \rfloor},$$
 where $\\| \mu - \mu' \\|\_\text{TV} = \sup\_A |\mu(A) - \mu'(A)|$ is the total variation distance.
 
-.italic[Proof.] Write $\mu P^n$ for the distribution of $x\_{t+n}$ when $x\_t \sim \mu$, and $\mu \bar{P}$ for the distribution of one move of $\bar{p}$ from $\mu$. For two distributions $\mu$ and $\mu'$, the restart terms cancel:
+.italic[Proof.] Write $\mu P^n$ for the distribution of $x\_{t+n}$ when $x\_t \sim \mu$, and $\mu \bar{P}$ for the distribution of one move of $\bar{p}$ from $\mu$. For two distributions $\mu$ and $\mu'$, the terms in $\delta \nu$ cancel:
 $$\begin{aligned}
 \mu P^m - \mu' P^m &= \delta \nu + (1 - \delta) \mu \bar{P} - \delta \nu - (1 - \delta) \mu' \bar{P} \\\\
 &= (1 - \delta)(\mu \bar{P} - \mu' \bar{P}).
