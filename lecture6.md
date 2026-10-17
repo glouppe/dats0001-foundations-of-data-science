@@ -483,19 +483,7 @@ Metropolis-Hastings accepts 40% of its proposals and moves by small steps; its s
 
 The gradients come from automatic differentiation in general: `nb06b` computes them with JAX.
 
----
-
-class: middle
-
-## Other samplers
-
-- .bold[No-U-Turn Sampler (NUTS)]: An adaptive variant of HMC that automatically 
-  tunes the trajectory length $L$.
-  Default sampler in Stan and PyMC.
-
-- .bold[Gibbs sampling]: Updates variables one at a time from conditional 
-  distributions. A special case of MH with acceptance probability = 1 
-  when conditionals are tractable.
+In practice, $\epsilon$ and $L$ are tuned automatically. The No-U-Turn Sampler (NUTS), the default sampler of Stan and PyMC, stops each trajectory when it starts to turn back.
 
 ---
 
