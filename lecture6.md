@@ -14,12 +14,6 @@ class: middle
 
 .center.width-55[![](figures/lec5/wolf-gps-observations.svg)]
 
-.center[
-
-Noisy GPS observations $\mathbf{x}\_{1:T}$ of a wolf, here simulated.
-
-]
-
 .question[
 
 The Kalman filter gives the likelihood $p(\mathbf{x}\_{1:T} \mid \theta)$ of the parameters $\theta$ of the wolf model. How do we obtain their posterior $p(\theta \mid \mathbf{x}\_{1:T})$?
