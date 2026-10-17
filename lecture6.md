@@ -156,6 +156,8 @@ class: middle
 
 .italic[Proof.] Beyond scope in the general case. The next slides prove it under a stronger condition.
 
+.footnote[Credits: [Meyn and Tweedie](https://doi.org/10.1017/CBO9780511626630), Markov Chains and Stochastic Stability, 2009.]
+
 ???
 
 Each condition has a role: irreducibility gives uniqueness, aperiodicity gives convergence, and positive recurrence gives a stationary distribution that integrates to one.
@@ -341,6 +343,8 @@ $$\alpha(x' \mid x\_t) = \min\\left(\frac{\tilde{\pi}(x') q(x\_t \mid x')}{\tild
 
 This process generates a sequence of samples $x\_1, x\_2, \ldots$ that form a Markov chain.
 
+.footnote[Credits: [Metropolis et al.](https://doi.org/10.1063/1.1699114), 1953; [Hastings](https://doi.org/10.1093/biomet/57.1.97), 1970.]
+
 ---
 
 class: middle
@@ -435,6 +439,8 @@ The state $x \in \mathbb{R}^d$ is augmented with a momentum $v \in \mathbb{R}^d$
 $$\pi(x, v) \propto \tilde{\pi}(x) \mathcal{N}(v | 0, I) \propto \exp(-H(x, v))$$
 defined by the .bold[Hamiltonian]
 $$H(x, v) = -\log \tilde{\pi}(x) + \frac{1}{2} v^T v.$$
+
+.footnote[Credits: [Duane et al.](https://doi.org/10.1016/0370-2693%2887%2991197-X), 1987; [Neal](https://arxiv.org/abs/1206.1901), 2011.]
 
 ???
 
@@ -666,11 +672,13 @@ The first quantitative diagnostic to monitor is the .bold[acceptance rate], defi
 - A very high acceptance rate (e.g., > 80%) suggests that the proposal distribution is making too small jumps, resulting in slow exploration of the state space.
 - For a Gaussian random-walk proposal, the optimal acceptance rate is about 44% in one dimension and decreases to 23.4% as the dimension grows.
 
+.footnote[Credits: Gelman, Roberts and Gilks, 1996; [Roberts, Gelman and Gilks](https://doi.org/10.1214/aoap/1034625254), 1997.]
+
 ???
 
 Optimal means that the chain explores the target fastest, as measured by the effective sample size per iteration.
 
-These values are derived for targets with independent components (Roberts, Gelman and Gilks, 1997), and they hold approximately beyond. The demos of `nb06b` sample one-dimensional targets, where 44% is the value to aim for.
+The value of 23.4% is the limit as the dimension grows, for targets with independent components (Roberts, Gelman and Gilks, 1997); it holds approximately beyond. The value of 44% was found numerically for a one-dimensional Gaussian target (Gelman, Roberts and Gilks, 1996), with a proposal standard deviation of about 2.4 times that of the target, the value used in the autocorrelation traces. The demos of `nb06b` sample one-dimensional targets, where 44% is the value to aim for.
 
 ---
 
@@ -724,6 +732,8 @@ The .bold[Gelman-Rubin statistic] compares the two:
 $$\hat{R} = \sqrt{\frac{\frac{T-1}{T} W + \frac{1}{T} B}{W}},$$
 where $W$ is the average variance within the chains and $B / T$ the variance of the chain means. It approaches 1 as the chains agree.
 
+.footnote[Credits: [Gelman and Rubin](https://doi.org/10.1214/ss/1177011136), 1992.]
+
 ???
 
 For a scalar quantity $x$, $W = \frac{1}{M} \sum\_{m=1}^M s\_m^2$, where $s\_m^2$ is the sample variance of chain $m$, and $B = \frac{T}{M-1} \sum\_{m=1}^M (\bar{x}\_m - \bar{x})^2$, where $\bar{x}\_m$ is the mean of chain $m$ and $\bar{x}$ the mean of all draws. The numerator estimates the variance of $\pi$ from all chains pooled. Chains that have not mixed have means far apart, so $B$ is large and $\hat{R} > 1$.
@@ -753,6 +763,8 @@ class: middle
 In practice, $\hat{R}$ is computed on each half of each chain, which catches a chain that drifts, and on the ranks of the draws, which makes it robust to heavy tails.
 
 The chains are run until $\hat{R} < 1.01$ for every quantity of interest.
+
+.footnote[Credits: [Vehtari et al.](https://doi.org/10.1214/20-BA1221), 2021.]
 
 ???
 
@@ -791,6 +803,8 @@ For a scalar parameter $\theta$, repeat for $s = 1, \ldots, S$:
 .italic[Proposition.] If the sampler draws independent samples from the exact posterior, the ranks $r\_s$ are uniformly distributed over $\\{0, \ldots, L\\}$.
 
 .italic[Proof.] The pair $(\theta^\*\_s, \mathcal{D}\_s)$ is drawn from the joint $p(\theta, \mathcal{D})$, so given $\mathcal{D}\_s$, $\theta^\*\_s$ is distributed as $p(\theta \mid \mathcal{D}\_s)$. Then $\theta^\*\_s, \theta\_1, \ldots, \theta\_L$ are $L + 1$ independent draws from $p(\theta \mid \mathcal{D}\_s)$. By symmetry, $\theta^\*\_s$ takes any of the $L + 1$ positions in their sorted order with the same probability.
+
+.footnote[Credits: [Talts et al.](https://arxiv.org/abs/1804.06788), 2018.]
 
 ???
 
