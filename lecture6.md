@@ -176,7 +176,7 @@ Wherever the chain is, the distribution of its state $m$ steps later contains a 
 
 The condition says that the starting state never fully controls where the chain goes $m$ steps later. Two chains started anywhere have a chance of at least $\delta$ to land on the same distribution $\nu$.
 
-A finite chain that is irreducible and aperiodic satisfies the condition: some power $P^m$ of its transition matrix has only positive entries, and $\delta = \sum\_y \min\_x P^m(x, y)$. So does an independence sampler whose ratio $\pi / q$ is bounded. Random-walk Metropolis-Hastings on an unbounded space does not: from far away, the chain needs more steps to come back. It still converges at a geometric rate, but the rate depends on the starting point, and the proof is beyond scope.
+A finite chain that is irreducible and aperiodic satisfies the condition: some power $P^m$ of its transition matrix has only positive entries, and $\delta = \sum\_y \min\_x P^m(x, y)$. So does Metropolis-Hastings with a proposal $q(x')$ that ignores the current state, when the ratio $\pi / q$ is bounded. Random-walk Metropolis-Hastings on an unbounded space does not: from far away, the chain needs more steps to come back. It still converges at a geometric rate, but the rate depends on the starting point, and the proof is beyond scope.
 
 ---
 
@@ -345,6 +345,24 @@ This process generates a sequence of samples $x\_1, x\_2, \ldots$ that form a Ma
 
 class: middle
 
+.center.width-60[![](figures/lec6/mh.gif)]
+
+.center[
+
+Metropolis-Hastings on a mixture of two Gaussians, with the random-walk proposal $q(x' \mid x) = \mathcal{N}(x' \mid x, \sigma^2 I)$. Proposals are accepted (green) or rejected (red), and the histograms of the chain approach the marginals of the target.
+
+]
+
+???
+
+The chain starts at $(0, 3)$, away from the target, and its first states are a warm-up. Proposals uphill are always accepted. Proposals downhill are accepted with probability $\tilde{\pi}(x') / \tilde{\pi}(x\_t)$, so the chain still crosses the valley between the two modes, but rarely. A rejected proposal leaves the chain in place, and the current state is counted again. Here $\sigma = 1$, and 40% of the proposals are accepted over 5000 iterations.
+
+The random walk is the most common proposal. Its step size $\sigma$ sets the trade-off between small, often accepted moves and large, often rejected ones.
+
+---
+
+class: middle
+
 .italic[Proposition.] The Metropolis-Hastings algorithm constructs a Markov chain whose stationary distribution is $\pi(x)$.
 
 .italic[Proof.] The transition model of the Markov chain is given by
@@ -388,27 +406,6 @@ These conditions ensure convergence to $\pi(x)$ by the basic limit theorem.
 ???
 
 It suffices that the proposal reaches every region where $\pi > 0$, possibly in several steps.
-
----
-
-class: middle
-
-## Proposal distributions
-
-The efficiency of Metropolis-Hastings depends on the proposal $q(x' \mid x)$.
-
-The .bold[random walk] proposal moves by a Gaussian step of size $\sigma$:
-$$q(x' \mid x) = \mathcal{N}(x' \mid x, \sigma^2 I).$$
-
-The .bold[Langevin] proposal adds a step along the gradient of $\log \tilde{\pi}$:
-$$q(x' \mid x) = \mathcal{N}(x' \mid x + \frac{\epsilon^2}{2} \nabla \log \tilde{\pi}(x), \epsilon^2 I).$$
-
-The .bold[independence] proposal ignores the current state:
-$$q(x' \mid x) = q(x').$$
-
-???
-
-The random walk is the most common choice. It is simple and general, but its efficiency depends on $\sigma$: the optimal acceptance rate is about 44% in one dimension and 23% in high dimension. The Langevin proposal is gradient ascent with noise. It requires a differentiable $\tilde{\pi}$. The independence proposal works when a good approximation of $\pi$ is available, such as a Laplace approximation.
 
 ---
 
@@ -464,7 +461,7 @@ Otherwise, set $x\_{t+1} = x\_t$.
 
 Step 3 is the Metropolis-Hastings acceptance for the joint target $\pi(x, v)$. The proposal is deterministic given $v$, reversible and volume preserving, so its densities cancel in the ratio. Only the integration error remains, and it corrects it exactly.
 
-The step size $\epsilon$ controls the integration error, hence the acceptance rate. The number of steps $L$ controls how far the proposal travels. Too large an $\epsilon$ makes $H$ blow up and every proposal is rejected. With $L = 1$, HMC is the Langevin proposal of the previous slides with a Metropolis-Hastings correction.
+The step size $\epsilon$ controls the integration error, hence the acceptance rate. The number of steps $L$ controls how far the proposal travels. Too large an $\epsilon$ makes $H$ blow up and every proposal is rejected. With $L = 1$, HMC is the Metropolis-adjusted Langevin algorithm, whose proposal takes one noisy gradient step.
 
 ---
 

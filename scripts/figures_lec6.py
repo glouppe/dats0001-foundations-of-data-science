@@ -392,6 +392,92 @@ def diagnostics():
     save(fig, "trace-convergence.png")
 
 
+# Metropolis-Hastings at work ---------------------------------------------------------------
+
+def mh_animation():
+    """Animated corner plot of random-walk MH on a mixture of two 2-D Gaussians: one iteration per
+    frame at first, with the proposal accepted (green) or rejected (red), then faster up to 5000
+    iterations. The path of the chain is drawn in full while short, then its last 100 moves; the
+    marginal histograms fill up against the exact marginals."""
+    from PIL import Image
+    from scipy.stats import multivariate_normal as mvn
+    w = np.array([.4, .6])
+    mu = np.array([[-1.5, -1.0], [1.5, 1.2]])
+    cov = np.array([[[.5, .3], [.3, .5]], [[.6, -.2], [-.2, .4]]])
+    comps = [mvn(mu[k], cov[k]) for k in range(2)]
+    log_target = lambda x: np.logaddexp(np.log(w[0]) + comps[0].logpdf(x), np.log(w[1]) + comps[1].logpdf(x))
+
+    rng = np.random.default_rng(1)
+    n, step = 5000, 1.0
+    x = np.array([0.0, 3.0])
+    chain, props, accepted = [x], [], []
+    for _ in range(n):
+        prop = x + step * rng.standard_normal(2)
+        acc = np.log(rng.random()) < log_target(prop) - log_target(x)
+        props.append(prop)
+        accepted.append(acc)
+        if acc:
+            x = prop
+        chain.append(x)
+    chain, props, accepted = np.array(chain), np.array(props), np.array(accepted)
+    print("  MH animation: acceptance rate %.2f" % accepted.mean())
+
+    lim = (-4, 4)
+    g = np.linspace(*lim, 200)
+    G = np.stack(np.meshgrid(g, g), -1)
+    Z = np.exp(log_target(G))
+    marg = [sum(w[k] * norm.pdf(g, mu[k, d], np.sqrt(cov[k, d, d])) for k in range(2)) for d in range(2)]
+    frames_t = list(range(1, 41)) + sorted(set(np.geomspace(41, n, 50).astype(int)))
+    durations = [500] * 40 + [120] * (len(frames_t) - 41) + [3000]
+
+    fig = plt.figure(figsize=(4.6, 4.6), dpi=100)
+    gs = fig.add_gridspec(2, 2, width_ratios=[3, 1], height_ratios=[1, 3], wspace=.05, hspace=.05)
+    ax = fig.add_subplot(gs[1, 0])
+    ax1 = fig.add_subplot(gs[0, 0], sharex=ax)
+    ax2 = fig.add_subplot(gs[1, 1], sharey=ax)
+    images = []
+    for t in frames_t:
+        for a in (ax, ax1, ax2):
+            a.cla()
+        ax.contour(g, g, Z, levels=5, colors=LIGHT, linewidths=.8)
+        seen = chain[:t + 1]
+        ax.plot(seen[:, 0], seen[:, 1], ".", color=BLUE, ms=3 if t < 300 else 1.5, alpha=.5 if t < 300 else .25)
+        path = seen if t <= 300 else seen[-100:]
+        ax.plot(path[:, 0], path[:, 1], color=BLUE, lw=.8 if t <= 40 else .5, alpha=.9 if t <= 40 else .6)
+        ax.plot(*seen[-1], "o", color=BLUE, ms=6)
+        if t <= 40:
+            cur, prop, acc = chain[t - 1], props[t - 1], accepted[t - 1]
+            c = GREEN if acc else RED
+            ax.plot([cur[0], prop[0]], [cur[1], prop[1]], color=c, lw=1, ls=(0, (3, 2)))
+            ax.plot(*prop, "o" if acc else "x", color=c, ms=6, mew=1.5, mfc="none" if acc else None)
+        ax.set_xlim(*lim)
+        ax.set_ylim(*lim)
+        ax.set_xlabel("$x_1$")
+        ax.set_ylabel("$x_2$")
+        tidy(ax)
+        bins = np.linspace(*lim, 41)
+        ax1.hist(seen[:, 0], bins=bins, density=True, color=LIGHT)
+        ax1.plot(g, marg[0], color=GREY, lw=1.2)
+        ax2.hist(seen[:, 1], bins=bins, density=True, color=LIGHT, orientation="horizontal")
+        ax2.plot(marg[1], g, color=GREY, lw=1.2)
+        ax1.set_ylim(0, .8)
+        ax2.set_xlim(0, .8)
+        for a in (ax1, ax2):
+            a.axis("off")
+        rate = accepted[:t].mean()
+        fig.text(.73, .86, "$t = %d$\nacceptance\nrate %.0f%%" % (t, 100 * rate), ha="left", va="top",
+                 fontsize=11, color=GREY)
+        fig.canvas.draw()
+        images.append(Image.frombuffer("RGBA", fig.canvas.get_width_height(),
+                                       fig.canvas.buffer_rgba()).convert("RGB")
+                      .quantize(colors=64, method=Image.Quantize.MEDIANCUT))
+        fig.texts.clear()
+    plt.close(fig)
+    path = "figures/lec6/mh.gif"
+    images[0].save(path, save_all=True, append_images=images[1:], duration=durations, loop=0, optimize=True)
+    print("wrote", path, "(%d frames)" % len(images))
+
+
 # Hamiltonian Monte Carlo ----------------------------------------------------------------
 
 def hmc():
@@ -535,6 +621,7 @@ if __name__ == "__main__":
     random_walks()
     doeblin_overlap()
     doeblin()
+    mh_animation()
     regression()
     diagnostics()
     hmc()
