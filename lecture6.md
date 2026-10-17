@@ -607,7 +607,11 @@ class: middle
 class: middle
 
 .center.width-70[![](figures/lec6/example1-pp.png)]
-.center[Posterior predictive distribution $p(y \mid x, \mathcal{D})$: median and 5-95% band.]
+.center[
+
+Posterior predictive distribution $p(y \mid x, \mathcal{D})$, median and 5-95% band, <br>with 20 lines $y = w\_0 x + w\_1$ drawn from the posterior.
+
+]
 
 ---
 

@@ -308,13 +308,16 @@ def regression():
     lo, med, hi = np.percentile(ypred, [5, 50, 95], axis=0)
     fig, ax = plt.subplots(figsize=(5.8, 3.4), dpi=200)
     ax.fill_between(xs, lo, hi, color=BLUE, alpha=.2, lw=0, label="5-95% band")
+    for k in range(20):
+        ax.plot(xs, draws[k, 0] * xs + draws[k, 1], color=BLUE, lw=.6, alpha=.5,
+                label=r"$y = w_0 x + w_1$, posterior draws" if k == 0 else None)
     ax.plot(xs, med, color=BLUE, lw=1.6, label="median")
     ax.plot(xs, THETA_TRUE[0] * xs + THETA_TRUE[1], color=GREY, lw=1.2, ls=(0, (4, 3)),
             label="true line")
     ax.scatter(x, y, s=28, color=ORANGE, zorder=3, label="observations")
     ax.set_xlabel("$x$")
     ax.set_ylabel("$y$")
-    ax.legend(frameon=False, loc="upper right", fontsize=10)
+    ax.legend(frameon=False, loc="lower left", fontsize=10)
     tidy(ax)
     fig.tight_layout()
     save(fig, "example1-pp.png")
