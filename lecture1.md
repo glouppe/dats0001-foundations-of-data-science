@@ -331,7 +331,7 @@ class: middle
 - Lecture 3: Visualization 
 - Lecture 4: Latent variable models
 - Lecture 5: State-space models
-- Lecture 6: Markov Chain Monte Carlo
+- Lecture 6: Markov chain Monte Carlo
 - Lecture 7: Model criticism and validation
 - Lecture 8: Expectation-Maximization
 - Lecture 9: Variational Inference
