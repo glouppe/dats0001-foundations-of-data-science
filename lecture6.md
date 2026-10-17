@@ -363,6 +363,22 @@ The random walk is the most common proposal. Its step size $\sigma$ sets the tra
 
 class: middle
 
+.center.width-80[![](figures/lec6/mh-traces.png)]
+
+.center[
+
+Traces of $x\_1$ and $x\_2$ along the same Markov chain of Metropolis-Hastings.
+
+]
+
+???
+
+The chain stays in one mode for hundreds of iterations, then switches to the other. Within a mode, successive states are close to each other: the samples are autocorrelated. The first iterations, from $(0, 3)$, are the warm-up.
+
+---
+
+class: middle
+
 .italic[Proposition.] The Metropolis-Hastings algorithm constructs a Markov chain whose stationary distribution is $\pi(x)$.
 
 .italic[Proof.] The transition model of the Markov chain is given by
@@ -484,6 +500,22 @@ Metropolis-Hastings accepts 40% of its proposals and moves by small steps; its s
 The gradients come from automatic differentiation in general: `nb06b` computes them with JAX.
 
 In practice, $\epsilon$ and $L$ are tuned automatically. The No-U-Turn Sampler (NUTS), the default sampler of Stan and PyMC, stops each trajectory when it starts to turn back.
+
+---
+
+class: middle
+
+.center.width-80[![](figures/lec6/mh-hmc-traces.png)]
+
+.center[
+
+Traces of $x\_1$ and $x\_2$ for Metropolis-Hastings and HMC, over the same number of iterations.
+
+]
+
+???
+
+HMC switches between the modes every few iterations, and its trace looks like noise around the two levels: its samples are almost independent. The trace of Metropolis-Hastings keeps the slow switches of the previous traces.
 
 ---
 

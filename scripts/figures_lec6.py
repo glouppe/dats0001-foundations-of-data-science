@@ -549,6 +549,43 @@ def mh_hmc_animation():
     animate([mh, hmc], "figures/lec6/mh-hmc.gif")
 
 
+def mh_hmc_traces():
+    """Trace plots of the chains of the two animations: x_1 and x_2 for MH alone, then MH and HMC
+    side by side on shared axes, with the means of the two modes as dashed lines."""
+    mh, hmc = run_mh(), run_hmc()
+    labels = ["$x_1$", "$x_2$"]
+
+    def trace(ax, chain, d, legend=False):
+        for k in range(2):
+            ax.axhline(MIX_MU[k, d], color=GREY, lw=.8, ls=(0, (4, 3)),
+                       label="means of the two modes" if legend and k == 0 else None)
+        ax.plot(chain[:, d], color=BLUE, lw=.4)
+        ax.set_ylim(-4, 4)
+        ax.set_xlim(0, len(chain) - 1)
+        tidy(ax)
+
+    fig, axes = plt.subplots(2, 1, figsize=(5.8, 3.4), dpi=200, sharex=True)
+    for d, ax in enumerate(axes):
+        trace(ax, mh["chain"], d, legend=d == 0)
+        ax.set_ylabel(labels[d])
+    axes[-1].set_xlabel("iteration $t$")
+    fig.legend(frameon=False, loc="upper center", fontsize=9)
+    fig.tight_layout(rect=(0, 0, 1, .94))
+    save(fig, "mh-traces.png")
+
+    fig, axes = plt.subplots(2, 2, figsize=(5.8, 3.4), dpi=200, sharex=True, sharey=True)
+    for j, run in enumerate((mh, hmc)):
+        for d in range(2):
+            trace(axes[d, j], run["chain"], d, legend=j == 0 and d == 0)
+        axes[0, j].set_title(run["name"], fontsize=10, pad=3)
+        axes[1, j].set_xlabel("iteration $t$")
+    for d in range(2):
+        axes[d, 0].set_ylabel(labels[d])
+    fig.legend(frameon=False, loc="upper center", fontsize=9)
+    fig.tight_layout(rect=(0, 0, 1, .92))
+    save(fig, "mh-hmc-traces.png")
+
+
 # Simulation-based calibration ------------------------------------------------------------
 
 def log_posterior_batch(theta, x, y, bug=False):
@@ -637,4 +674,5 @@ if __name__ == "__main__":
     regression()
     diagnostics()
     mh_hmc_animation()
+    mh_hmc_traces()
     calibration()
