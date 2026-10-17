@@ -451,9 +451,9 @@ def mix_grad_log_target(x):
     return -np.einsum("k,kij,kj->i", resp, MIX_PREC, x - MIX_MU)
 
 
-def run_mh(n=5000, step=1.0, seed=1):
+def run_mh(n=5000, step=1.0, seed=1, start=MIX_START):
     rng = np.random.default_rng(seed)
-    x = MIX_START
+    x = np.asarray(start, float)
     chain, props, accepted = [x], [], []
     for _ in range(n):
         prop = x + step * rng.standard_normal(2)
@@ -618,6 +618,40 @@ def mh_hmc_traces():
     save(fig, "mh-hmc-traces.png")
 
 
+def split_rhat(chains):
+    """Rank-normalized split-R-hat (Vehtari et al., 2021) of chains of shape (M, T)."""
+    from scipy.stats import rankdata
+    half = chains.shape[1] // 2
+    z = np.concatenate([chains[:, :half], chains[:, half:2 * half]])
+    m, n = z.shape
+    z = norm.ppf((rankdata(z).reshape(z.shape) - 3 / 8) / (m * n + 1 / 4))
+    means = z.mean(1)
+    B = n / (m - 1) * ((means - means.mean()) ** 2).sum()
+    W = z.var(1, ddof=1).mean()
+    return np.sqrt(((n - 1) / n * W + B / n) / W)
+
+
+def rhat_figure():
+    """Traces of x_1 for four MH chains on the two-mode target, started at the four corners, after
+    200, 1000 and 10000 iterations, with the split-R-hat of the iterations shown."""
+    starts = [(-3, -3), (3, 3), (-3, 3), (3, -3)]
+    chains = np.array([run_mh(n=10000, seed=10 + k, start=s0)["chain"][1:, 0] for k, s0 in enumerate(starts)])
+    fig, axes = plt.subplots(3, 1, figsize=(5.8, 4.4), dpi=200)
+    for ax, T in zip(axes, [200, 1000, 10000]):
+        for chain, color in zip(chains, [BLUE, ORANGE, GREEN, RED]):
+            ax.plot(np.arange(1, T + 1), chain[:T], color=color, lw=.6 if T <= 1000 else .3, alpha=.9)
+        r = split_rhat(chains[:, :T])
+        ax.set_title(r"%d iterations, $\hat{R} = %.3f$" % (T, r), loc="left", fontsize=10, pad=3)
+        ax.set_xlim(0, T)
+        ax.set_ylim(-4, 4)
+        ax.set_ylabel("$x_1$")
+        tidy(ax)
+        print("  R-hat after %d iterations: %.4f" % (T, r))
+    axes[-1].set_xlabel("iteration $t$")
+    fig.tight_layout()
+    save(fig, "rhat.png")
+
+
 # Simulation-based calibration ------------------------------------------------------------
 
 def log_posterior_batch(theta, x, y, bug=False):
@@ -708,4 +742,5 @@ if __name__ == "__main__":
     autocorrelation_figure()
     mh_hmc_animation()
     mh_hmc_traces()
+    rhat_figure()
     calibration()

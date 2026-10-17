@@ -716,36 +716,49 @@ The sum defining $\tau\_\text{int}$ is cut at the first negative autocorrelation
 
 class: middle
 
-## Gelman-Rubin Statistic
+## Gelman-Rubin statistic
 
-The .bold[Gelman-Rubin statistic] $\hat{R}$ serves as a convergence diagnostic when running $M$ independent chains in parallel, each with $T$ samples of a scalar quantity $x$ (after warm-up). 
-Let 
-$$W = \frac{1}{M} \sum\_{m=1}^M s\_m^2$$ 
-be the within-chain variance, where $s\_m^2$ is the sample variance of chain $m$, and 
-$$B = \frac{T}{M-1} \sum\_{m=1}^M (\bar{x}\_m - \bar{x})^2$$ 
-be the between-chain variance, where $\bar{x}\_m$ is the sample mean of chain $m$ and $\bar{x}$ is the overall mean across chains. 
-Then, 
-$$\hat{R} = \sqrt{\frac{\frac{T-1}{T} W + \frac{1}{T} B}{W}}.$$
+Run $M$ independent chains of $T$ iterations from dispersed starting points. Once they have all converged to $\pi$, the chains look alike, and the variance within a chain matches the variance of all chains pooled.
+
+The .bold[Gelman-Rubin statistic] compares the two:
+$$\hat{R} = \sqrt{\frac{\frac{T-1}{T} W + \frac{1}{T} B}{W}},$$
+where $W$ is the average variance within the chains and $B / T$ the variance of the chain means. It approaches 1 as the chains agree.
+
+???
+
+For a scalar quantity $x$, $W = \frac{1}{M} \sum\_{m=1}^M s\_m^2$, where $s\_m^2$ is the sample variance of chain $m$, and $B = \frac{T}{M-1} \sum\_{m=1}^M (\bar{x}\_m - \bar{x})^2$, where $\bar{x}\_m$ is the mean of chain $m$ and $\bar{x}$ the mean of all draws. The numerator estimates the variance of $\pi$ from all chains pooled. Chains that have not mixed have means far apart, so $B$ is large and $\hat{R} > 1$.
+
+$\hat{R}$ needs independent chains. The walkers of `emcee` are not: they move using each other's positions. `nb06b` computes $\hat{R}$ on independent runs of Metropolis-Hastings.
 
 ---
 
 class: middle
 
-## Rank-normalized split-$\hat{R}$
+.center.width-80[![](figures/lec6/rhat.png)]
 
-In practice, $\hat{R}$ is computed with two modifications:
-- each chain is split into two halves, which detects a chain that drifts during the run;
-- each draw is replaced by the normal quantile of its rank among all draws, which makes $\hat{R}$ robust to heavy tails.
+.center[
 
-Values of $\hat{R}$ below 1.01 indicate convergence across chains.
+Four Metropolis-Hastings chains on the two-mode target, started at its corners.
 
-The effective sample size is computed on the same rank-normalized draws (.bold[bulk ESS]) and on the indicators of the 5% and 95% quantiles (.bold[tail ESS]). Both should exceed 100 per chain.
+]
 
 ???
 
-These are the recommendations of Vehtari et al. (2021), used by Stan, ArviZ and PyMC. The older threshold of 1.1 lets non-converged chains through. Bulk ESS measures the precision of the mean and the median, tail ESS that of the 5% and 95% quantiles.
+After 200 iterations, the chains still remember where they started, and $\hat{R} = 1.22$. After 1000 iterations, $\hat{R} = 1.08$ passes the old threshold of 1.1, although the chains still spend long stretches in different modes. After 10000 iterations, $\hat{R} = 1.006$.
 
-$\hat{R}$ needs independent chains started from dispersed points. The walkers of `emcee` are not independent chains: they move using each other's positions. `nb06b` computes $\hat{R}$ on independent runs of Metropolis-Hastings.
+---
+
+class: middle
+
+In practice, $\hat{R}$ is computed on each half of each chain, which catches a chain that drifts, and on the ranks of the draws, which makes it robust to heavy tails.
+
+The chains are run until $\hat{R} < 1.01$ for every quantity of interest.
+
+???
+
+These are the recommendations of Vehtari et al. (2021), used by Stan, ArviZ and PyMC. Each draw is replaced by the normal quantile of its rank among all draws. The older threshold of 1.1 lets non-converged chains through, as the previous figure shows.
+
+The effective sample size is computed on the same rank-normalized draws (bulk ESS) and on the indicators of the 5% and 95% quantiles (tail ESS). Bulk ESS measures the precision of the mean and the median, tail ESS that of the 5% and 95% quantiles. Both should exceed 100 per chain.
 
 ---
 
