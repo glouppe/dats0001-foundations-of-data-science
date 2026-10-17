@@ -18,8 +18,8 @@ How to sample from a distribution $p(x)$ for which we can only evaluate an unnor
 
 Use cases:
 - Generating data points $x$ from a generative model $p(x)$.
-- Computing expectations $\mathbb{E}_{p(x)}[f(x)]$ or integrals $\int f(x) p(x) dx$.
-- Computing posterior distributions $p(z \mid x)$ in Bayesian inference.
+- Computing expectations $\mathbb{E}\_{p(x)}[f(x)]$ or integrals $\int f(x) p(x) dx$.
+- Computing posterior distributions $p(\mathbf{z} \mid \mathbf{x})$ in Bayesian inference.
 
 ---
 
@@ -31,7 +31,7 @@ class: middle
 
 class: middle
 
-.center[![](figures/lec6/markov-chain.svg)]
+.center.width-50[![](figures/lec6/markov-chain.svg)]
 
 ## Markov chains
 
@@ -40,6 +40,10 @@ A Markov chain is a sequence of random variables $X\_1, X\_2, \ldots$ that assum
 It follows that the joint distribution of $X\_1, \ldots, X\_T$ can be factorized as
 $$p(x\_1, \ldots, x\_T) = p(x\_1) \prod\_{t=1}^{T-1} p(x\_{t+1} \mid x\_t),$$
 where $p(x\_1)$ is the .bold[initial distribution] and $p(x\_{t+1} \mid x\_t)$ is the .bold[transition model].
+
+???
+
+The chain of states of the state-space models of Lecture 5, without the observations.
 
 ---
 
@@ -51,7 +55,7 @@ When the transition model does not depend on $t$, i.e., $p(x\_{t+1} \mid x\_t) =
 
 class: middle
 
-.center.width-60[![](figures/lec6/gaussian_random_walk_1d.png)]
+.center.width-70[![](figures/lec6/gaussian_random_walk_1d.png)]
 
 .center[
 
@@ -76,7 +80,7 @@ Therefore, if $x\_t \sim \pi(x)$, then $x\_{t+1} \sim \pi(x)$.
 
 class: middle
 
-.center.width-60[![](figures/lec6/gaussian_random_walk_1d_variance.png)]
+.center.width-70[![](figures/lec6/gaussian_random_walk_1d_variance.png)]
 
 .center[
 
@@ -92,7 +96,7 @@ The marginal $p(x\_t)$ is Gaussian with mean 0 and variance $1 + (t-1)\sigma^2$.
 
 class: middle
 
-.center.width-60[![](figures/lec6/gaussian_random_walk_1d_drift.png)]
+.center.width-70[![](figures/lec6/gaussian_random_walk_1d_drift.png)]
 
 .center[
 
@@ -100,11 +104,15 @@ class: middle
 
 ]
 
+???
+
+This is the wolf model of Lecture 5 in one dimension, the Euler discretization of its Ornstein-Uhlenbeck process, here with $\kappa = 0.1$, $\sigma = 1$ and $\mu = 0$.
+
 ---
 
 class: middle
 
-.center.width-60[![](figures/lec6/gaussian_random_walk_variance_comparison.png)]
+.center.width-70[![](figures/lec6/gaussian_random_walk_variance_comparison.png)]
 
 .center[
 
@@ -114,8 +122,7 @@ The Gaussian random walk with drift has a stationary distribution $\pi(x) = \mat
 
 ???
 
-Proof: The stationary distribution must satisfy
-$$\pi(x') = \int \pi(x) \mathcal{N}(x' | x - \kappa(x - \mu), \sigma^2) dx.$$ This can be proved using the properties of Gaussian integrals.
+If $x \sim \mathcal{N}(\mu, v)$, then $x' = x - \kappa (x - \mu) + \epsilon$ is Gaussian with mean $\mu$ and variance $(1 - \kappa)^2 v + \sigma^2$. Stationarity requires this variance to equal $v$, hence $v = \sigma^2 / (2\kappa - \kappa^2)$. With $\kappa = 0.1$ and $\sigma = 1$, $v = 5.26$.
 
 ---
 
@@ -130,9 +137,7 @@ A markov chain is said to be:
 
 ???
 
-- Irreducibility ensures that the chain can explore the entire state space and does not get stuck in a subset of states.
-- Aperiodicity ensures that the chain does not get trapped in cycles, which would prevent convergence to a stationary distribution.
-- Recurrence is the most technical condition. Intuitively, it prevents the chain from "drifting away" to infinity. Without it, you could have an "improper" stationary distribution that doesn't integrate to 1.
+Irreducibility lets the chain reach every part of the state space. Aperiodicity rules out deterministic cycles. Recurrence keeps the chain from drifting away to infinity; without it, the stationary distribution may not integrate to one.
 
 ---
 
@@ -150,10 +155,7 @@ class: middle
 
 ???
 
-The three conditions each play a role:
-- Irreducibility → uniqueness
-- Aperiodicity → convergence (not oscillation)
-- Recurrence → proper distribution (integrates to 1)
+Each condition has a role: irreducibility gives uniqueness, aperiodicity gives convergence, and recurrence gives a stationary distribution that integrates to one.
 
 ---
 
@@ -177,7 +179,7 @@ for all $x$, $x'$.
 
 ???
 
-Intuitively, detailed balance means that the flow of probability from $x$ to $x'$ is equal to the flow from $x'$ to $x$ when the system is in equilibrium (i.e., when the distribution of states is given by $\pi$).
+At equilibrium, with states distributed as $\pi$, the flow of probability from $x$ to $x'$ equals the flow from $x'$ to $x$.
 
 ---
 
@@ -270,7 +272,7 @@ These conditions ensure convergence to $\pi(x)$ by the basic limit theorem.
 
 ???
 
-For irreducibility: We don't need q(x'|x) > 0 for ALL pairs. We just need the proposal to be able to reach all regions where π > 0, possibly through multiple steps.
+It suffices that the proposal reaches every region where $\pi > 0$, possibly in several steps.
 
 ---
 
@@ -294,9 +296,7 @@ Common choices include:
 
 ???
 
-Random walk: Most common in practice. The σ parameter controls exploration speed.
-Langevin: Drift term pushes toward high probability - like "gradient ascent + noise"
-Independence: Useful when you have a good initial guess (e.g., Laplace approximation)
+The random walk is the most common choice, with $\sigma$ setting the step size. The Langevin proposal adds a step along the gradient of $\log \tilde{\pi}$, like gradient ascent with noise. The independence proposal works when a good approximation of $\pi$ is available, such as a Laplace approximation.
 
 ---
 
@@ -338,9 +338,13 @@ class: middle
 
 ## Bayesian inference with MCMC
 
-In Bayesian inference, we are often interested in computing the posterior distribution $$p(z, \theta \mid x) = \frac{p(x \mid z, \theta) p(z, \theta)}{p(x)}$$ of latent variables $z$ and parameters $\theta$ given observed data $x$.
+In Bayesian inference, we are often interested in computing the posterior distribution $$p(\mathbf{z}, \theta \mid \mathbf{x}\_\text{obs}) = \frac{p(\mathbf{x}\_\text{obs} \mid \mathbf{z}, \theta) p(\mathbf{z}, \theta)}{p(\mathbf{x}\_\text{obs})}$$ of latent variables $\mathbf{z}$ and parameters $\theta$ given observed data $\mathbf{x}\_\text{obs}$.
 
-.alert[In general, the normalizer $p(x) = \int p(x \mid z, \theta) p(z, \theta) dz d\theta$ has no closed form.]
+.alert[In general, the normalizer $p(\mathbf{x}\_\text{obs}) = \int p(\mathbf{x}\_\text{obs} \mid \mathbf{z}, \theta) p(\mathbf{z}, \theta) d\mathbf{z} d\theta$ has no closed form.]
+
+???
+
+This is the posterior of Lecture 4, and its normalizer is the marginal likelihood. Lecture 5 left the posterior of the wolf's parameters to this lecture: the Kalman filter gives $p(\mathbf{x}\_{1:T} \mid \theta)$, and MCMC samples $p(\theta \mid \mathbf{x}\_{1:T}) \propto p(\mathbf{x}\_{1:T} \mid \theta) p(\theta)$.
 
 ---
 
@@ -348,34 +352,31 @@ class: middle
 
 .center.width-10[![](figures/lec6/light-bulb.png)]
 
-MCMC methods, such as Metropolis-Hastings, can be used to generate samples from the posterior distribution $p(z, \theta \mid x)$ even when the marginal density $p(x)$ is intractable.
+MCMC methods, such as Metropolis-Hastings, generate samples from the posterior $p(\mathbf{z}, \theta \mid \mathbf{x}\_\text{obs})$ even when the normalizer $p(\mathbf{x}\_\text{obs})$ has no closed form.
 
-Since MCMC methods only require an unnormalized density $\tilde{p}$, .bold[we can use the joint tractable density $p(x, z, \theta) = p(x \mid z, \theta) p(z, \theta)$] as the target distribution, ignoring the marginalization constant $p(x)$.
-
----
-
-class: middle
-
-.italic[Example 3.] Bayesian linear regression. Consider a data set of $N$ observations $x = \\{(x\_i, y\_i)\\}\_{i=1}^N$, where $x\_i \in \mathbb{R}^d$ are input features and $y\_i \in \mathbb{R}$ are target values.
-.center.width-60[![](figures/lec6/example1-data.png)]
+Since MCMC methods only require an unnormalized density $\tilde{p}$, .bold[the joint density $p(\mathbf{x}\_\text{obs}, \mathbf{z}, \theta) = p(\mathbf{x}\_\text{obs} \mid \mathbf{z}, \theta) p(\mathbf{z}, \theta)$ can be used as the target], without the normalizer $p(\mathbf{x}\_\text{obs})$.
 
 ---
 
 class: middle
 
-.center[![](figures/lec6/example1.svg)]
-
-We model the conditional distribution of $y$ given $x$ using a Bayesian linear regression model $$p(y \mid x, w, \log \sigma) p(w) p(\log \sigma),$$ where $p(y \mid x, w, \log \sigma) = \mathcal{N}(y \mid w^T x, \sigma^2)$ is the likelihood, $p(w) = \mathcal{N}(w \mid 0, \tau\_1^2 I)$ is the prior over weights $w$, $p(\log \sigma) = \mathcal{N}(\log \sigma \mid 0, \tau\_2^2)$ is the prior over the log-noise standard deviation, and $\tau\_1, \tau\_2$ are hyperparameters.
+.italic[Example 3.] Bayesian linear regression. Consider a data set $\mathcal{D} = \\{(x\_i, y\_i)\\}\_{i=1}^N$ of $N$ pairs of an input $x\_i \in \mathbb{R}$ and a target $y\_i \in \mathbb{R}$.
+.center.width-70[![](figures/lec6/example1-data.png)]
 
 ---
 
 class: middle
 
-The target distribution is the posterior $p(w, \log \sigma \mid \\{x\_i, y\_i\\}\_{i=1}^N)$, which is proportional to the joint density 
-$$\begin{aligned}
-& p(\\{y\_i\\}\_{i=1}^N \mid \\{x\_i\\}\_{i=1}^N, w, \log \sigma) p(w) p(\log \sigma) \\\\
-&= \left( \prod\_{i=1}^N p(y\_i \mid x\_i, w, \log \sigma) \right) p(w) p(\log \sigma).
-\end{aligned}$$
+.center.width-50[![](figures/lec6/example1.svg)]
+
+We model $y$ given $x$ as a line with Gaussian noise, $$p(y \mid x, \mathbf{w}, \log \sigma) = \mathcal{N}(y \mid w\_0 x + w\_1, \sigma^2),$$ where $\mathbf{w} = (w\_0, w\_1)$ holds the slope and the intercept. The priors are $p(\mathbf{w}) = \mathcal{N}(\mathbf{w} \mid \mathbf{0}, \tau\_1^2 \mathbf{I})$ and $p(\log \sigma) = \mathcal{N}(\log \sigma \mid 0, \tau\_2^2)$, with hyperparameters $\tau\_1$ and $\tau\_2$.
+
+---
+
+class: middle
+
+The target distribution is the posterior $p(\mathbf{w}, \log \sigma \mid \mathcal{D})$, which is proportional to the joint density
+$$p(\mathbf{w}, \log \sigma \mid \mathcal{D}) \propto \left( \prod\_{i=1}^N p(y\_i \mid x\_i, \mathbf{w}, \log \sigma) \right) p(\mathbf{w}) p(\log \sigma).$$
 
 We can use Metropolis-Hastings to sample from this posterior distribution using the joint density as the unnormalized target density.
 
@@ -384,21 +385,21 @@ We can use Metropolis-Hastings to sample from this posterior distribution using 
 class: middle
 
 .center.width-70[![](figures/lec6/example1-traces.png)]
-.center[Markov chain traces for $w\_0$, $w\_1$, and $\log \sigma$ using Metropolis-Hastings.]
+.center[Traces of $w\_0$, $w\_1$ and $\log \sigma$ along the Markov chain of Metropolis-Hastings.]
 
 ---
 
 class: middle
 
-.center.width-70[![](figures/lec6/example1-corner.png)]
-.center[Posterior samples visualized using a corner plot.]
+.center.width-60[![](figures/lec6/example1-corner.png)]
+.center[Posterior samples, after a warm-up of 1000 iterations.]
 
 ---
 
 class: middle
 
 .center.width-70[![](figures/lec6/example1-pp.png)]
-.center[Posterior predictive distribution $p(y \mid x, \\\\{x\\\_i, y\\\_i\\\\}\_{i=1}^N)$.]
+.center[Posterior predictive distribution $p(y \mid x, \mathcal{D})$: median and 5-95% band.]
 
 ---
 
@@ -439,7 +440,7 @@ class: middle
 class: middle
 
 .center.width-70[![](figures/lec6/trace-convergence.png)]
-.center[Two chains run on the same target but initialized differently. <br> Traces show convergence to a same distribution.]
+.center[Two chains run on the same target but initialized differently. <br> Traces show convergence to the same distribution.]
 
 ---
 
@@ -455,7 +456,7 @@ The first quantitative diagnostic to monitor is the .bold[acceptance rate], defi
 
 ???
 
-Here optimal means that the chain explores the target distribution efficiently, balancing exploration and exploitation.
+Optimal means that the chain explores the target fastest, as measured by the effective sample size per iteration.
 
 ---
 
@@ -495,7 +496,7 @@ The .bold[Gelman-Rubin statistic] $\hat{R}$ serves as a convergence diagnostic w
 Let 
 $$W = \frac{1}{M} \sum\_{m=1}^M s\_m^2$$ 
 be the within-chain variance, where $s\_m^2$ is the sample variance of chain $m$, and 
-$$B = \frac{T}{M-1} \sum_{m=1}^M (\bar{x}\_m - \bar{x})^2$$ 
+$$B = \frac{T}{M-1} \sum\_{m=1}^M (\bar{x}\_m - \bar{x})^2$$ 
 be the between-chain variance, where $\bar{x}\_m$ is the sample mean of chain $m$ and $\bar{x}$ is the overall mean across chains. 
 Then, 
 $$\hat{R} = \sqrt{\frac{\frac{T-1}{T} W + \frac{1}{T} B}{W}}.$$
