@@ -45,6 +45,38 @@ def save(fig, name):
     print("wrote", path)
 
 
+# Doeblin condition ---------------------------------------------------------------------
+
+def doeblin():
+    """Two copies of a chain that restarts from nu = N(0, 1) with probability delta at each step
+    and otherwise takes a Gaussian random-walk step, started at -10 and 10 and driven by the
+    same random numbers: they stay 20 apart until the first restart, and coincide from then on."""
+    delta, T = .05, 80
+    rng = np.random.default_rng(3)      # first restart at t = 21, near its mean 1 / delta
+    restart = rng.random(T) < delta
+    nu, eps = rng.standard_normal(T), rng.standard_normal(T)
+    chains = np.empty((2, T))
+    chains[:, 0] = -10, 10
+    for t in range(1, T):
+        prev = chains[:, t - 1]
+        chains[:, t] = nu[t] if restart[t] else prev + eps[t]
+    first = np.argmax(restart[1:]) + 2    # in the time index t = 1, ..., T of the plot
+
+    fig, ax = plt.subplots(figsize=(5.8, 2.6), dpi=200)
+    ax.axvline(first, color=LIGHT, lw=1, ls=(0, (4, 3)))
+    ax.text(first + .8, 9, "first restart from $\\nu$", fontsize=10, va="top")
+    ax.plot(np.arange(1, T + 1), chains[0], color=BLUE, lw=1.2, label="started at $-10$")
+    ax.plot(np.arange(1, T + 1), chains[1], color=ORANGE, lw=1.2, label="started at $10$")
+    ax.set_xlabel("$t$")
+    ax.set_ylabel("$x_t$")
+    ax.set_xlim(1, T)
+    ax.legend(frameon=False, loc="upper right", fontsize=10)
+    tidy(ax)
+    fig.tight_layout()
+    save(fig, "doeblin.png")
+    print("  first restart at t = %d" % first)
+
+
 # Graphical models --------------------------------------------------------------------
 
 def markov_chain():
@@ -468,6 +500,7 @@ def calibration():
 if __name__ == "__main__":
     graphical_models()
     random_walks()
+    doeblin()
     regression()
     diagnostics()
     hmc()

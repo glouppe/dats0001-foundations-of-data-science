@@ -154,11 +154,112 @@ class: middle
 - (Convergence) For any initial distribution $p(x\_1)$, $p(x\_t) \to \pi(x)$ as $t \to \infty$;
 - (Ergodic theorem) For any function $f$ with $\mathbb{E}\_{\pi}[|f(x)|] < \infty$, $$\lim\_{T \to \infty} \frac{1}{T} \sum\_{t=1}^T f(x\_t) = \mathbb{E}\_{\pi}[f(x)]$$ almost surely.
 
-.italic[Proof.] (Omitted and beyond scope.)
+.italic[Proof.] Beyond scope in the general case. The next slides prove it under a stronger condition.
 
 ???
 
 Each condition has a role: irreducibility gives uniqueness, aperiodicity gives convergence, and positive recurrence gives a stationary distribution that integrates to one.
+
+---
+
+class: middle
+
+## Doeblin condition
+
+A Markov chain satisfies the .bold[Doeblin condition] if there exist $m \geq 1$, $\delta > 0$ and a distribution $\nu$ such that
+$$p(x\_{t+m} \in A \mid x\_t = x) \geq \delta \nu(A)$$
+for all states $x$ and sets $A$.
+
+The $m$-step transition model then splits into
+$$p(x\_{t+m} \mid x\_t) = \delta \nu(x\_{t+m}) + (1 - \delta) r(x\_{t+m} \mid x\_t),$$
+where $r$ is another transition model. Every $m$ steps, the chain restarts from $\nu$ with probability $\delta$, whatever its current state.
+
+???
+
+The remainder $r = (p - \delta \nu) / (1 - \delta)$ is non-negative by the condition and integrates to one, so it is a transition model. The split can be read as a coin flip every $m$ steps: with probability $\delta$, draw the next state from $\nu$; otherwise, move with $r$. After a restart, the state no longer depends on $x\_1$.
+
+A finite chain that is irreducible and aperiodic satisfies the condition: some power $P^m$ of its transition matrix has only positive entries, and $\delta = \sum\_y \min\_x P^m(x, y)$. So does an independence sampler whose ratio $\pi / q$ is bounded. Random-walk Metropolis-Hastings on an unbounded space does not: from far away, the chain needs more steps to come back. It still converges at a geometric rate, but the rate depends on the starting point, and the proof is beyond scope.
+
+---
+
+class: middle
+
+.center.width-80[![](figures/lec6/doeblin.png)]
+
+.center[
+
+Two copies of a chain that restarts from $\nu = \mathcal{N}(0, 1)$ with probability $\delta = 0.05$ and otherwise takes a Gaussian random-walk step. Driven by the same random numbers, they coincide from the first restart on.
+
+]
+
+???
+
+This chain satisfies the Doeblin condition with $m = 1$; the Gaussian random walk alone does not. The two copies stay 20 apart until the first restart, at $t = 21$, close to its mean $1 / \delta = 20$. From then on, they share their whole future: the chain has forgotten where it started.
+
+The probability that no restart has happened by step $t$ is $(1 - \delta)^{t - 1}$. If the second copy starts from $\pi$, it stays distributed as $\pi$, and the first copy differs from it only on runs without a restart. This gives the bound of the next slide, by a second route.
+
+---
+
+class: middle
+
+.italic[Theorem.] Under the Doeblin condition, there exists a unique stationary distribution $\pi$, and for any initial distribution $p(x\_1)$,
+$$\\| p(x\_{t}) - \pi \\|\_\text{TV} \leq (1 - \delta)^{\lfloor (t-1)/m \rfloor},$$
+where $\\| \mu - \mu' \\|\_\text{TV} = \sup\_A |\mu(A) - \mu'(A)|$ is the total variation distance.
+
+.italic[Proof.] Write $\mu P^m$ and $\mu R$ for the distributions of $x\_{t+m}$ when $x\_t \sim \mu$, under $p$ and $r$. For two distributions $\mu$ and $\mu'$, the restart terms cancel:
+$$\begin{aligned}
+\mu P^m - \mu' P^m &= \delta \nu + (1 - \delta) \mu R - \delta \nu - (1 - \delta) \mu' R \\\\
+&= (1 - \delta)(\mu R - \mu' R).
+\end{aligned}$$
+A transition model does not increase the total variation distance, hence
+$$\\| \mu P^m - \mu' P^m \\|\_\text{TV} \leq (1 - \delta) \\| \mu - \mu' \\|\_\text{TV}.$$
+
+???
+
+$\mu R(A) - \mu' R(A) = \int r(A \mid x) (\mu - \mu')(dx)$, and $r(A \mid x)$ lies in $[0, 1]$, so this is at most $\sup\_A |\mu(A) - \mu'(A)|$.
+
+Every $m$ steps, any two distributions get closer by a factor $1 - \delta$: $P^m$ is a contraction.
+
+---
+
+class: middle
+
+The contraction gives the three results:
+
+- (Uniqueness) Two stationary distributions $\pi$ and $\pi'$ satisfy
+$$\\| \pi - \pi' \\|\_\text{TV} = \\| \pi P^m - \pi' P^m \\|\_\text{TV} \leq (1 - \delta) \\| \pi - \pi' \\|\_\text{TV},$$
+hence $\pi = \pi'$.
+- (Existence) The distributions $\mu P^{km}$ form a Cauchy sequence, since
+$$\\| \mu P^{(k+1)m} - \mu P^{km} \\|\_\text{TV} \leq (1 - \delta)^k.$$
+Their limit $\pi$ satisfies $\pi P^m = \pi$. Then $\pi P$ is also a fixed point of $P^m$, hence $\pi P = \pi$.
+- (Convergence) Since the total variation distance is at most 1,
+$$\\| p(x\_t) - \pi \\|\_\text{TV} = \\| p(x\_1) P^{t-1} - \pi P^{t-1} \\|\_\text{TV} \leq (1 - \delta)^{\lfloor (t-1)/m \rfloor}.$$
+
+???
+
+Existence is the Banach fixed-point theorem: the space of distributions with the total variation distance is complete, and a contraction on it has a unique fixed point.
+
+---
+
+class: middle
+
+## What the theorem means
+
+The chain .bold[forgets its initial state] at a geometric rate. After a warm-up of a few multiples of $m / \delta$ steps, $x\_t$ is distributed as $\pi$, whatever $x\_1$.
+
+Two states of the chain also become independent as they get far apart. For a bounded $f$ and $x\_1 \sim \pi$,
+$$|\text{Cov}(f(x\_s), f(x\_{s+k}))| \leq 2 \\|f\\|\_\infty^2 (1 - \delta)^{\lfloor k/m \rfloor},$$
+and the variance of the average vanishes:
+$$\mathbb{V}\left[\frac{1}{T} \sum\_{t=1}^T f(x\_t)\right] \approx \frac{\tau\_\text{int}}{T} \mathbb{V}\_\pi[f(x)] \to 0.$$
+The average converges to $\mathbb{E}\_\pi[f(x)]$, as fast as for $T / \tau\_\text{int}$ independent samples.
+
+???
+
+The covariance bound: conditionally on $x\_s = x$, the distribution of $x\_{s+k}$ is $(1-\delta)^{\lfloor k/m \rfloor}$-close to $\pi$ in total variation, so $|\mathbb{E}[f(x\_{s+k}) \mid x\_s] - \mathbb{E}\_\pi[f]| \leq 2 \\|f\\|\_\infty (1-\delta)^{\lfloor k/m \rfloor}$. Under $\pi$, $\mathbb{E}[f(x\_{s+k}) \mid x\_s] - \mathbb{E}\_\pi[f]$ has mean zero, so the covariance is the expectation of its product with $f(x\_s)$, and $|f(x\_s)| \leq \\|f\\|\_\infty$.
+
+Expanding the variance of the average gives $\frac{1}{T} \mathbb{V}\_\pi[f] (1 + 2 \sum\_{k \geq 1} (1 - k/T) \rho\_k)$, where $\rho\_k$ is the autocorrelation at lag $k$. The geometric decay makes the sum converge, to $\tau\_\text{int}$, the integrated autocorrelation time defined with the diagnostics. This is convergence in mean square, hence in probability; the almost sure convergence of the theorem needs more work.
+
+Warm-up and effective sample size, used at the end of the lecture, are these two results put to work. In practice $\delta$ and $m$ are unknown, which is why convergence is checked with diagnostics.
 
 ---
 
