@@ -360,6 +360,35 @@ def two_traces(chains, titles, name, ylim=None):
     save(fig, name)
 
 
+def autocorrelation_figure():
+    """Autocorrelation rho_k against the lag k for the two chains of trace-autocorrelation.png (same
+    seed and order of draws), with the area under each curve shaded up to the window that defines
+    tau_int; tau_int = 1 + 2 sum_k rho_k is twice the shaded area plus one."""
+    rng = np.random.default_rng(3)
+    gauss = lambda x: -.5 * x ** 2
+    n, max_lag = 10000, 1500
+    chains = [rw_mh(gauss, 0.0, .1, n, rng), rw_mh(gauss, 0.0, 2.4, n, rng)]
+    fig, ax = plt.subplots(figsize=(5.8, 2.8), dpi=200)
+    for chain, color, std in zip(chains, [BLUE, ORANGE], ["0.1", "2.4"]):
+        c = chain - chain.mean()
+        acf = np.correlate(c, c, mode="full")[n - 1:n - 1 + max_lag] / (c.var() * n)
+        stop = np.argmax(acf < 0) if (acf < 0).any() else max_lag
+        tau = 1 + 2 * acf[1:stop].sum()
+        lags = np.arange(max_lag)
+        ax.fill_between(lags[:stop], acf[:stop], color=color, alpha=.25, lw=0)
+        ax.plot(lags, acf, color=color, lw=1.2 if color == BLUE else .7,
+                label=r"proposal std %s: $\tau_\mathrm{int} \approx %s$, ESS $\approx %d$"
+                % (std, "%.0f" % tau if tau > 10 else "%.1f" % tau, round(n / tau, -1)))
+    ax.axhline(0, color=LIGHT, lw=.8)
+    ax.set_xlim(0, max_lag)
+    ax.set_xlabel("lag $k$")
+    ax.set_ylabel(r"$\rho_k$")
+    ax.legend(frameon=False, loc="upper right", fontsize=9)
+    tidy(ax)
+    fig.tight_layout()
+    save(fig, "autocorrelation.png")
+
+
 def diagnostics():
     rng = np.random.default_rng(3)
     gauss = lambda x: -.5 * x ** 2
@@ -676,6 +705,7 @@ if __name__ == "__main__":
     mh_animation()
     regression()
     diagnostics()
+    autocorrelation_figure()
     mh_hmc_animation()
     mh_hmc_traces()
     calibration()

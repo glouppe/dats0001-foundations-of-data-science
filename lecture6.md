@@ -698,6 +698,24 @@ In the autocorrelation figure, the two chains of 10000 iterations have $\tau\_\t
 
 class: middle
 
+.center.width-80[![](figures/lec6/autocorrelation.png)]
+
+.center[
+
+Autocorrelation of two random-walk chains of 10000 iterations. <br>$\tau\_\text{int}$ is one plus twice the shaded area.
+
+]
+
+???
+
+These are the two chains of the autocorrelation traces. The chain with small steps stays correlated with its past for hundreds of iterations: its 10000 samples are worth about 20 independent ones. The chain with steps of 2.4 forgets its past within a few iterations: about 2300 independent samples.
+
+The sum defining $\tau\_\text{int}$ is cut at the first negative autocorrelation. Beyond it, the estimated $\rho\_k$ is noise around zero, as the orange curve shows, and summing it would add noise to $\tau\_\text{int}$.
+
+---
+
+class: middle
+
 ## Gelman-Rubin Statistic
 
 The .bold[Gelman-Rubin statistic] $\hat{R}$ serves as a convergence diagnostic when running $M$ independent chains in parallel, each with $T$ samples of a scalar quantity $x$ (after warm-up). 
