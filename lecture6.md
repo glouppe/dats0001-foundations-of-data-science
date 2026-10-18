@@ -389,16 +389,15 @@ For $x' = x$, detailed balance holds trivially.
 
 class: middle
 
-.italic[Proposition.] Under appropriate conditions on $q$, the Markov chain constructed by the Metropolis-Hastings algorithm satisfies the conditions of the basic limit theorem.
+.italic[Proposition.] Let $q(x' \mid x) = q(x')$ be a proposal that ignores the current state, with $\pi(x) \leq M q(x)$ for all $x$. Then the Metropolis-Hastings chain satisfies the Doeblin condition with $m = 1$, $\delta = 1/M$ and $\nu = \pi$.
 
-.italic[Sketch of proof.]
-- Stationarity: $\pi$ is a stationary distribution, by the previous proposition.
+.italic[Proof.] Let $w(x) = \pi(x) / q(x) \leq M$. For $x' \neq x$,
+$$p(x' \mid x) = q(x') \min\left(1, \frac{w(x')}{w(x)}\right) \geq q(x') \frac{w(x')}{M} = \frac{\pi(x')}{M},$$
+since $w(x) \leq M$ and $w(x') / M \leq 1$.
 
-- Aperiodicity: The chain stays at the same state when a proposal is rejected, which happens with probability $r(x) > 0$. This breaks any periodic cycles.
-
-- Irreducibility: If the proposal $q$ has appropriate support, then for any $x, x'$ where $\pi(x), \pi(x') > 0$, there exists a sequence of proposals with positive probability connecting them.
-
-By the basic limit theorem, the chain converges to $\pi$.
+Since $\pi$ is stationary, the Doeblin theorem gives
+$$\\| p(x\_t) - \pi \\|\_\text{TV} \leq \left(1 - \frac{1}{M}\right)^{t-1}.$$
+The better $q$ covers $\pi$, the smaller $M$ and the faster the convergence. A random-walk proposal on an unbounded space does not satisfy the Doeblin condition, but its chain still converges by the basic limit theorem.
 
 ---
 
