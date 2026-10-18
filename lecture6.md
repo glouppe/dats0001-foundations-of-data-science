@@ -263,7 +263,7 @@ class: middle
 
 .success[
 
-Sampling from a target $\pi$ reduces to running an irreducible, aperiodic chain whose stationary distribution is $\pi$. Its states eventually follow $\pi$, and averages along the chain estimate expectations under $\pi$. The first states still depend on $x\_1$ and are discarded as a .bold[warm-up].
+An irreducible, aperiodic chain with stationary distribution $\pi$ samples from $\pi$, after a .bold[warm-up].
 
 ]
 
@@ -271,9 +271,7 @@ Sampling from a target $\pi$ reduces to running an irreducible, aperiodic chain 
 
 .alert[
 
-Still missing:
-- how to build a chain whose stationary distribution is a given target (detailed balance and Metropolis-Hastings);
-- how long to run the chain, when $m$ and $\delta$ are unknown (diagnostics).
+Missing: how to build a chain with stationary distribution $\pi$, and how long to run it.
 
 ]
 
