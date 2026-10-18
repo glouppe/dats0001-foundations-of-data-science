@@ -27,9 +27,9 @@ Materials for DATS0001 Foundations of Data Science, ULiège, Fall 2026.
 | December 7 | Lecture 11: Wrap-up case study<br>`nb11`: Estimating air pollution from satellite data |
 | December 14 | _No lecture_ |
 
-## Homework
+## Case study
 
-(TBD.)
+The [case study](./project/case-study.ipynb) models tides, storm surge and sea level in the harbour of Boston. It is due on December 18, 2026, and accounts for 40% of the grade, evaluated through a 30-minute oral discussion during the January exam session.
 
 ## Setup
 
