@@ -208,9 +208,18 @@ class: middle
 
 .italic[Theorem.] Under the Doeblin condition, there is a unique stationary distribution $\pi$. For any $p(x\_1)$,
 $$\\| p(x\_{t}) - \pi \\|\_\text{TV} \leq (1 - \delta)^{\lfloor (t-1)/m \rfloor},$$
-the probability of no restart in $t - 1$ steps, as in the example. The total variation distance is $\\| p\_1 - p\_1' \\|\_\text{TV} = \sup\_A |p\_1(A) - p\_1'(A)|$.
+the probability of no restart in $t - 1$ steps, as in the example.
 
-.italic[Proof.] Let $p\_1 P^n$ be the distribution of $x\_{t+n}$ when $x\_t \sim p\_1$, and $p\_1 \bar{P}$ likewise for one move of $\bar{p}$. By the split, $p\_1 P^m = \delta \nu + (1 - \delta) p\_1 \bar{P}$, so
+The total variation distance between two distributions $p\_1$ and $p\_1'$ is
+$$\\| p\_1 - p\_1' \\|\_\text{TV} = \sup\_A |p\_1(A) - p\_1'(A)|.$$
+
+---
+
+class: middle
+
+.italic[Proof.] Start two copies of the chain from $p\_1$ and $p\_1'$. Let $p\_1 P^n$ be the distribution of $x\_{t+n}$ when $x\_t \sim p\_1$, and $p\_1 \bar{P}$ likewise for one move of $\bar{p}$. By the split,
+$$p\_1 P^m = \delta \nu + (1 - \delta) p\_1 \bar{P},$$
+so the terms in $\delta \nu$ cancel:
 $$\begin{aligned}
 p\_1 P^m - p\_1' P^m &= \delta \nu + (1 - \delta) p\_1 \bar{P} - \delta \nu - (1 - \delta) p\_1' \bar{P} \\\\
 &= (1 - \delta)(p\_1 \bar{P} - p\_1' \bar{P}).
