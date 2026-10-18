@@ -263,7 +263,7 @@ class: middle
 
 .success[
 
-An irreducible, aperiodic chain with stationary distribution $\pi$ samples from $\pi$, after a .bold[warm-up].
+After a .bold[warm-up], the states of an irreducible, aperiodic chain with stationary distribution $\pi$ are samples from $\pi$.
 
 ]
 
@@ -271,7 +271,7 @@ An irreducible, aperiodic chain with stationary distribution $\pi$ samples from 
 
 .alert[
 
-Missing: how to build a chain with stationary distribution $\pi$, and how long to run it.
+We still need to build such a chain for a given $\pi$, and to know how long to run it.
 
 ]
 
