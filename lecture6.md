@@ -583,6 +583,14 @@ Posterior predictive distribution $p(y \mid x, \mathcal{D})$, median and 5-95% b
 
 ---
 
+class: middle, center
+
+.center.width-10[![](figures/lec6/laptop.png)]
+
+Run the end of `nb06b-mcmc.ipynb` to sample the posterior of the wolf's parameters.
+
+---
+
 class: middle
 
 .center.width-10[![](figures/lec6/medical-diagnostics.png)]
@@ -755,14 +763,6 @@ class: middle
 Coverage of the central credible intervals of level $\alpha$, read from the same ranks. <br>A calibrated sampler follows the diagonal, $P(\theta^\* \in C\_\alpha(\mathcal{D})) = \alpha$.
 
 ]
-
----
-
-class: middle, center
-
-.center.width-10[![](figures/lec6/laptop.png)]
-
-Run the end of `nb06b-mcmc.ipynb` to sample the posterior of the wolf's parameters.
 
 ---
 
