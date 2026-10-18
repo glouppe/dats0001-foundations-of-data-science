@@ -267,8 +267,6 @@ After a .bold[warm-up], the states of an irreducible, aperiodic chain with stati
 
 ]
 
-<br>
-
 .alert[
 
 We still need to build such a chain for a given $\pi$, and to know how long to run it.
