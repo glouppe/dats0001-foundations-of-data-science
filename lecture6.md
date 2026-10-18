@@ -669,7 +669,7 @@ Run $M$ independent chains of $T$ iterations from dispersed starting points. Onc
 
 The .bold[Gelman-Rubin statistic] compares the two:
 $$\hat{R} = \sqrt{\frac{\frac{T-1}{T} W + \frac{1}{T} B}{W}},$$
-where
+where the .bold[within-chain variance] $W$ and the .bold[between-chain variance] $B$ are
 $$W = \frac{1}{M} \sum\_{j=1}^M s\_j^2, \quad B = \frac{T}{M-1} \sum\_{j=1}^M (\bar{x}\_j - \bar{x})^2,$$
 with $s\_j^2$ and $\bar{x}\_j$ the variance and the mean of chain $j$, and $\bar{x}$ the mean of all draws.
 
