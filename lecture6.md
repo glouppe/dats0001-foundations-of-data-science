@@ -16,7 +16,7 @@ class: middle
 
 .question[
 
-The Kalman filter gives the likelihood $p(\mathbf{x}\_{1:T} \mid \theta)$ of the parameters $\theta$ of the wolf model. How do we obtain their posterior $p(\theta \mid \mathbf{x}\_{1:T})$?
+The normalizing constants of the Kalman filter updates multiply into the likelihood $p(\mathbf{x}\_{1:T} \mid \theta)$ of the parameters $\theta$ of the wolf model. How do we obtain their posterior $p(\theta \mid \mathbf{x}\_{1:T})$?
 
 ]
 
