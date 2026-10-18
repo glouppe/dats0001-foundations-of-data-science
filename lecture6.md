@@ -407,8 +407,11 @@ class: middle
 The traces show that random-walk proposals explore the target by small, undirected steps. .bold[Hamiltonian Monte Carlo] (HMC) proposes distant states by following the gradient of $\log \tilde{\pi}$.
 
 The state $\mathbf{x} \in \mathbb{R}^d$ is augmented with a momentum $\mathbf{v} \in \mathbb{R}^d$, and the chain targets the joint distribution
-$$\pi(\mathbf{x}, \mathbf{v}) \propto \tilde{\pi}(\mathbf{x}) \mathcal{N}(\mathbf{v} \mid \mathbf{0}, \mathbf{I}) \propto \exp(-H(\mathbf{x}, \mathbf{v}))$$
-defined by the .bold[Hamiltonian]
+$$\begin{aligned}
+\pi(\mathbf{x}, \mathbf{v}) &\propto \tilde{\pi}(\mathbf{x}) \mathcal{N}(\mathbf{v} \mid \mathbf{0}, \mathbf{I}) \propto \exp(\log \tilde{\pi}(\mathbf{x})) \exp\left(-\frac{1}{2} \mathbf{v}^T \mathbf{v}\right) \\\\
+&= \exp(-H(\mathbf{x}, \mathbf{v})),
+\end{aligned}$$
+where the .bold[Hamiltonian] is
 $$H(\mathbf{x}, \mathbf{v}) = -\log \tilde{\pi}(\mathbf{x}) + \frac{1}{2} \mathbf{v}^T \mathbf{v}.$$
 
 .footnote[Credits: [Duane et al.](https://doi.org/10.1016/0370-2693%2887%2991197-X), 1987; [Neal](https://arxiv.org/abs/1206.1901), 2011.]
