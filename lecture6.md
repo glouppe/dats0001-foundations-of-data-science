@@ -228,8 +228,12 @@ $$\begin{aligned}
 p\_1 P^m - p\_1' P^m &= \delta \nu + (1 - \delta) p\_1 \bar{P} - \delta \nu - (1 - \delta) p\_1' \bar{P} \\\\
 &= (1 - \delta)(p\_1 \bar{P} - p\_1' \bar{P}).
 \end{aligned}$$
-Since $\bar{p}$ does not increase the total variation distance,
-$$\\| p\_1 P^m - p\_1' P^m \\|\_\text{TV} \leq (1 - \delta) \\| p\_1 - p\_1' \\|\_\text{TV}.$$
+Taking the total variation distance of both sides,
+$$\begin{aligned}
+\\| p\_1 P^m - p\_1' P^m \\|\_\text{TV} &= (1 - \delta) \\| p\_1 \bar{P} - p\_1' \bar{P} \\|\_\text{TV} \\\\
+&\leq (1 - \delta) \\| p\_1 - p\_1' \\|\_\text{TV},
+\end{aligned}$$
+since moving two distributions with the same transition model $\bar{p}$ cannot make them more different.
 
 ---
 
