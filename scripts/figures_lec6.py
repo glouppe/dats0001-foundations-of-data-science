@@ -634,14 +634,24 @@ def mh_hmc_traces():
     fig.tight_layout(rect=(0, 0, 1, .94))
     save(fig, "mh-traces.png")
 
-    fig, axes = plt.subplots(2, 2, figsize=(5.8, 3.4), dpi=200, sharex=True, sharey=True)
+    # MH and HMC side by side: full traces of x_1 and zooms on the same window
+    fig, axes = plt.subplots(2, 2, figsize=(5.8, 3.6), dpi=200, sharey=True)
     for j, run in enumerate((mh, hmc)):
-        for d in range(2):
-            trace(axes[d, j], run["chain"], d, legend=j == 0 and d == 0)
+        trace(axes[0, j], run["chain"], 0, legend=j == 0)
+        axes[0, j].axvspan(t0, t1, color=ORANGE, alpha=.25, lw=0)
         axes[0, j].set_title(run["name"], fontsize=10, pad=3)
-        axes[1, j].set_xlabel("iteration $t$")
+        axes[0, j].set_xlabel("iteration $t$", fontsize=9)
+        for k in range(2):
+            axes[1, j].axhline(MIX_MU[k, 0], color=GREY, lw=.8, ls=(0, (4, 3)))
+        axes[1, j].step(t, run["chain"][t0:t1 + 1, 0], where="post", color=BLUE, lw=1)
+        axes[1, j].set_xlim(t0, t1)
+        axes[1, j].set_ylim(-4, 4)
+        axes[1, j].set_xlabel("iteration $t$ (zoom)", fontsize=9)
+        tidy(axes[1, j])
+        for a in axes[:, j]:
+            a.tick_params(labelsize=8)
     for d in range(2):
-        axes[d, 0].set_ylabel(labels[d])
+        axes[d, 0].set_ylabel(labels[0])
     fig.legend(frameon=False, loc="upper center", fontsize=9)
     fig.tight_layout(rect=(0, 0, 1, .92))
     save(fig, "mh-hmc-traces.png")

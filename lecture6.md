@@ -464,7 +464,7 @@ class: middle
 
 .center[
 
-Traces of $x\_1$ and $x\_2$ for Metropolis-Hastings and HMC.
+Traces of $x\_1$ for Metropolis-Hastings and HMC, with zooms on 100 iterations.
 
 ]
 
