@@ -589,7 +589,7 @@ class: middle
 
 ## Diagnostics for MCMC
 
-The limit theorem guarantees that a chain converges to the target, but not how fast, since $m$ and $\delta$ are unknown. Diagnostics check the chains themselves in terms of .bold[autocorrelation], .bold[mixing] and .bold[convergence].
+The limit theorem guarantees that a chain converges to the target, but not how fast. Diagnostics check the chains themselves in terms of .bold[autocorrelation], .bold[mixing] and .bold[convergence].
 
 ---
 
@@ -632,9 +632,6 @@ The first quantitative diagnostic to monitor is the .bold[acceptance rate], defi
 
 - A very low acceptance rate (e.g., < 10%) indicates that the proposal distribution is making too large jumps, leading to many rejections.
 - A very high acceptance rate (e.g., > 80%) suggests that the proposal distribution is making too small jumps, resulting in slow exploration of the state space.
-- For a Gaussian random-walk proposal, the optimal acceptance rate is about 44% in one dimension and decreases to 23.4% as the dimension grows.
-
-.footnote[Credits: Gelman, Roberts and Gilks, 1996; [Roberts, Gelman and Gilks](https://doi.org/10.1214/aoap/1034625254), 1997.]
 
 ---
 
