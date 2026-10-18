@@ -206,15 +206,15 @@ The two copies coincide from the first restart on.
 
 class: middle
 
+The total variation distance between two distributions $p\_1$ and $p\_1'$ is
+$$\\| p\_1 - p\_1' \\|\_\text{TV} = \sup\_A |p\_1(A) - p\_1'(A)|.$$
+
 .italic[Theorem.] Under the Doeblin condition,
 - (Existence) the chain has a stationary distribution $\pi$;
 - (Uniqueness) $\pi$ is its only stationary distribution;
 - (Convergence) for any $p(x\_1)$,
 $$\\| p(x\_{t}) - \pi \\|\_\text{TV} \leq (1 - \delta)^{\lfloor (t-1)/m \rfloor},$$
 the probability of no restart in $t - 1$ steps, as in the example.
-
-The total variation distance between two distributions $p\_1$ and $p\_1'$ is
-$$\\| p\_1 - p\_1' \\|\_\text{TV} = \sup\_A |p\_1(A) - p\_1'(A)|.$$
 
 ---
 
