@@ -231,7 +231,7 @@ p\_1 P^m - p\_1' P^m &= \delta \nu + (1 - \delta) p\_1 \bar{P} - \delta \nu - (1
 Taking the total variation distance of both sides,
 $$\begin{aligned}
 \\| p\_1 P^m - p\_1' P^m \\|\_\text{TV} &= (1 - \delta) \\| p\_1 \bar{P} - p\_1' \bar{P} \\|\_\text{TV} \\\\
-&\leq (1 - \delta) \\| p\_1 - p\_1' \\|\_\text{TV},
+&\leq (1 - \delta) \\| p\_1 - p\_1' \\|\_\text{TV}, \qquad (\star)
 \end{aligned}$$
 since moving two distributions with the same transition model $\bar{p}$ cannot make them more different.
 
@@ -246,15 +246,15 @@ With the notation $p\_1 P^n$, a distribution $\pi$ is stationary if and only if 
 - (Uniqueness) Two distributions unchanged by $m$ steps, $\pi P^m = \pi$ and $\pi' P^m = \pi'$, satisfy
 $$\\| \pi - \pi' \\|\_\text{TV} = \\| \pi P^m - \pi' P^m \\|\_\text{TV} \leq (1 - \delta) \\| \pi - \pi' \\|\_\text{TV},$$
 hence $\pi = \pi'$.
-- (Existence) Applying the inequality $k$ times to $p\_1 P^m$ and $p\_1$, whose distance is at most 1,
-$$\\| p\_1 P^{(k+1)m} - p\_1 P^{km} \\|\_\text{TV} \leq (1 - \delta)^k.$$
+- (Existence) Applying $(\star)$ $k$ times to $p\_1 P^m$ and $p\_1$,
+$$\\| p\_1 P^{(k+1)m} - p\_1 P^{km} \\|\_\text{TV} \leq (1 - \delta)^k \\| p\_1 P^m - p\_1 \\|\_\text{TV} \leq (1 - \delta)^k.$$
 The steps shrink geometrically, so $p\_1 P^{km}$ converges to a limit $\pi$, with $\pi P^m = \pi$. Then $(\pi P) P^m = (\pi P^m) P = \pi P$: $\pi P$ is also unchanged by $m$ steps, so $\pi P = \pi$ by uniqueness.
 
 ---
 
 class: middle
 
-- (Convergence) Since $\pi$ is stationary, $\pi = \pi P^{t-1}$. Applying the inequality $\lfloor (t-1)/m \rfloor$ times, since the remaining steps cannot increase the distance, and since the total variation distance is at most 1,
+- (Convergence) Since $\pi$ is stationary, $\pi = \pi P^{t-1}$. Applying $(\star)$ $\lfloor (t-1)/m \rfloor$ times to $p(x\_1)$ and $\pi$, since the remaining steps cannot increase the distance, and since the total variation distance is at most 1,
 $$\\| p(x\_t) - \pi \\|\_\text{TV} = \\| p(x\_1) P^{t-1} - \pi P^{t-1} \\|\_\text{TV} \leq (1 - \delta)^{\lfloor (t-1)/m \rfloor}.$$
 
 ---
