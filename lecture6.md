@@ -669,7 +669,11 @@ Run $M$ independent chains of $T$ iterations from dispersed starting points. Onc
 
 The .bold[Gelman-Rubin statistic] compares the two:
 $$\hat{R} = \sqrt{\frac{\frac{T-1}{T} W + \frac{1}{T} B}{W}},$$
-where $W$ is the average variance within the chains and $B / T$ the variance of the chain means. It approaches 1 as the chains agree.
+where
+$$W = \frac{1}{M} \sum\_{j=1}^M s\_j^2, \quad B = \frac{T}{M-1} \sum\_{j=1}^M (\bar{x}\_j - \bar{x})^2,$$
+with $s\_j^2$ and $\bar{x}\_j$ the variance and the mean of chain $j$, and $\bar{x}$ the mean of all draws.
+
+$\hat{R}$ approaches 1 as the chains agree.
 
 .footnote[Credits: [Gelman and Rubin](https://doi.org/10.1214/ss/1177011136), 1992.]
 
