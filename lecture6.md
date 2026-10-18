@@ -352,7 +352,7 @@ class: middle
 
 .center[
 
-Traces of $x\_1$ and $x\_2$ along the same Markov chain of Metropolis-Hastings.
+Trace of $x\_1$ along the same chain, and a zoom on 100 iterations. <br>Each flat segment is a run of rejected proposals.
 
 ]
 

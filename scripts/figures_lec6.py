@@ -614,11 +614,22 @@ def mh_hmc_traces():
         ax.set_xlim(0, len(chain) - 1)
         tidy(ax)
 
-    fig, axes = plt.subplots(2, 1, figsize=(5.8, 3.4), dpi=200, sharex=True)
-    for d, ax in enumerate(axes):
-        trace(ax, mh["chain"], d, legend=d == 0)
-        ax.set_ylabel(labels[d])
-    axes[-1].set_xlabel("iteration $t$")
+    # MH alone: the full trace of x_1, and a zoom where rejections show as flat segments
+    t0, t1 = 2000, 2100
+    fig, axes = plt.subplots(2, 1, figsize=(5.8, 3.6), dpi=200)
+    trace(axes[0], mh["chain"], 0, legend=True)
+    axes[0].axvspan(t0, t1, color=ORANGE, alpha=.25, lw=0)
+    axes[0].set_ylabel(labels[0])
+    axes[0].set_xlabel("iteration $t$")
+    t = np.arange(t0, t1 + 1)
+    for k in range(2):
+        axes[1].axhline(MIX_MU[k, 0], color=GREY, lw=.8, ls=(0, (4, 3)))
+    axes[1].step(t, mh["chain"][t0:t1 + 1, 0], where="post", color=BLUE, lw=1)
+    axes[1].set_xlim(t0, t1)
+    axes[1].set_ylim(-4, 4)
+    axes[1].set_ylabel(labels[0])
+    axes[1].set_xlabel("iteration $t$ (zoom on the orange window)")
+    tidy(axes[1])
     fig.legend(frameon=False, loc="upper center", fontsize=9)
     fig.tight_layout(rect=(0, 0, 1, .94))
     save(fig, "mh-traces.png")
