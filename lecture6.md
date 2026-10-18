@@ -239,15 +239,20 @@ since moving two distributions with the same transition model $\bar{p}$ cannot m
 
 class: middle
 
-Every $m$ steps, any two distributions get closer by a factor $1 - \delta$. With this notation, a distribution $\pi$ is stationary if and only if $\pi P = \pi$. The three parts of the theorem follow, uniqueness first:
+By the inequality of the proof, every $m$ steps, any two distributions get closer by a factor $1 - \delta$. With the notation $p\_1 P^n$, a distribution $\pi$ is stationary if and only if $\pi P = \pi$. The three parts of the theorem follow, uniqueness first:
 
 - (Uniqueness) Two stationary distributions $\pi$ and $\pi'$ satisfy $\pi P^m = \pi$ and $\pi' P^m = \pi'$, so
 $$\\| \pi - \pi' \\|\_\text{TV} = \\| \pi P^m - \pi' P^m \\|\_\text{TV} \leq (1 - \delta) \\| \pi - \pi' \\|\_\text{TV},$$
 hence $\pi = \pi'$.
-- (Existence) The distributions $p\_1 P^{km}$ get closer and closer to each other,
-$$\\| p\_1 P^{(k+1)m} - p\_1 P^{km} \\|\_\text{TV} \leq (1 - \delta)^k.$$
-so they converge to a limit $\pi$, with $\pi P^m = \pi$. Then $(\pi P) P^m = (\pi P^m) P = \pi P$, so $\pi P$ is also unchanged by $P^m$, and $\pi P = \pi$ by uniqueness.
-- (Convergence) Applying the inequality $\lfloor (t-1)/m \rfloor$ times, and since the total variation distance is at most 1,
+- (Existence) Applying the inequality $k$ times to $p\_1 P^m$ and $p\_1$, and since the total variation distance is at most 1,
+$$\\| p\_1 P^{(k+1)m} - p\_1 P^{km} \\|\_\text{TV} \leq (1 - \delta)^k,$$
+so the distributions $p\_1 P^{km}$ get closer and closer to each other and converge to a limit $\pi$, with $\pi P^m = \pi$. Then $(\pi P) P^m = (\pi P^m) P = \pi P$, so $\pi P$ is also unchanged by $P^m$, and $\pi P = \pi$ by uniqueness.
+
+---
+
+class: middle
+
+- (Convergence) Since $\pi$ is stationary, $\pi = \pi P^{t-1}$. Applying the inequality $\lfloor (t-1)/m \rfloor$ times, since the remaining steps cannot increase the distance, and since the total variation distance is at most 1,
 $$\\| p(x\_t) - \pi \\|\_\text{TV} = \\| p(x\_1) P^{t-1} - \pi P^{t-1} \\|\_\text{TV} \leq (1 - \delta)^{\lfloor (t-1)/m \rfloor}.$$
 
 ---
