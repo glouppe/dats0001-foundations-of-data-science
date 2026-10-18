@@ -424,13 +424,13 @@ In physics, the Hamiltonian is the total energy of a system with position $\math
 
 class: middle
 
-## Hamiltonian dynamics
+## Following the gradient
 
-The Hamiltonian dynamics move $(\mathbf{x}, \mathbf{v})$ along a fictitious time $s$,
-$$\frac{d\mathbf{x}}{ds} = \frac{\partial H}{\partial \mathbf{v}} = \mathbf{v}, \quad \frac{d\mathbf{v}}{ds} = -\frac{\partial H}{\partial \mathbf{x}} = \nabla \log \tilde{\pi}(\mathbf{x}).$$
-These are Newton's laws for a ball rolling on the surface $-\log \tilde{\pi}(\mathbf{x})$: the position moves with the momentum, and the momentum is pushed towards higher density.
+HMC moves $(\mathbf{x}, \mathbf{v})$ continuously along a time $s$,
+$$\frac{d\mathbf{x}}{ds} = \mathbf{v}, \quad \frac{d\mathbf{v}}{ds} = \nabla \log \tilde{\pi}(\mathbf{x}).$$
+The state moves in the direction $\mathbf{v}$, and $\mathbf{v}$ is pushed towards higher density: this is gradient ascent with momentum.
 
-The dynamics keep $H$ constant:
+These dynamics keep $H$ constant:
 $$\frac{dH}{ds} = -\nabla \log \tilde{\pi}(\mathbf{x}) \cdot \frac{d\mathbf{x}}{ds} + \mathbf{v} \cdot \frac{d\mathbf{v}}{ds} = -\nabla \log \tilde{\pi}(\mathbf{x}) \cdot \mathbf{v} + \mathbf{v} \cdot \nabla \log \tilde{\pi}(\mathbf{x}) = 0.$$
 Hence the density $\pi(\mathbf{x}, \mathbf{v}) \propto \exp(-H(\mathbf{x}, \mathbf{v}))$ is also constant along them.
 
