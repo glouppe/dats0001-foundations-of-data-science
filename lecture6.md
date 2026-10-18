@@ -685,17 +685,9 @@ class: middle
 
 .center[
 
-Four Metropolis-Hastings chains on the two-mode target, started at its corners.
+Four Metropolis-Hastings chains on the two-mode target, started at its corners. <br>In practice, chains are run until $\hat{R} < 1.01$.
 
 ]
-
----
-
-class: middle
-
-In practice, $\hat{R}$ is computed on each half of each chain, which catches a chain that drifts, and on the ranks of the draws, which makes it robust to heavy tails.
-
-The chains are run until $\hat{R} < 1.01$ for every quantity of interest.
 
 .footnote[Credits: [Vehtari et al.](https://doi.org/10.1214/20-BA1221), 2021.]
 
