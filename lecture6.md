@@ -210,8 +210,11 @@ class: middle
 $$\\| p(x\_{t}) - \pi \\|\_\text{TV} \leq (1 - \delta)^{\lfloor (t-1)/m \rfloor},$$
 the probability of no restart in $t - 1$ steps, as in the example. The total variation distance is $\\| p\_1 - p\_1' \\|\_\text{TV} = \sup\_A |p\_1(A) - p\_1'(A)|$.
 
-.italic[Proof.] Let $p\_1 P^n$ be the distribution of $x\_{t+n}$ when $x\_t \sim p\_1$, and $p\_1 \bar{P}$ likewise for one move of $\bar{p}$. The terms in $\delta \nu$ cancel:
-$$p\_1 P^m - p\_1' P^m = (1 - \delta)(p\_1 \bar{P} - p\_1' \bar{P}).$$
+.italic[Proof.] Let $p\_1 P^n$ be the distribution of $x\_{t+n}$ when $x\_t \sim p\_1$, and $p\_1 \bar{P}$ likewise for one move of $\bar{p}$. By the split, $p\_1 P^m = \delta \nu + (1 - \delta) p\_1 \bar{P}$, so
+$$\begin{aligned}
+p\_1 P^m - p\_1' P^m &= \delta \nu + (1 - \delta) p\_1 \bar{P} - \delta \nu - (1 - \delta) p\_1' \bar{P} \\\\
+&= (1 - \delta)(p\_1 \bar{P} - p\_1' \bar{P}).
+\end{aligned}$$
 Since $\bar{p}$ does not increase the total variation distance,
 $$\\| p\_1 P^m - p\_1' P^m \\|\_\text{TV} \leq (1 - \delta) \\| p\_1 - p\_1' \\|\_\text{TV}.$$
 
