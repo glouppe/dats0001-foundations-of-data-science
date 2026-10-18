@@ -48,13 +48,15 @@ def save(fig, name):
 # Doeblin condition ---------------------------------------------------------------------
 
 def doeblin_overlap():
-    """m-step transition densities of a Gaussian random walk truncated to [-3, 3], from the starting
+    """m-step transition densities of a Gaussian random walk with steps of standard deviation 1.5,
+    truncated to [-3, 3], from the starting
     states -3, -2, ..., 3, for m = 1 and m = 4 (top). Their pointwise minimum over all starting states
     is delta * nu, shaded; delta is its area. Below, nu itself, the common part rescaled to area 1,
     on its own scale."""
     g = np.linspace(-3, 3, 601)
     dx = g[1] - g[0]
-    K = np.exp(-.5 * (g[None, :] - g[:, None]) ** 2)
+    step = 1.5                                       # standard deviation of a step
+    K = np.exp(-.5 * ((g[None, :] - g[:, None]) / step) ** 2)
     K /= K.sum(1, keepdims=True) * dx                # rows are densities on the grid
     starts = np.arange(-3, 4)
     fig, axes = plt.subplots(2, 2, figsize=(5.8, 3.9), dpi=200, sharex=True,
@@ -77,7 +79,7 @@ def doeblin_overlap():
             else:
                 ax.plot(g, row, color=GREY, lw=.6, alpha=.6,
                         label="$x_t = -2, \\ldots, 2$" if x0 == -2 else None)
-        ax.set_title(r"$m = %d$, $\delta = %.2g$" % (m, delta), fontsize=10, pad=3)
+        ax.set_title(r"$m = %d$, $\delta = %.2f$" % (m, delta), fontsize=10, pad=3)
         axn.fill_between(g, common / delta, color=GREEN, alpha=.25, lw=0)
         axn.plot(g, common / delta, color=GREEN, lw=1.2)
         axn.set_xlabel("$x_{t+m}$")
