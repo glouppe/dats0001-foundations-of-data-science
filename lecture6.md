@@ -261,11 +261,21 @@ $$\\| p(x\_t) - \pi \\|\_\text{TV} = \\| p(x\_1) P^{t-1} - \pi P^{t-1} \\|\_\tex
 
 class: middle
 
-The first states of a chain still depend on $x\_1$. They are discarded as a .bold[warm-up].
+.success[
 
-Two questions remain: how to build a chain whose stationary distribution is a given target, and how long to run it when $m$ and $\delta$ are unknown.
+Sampling from a target $\pi$ reduces to running an irreducible, aperiodic chain whose stationary distribution is $\pi$. Its states eventually follow $\pi$, and averages along the chain estimate expectations under $\pi$. The first states still depend on $x\_1$ and are discarded as a .bold[warm-up].
 
-Detailed balance and Metropolis-Hastings answer the first. Diagnostics, at the end of the lecture, address the second.
+]
+
+<br>
+
+.alert[
+
+Still missing:
+- how to build a chain whose stationary distribution is a given target (detailed balance and Metropolis-Hastings);
+- how long to run the chain, when $m$ and $\delta$ are unknown (diagnostics).
+
+]
 
 ---
 
