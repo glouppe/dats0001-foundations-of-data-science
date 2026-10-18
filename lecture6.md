@@ -130,7 +130,7 @@ class: middle
 Let $\nu$ be a distribution on the state space, such as $\mathcal{N}(0, 1)$ on the real line. A set $A$ has positive measure if its probability $\nu(A)$ under $\nu$ is positive. A Markov chain is said to be:
 - .bold[irreducible] if any set $A$ with positive measure $\nu(A) > 0$ can be reached from any state $x$, i.e., there exists $t$ such that $p(x\_t \in A \mid x\_1 = x) > 0$.
 - .bold[aperiodic] if there is no deterministic cycle, i.e., the state space cannot be split into $d \geq 2$ disjoint sets that the chain visits in turn. For discrete state spaces, the possible return times $\\{t \geq 1 : p(x\_{1+t} = x \mid x\_1 = x) > 0\\}$ have greatest common divisor 1 for all $x$.
-- for discrete state spaces, .bold[positive recurrent] if the expected return time to any state is finite; for continuous state spaces, .bold[positive Harris recurrent] if the chain returns to any set $A$ with positive measure $\nu(A) > 0$ infinitely often with probability 1 and has a stationary distribution.
+- .bold[Harris recurrent] if, from any state, the chain returns to any set $A$ with positive measure $\nu(A) > 0$ infinitely often with probability 1.
 
 ---
 
@@ -138,15 +138,15 @@ class: middle
 
 ## Basic limit theorem for Markov chains
 
-.italic[Theorem.] If a time-homogeneous Markov chain is irreducible, aperiodic, and positive (Harris) recurrent, then it satisfies the following properties:
+.italic[Theorem.] If a time-homogeneous Markov chain has a stationary distribution $\pi$ and is irreducible and aperiodic, then:
 
-- (Existence and uniqueness) There exists a .bold[unique] stationary distribution $\pi$;
-- (Convergence) For any initial distribution $p(x\_1)$, $p(x\_t) \to \pi(x)$ as $t \to \infty$;
+- (Uniqueness) $\pi$ is its .bold[only] stationary distribution;
+- (Convergence) For almost any initial state $x\_1$, $p(x\_t) \to \pi(x)$ as $t \to \infty$, and for every $x\_1$ if the chain is Harris recurrent;
 - (Ergodic theorem) For any function $f$ with $\mathbb{E}\_{\pi}[|f(x)|] < \infty$, $$\lim\_{T \to \infty} \frac{1}{T} \sum\_{t=1}^T f(x\_t) = \mathbb{E}\_{\pi}[f(x)]$$ almost surely.
 
 .italic[Proof.] Beyond scope in the general case. The next slides prove it under a stronger condition.
 
-.footnote[Credits: [Meyn and Tweedie](https://doi.org/10.1017/CBO9780511626630), Markov Chains and Stochastic Stability, 2009.]
+.footnote[Credits: [Meyn and Tweedie](https://doi.org/10.1017/CBO9780511626630), Markov Chains and Stochastic Stability, 2009; [Tierney](https://doi.org/10.1214/aos/1176325750), 1994.]
 
 ---
 
@@ -357,16 +357,18 @@ For $x' = x$, detailed balance holds trivially.
 
 class: middle
 
-.italic[Proposition.] The Markov chain constructed by the Metropolis-Hastings algorithm satisfies the regularity conditions under appropriate conditions on $q$.
+.italic[Proposition.] Under appropriate conditions on $q$, the Markov chain constructed by the Metropolis-Hastings algorithm satisfies the conditions of the basic limit theorem.
 
 .italic[Sketch of proof.]
+- Stationarity: $\pi$ is a stationary distribution, by the previous proposition.
+
 - Aperiodicity: The chain stays at the same state when a proposal is rejected, which happens with probability $r(x) > 0$. This breaks any periodic cycles.
 
 - Irreducibility: If the proposal $q$ has appropriate support, then for any $x, x'$ where $\pi(x), \pi(x') > 0$, there exists a sequence of proposals with positive probability connecting them.
 
-- Recurrence: If $\pi$ is a proper probability distribution, the chain is positive Harris recurrent. (Proof beyond scope)
+- Harris recurrence: An irreducible Metropolis-Hastings chain is Harris recurrent. (Proof beyond scope)
 
-These conditions ensure convergence to $\pi(x)$ by the basic limit theorem.
+By the basic limit theorem, the chain converges to $\pi$ from every initial state.
 
 ---
 
