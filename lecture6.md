@@ -129,7 +129,7 @@ class: middle
 
 Let $\nu$ be a distribution on the state space, such as $\mathcal{N}(0, 1)$ on the real line. A set $A$ has positive measure if its probability $\nu(A)$ under $\nu$ is positive. A Markov chain is said to be:
 - .bold[irreducible] if any set $A$ with positive measure $\nu(A) > 0$ can be reached from any state $x$, i.e., there exists $t$ such that $p(x\_t \in A \mid x\_1 = x) > 0$.
-- .bold[aperiodic] if there is no deterministic cycle, i.e., the state space cannot be split into $d \geq 2$ disjoint sets that the chain visits in turn. For discrete state spaces, the greatest common divisor of $\\{t : p(x\_t = x \mid x\_1 = x) > 0\\}$ is 1 for all $x$.
+- .bold[aperiodic] if there is no deterministic cycle, i.e., the state space cannot be split into $d \geq 2$ disjoint sets that the chain visits in turn. For discrete state spaces, the possible return times $\\{t \geq 1 : p(x\_{1+t} = x \mid x\_1 = x) > 0\\}$ have greatest common divisor 1 for all $x$.
 - for discrete state spaces, .bold[positive recurrent] if the expected return time to any state is finite; for continuous state spaces, .bold[positive Harris recurrent] if the chain returns to any set $A$ with positive measure $\nu(A) > 0$ infinitely often with probability 1 and has a stationary distribution that integrates to one.
 
 ---
