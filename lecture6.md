@@ -697,7 +697,7 @@ class: middle
 
 ## Calibration
 
-Diagnostics cannot detect a bug in the log density.
+Diagnostics cannot detect an error in the log density, the sampler or the posterior approximation.
 
 In simulated experiments, draw $\theta^\* \sim p(\theta)$, simulate $\mathcal{D} \sim p(\mathcal{D} \mid \theta^\*)$, and compute a credible region $C\_\alpha(\mathcal{D})$ of level $\alpha$. An exact posterior is .bold[calibrated]:
 $$P(\theta^\* \in C\_\alpha(\mathcal{D})) = \alpha.$$
