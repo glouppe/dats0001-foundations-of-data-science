@@ -206,7 +206,10 @@ The two copies coincide from the first restart on.
 
 class: middle
 
-.italic[Theorem.] Under the Doeblin condition, there is a unique stationary distribution $\pi$. For any $p(x\_1)$,
+.italic[Theorem.] Under the Doeblin condition,
+- (Existence) the chain has a stationary distribution $\pi$;
+- (Uniqueness) $\pi$ is its only stationary distribution;
+- (Convergence) for any $p(x\_1)$,
 $$\\| p(x\_{t}) - \pi \\|\_\text{TV} \leq (1 - \delta)^{\lfloor (t-1)/m \rfloor},$$
 the probability of no restart in $t - 1$ steps, as in the example.
 
@@ -231,7 +234,7 @@ $$\\| p\_1 P^m - p\_1' P^m \\|\_\text{TV} \leq (1 - \delta) \\| p\_1 - p\_1' \\|
 
 class: middle
 
-Every $m$ steps, any two distributions get closer by a factor $1 - \delta$. With this notation, a distribution $\pi$ is stationary if and only if $\pi P = \pi$. The three results follow:
+Every $m$ steps, any two distributions get closer by a factor $1 - \delta$. With this notation, a distribution $\pi$ is stationary if and only if $\pi P = \pi$. The three parts of the theorem follow, uniqueness first:
 
 - (Uniqueness) Two stationary distributions $\pi$ and $\pi'$ satisfy $\pi P^m = \pi$ and $\pi' P^m = \pi'$, so
 $$\\| \pi - \pi' \\|\_\text{TV} = \\| \pi P^m - \pi' P^m \\|\_\text{TV} \leq (1 - \delta) \\| \pi - \pi' \\|\_\text{TV},$$
