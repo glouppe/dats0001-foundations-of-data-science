@@ -697,13 +697,10 @@ class: middle
 
 ## Calibration
 
-Diagnostics check that the chains have converged. They do not check that they converged to the right posterior: a bug in the log density goes unnoticed.
+Diagnostics cannot detect a bug in the log density.
 
-Repeat many simulated experiments. In each, draw parameters $\theta^\* \sim p(\theta)$, simulate data $\mathcal{D} \sim p(\mathcal{D} \mid \theta^\*)$, and compute a credible region $C\_\alpha(\mathcal{D})$ of level $\alpha$, which has posterior probability $\alpha$.
-
-If the posterior is exact, $C\_\alpha(\mathcal{D})$ contains $\theta^\*$ in a fraction $\alpha$ of the experiments:
+In simulated experiments, draw $\theta^\* \sim p(\theta)$, simulate $\mathcal{D} \sim p(\mathcal{D} \mid \theta^\*)$, and compute a credible region $C\_\alpha(\mathcal{D})$ of level $\alpha$. An exact posterior is .bold[calibrated]:
 $$P(\theta^\* \in C\_\alpha(\mathcal{D})) = \alpha.$$
-The posterior is then .bold[calibrated].
 
 ---
 
