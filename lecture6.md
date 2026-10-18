@@ -389,15 +389,14 @@ For $x' = x$, detailed balance holds trivially.
 
 class: middle
 
-.italic[Proposition.] Let $q(x' \mid x) = q(x')$ be a proposal that ignores the current state, with $\pi(x) \leq M q(x)$ for all $x$. Then the Metropolis-Hastings chain satisfies the Doeblin condition with $m = 1$, $\delta = 1/M$ and $\nu = \pi$.
+.italic[Proposition.] If $q(x' \mid x) > 0$ and $\pi(x) > 0$ for all $x$ and $x'$, as with a Gaussian random-walk proposal, the Metropolis-Hastings chain satisfies the conditions of the basic limit theorem.
 
-.italic[Proof.] Let $w(x) = \pi(x) / q(x) \leq M$. For $x' \neq x$,
-$$p(x' \mid x) = q(x') \min\left(1, \frac{w(x')}{w(x)}\right) \geq q(x') \frac{w(x')}{M} = \frac{\pi(x')}{M},$$
-since $w(x) \leq M$ and $w(x') / M \leq 1$.
+.italic[Proof.]
+- Stationarity: $\pi$ is a stationary distribution, by the previous proposition.
+- Irreducibility: for $x' \neq x$, $p(x' \mid x) = q(x' \mid x) \alpha(x' \mid x) > 0$, since both factors are positive. Taking $\nu = \pi$, any set $A$ with positive measure is reached in one step from any state.
+- Aperiodicity: since any set with positive measure can be reached in one step from any state, the chain is never forced to cycle through sets.
 
-Since $\pi$ is stationary, the Doeblin theorem gives
-$$\\| p(x\_t) - \pi \\|\_\text{TV} \leq \left(1 - \frac{1}{M}\right)^{t-1}.$$
-The better $q$ covers $\pi$, the smaller $M$ and the faster the convergence. A random-walk proposal on an unbounded space does not satisfy the Doeblin condition, but its chain still converges by the basic limit theorem.
+By the basic limit theorem, the chain converges to $\pi$.
 
 ---
 
