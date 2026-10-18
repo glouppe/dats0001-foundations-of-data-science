@@ -130,7 +130,6 @@ class: middle
 Let $\nu$ be a distribution on the state space, such as $\mathcal{N}(0, 1)$ on the real line. A set $A$ has positive measure if its probability $\nu(A)$ under $\nu$ is positive. A Markov chain is said to be:
 - .bold[irreducible] if any set $A$ with positive measure $\nu(A) > 0$ can be reached from any state $x$, i.e., there exists $t$ such that $p(x\_t \in A \mid x\_1 = x) > 0$.
 - .bold[aperiodic] if there is no deterministic cycle, i.e., the state space cannot be split into $d \geq 2$ disjoint sets that the chain visits in turn. For discrete state spaces, the possible return times $\\{t \geq 1 : p(x\_{1+t} = x \mid x\_1 = x) > 0\\}$ have greatest common divisor 1 for all $x$.
-- .bold[Harris recurrent] if, from any state, the chain reaches any set $A$ with positive measure $\nu(A) > 0$ infinitely often with probability 1. This strengthens irreducibility, which only asks to reach $A$ with positive probability.
 
 ---
 
@@ -141,7 +140,7 @@ class: middle
 .italic[Theorem.] If a time-homogeneous Markov chain has a stationary distribution $\pi$ and is irreducible and aperiodic, then:
 
 - (Uniqueness) $\pi$ is its .bold[only] stationary distribution;
-- (Convergence) For almost any initial state $x\_1$, $p(x\_t) \to \pi(x)$ as $t \to \infty$, and for every $x\_1$ if the chain is Harris recurrent;
+- (Convergence) For almost any initial state $x\_1$, $p(x\_t) \to \pi(x)$ as $t \to \infty$;
 - (Ergodic theorem) For any function $f$ with $\mathbb{E}\_{\pi}[|f(x)|] < \infty$, $$\lim\_{T \to \infty} \frac{1}{T} \sum\_{t=1}^T f(x\_t) = \mathbb{E}\_{\pi}[f(x)]$$ almost surely.
 
 .italic[Proof.] Beyond scope in the general case. The next slides prove it under a stronger condition.
@@ -366,9 +365,7 @@ class: middle
 
 - Irreducibility: If the proposal $q$ has appropriate support, then for any $x, x'$ where $\pi(x), \pi(x') > 0$, there exists a sequence of proposals with positive probability connecting them.
 
-- Harris recurrence: An irreducible Metropolis-Hastings chain is Harris recurrent. (Proof beyond scope)
-
-By the basic limit theorem, the chain converges to $\pi$ from every initial state.
+By the basic limit theorem, the chain converges to $\pi$.
 
 ---
 
