@@ -428,7 +428,15 @@ class: middle
 
 The Hamiltonian dynamics move $(\mathbf{x}, \mathbf{v})$ along a fictitious time $s$,
 $$\frac{d\mathbf{x}}{ds} = \frac{\partial H}{\partial \mathbf{v}} = \mathbf{v}, \quad \frac{d\mathbf{v}}{ds} = -\frac{\partial H}{\partial \mathbf{x}} = \nabla \log \tilde{\pi}(\mathbf{x}).$$
-Following them keeps $H$ constant, and leaves $\pi(\mathbf{x}, \mathbf{v})$ stationary.
+These are Newton's laws for a ball rolling on the surface $-\log \tilde{\pi}(\mathbf{x})$: the position moves with the momentum, and the momentum is pushed towards higher density.
+
+The dynamics keep $H$ constant:
+$$\frac{dH}{ds} = -\nabla \log \tilde{\pi}(\mathbf{x}) \cdot \frac{d\mathbf{x}}{ds} + \mathbf{v} \cdot \frac{d\mathbf{v}}{ds} = -\nabla \log \tilde{\pi}(\mathbf{x}) \cdot \mathbf{v} + \mathbf{v} \cdot \nabla \log \tilde{\pi}(\mathbf{x}) = 0.$$
+Hence the density $\pi(\mathbf{x}, \mathbf{v}) \propto \exp(-H(\mathbf{x}, \mathbf{v}))$ is also constant along them.
+
+---
+
+class: middle
 
 The dynamics are integrated numerically by the .bold[leapfrog] scheme, which repeats $L$ steps of size $\epsilon$:
 $$\begin{aligned}
