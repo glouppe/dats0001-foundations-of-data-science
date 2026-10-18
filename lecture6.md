@@ -413,6 +413,10 @@ $$H(\mathbf{x}, \mathbf{v}) = -\log \tilde{\pi}(\mathbf{x}) + \frac{1}{2} \mathb
 
 .footnote[Credits: [Duane et al.](https://doi.org/10.1016/0370-2693%2887%2991197-X), 1987; [Neal](https://arxiv.org/abs/1206.1901), 2011.]
 
+???
+
+In physics, the Hamiltonian is the total energy of a system with position $\mathbf{x}$ and momentum $\mathbf{v}$: a potential energy that depends on the position, here $-\log \tilde{\pi}(\mathbf{x})$, plus a kinetic energy that depends on the momentum, here $\frac{1}{2} \mathbf{v}^T \mathbf{v}$. Think of a ball rolling without friction on the surface $-\log \tilde{\pi}(\mathbf{x})$: it speeds up downhill, towards high density, and slows down uphill, trading one energy for the other while their sum stays constant.
+
 ---
 
 class: middle
