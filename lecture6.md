@@ -243,12 +243,21 @@ class: middle
 
 With the notation $p\_1 P^n$, a distribution $\pi$ is stationary if and only if $\pi P = \pi$. The three parts of the theorem follow, uniqueness first:
 
-- (Uniqueness) Two stationary distributions $\pi$ and $\pi'$ satisfy $\pi P^m = \pi$ and $\pi' P^m = \pi'$, so
+- (Uniqueness) Two distributions unchanged by $m$ steps, $\pi P^m = \pi$ and $\pi' P^m = \pi'$, satisfy
 $$\\| \pi - \pi' \\|\_\text{TV} = \\| \pi P^m - \pi' P^m \\|\_\text{TV} \leq (1 - \delta) \\| \pi - \pi' \\|\_\text{TV},$$
-hence $\pi = \pi'$.
+hence $\pi = \pi'$. In particular, two stationary distributions are equal.
+
+---
+
+class: middle
+
 - (Existence) Applying the inequality $k$ times to $p\_1 P^m$ and $p\_1$, and since the total variation distance is at most 1,
-$$\\| p\_1 P^{(k+1)m} - p\_1 P^{km} \\|\_\text{TV} \leq (1 - \delta)^k,$$
-so the distributions $p\_1 P^{km}$ get closer and closer to each other and converge to a limit $\pi$, with $\pi P^m = \pi$. Then $(\pi P) P^m = (\pi P^m) P = \pi P$, so $\pi P$ is also unchanged by $P^m$, and $\pi P = \pi$ by uniqueness.
+$$\\| p\_1 P^{(k+1)m} - p\_1 P^{km} \\|\_\text{TV} \leq (1 - \delta)^k.$$
+After step $k$, the distributions $p\_1 P^{lm}$ can still move by at most
+$$\sum\_{j \geq k} (1 - \delta)^j = \frac{(1 - \delta)^k}{\delta} \to 0,$$
+so they converge to a limit $\pi$, which $m$ steps leave unchanged: $\pi P^m = \pi$.
+
+  One step leaves $\pi$ unchanged too. Indeed, $(\pi P) P^m = (\pi P^m) P = \pi P$, so $\pi P$ is also unchanged by $m$ steps, and $\pi P = \pi$ by the uniqueness argument.
 
 ---
 
