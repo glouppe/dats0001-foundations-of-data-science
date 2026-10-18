@@ -404,9 +404,17 @@ class: middle
 
 ## Hamiltonian Monte Carlo
 
-The traces show that random-walk proposals explore the target by small, undirected steps. .bold[Hamiltonian Monte Carlo] (HMC) proposes distant states by following the gradient of $\log \tilde{\pi}$.
+The traces show that random-walk proposals explore the target by small steps. Larger steps land in regions of low density and are rejected.
 
-The state $\mathbf{x} \in \mathbb{R}^d$ is augmented with a momentum $\mathbf{v} \in \mathbb{R}^d$, and the chain targets the joint distribution
+A move along which the density $\tilde{\pi}$ stays constant would always be accepted, since the acceptance ratio would be 1. But such a move never leaves its contour line: it cannot visit regions of higher or lower density.
+
+.footnote[Credits: [Duane et al.](https://doi.org/10.1016/0370-2693%2887%2991197-X), 1987; [Neal](https://arxiv.org/abs/1206.1901), 2011.]
+
+---
+
+class: middle
+
+.bold[Hamiltonian Monte Carlo] (HMC) adds an auxiliary variable $\mathbf{v} \in \mathbb{R}^d$, the .bold[momentum], drawn anew at each iteration, and targets the joint distribution
 $$\begin{aligned}
 \pi(\mathbf{x}, \mathbf{v}) &\propto \tilde{\pi}(\mathbf{x}) \mathcal{N}(\mathbf{v} \mid \mathbf{0}, \mathbf{I}) \propto \exp(\log \tilde{\pi}(\mathbf{x})) \exp\left(-\frac{1}{2} \mathbf{v}^T \mathbf{v}\right) \\\\
 &= \exp(-H(\mathbf{x}, \mathbf{v})),
@@ -414,7 +422,7 @@ $$\begin{aligned}
 where the .bold[Hamiltonian] is
 $$H(\mathbf{x}, \mathbf{v}) = -\log \tilde{\pi}(\mathbf{x}) + \frac{1}{2} \mathbf{v}^T \mathbf{v}.$$
 
-.footnote[Credits: [Duane et al.](https://doi.org/10.1016/0370-2693%2887%2991197-X), 1987; [Neal](https://arxiv.org/abs/1206.1901), 2011.]
+Along a move that keeps the joint density constant, $\tilde{\pi}(\mathbf{x})$ can now go up or down, as long as $\mathbf{v}$ compensates. Since $\mathbf{v}$ is independent of $\mathbf{x}$, the marginal of $\mathbf{x}$ is still $\pi$: discarding $\mathbf{v}$ gives samples of $\pi$.
 
 ???
 
@@ -424,26 +432,24 @@ In physics, the Hamiltonian is the total energy of a system with position $\math
 
 class: middle
 
-## Following the gradient
+## Keeping $H$ constant
 
-HMC moves $(\mathbf{x}, \mathbf{v})$ continuously along a time $s$,
-$$\frac{d\mathbf{x}}{ds} = \mathbf{v}, \quad \frac{d\mathbf{v}}{ds} = \nabla \log \tilde{\pi}(\mathbf{x}).$$
+Which moves keep $H$ constant? Along a path $(\mathbf{x}(s), \mathbf{v}(s))$, by the chain rule,
+$$\frac{dH}{ds} = \nabla\_{\mathbf{x}} H \cdot \frac{d\mathbf{x}}{ds} + \nabla\_{\mathbf{v}} H \cdot \frac{d\mathbf{v}}{ds}.$$
+Choosing
+$$\frac{d\mathbf{x}}{ds} = \nabla\_{\mathbf{v}} H = \mathbf{v}, \quad \frac{d\mathbf{v}}{ds} = -\nabla\_{\mathbf{x}} H = \nabla \log \tilde{\pi}(\mathbf{x})$$
+makes the two terms cancel, so $dH/ds = 0$.
+
 The state moves in the direction $\mathbf{v}$, and $\mathbf{v}$ is pushed towards higher density: this is gradient ascent with momentum.
-
-These dynamics keep $H$ constant:
-$$\frac{dH}{ds} = -\nabla \log \tilde{\pi}(\mathbf{x}) \cdot \frac{d\mathbf{x}}{ds} + \mathbf{v} \cdot \frac{d\mathbf{v}}{ds} = -\nabla \log \tilde{\pi}(\mathbf{x}) \cdot \mathbf{v} + \mathbf{v} \cdot \nabla \log \tilde{\pi}(\mathbf{x}) = 0.$$
-Hence the density $\pi(\mathbf{x}, \mathbf{v}) \propto \exp(-H(\mathbf{x}, \mathbf{v}))$ is also constant along them.
 
 ---
 
 class: middle
 
-The dynamics are integrated numerically by the .bold[leapfrog] scheme, which repeats $L$ steps of size $\epsilon$:
-$$\begin{aligned}
-\mathbf{v} &\leftarrow \mathbf{v} + \frac{\epsilon}{2} \nabla \log \tilde{\pi}(\mathbf{x}) \\\\
-\mathbf{x} &\leftarrow \mathbf{x} + \epsilon \mathbf{v} \\\\
-\mathbf{v} &\leftarrow \mathbf{v} + \frac{\epsilon}{2} \nabla \log \tilde{\pi}(\mathbf{x}).
-\end{aligned}$$
+.center.width-45[![](figures/lec6/leapfrog.png)]
+
+These dynamics are simulated with steps of size $\epsilon$. Euler steps let $H$ drift, so long moves would be rejected. The .bold[leapfrog] scheme keeps $H$ nearly constant:
+$$\mathbf{v} \leftarrow \mathbf{v} + \frac{\epsilon}{2} \nabla \log \tilde{\pi}(\mathbf{x}), \quad \mathbf{x} \leftarrow \mathbf{x} + \epsilon \mathbf{v}, \quad \mathbf{v} \leftarrow \mathbf{v} + \frac{\epsilon}{2} \nabla \log \tilde{\pi}(\mathbf{x}).$$
 
 ---
 
@@ -457,7 +463,7 @@ The HMC algorithm proceeds as follows:
 $$\alpha = \min\left(1, \exp(H(\mathbf{x}\_t, \mathbf{v}) - H(\mathbf{x}', \mathbf{v}'))\right).$$
 Otherwise, set $\mathbf{x}\_{t+1} = \mathbf{x}\_t$.
 
-Step 3 is the Metropolis-Hastings acceptance for the target $\pi(\mathbf{x}, \mathbf{v})$, with a proposal whose densities cancel in the ratio.
+Step 3 is the Metropolis-Hastings acceptance for the target $\pi(\mathbf{x}, \mathbf{v})$. It corrects the small change of $H$ left by the leapfrog steps.
 
 ---
 

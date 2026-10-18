@@ -444,6 +444,40 @@ def diagnostics():
 
 # Metropolis-Hastings at work ---------------------------------------------------------------
 
+def leapfrog_vs_euler():
+    """Euler and leapfrog on a standard Gaussian target, log pi(x) = -x^2 / 2, in the (x, v) plane:
+    the exact dynamics follow a circle of constant H, Euler spirals outwards, leapfrog stays on it."""
+    eps, n = .2, 30
+    grad = lambda x: -x
+    x, v = 1.5, 0.0
+    euler = [(x, v)]
+    for _ in range(n):
+        x, v = x + eps * v, v + eps * grad(x)
+        euler.append((x, v))
+    x, v = 1.5, 0.0
+    leap = [(x, v)]
+    for _ in range(n):
+        v = v + eps / 2 * grad(x)
+        x = x + eps * v
+        v = v + eps / 2 * grad(x)
+        leap.append((x, v))
+    euler, leap = np.array(euler), np.array(leap)
+    a = np.linspace(0, 2 * np.pi, 200)
+    fig, ax = plt.subplots(figsize=(3.8, 4.0), dpi=200)
+    ax.plot(1.5 * np.cos(a), 1.5 * np.sin(a), color=GREY, lw=1, ls=(0, (4, 3)), label="constant $H$")
+    ax.plot(euler[:, 0], euler[:, 1], "o-", color=RED, ms=2.5, lw=.8, label="Euler")
+    ax.plot(leap[:, 0], leap[:, 1], "o-", color=BLUE, ms=2.5, lw=.8, label="leapfrog")
+    ax.set_aspect("equal")
+    ax.set_xlim(-3, 3)
+    ax.set_ylim(-3, 3)
+    ax.set_xlabel("$x$")
+    ax.set_ylabel("$v$")
+    tidy(ax)
+    fig.legend(frameon=False, loc="lower center", fontsize=9, ncol=3)
+    fig.tight_layout(rect=(0, .08, 1, 1))
+    save(fig, "leapfrog.png")
+
+
 # Two-mode target, shared by the Metropolis-Hastings and HMC animations
 MIX_W = np.array([.4, .6])
 MIX_MU = np.array([[-1.5, -1.0], [1.5, 1.2]])
@@ -803,6 +837,7 @@ if __name__ == "__main__":
     regression()
     diagnostics()
     autocorrelation_figure()
+    leapfrog_vs_euler()
     mh_hmc_animation()
     mh_hmc_traces()
     rhat_figure()
