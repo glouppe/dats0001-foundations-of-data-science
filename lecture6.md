@@ -736,6 +736,8 @@ Simulation-based calibration tests whether a sampler is calibrated. For a scalar
 
 .italic[Proposition.] If the sampler draws independent samples from the exact posterior, the ranks $r\_s$ are uniformly distributed over $\\{0, \ldots, L\\}$.
 
+The true value $\theta^\*\_s$ lies in the central credible interval of level $\alpha$ when its rank lies in the central fraction $\alpha$ of $\\{0, \ldots, L\\}$. Uniform ranks make this happen with probability $\alpha$, for every $\alpha$: the sampler is calibrated.
+
 
 .footnote[Credits: [Talts et al.](https://arxiv.org/abs/1804.06788), 2018.]
 
