@@ -699,8 +699,23 @@ class: middle
 
 Diagnostics check that the chains have converged. They do not check that they converged to the right posterior: a bug in the log density goes unnoticed.
 
-Let $\theta$ denote the parameters of a model, $\theta^\* \sim p(\theta)$ and $\mathcal{D} \sim p(\mathcal{D} \mid \theta^\*)$. A credible region $C\_\alpha(\mathcal{D})$ of level $\alpha$ has posterior probability $\alpha$. The exact posterior is .bold[calibrated]: $C\_\alpha(\mathcal{D})$ contains $\theta^\*$ with probability $\alpha$,
+Repeat many simulated experiments. In each, draw parameters $\theta^\* \sim p(\theta)$, simulate data $\mathcal{D} \sim p(\mathcal{D} \mid \theta^\*)$, and compute a credible region $C\_\alpha(\mathcal{D})$ of level $\alpha$, which has posterior probability $\alpha$.
+
+If the posterior is exact, $C\_\alpha(\mathcal{D})$ contains $\theta^\*$ in a fraction $\alpha$ of the experiments:
 $$P(\theta^\* \in C\_\alpha(\mathcal{D})) = \alpha.$$
+The posterior is then .bold[calibrated].
+
+---
+
+class: middle
+
+.center.width-90[![](figures/lec6/calibration-intervals.png)]
+
+.center[
+
+90% credible intervals of a Gaussian mean, in 50 simulated experiments. <br>The exact posterior misses $\theta^\*$ in about 10% of them.
+
+]
 
 ---
 

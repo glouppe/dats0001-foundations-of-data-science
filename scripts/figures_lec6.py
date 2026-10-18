@@ -727,6 +727,37 @@ def rhat_figure():
 
 # Simulation-based calibration ------------------------------------------------------------
 
+def calibration_intervals():
+    """90% credible intervals of a Gaussian mean in 50 simulated experiments: theta* ~ N(0, 1), five
+    observations x_i ~ N(theta*, 1), exact posterior N(sum x / 6, 1 / 6); next to it, an
+    overconfident posterior with intervals half as wide. Intervals that miss theta* are red."""
+    rng = np.random.default_rng(5)
+    n_exp, n, z = 50, 5, norm.ppf(.95)
+    theta = rng.standard_normal(n_exp)
+    x = theta[:, None] + rng.standard_normal((n_exp, n))
+    mean, sd = x.sum(1) / (n + 1), np.sqrt(1 / (n + 1))
+    fig, axes = plt.subplots(1, 2, figsize=(5.8, 3.1), dpi=200, sharey=True)
+    k = np.arange(n_exp)
+    for ax, width, title in zip(axes, [1, .5], ["exact posterior", "overconfident posterior"]):
+        half = width * z * sd
+        miss = np.abs(mean - theta) > half
+        for color, sel in ((BLUE, ~miss), (RED, miss)):
+            ax.vlines(k[sel], (mean - half)[sel], (mean + half)[sel], color=color, lw=1.2)
+        ax.plot(k, theta, "o", color=ORANGE, ms=2.5, zorder=3, label=r"$\theta^*$")
+        ax.set_title("%s\n%d misses out of %d" % (title, miss.sum(), n_exp), fontsize=10, pad=3)
+        ax.set_xticks([])
+        ax.set_xlabel("simulated experiment", fontsize=9)
+        tidy(ax)
+        print("  %s: %d misses" % (title, miss.sum()))
+    axes[0].set_ylabel(r"$\theta$")
+    handles = [plt.Line2D([], [], color=BLUE, lw=1.2), plt.Line2D([], [], color=RED, lw=1.2),
+               plt.Line2D([], [], color=ORANGE, marker="o", ls="", ms=3)]
+    fig.legend(handles, ["90% interval containing $\\theta^*$", "90% interval missing $\\theta^*$", "$\\theta^*$"],
+               frameon=False, loc="lower center", fontsize=9, ncol=3)
+    fig.tight_layout(rect=(0, .1, 1, 1))
+    save(fig, "calibration-intervals.png")
+
+
 def log_posterior_batch(theta, x, y, bug=False):
     """Unnormalized log posterior of the regression for S data sets at once, theta (S, 3), y (S, N).
     With bug=True, the likelihood takes sigma^2 as its scale, a common mistake with scipy."""
@@ -841,4 +872,5 @@ if __name__ == "__main__":
     mh_hmc_animation()
     mh_hmc_traces()
     rhat_figure()
+    calibration_intervals()
     calibration()
