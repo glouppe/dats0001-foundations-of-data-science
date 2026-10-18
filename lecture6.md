@@ -235,11 +235,13 @@ $$\begin{aligned}
 \end{aligned}$$
 since moving two distributions with the same transition model $\bar{p}$ cannot make them more different.
 
+Every $m$ steps, any two distributions get closer by a factor $1 - \delta$.
+
 ---
 
 class: middle
 
-By the inequality of the proof, every $m$ steps, any two distributions get closer by a factor $1 - \delta$. With the notation $p\_1 P^n$, a distribution $\pi$ is stationary if and only if $\pi P = \pi$. The three parts of the theorem follow, uniqueness first:
+With the notation $p\_1 P^n$, a distribution $\pi$ is stationary if and only if $\pi P = \pi$. The three parts of the theorem follow, uniqueness first:
 
 - (Uniqueness) Two stationary distributions $\pi$ and $\pi'$ satisfy $\pi P^m = \pi$ and $\pi' P^m = \pi'$, so
 $$\\| \pi - \pi' \\|\_\text{TV} = \\| \pi P^m - \pi' P^m \\|\_\text{TV} \leq (1 - \delta) \\| \pi - \pi' \\|\_\text{TV},$$
