@@ -444,38 +444,79 @@ def diagnostics():
 
 # Metropolis-Hastings at work ---------------------------------------------------------------
 
-def leapfrog_vs_euler():
-    """Euler and leapfrog on a standard Gaussian target, log pi(x) = -x^2 / 2, in the (x, v) plane:
-    the exact dynamics follow a circle of constant H, Euler spirals outwards, leapfrog stays on it."""
-    eps, n = .2, 30
-    grad = lambda x: -x
-    x, v = 1.5, 0.0
-    euler = [(x, v)]
+def hmc_dynamics_animation():
+    """Leapfrog and Euler with the same step on a two-mode 1-D target, from x = -1.5 and v = 2.2:
+    the position on the target, the path in the (x, v) plane over contours of H, and H against
+    the step. Leapfrog keeps H nearly constant and crosses between the modes; Euler drifts."""
+    from PIL import Image
+    logp = lambda x: np.logaddexp(np.log(.4) + norm.logpdf(x, -1.5, .6), np.log(.6) + norm.logpdf(x, 1.5, .7))
+    grad = lambda x, h=1e-5: (logp(x + h) - logp(x - h)) / (2 * h)
+    H = lambda x, v: -logp(x) + .5 * v ** 2
+    eps, n = .1, 120
+    lf, eu = [(-1.5, 2.2)], [(-1.5, 2.2)]
     for _ in range(n):
-        x, v = x + eps * v, v + eps * grad(x)
-        euler.append((x, v))
-    x, v = 1.5, 0.0
-    leap = [(x, v)]
-    for _ in range(n):
+        x, v = lf[-1]
         v = v + eps / 2 * grad(x)
         x = x + eps * v
         v = v + eps / 2 * grad(x)
-        leap.append((x, v))
-    euler, leap = np.array(euler), np.array(leap)
-    a = np.linspace(0, 2 * np.pi, 200)
-    fig, ax = plt.subplots(figsize=(3.8, 4.0), dpi=200)
-    ax.plot(1.5 * np.cos(a), 1.5 * np.sin(a), color=GREY, lw=1, ls=(0, (4, 3)), label="constant $H$")
-    ax.plot(euler[:, 0], euler[:, 1], "o-", color=RED, ms=2.5, lw=.8, label="Euler")
-    ax.plot(leap[:, 0], leap[:, 1], "o-", color=BLUE, ms=2.5, lw=.8, label="leapfrog")
-    ax.set_aspect("equal")
-    ax.set_xlim(-3, 3)
-    ax.set_ylim(-3, 3)
-    ax.set_xlabel("$x$")
-    ax.set_ylabel("$v$")
-    tidy(ax)
-    fig.legend(frameon=False, loc="lower center", fontsize=9, ncol=3)
-    fig.tight_layout(rect=(0, .08, 1, 1))
-    save(fig, "leapfrog.png")
+        lf.append((x, v))
+        x, v = eu[-1]
+        eu.append((x + eps * v, v + eps * grad(x)))
+    lf, eu = np.array(lf), np.array(eu)
+    H_lf, H_eu = H(lf[:, 0], lf[:, 1]), H(eu[:, 0], eu[:, 1])
+    H0 = H_lf[0]
+
+    gx = np.linspace(-3.5, 3.5, 300)
+    gv = np.linspace(-4, 4, 300)
+    GX, GV = np.meshgrid(gx, gv)
+    HH = H(GX, GV)
+    images = []
+    fig, axes = plt.subplots(1, 3, figsize=(9, 3), dpi=100,
+                             gridspec_kw=dict(width_ratios=[1.2, 1, 1]))
+    for k in range(0, n + 1, 2):
+        for a in axes:
+            a.cla()
+        ax = axes[0]
+        ax.plot(gx, np.exp(logp(gx)), color=GREY, lw=1.2)
+        ax.plot(lf[k, 0], np.exp(logp(lf[k, 0])), "o", color=BLUE, ms=8)
+        if abs(eu[k, 0]) < 3.5:
+            ax.plot(eu[k, 0], np.exp(logp(eu[k, 0])), "o", color=RED, ms=6)
+        ax.set_xlim(-3.5, 3.5)
+        ax.set_ylim(0, .42)
+        ax.set_yticks([])
+        ax.set_xlabel("$x$")
+        ax.set_title(r"target $\tilde{\pi}(x)$", fontsize=11, pad=3)
+        ax = axes[1]
+        ax.contour(gx, gv, HH, levels=np.linspace(1.2, 9, 9), colors=LIGHT, linewidths=.7)
+        ax.contour(gx, gv, HH, levels=[H0], colors=GREY, linewidths=1, linestyles="dashed")
+        ax.plot(eu[:k + 1, 0], eu[:k + 1, 1], color=RED, lw=1.2)
+        ax.plot(lf[:k + 1, 0], lf[:k + 1, 1], color=BLUE, lw=1.6)
+        ax.plot(*lf[k], "o", color=BLUE, ms=6)
+        ax.set_xlim(-3.5, 3.5)
+        ax.set_ylim(-4, 4)
+        ax.set_xlabel("$x$")
+        ax.set_ylabel("$v$")
+        ax.set_title("$(x, v)$ plane", fontsize=11, pad=3)
+        ax = axes[2]
+        ax.axhline(H0, color=GREY, lw=1, ls=(0, (4, 3)))
+        ax.plot(np.arange(k + 1), H_eu[:k + 1], color=RED, lw=1.4, label="Euler")
+        ax.plot(np.arange(k + 1), H_lf[:k + 1], color=BLUE, lw=1.6, label="leapfrog")
+        ax.set_xlim(0, n)
+        ax.set_ylim(H0 - 1, H0 + 4)
+        ax.set_xlabel("step")
+        ax.set_title("$H(x, v)$", fontsize=11, pad=3)
+        ax.legend(frameon=False, loc="upper left", fontsize=9)
+        for a in axes:
+            tidy(a)
+        fig.tight_layout()
+        fig.canvas.draw()
+        images.append(Image.frombuffer("RGBA", fig.canvas.get_width_height(), fig.canvas.buffer_rgba())
+                      .convert("RGB").quantize(colors=64, method=Image.Quantize.MEDIANCUT))
+    plt.close(fig)
+    path = "figures/lec6/hmc-dynamics.gif"
+    images[0].save(path, save_all=True, append_images=images[1:], duration=[100] * (len(images) - 1) + [2500],
+                   loop=0, optimize=True)
+    print("wrote", path, "(%d frames)" % len(images))
 
 
 # Two-mode target, shared by the Metropolis-Hastings and HMC animations
@@ -868,7 +909,7 @@ if __name__ == "__main__":
     regression()
     diagnostics()
     autocorrelation_figure()
-    leapfrog_vs_euler()
+    hmc_dynamics_animation()
     mh_hmc_animation()
     mh_hmc_traces()
     rhat_figure()

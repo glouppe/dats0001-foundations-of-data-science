@@ -446,7 +446,7 @@ The state moves in the direction $\mathbf{v}$, and $\mathbf{v}$ is pushed toward
 
 class: middle
 
-.center.width-45[![](figures/lec6/leapfrog.png)]
+.center.width-100[![](figures/lec6/hmc-dynamics.gif)]
 
 These dynamics are simulated with steps of size $\epsilon$. Euler steps let $H$ drift, so long moves would be rejected. The .bold[leapfrog] scheme keeps $H$ nearly constant:
 $$\mathbf{v} \leftarrow \mathbf{v} + \frac{\epsilon}{2} \nabla \log \tilde{\pi}(\mathbf{x}), \quad \mathbf{x} \leftarrow \mathbf{x} + \epsilon \mathbf{v}, \quad \mathbf{v} \leftarrow \mathbf{v} + \frac{\epsilon}{2} \nabla \log \tilde{\pi}(\mathbf{x}).$$
