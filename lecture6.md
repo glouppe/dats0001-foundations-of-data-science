@@ -454,19 +454,13 @@ Such moves are always accepted, however far they go. But they never leave their 
 
 class: middle
 
-.bold[Hamiltonian Monte Carlo] (HMC) adds an auxiliary variable $\mathbf{v} \in \mathbb{R}^d$, the .bold[momentum], drawn anew at each iteration, and targets the joint distribution
-$$\begin{aligned}
-\pi(\mathbf{x}, \mathbf{v}) &\propto \tilde{\pi}(\mathbf{x}) \mathcal{N}(\mathbf{v} \mid \mathbf{0}, \mathbf{I}) \propto \exp(\log \tilde{\pi}(\mathbf{x})) \exp\left(-\frac{1}{2} \mathbf{v}^T \mathbf{v}\right) \\\\
-&= \exp(-H(\mathbf{x}, \mathbf{v})),
-\end{aligned}$$
+.bold[Hamiltonian Monte Carlo] (HMC) adds an auxiliary variable $\mathbf{v} \in \mathbb{R}^d$, the .bold[momentum], independent of $\mathbf{x}$, and samples the pairs $(\mathbf{x}, \mathbf{v})$ from
+$$\pi(\mathbf{x}, \mathbf{v}) \propto \tilde{\pi}(\mathbf{x}) \mathcal{N}(\mathbf{v} \mid \mathbf{0}, \mathbf{I}) \propto \exp(-H(\mathbf{x}, \mathbf{v})),$$
 where the .bold[Hamiltonian] is
 $$H(\mathbf{x}, \mathbf{v}) = -\log \tilde{\pi}(\mathbf{x}) + \frac{1}{2} \mathbf{v}^T \mathbf{v}.$$
+Since $\mathbf{v}$ is independent of $\mathbf{x}$, the marginal of $\mathbf{x}$ is $\pi$: discarding $\mathbf{v}$ gives samples of $\pi$.
 
-Using Metropolis-Hastings over the pairs $(\mathbf{x}, \mathbf{v})$, with a symmetric proposal, the acceptance ratio is $\exp(H(\mathbf{x}, \mathbf{v}) - H(\mathbf{x}', \mathbf{v}'))$: it is 1 if $H$ stays constant. Yet $\tilde{\pi}(\mathbf{x})$ can now go up or down, as long as $\mathbf{v}$ compensates.
-
-Each HMC iteration makes two moves, each keeping $(\mathbf{x}, \mathbf{v})$ distributed as $\pi(\mathbf{x}, \mathbf{v})$:
-1. Keep $\mathbf{x}$ and redraw $\mathbf{v} \sim \pi(\mathbf{v} \mid \mathbf{x}) = \mathcal{N}(\mathbf{0}, \mathbf{I})$. The draw is exact, so there is nothing to accept or reject. $H$ takes a new value.
-2. Follow a path from $(\mathbf{x}, \mathbf{v})$ along which $H$ keeps this value, and propose its end $(\mathbf{x}', \mathbf{v}')$. The acceptance ratio is 1.
+On the pairs, a constant density means a constant $H$. Unlike on the previous slide, a move at constant $H$ can change $\tilde{\pi}(\mathbf{x})$: $-\log \tilde{\pi}(\mathbf{x})$ goes up or down, and $\frac{1}{2} \mathbf{v}^T \mathbf{v}$ by the opposite amount.
 
 ???
 
@@ -476,9 +470,21 @@ In physics, the Hamiltonian is the total energy of a system with position $\math
 
 class: middle
 
-## Keeping $H$ constant
+Each HMC iteration makes two moves on the pair $(\mathbf{x}, \mathbf{v})$. Each keeps $(\mathbf{x}, \mathbf{v})$ distributed as $\pi(\mathbf{x}, \mathbf{v})$, so the iteration does too.
 
-Which moves keep $H$ constant? Along a path $(\mathbf{x}(s), \mathbf{v}(s))$, by the chain rule,
+1. .bold[Momentum.] Keep $\mathbf{x}$ and redraw $\mathbf{v} \sim \pi(\mathbf{v} \mid \mathbf{x}) = \mathcal{N}(\mathbf{0}, \mathbf{I})$. The draw is exact, so there is nothing to accept or reject. $H$ takes a new value.
+2. .bold[Trajectory.] Follow a path from $(\mathbf{x}, \mathbf{v})$ along which $H$ keeps this value, and propose its end $(\mathbf{x}', \mathbf{v}')$. For Metropolis-Hastings over the pairs, with a symmetric proposal, the acceptance probability is
+$$\alpha = \min\left(1, \frac{\pi(\mathbf{x}', \mathbf{v}')}{\pi(\mathbf{x}, \mathbf{v})}\right) = \min\left(1, \exp(H(\mathbf{x}, \mathbf{v}) - H(\mathbf{x}', \mathbf{v}'))\right) = 1.$$
+
+The first move changes the value of $H$. The second travels far at this value, and is always accepted. It remains to find such paths.
+
+---
+
+class: middle
+
+## Paths at constant $H$
+
+Along a path $(\mathbf{x}(s), \mathbf{v}(s))$, by the chain rule,
 $$\frac{dH}{ds} = \nabla\_{\mathbf{x}} H \cdot \frac{d\mathbf{x}}{ds} + \nabla\_{\mathbf{v}} H \cdot \frac{d\mathbf{v}}{ds}.$$
 Choosing
 $$\frac{d\mathbf{x}}{ds} = \nabla\_{\mathbf{v}} H = \mathbf{v}, \quad \frac{d\mathbf{v}}{ds} = -\nabla\_{\mathbf{x}} H = \nabla \log \tilde{\pi}(\mathbf{x})$$
@@ -502,13 +508,13 @@ class: middle
 
 The HMC algorithm proceeds as follows:
 
-1. Given the current state $\mathbf{x}\_t$, draw a momentum $\mathbf{v} \sim \mathcal{N}(\mathbf{0}, \mathbf{I})$.
-2. Starting from $(\mathbf{x}\_t, \mathbf{v})$, run $L$ leapfrog steps of size $\epsilon$ to obtain $(\mathbf{x}', \mathbf{v}')$.
+1. .bold[Momentum.] Given the current state $\mathbf{x}\_t$, draw $\mathbf{v} \sim \mathcal{N}(\mathbf{0}, \mathbf{I})$.
+2. .bold[Trajectory.] Starting from $(\mathbf{x}\_t, \mathbf{v})$, run $L$ leapfrog steps of size $\epsilon$ to obtain $(\mathbf{x}', \mathbf{v}')$.
 3. Accept $\mathbf{x}\_{t+1} = \mathbf{x}'$ with probability
 $$\alpha = \min\left(1, \exp(H(\mathbf{x}\_t, \mathbf{v}) - H(\mathbf{x}', \mathbf{v}'))\right).$$
-Otherwise, set $\mathbf{x}\_{t+1} = \mathbf{x}\_t$.
+Otherwise, set $\mathbf{x}\_{t+1} = \mathbf{x}\_t$. In both cases, discard $\mathbf{v}$.
 
-Step 3 is the Metropolis-Hastings acceptance for the target $\pi(\mathbf{x}, \mathbf{v})$. It corrects the small change of $H$ left by the leapfrog steps.
+With exact paths, $\alpha = 1$. The leapfrog steps leave a small change of $H$, which step 3 corrects.
 
 ---
 
