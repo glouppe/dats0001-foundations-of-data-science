@@ -243,12 +243,12 @@ class: middle
 
 A distribution $\pi$ is stationary if $\pi P = \pi$.
 
-- (Uniqueness) Let $\pi$ and $\pi'$ be stationary. By $(\star)$,
+- (Uniqueness) Let $\pi$ and $\pi'$ be stationary. By $(\star)$ with $p\_1 = \pi$ and $p\_1' = \pi'$,
 $$\\| \pi - \pi' \\|\_\text{TV} = \\| \pi P - \pi' P \\|\_\text{TV} \leq (1 - \delta) \\| \pi - \pi' \\|\_\text{TV}.$$
 A distance at most $1 - \delta < 1$ times itself is zero, so $\pi = \pi'$.
-- (Existence) Start from any $p\_1$, and write $p\_1 P^n$ for the distribution $n$ steps later. By $(\star)$, the step $d\_n = \\| p\_1 P^{n+1} - p\_1 P^n \\|\_\text{TV}$ is at most $1 - \delta$ times the previous one:
-$$d\_n \leq (1 - \delta) d\_{n-1} \leq \ldots \leq (1 - \delta)^n d\_0 \leq (1 - \delta)^n,$$
-since a total variation distance is at most 1. The steps shrink geometrically, so $p\_1 P^n$ converges to a limit $\pi$. Since $p\_1 P^{n+1} = (p\_1 P^n) P$ tends both to $\pi$ and to $\pi P$, $\pi P = \pi$.
+- (Existence) Start from any $p\_1$, and write $p\_1 P^n$ for the distribution $n$ steps later. Let $d\_n = \\| p\_1 P^{n+1} - p\_1 P^n \\|\_\text{TV}$ be the distance between two consecutive distributions. By $(\star)$ with $p\_1 P^n$ and $p\_1 P^{n-1}$ in place of $p\_1$ and $p\_1'$,
+$$d\_n = \\| (p\_1 P^n) P - (p\_1 P^{n-1}) P \\|\_\text{TV} \leq (1 - \delta) \\| p\_1 P^n - p\_1 P^{n-1} \\|\_\text{TV} = (1 - \delta) d\_{n-1}.$$
+Repeating, $d\_n \leq (1 - \delta)^n d\_0 \leq (1 - \delta)^n$, since a total variation distance is at most 1. The steps shrink geometrically, so $p\_1 P^n$ converges to a limit $\pi$. Since $p\_1 P^{n+1} = (p\_1 P^n) P$ tends both to $\pi$ and to $\pi P$, $\pi P = \pi$.
 
 ---
 
