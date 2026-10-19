@@ -501,7 +501,7 @@ class: middle
 
 .center[
 
-Six HMC iterations on a two-mode target. Each new $v$ (orange) changes $H$; each path (blue) keeps it. <br>Only the iteration with the largest $H$ crosses to the other mode.
+Six HMC iterations. Each new $v$ (orange) changes $H$, each path (blue) keeps it. <br>Only the iteration with the largest $H$ crosses to the other mode.
 
 ]
 
