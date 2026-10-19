@@ -241,12 +241,12 @@ At every step, any two distributions get closer by a factor $1 - \delta$.
 
 class: middle
 
-Write likewise $p\_1 P^n$ for the distribution $n$ steps later. A distribution $\pi$ is stationary if $\pi P = \pi$. It is then unchanged by any number of steps: $\pi P^n = \pi$.
+A distribution $\pi$ is stationary if $\pi P = \pi$.
 
 - (Uniqueness) Let $\pi$ and $\pi'$ be stationary. By $(\star)$,
 $$\\| \pi - \pi' \\|\_\text{TV} = \\| \pi P - \pi' P \\|\_\text{TV} \leq (1 - \delta) \\| \pi - \pi' \\|\_\text{TV}.$$
 A distance at most $1 - \delta < 1$ times itself is zero, so $\pi = \pi'$.
-- (Existence) Start from any $p\_1$. By $(\star)$, the step $d\_n = \\| p\_1 P^{n+1} - p\_1 P^n \\|\_\text{TV}$ is at most $1 - \delta$ times the previous one:
+- (Existence) Start from any $p\_1$, and write $p\_1 P^n$ for the distribution $n$ steps later. By $(\star)$, the step $d\_n = \\| p\_1 P^{n+1} - p\_1 P^n \\|\_\text{TV}$ is at most $1 - \delta$ times the previous one:
 $$d\_n \leq (1 - \delta) d\_{n-1} \leq \ldots \leq (1 - \delta)^n d\_0 \leq (1 - \delta)^n,$$
 since a total variation distance is at most 1. The steps shrink geometrically, so $p\_1 P^n$ converges to a limit $\pi$. Since $p\_1 P^{n+1} = (p\_1 P^n) P$ tends both to $\pi$ and to $\pi P$, $\pi P = \pi$.
 
@@ -254,7 +254,7 @@ since a total variation distance is at most 1. The steps shrink geometrically, s
 
 class: middle
 
-- (Convergence) The chain starts at $x\_1$, so $x\_t$ comes $t - 1$ steps later: $p(x\_t) = p(x\_1) P^{t-1}$. Since $\pi = \pi P^{t-1}$, applying $(\star)$ $t - 1$ times,
+- (Convergence) The chain starts at $x\_1$, so $x\_t$ comes $t - 1$ steps later: $p(x\_t) = p(x\_1) P^{t-1}$. Since $\pi$ is stationary, $\pi = \pi P^{t-1}$. Applying $(\star)$ $t - 1$ times,
 $$\\| p(x\_t) - \pi \\|\_\text{TV} = \\| p(x\_1) P^{t-1} - \pi P^{t-1} \\|\_\text{TV} \leq (1 - \delta)^{t-1}.$$
 
 For $m > 1$, observe the chain every $m$ steps: $x\_1, x\_{1+m}, x\_{1+2m}, \ldots$ This is again a Markov chain, with transition $P^m$, which satisfies the Doeblin condition with $m = 1$. By the case $m = 1$:
