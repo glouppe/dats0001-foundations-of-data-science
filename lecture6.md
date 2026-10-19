@@ -478,7 +478,8 @@ Which moves keep $H$ constant? Along a path $(\mathbf{x}(s), \mathbf{v}(s))$, by
 $$\frac{dH}{ds} = \nabla\_{\mathbf{x}} H \cdot \frac{d\mathbf{x}}{ds} + \nabla\_{\mathbf{v}} H \cdot \frac{d\mathbf{v}}{ds}.$$
 Choosing
 $$\frac{d\mathbf{x}}{ds} = \nabla\_{\mathbf{v}} H = \mathbf{v}, \quad \frac{d\mathbf{v}}{ds} = -\nabla\_{\mathbf{x}} H = \nabla \log \tilde{\pi}(\mathbf{x})$$
-makes the two terms cancel, so $dH/ds = 0$.
+makes the two terms cancel:
+$$\frac{dH}{ds} = \nabla\_{\mathbf{x}} H \cdot \nabla\_{\mathbf{v}} H - \nabla\_{\mathbf{v}} H \cdot \nabla\_{\mathbf{x}} H = 0.$$
 
 The state moves in the direction $\mathbf{v}$, and $\mathbf{v}$ is pushed towards higher density: this is gradient ascent with momentum.
 
