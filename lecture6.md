@@ -273,12 +273,25 @@ since a total variation distance is at most 1.
 
 class: middle
 
-For $m > 1$, observe the chain every $m$ steps: $x\_1, x\_{1+m}, x\_{1+2m}, \ldots$ This is again a Markov chain, with transition $P^m$, which satisfies the Doeblin condition with $m = 1$. By the case $m = 1$:
+For $m > 1$, we reduce to the case $m = 1$. Observe the chain every $m$ steps: $y\_k = x\_{1+km}$. One step of $y$ is $m$ steps of $x$, so $y$ is a Markov chain with transition $P^m$. By the Doeblin condition for $x$, this transition contains the common part $\delta \nu$: $y$ satisfies the condition with $m = 1$.
 
-- (Uniqueness) At most one distribution is unchanged by $m$ steps. Stationary distributions are, so there is at most one.
-- (Existence) Some $\pi$ satisfies $\pi P^m = \pi$. Let $\mu = \pi P$ be $\pi$ moved one step. Then $\mu P^m = (\pi P) P^m = (\pi P^m) P = \pi P = \mu$: $\mu$ is also unchanged by $m$ steps, so $\pi = \mu$ by uniqueness, and $\pi = \pi P$.
-- (Convergence) From $x\_1$ to $x\_t$, the chain makes $k = \lfloor (t-1)/m \rfloor$ blocks of $m$ steps and $r < m$ steps left over. The blocks bring $p(x\_t)$ within $(1 - \delta)^k$ of $\pi$, and the steps left over cannot make the two distributions more different:
-$$\\| p(x\_t) - \pi \\|\_\text{TV} \leq \\| p(x\_1) P^{km} - \pi P^{km} \\|\_\text{TV} \leq (1 - \delta)^{\lfloor (t-1)/m \rfloor}.$$
+The previous slides apply to $y$. Its stationary distributions are those unchanged by $m$ steps, $\pi P^m = \pi$. It remains to carry the results back to $x$.
+
+- (Uniqueness) A stationary distribution of $x$ is unchanged by $m$ steps, so it is also stationary for $y$. Since $y$ has only one, so does $x$.
+- (Existence) Let $\pi$ be the stationary distribution of $y$, with $\pi P^m = \pi$. To show that $\pi P = \pi$, let $\mu = \pi P$ be $\pi$ moved one step. Then $\mu P^m = (\pi P) P^m = (\pi P^m) P = \pi P = \mu$: $\mu$ is also stationary for $y$, so $\pi = \mu$ by uniqueness for $y$, and $\pi = \pi P$.
+
+---
+
+class: middle
+
+- (Convergence) Write $t - 1 = km + r$, with $k = \lfloor (t-1)/m \rfloor$ and $r < m$. Started from $p(x\_1)$, the chain $y$ makes $k$ steps in $km$ steps of $x$, and convergence for $y$ gives
+$$\\| p(x\_1) P^{km} - \pi \\|\_\text{TV} \leq (1 - \delta)^k.$$
+The $r$ steps left over move $p(x\_1) P^{km}$ and $\pi = \pi P^r$ with the same transition model, which cannot make them more different:
+$$\begin{aligned}
+\\| p(x\_t) - \pi \\|\_\text{TV} &= \\| (p(x\_1) P^{km}) P^r - \pi P^r \\|\_\text{TV} \\\\
+&\leq \\| p(x\_1) P^{km} - \pi \\|\_\text{TV} \\\\
+&\leq (1 - \delta)^{\lfloor (t-1)/m \rfloor}.
+\end{aligned}$$
 
 ---
 
