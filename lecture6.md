@@ -464,9 +464,9 @@ $$H(\mathbf{x}, \mathbf{v}) = -\log \tilde{\pi}(\mathbf{x}) + \frac{1}{2} \mathb
 
 Using Metropolis-Hastings over the pairs $(\mathbf{x}, \mathbf{v})$, with a symmetric proposal, the acceptance ratio is $\exp(H(\mathbf{x}, \mathbf{v}) - H(\mathbf{x}', \mathbf{v}'))$: it is 1 if $H$ stays constant. Yet $\tilde{\pi}(\mathbf{x})$ can now go up or down, as long as $\mathbf{v}$ compensates.
 
-Each HMC iteration makes two moves:
-1. Draw a new $\mathbf{v} \sim \mathcal{N}(\mathbf{0}, \mathbf{I})$. It is an exact draw from $\pi(\mathbf{v} \mid \mathbf{x})$, so there is nothing to accept or reject. It changes the value of $H$.
-2. Move $(\mathbf{x}, \mathbf{v})$ far, keeping $H$ at this new value. The acceptance ratio is 1, so the move is accepted.
+Each HMC iteration makes two moves, each keeping $(\mathbf{x}, \mathbf{v})$ distributed as $\pi(\mathbf{x}, \mathbf{v})$:
+1. Keep $\mathbf{x}$ and redraw $\mathbf{v} \sim \pi(\mathbf{v} \mid \mathbf{x}) = \mathcal{N}(\mathbf{0}, \mathbf{I})$. The draw is exact, so there is nothing to accept or reject. $H$ takes a new value.
+2. Follow a path from $(\mathbf{x}, \mathbf{v})$ along which $H$ keeps this value, and propose its end $(\mathbf{x}', \mathbf{v}')$. The acceptance ratio is 1.
 
 ???
 
