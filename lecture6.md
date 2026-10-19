@@ -462,7 +462,7 @@ $$\begin{aligned}
 where the .bold[Hamiltonian] is
 $$H(\mathbf{x}, \mathbf{v}) = -\log \tilde{\pi}(\mathbf{x}) + \frac{1}{2} \mathbf{v}^T \mathbf{v}.$$
 
-Using Metropolis-Hastings over the pairs $(\mathbf{x}, \mathbf{v})$, with a symmetric proposal, the acceptance ratio is $\frac{\pi(\mathbf{x}', \mathbf{v}')}{\pi(\mathbf{x}, \mathbf{v})} = \exp(H(\mathbf{x}, \mathbf{v}) - H(\mathbf{x}', \mathbf{v}'))$, which is 1 if $H$ stays constant. Yet $\tilde{\pi}(\mathbf{x})$ can now go up or down, as long as $\mathbf{v}$ compensates. Each move stays among the pairs with the same value of $H$. Redrawing $\mathbf{v}$ at each iteration changes this value.
+Using Metropolis-Hastings over the pairs $(\mathbf{x}, \mathbf{v})$, with a symmetric proposal, the acceptance ratio is $\frac{\pi(\mathbf{x}', \mathbf{v}')}{\pi(\mathbf{x}, \mathbf{v})} = \exp(H(\mathbf{x}, \mathbf{v}) - H(\mathbf{x}', \mathbf{v}'))$, which is 1 if $H$ stays constant. Yet $\tilde{\pi}(\mathbf{x})$ can now go up or down, as long as $\mathbf{v}$ compensates. $H$ is kept constant during a move, so that the move is accepted. Between moves, a fresh $\mathbf{v} \sim \mathcal{N}(\mathbf{0}, \mathbf{I})$, an exact draw from $\pi(\mathbf{v} \mid \mathbf{x})$, gives $H$ a new value. Without it, the chain would keep forever the value of $H$ it started with.
 
 Since $\mathbf{v}$ is independent of $\mathbf{x}$, the marginal of $\mathbf{x}$ is still $\pi$: discarding $\mathbf{v}$ gives samples of $\pi$.
 
