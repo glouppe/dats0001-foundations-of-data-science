@@ -445,77 +445,113 @@ def diagnostics():
 # Metropolis-Hastings at work ---------------------------------------------------------------
 
 def hmc_dynamics_animation():
-    """Leapfrog and Euler with the same step on a two-mode 1-D target, from x = -1.5 and v = 2.2:
-    the position on the target, the path in the (x, v) plane over contours of H, and H against
-    the step. Leapfrog keeps H nearly constant and crosses between the modes; Euler drifts."""
+    """Six HMC iterations on a two-mode 1-D target, from x = -1.5, with 30 leapfrog steps of size 0.1:
+    the samples on the target, the path in the (x, v) plane over contours of H, and H against the
+    leapfrog step. Each draw of v (orange) keeps x and changes H; each path (blue) keeps
+    H nearly constant. The chain crosses to the other mode on the iteration with the largest H."""
     from PIL import Image
     logp = lambda x: np.logaddexp(np.log(.4) + norm.logpdf(x, -1.5, .6), np.log(.6) + norm.logpdf(x, 1.5, .7))
     grad = lambda x, h=1e-5: (logp(x + h) - logp(x - h)) / (2 * h)
     H = lambda x, v: -logp(x) + .5 * v ** 2
-    eps, n = .1, 120
-    lf, eu = [(-1.5, 2.2)], [(-1.5, 2.2)]
-    for _ in range(n):
-        x, v = lf[-1]
-        v = v + eps / 2 * grad(x)
-        x = x + eps * v
-        v = v + eps / 2 * grad(x)
-        lf.append((x, v))
-        x, v = eu[-1]
-        eu.append((x + eps * v, v + eps * grad(x)))
-    lf, eu = np.array(lf), np.array(eu)
-    H_lf, H_eu = H(lf[:, 0], lf[:, 1]), H(eu[:, 0], eu[:, 1])
-    H0 = H_lf[0]
+    eps, L, K = .1, 30, 6
+    rng = np.random.default_rng(4)
+    x, v_end = -1.5, 0.
+    jumps, paths, samples = [], [], [x]          # jumps: (x, v before, v after); paths: (L + 1, 2)
+    for _ in range(K):
+        v = rng.standard_normal()
+        jumps.append((x, v_end, v))
+        path = [(x, v)]
+        xx, vv = x, v
+        for _ in range(L):
+            vv = vv + eps / 2 * grad(xx)
+            xx = xx + eps * vv
+            vv = vv + eps / 2 * grad(xx)
+            path.append((xx, vv))
+        path = np.array(path)
+        paths.append(path)
+        if np.log(rng.random()) < H(x, v) - H(xx, vv):
+            x, v_end = xx, vv
+        else:
+            v_end = v
+        samples.append(x)
 
     gx = np.linspace(-3.5, 3.5, 300)
-    gv = np.linspace(-4, 4, 300)
+    gv = np.linspace(-3.5, 3.5, 300)
     GX, GV = np.meshgrid(gx, gv)
     HH = H(GX, GV)
-    images = []
-    fig, axes = plt.subplots(1, 3, figsize=(9, 3), dpi=100,
-                             gridspec_kw=dict(width_ratios=[1.2, 1, 1]))
-    for k in range(0, n + 1, 2):
+    Hmax = max(H(*p.T).max() for p in paths)
+
+    def draw(k, phase, j):
+        """Iteration k; phase "jump" with fraction j of the momentum draw, or "path" up to step j."""
         for a in axes:
             a.cla()
+        x0, va, vb = jumps[k]
+        v_now = va + j * (vb - va) if phase == "jump" else None
+        cur = (x0, v_now) if phase == "jump" else paths[k][j]
+        done = k + (phase == "path" and j == L)
         ax = axes[0]
         ax.plot(gx, np.exp(logp(gx)), color=GREY, lw=1.2)
-        ax.plot(lf[k, 0], np.exp(logp(lf[k, 0])), "o", color=BLUE, ms=8)
-        if abs(eu[k, 0]) < 3.5:
-            ax.plot(eu[k, 0], np.exp(logp(eu[k, 0])), "o", color=RED, ms=6)
+        ax.plot(samples[:done + 1], np.full(done + 1, .012), "|", color=BLUE, ms=12, mew=1.5)
+        ax.plot(cur[0], np.exp(logp(cur[0])), "o", color=BLUE, ms=8)
         ax.set_xlim(-3.5, 3.5)
         ax.set_ylim(0, .42)
         ax.set_yticks([])
         ax.set_xlabel("$x$")
-        ax.set_title(r"target $\tilde{\pi}(x)$", fontsize=11, pad=3)
+        ax.set_title(r"target $\tilde{\pi}(x)$ and samples", fontsize=11, pad=3)
         ax = axes[1]
-        ax.contour(gx, gv, HH, levels=np.linspace(1.2, 9, 9), colors=LIGHT, linewidths=.7)
-        ax.contour(gx, gv, HH, levels=[H0], colors=GREY, linewidths=1, linestyles="dashed")
-        ax.plot(eu[:k + 1, 0], eu[:k + 1, 1], color=RED, lw=1.2)
-        ax.plot(lf[:k + 1, 0], lf[:k + 1, 1], color=BLUE, lw=1.6)
-        ax.plot(*lf[k], "o", color=BLUE, ms=6)
+        ax.contour(gx, gv, HH, levels=np.linspace(1.2, 6, 7), colors=LIGHT, linewidths=.7)
+        for i in range(k):
+            ax.plot([jumps[i][0]] * 2, jumps[i][1:], color=ORANGE, lw=1, alpha=.35)
+            ax.plot(*paths[i].T, color=BLUE, lw=1, alpha=.35)
+        ax.plot([x0, x0], [va, vb if phase == "path" else v_now], color=ORANGE, lw=2)
+        if phase == "path":
+            ax.contour(gx, gv, HH, levels=[H(x0, vb)], colors=GREY, linewidths=1, linestyles="dashed")
+            ax.plot(*paths[k][:j + 1].T, color=BLUE, lw=2)
+        ax.plot(*cur, "o", color=BLUE, ms=6)
         ax.set_xlim(-3.5, 3.5)
-        ax.set_ylim(-4, 4)
+        ax.set_ylim(-3.5, 3.5)
         ax.set_xlabel("$x$")
         ax.set_ylabel("$v$")
         ax.set_title("$(x, v)$ plane", fontsize=11, pad=3)
         ax = axes[2]
-        ax.axhline(H0, color=GREY, lw=1, ls=(0, (4, 3)))
-        ax.plot(np.arange(k + 1), H_eu[:k + 1], color=RED, lw=1.4, label="Euler")
-        ax.plot(np.arange(k + 1), H_lf[:k + 1], color=BLUE, lw=1.6, label="leapfrog")
-        ax.set_xlim(0, n)
-        ax.set_ylim(H0 - 1, H0 + 4)
-        ax.set_xlabel("step")
+        for i in range(k + 1):
+            s0 = i * L
+            hb = H(jumps[i][0], jumps[i][2])
+            ha = H(jumps[i][0], jumps[i][1])
+            top = hb if (i < k or phase == "path") else ha + j * (hb - ha)
+            ax.plot([s0, s0], [ha, top], color=ORANGE, lw=2)
+            n = L if i < k else (j if phase == "path" else 0)
+            if n:
+                ax.plot(s0 + np.arange(n + 1), H(*paths[i][:n + 1].T), color=BLUE, lw=2)
+        ax.set_xlim(-2, K * L + 2)
+        ax.set_ylim(0, Hmax + .8)
+        ax.set_xlabel("leapfrog step")
         ax.set_title("$H(x, v)$", fontsize=11, pad=3)
-        ax.legend(frameon=False, loc="upper left", fontsize=9)
+        ax.legend(handles=[plt.Line2D([], [], color=ORANGE, lw=2, label="redraw $v$"),
+                           plt.Line2D([], [], color=BLUE, lw=2, label="path at constant $H$")],
+                  frameon=False, loc="lower right", fontsize=9)
         for a in axes:
             tidy(a)
         fig.tight_layout()
+
+    images, durations = [], []
+    fig, axes = plt.subplots(1, 3, figsize=(9, 3), dpi=100,
+                             gridspec_kw=dict(width_ratios=[1.2, 1, 1]))
+    frames = []
+    for k in range(K):
+        frames += [(k, "jump", j, 120) for j in (.25, .5, .75)] + [(k, "jump", 1., 700)]
+        frames += [(k, "path", j, 80) for j in range(0, L + 1, 2)]
+        frames[-1] = frames[-1][:3] + (700,)
+    frames[-1] = frames[-1][:3] + (3000,)
+    for k, phase, j, ms in frames:
+        draw(k, phase, j)
         fig.canvas.draw()
         images.append(Image.frombuffer("RGBA", fig.canvas.get_width_height(), fig.canvas.buffer_rgba())
                       .convert("RGB").quantize(colors=64, method=Image.Quantize.MEDIANCUT))
+        durations.append(ms)
     plt.close(fig)
     path = "figures/lec6/hmc-dynamics.gif"
-    images[0].save(path, save_all=True, append_images=images[1:], duration=[100] * (len(images) - 1) + [2500],
-                   loop=0, optimize=True)
+    images[0].save(path, save_all=True, append_images=images[1:], duration=durations, loop=0, optimize=True)
     print("wrote", path, "(%d frames)" % len(images))
 
 

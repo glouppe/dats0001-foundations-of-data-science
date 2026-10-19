@@ -472,8 +472,8 @@ class: middle
 
 Each HMC iteration makes two moves on the pair $(\mathbf{x}, \mathbf{v})$. Each keeps $(\mathbf{x}, \mathbf{v})$ distributed as $\pi(\mathbf{x}, \mathbf{v})$, so the iteration does too.
 
-1. .bold[Momentum.] Keep $\mathbf{x}$ and redraw $\mathbf{v} \sim \pi(\mathbf{v} \mid \mathbf{x}) = \mathcal{N}(\mathbf{0}, \mathbf{I})$. The draw is exact, so there is nothing to accept or reject. $H$ takes a new value.
-2. .bold[Trajectory.] Follow a path from $(\mathbf{x}, \mathbf{v})$ along which $H$ keeps this value, and propose its end $(\mathbf{x}', \mathbf{v}')$. For Metropolis-Hastings over the pairs, with a symmetric proposal, the acceptance probability is
+1. Keep $\mathbf{x}$ and redraw $\mathbf{v} \sim \pi(\mathbf{v} \mid \mathbf{x}) = \mathcal{N}(\mathbf{0}, \mathbf{I})$. The draw is exact, so there is nothing to accept or reject. $H$ takes a new value.
+2. Follow a path from $(\mathbf{x}, \mathbf{v})$ along which $H$ keeps this value, and propose its end $(\mathbf{x}', \mathbf{v}')$. For Metropolis-Hastings over the pairs, with a symmetric proposal, the acceptance probability is
 $$\alpha = \min\left(1, \frac{\pi(\mathbf{x}', \mathbf{v}')}{\pi(\mathbf{x}, \mathbf{v})}\right) = \min\left(1, \exp(H(\mathbf{x}, \mathbf{v}) - H(\mathbf{x}', \mathbf{v}'))\right) = 1.$$
 
 The first move changes the value of $H$. The second travels far at this value, and is always accepted. It remains to find such paths.
@@ -499,6 +499,12 @@ class: middle
 
 .center.width-100[![](figures/lec6/hmc-dynamics.gif)]
 
+.center[
+
+Six HMC iterations on a two-mode target. Each new $v$ (orange) changes $H$; each path (blue) keeps it. <br>Only the iteration with the largest $H$ crosses to the other mode.
+
+]
+
 These dynamics are simulated with steps of size $\epsilon$. Euler steps let $H$ drift, so long moves would be rejected. The .bold[leapfrog] scheme keeps $H$ nearly constant:
 $$\mathbf{v} \leftarrow \mathbf{v} + \frac{\epsilon}{2} \nabla \log \tilde{\pi}(\mathbf{x}), \quad \mathbf{x} \leftarrow \mathbf{x} + \epsilon \mathbf{v}, \quad \mathbf{v} \leftarrow \mathbf{v} + \frac{\epsilon}{2} \nabla \log \tilde{\pi}(\mathbf{x}).$$
 
@@ -508,8 +514,8 @@ class: middle
 
 The HMC algorithm proceeds as follows:
 
-1. .bold[Momentum.] Given the current state $\mathbf{x}\_t$, draw $\mathbf{v} \sim \mathcal{N}(\mathbf{0}, \mathbf{I})$.
-2. .bold[Trajectory.] Starting from $(\mathbf{x}\_t, \mathbf{v})$, run $L$ leapfrog steps of size $\epsilon$ to obtain $(\mathbf{x}', \mathbf{v}')$.
+1. Given the current state $\mathbf{x}\_t$, draw $\mathbf{v} \sim \mathcal{N}(\mathbf{0}, \mathbf{I})$.
+2. Starting from $(\mathbf{x}\_t, \mathbf{v})$, run $L$ leapfrog steps of size $\epsilon$ to obtain $(\mathbf{x}', \mathbf{v}')$.
 3. Accept $\mathbf{x}\_{t+1} = \mathbf{x}'$ with probability
 $$\alpha = \min\left(1, \exp(H(\mathbf{x}\_t, \mathbf{v}) - H(\mathbf{x}', \mathbf{v}'))\right).$$
 Otherwise, set $\mathbf{x}\_{t+1} = \mathbf{x}\_t$. In both cases, discard $\mathbf{v}$.
