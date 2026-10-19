@@ -462,9 +462,7 @@ $$\begin{aligned}
 where the .bold[Hamiltonian] is
 $$H(\mathbf{x}, \mathbf{v}) = -\log \tilde{\pi}(\mathbf{x}) + \frac{1}{2} \mathbf{v}^T \mathbf{v}.$$
 
-Using Metropolis-Hastings over the pairs $(\mathbf{x}, \mathbf{v})$, with a symmetric proposal, the acceptance ratio is $\exp(H(\mathbf{x}, \mathbf{v}) - H(\mathbf{x}', \mathbf{v}'))$: it is 1 if $H$ stays constant. Yet $\tilde{\pi}(\mathbf{x})$ can now go up or down, as long as $\mathbf{v}$ compensates. Between moves, a fresh $\mathbf{v}$ gives $H$ a new value.
-
-Since $\mathbf{v}$ is independent of $\mathbf{x}$, the marginal of $\mathbf{x}$ is still $\pi$: discarding $\mathbf{v}$ gives samples of $\pi$.
+Using Metropolis-Hastings over the pairs $(\mathbf{x}, \mathbf{v})$, with a symmetric proposal, the acceptance ratio is $\exp(H(\mathbf{x}, \mathbf{v}) - H(\mathbf{x}', \mathbf{v}'))$: it is 1 if $H$ stays constant. Yet $\tilde{\pi}(\mathbf{x})$ can now go up or down, as long as $\mathbf{v}$ compensates.
 
 ???
 
