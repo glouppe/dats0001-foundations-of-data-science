@@ -444,7 +444,7 @@ class: middle
 
 The traces show that random-walk proposals explore the target by small steps. Larger steps land in regions of low density and are rejected.
 
-Consider instead a symmetric proposal, $q(x \mid x') = q(x' \mid x)$, that moves along a contour line of $\tilde{\pi}$, so that $\tilde{\pi}(x') = \tilde{\pi}(x)$. Both ratios in the acceptance probability are 1:
+Consider instead a proposal with two properties: it stays on the contour line of $\tilde{\pi}$ through $x$, so that $\tilde{\pi}(x') = \tilde{\pi}(x)$, and it is symmetric, $q(x \mid x') = q(x' \mid x)$. Both ratios in the acceptance probability are then 1:
 $$\alpha(x' \mid x) = \min\\left(\frac{\tilde{\pi}(x')}{\tilde{\pi}(x)} \frac{q(x \mid x')}{q(x' \mid x)}, 1\right) = \min(1, 1) = 1.$$
 Such moves are always accepted, however far they go. But they never leave their contour line: they cannot visit regions of higher or lower density.
 
