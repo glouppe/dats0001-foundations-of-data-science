@@ -462,7 +462,7 @@ $$\begin{aligned}
 where the .bold[Hamiltonian] is
 $$H(\mathbf{x}, \mathbf{v}) = -\log \tilde{\pi}(\mathbf{x}) + \frac{1}{2} \mathbf{v}^T \mathbf{v}.$$
 
-Metropolis-Hastings now proposes pairs $(\mathbf{x}', \mathbf{v}')$. For a symmetric proposal, the acceptance ratio is $\frac{\pi(\mathbf{x}', \mathbf{v}')}{\pi(\mathbf{x}, \mathbf{v})} = \exp(H(\mathbf{x}, \mathbf{v}) - H(\mathbf{x}', \mathbf{v}'))$, which is 1 if $H$ stays constant. Yet $\tilde{\pi}(\mathbf{x})$ can now go up or down, as long as $\mathbf{v}$ compensates. Redrawing $\mathbf{v}$ at each iteration changes the level of $H$.
+Using Metropolis-Hastings over the pairs $(\mathbf{x}, \mathbf{v})$, with a symmetric proposal, the acceptance ratio is $\frac{\pi(\mathbf{x}', \mathbf{v}')}{\pi(\mathbf{x}, \mathbf{v})} = \exp(H(\mathbf{x}, \mathbf{v}) - H(\mathbf{x}', \mathbf{v}'))$, which is 1 if $H$ stays constant. Yet $\tilde{\pi}(\mathbf{x})$ can now go up or down, as long as $\mathbf{v}$ compensates. Redrawing $\mathbf{v}$ at each iteration changes the level of $H$.
 
 Since $\mathbf{v}$ is independent of $\mathbf{x}$, the marginal of $\mathbf{x}$ is still $\pi$: discarding $\mathbf{v}$ gives samples of $\pi$.
 
