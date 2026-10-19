@@ -221,7 +221,7 @@ The total variation distance between two distributions $p\_1$ and $p\_1'$ is $\\
 
 class: middle
 
-.italic[Proof.] Consider two initial distributions $p\_1$ and $p\_1'$. Let $p\_1 P^n$ be the distribution of $x\_{t+n}$ when $x\_t \sim p\_1$, and $p\_1 \bar{P}$ likewise for one move of $\bar{p}$. The proof uses several numbers of steps $n$: $m$ on this slide, then $1$, $km$ and $t - 1$. By the split,
+.italic[Proof.] Consider two initial distributions $p\_1$ and $p\_1'$. Let $p\_1 P^n$ be the distribution of $x\_{t+n}$ when $x\_t \sim p\_1$, after $n$ steps of the chain. The proof uses $n = m$ on this slide, then $1$, $km$ and $t - 1$. Let $p\_1 \bar{P}$ be the distribution of $x\_{t+m}$ when $x\_t \sim p\_1$ and $x\_{t+m}$ is drawn from $\bar{p}(x\_{t+m} \mid x\_t)$. Like $P^m$, $\bar{P}$ moves $m$ steps ahead at once. By the split,
 $$p\_1 P^m = \delta \nu + (1 - \delta) p\_1 \bar{P},$$
 so the terms in $\delta \nu$ cancel:
 $$\begin{aligned}
