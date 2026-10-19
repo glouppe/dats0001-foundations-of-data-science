@@ -248,7 +248,7 @@ $$\\| \pi - \pi' \\|\_\text{TV} = \\| \pi P^m - \pi' P^m \\|\_\text{TV} \leq (1 
 A distance at most $1 - \delta < 1$ times itself is zero, so $\pi = \pi'$.
 - (Existence) Start from any $p\_1$ and look every $m$ steps. By $(\star)$, the step $d\_k = \\| p\_1 P^{(k+1)m} - p\_1 P^{km} \\|\_\text{TV}$ is at most $1 - \delta$ times the previous one:
 $$d\_k \leq (1 - \delta) d\_{k-1} \leq \ldots \leq (1 - \delta)^k d\_0 \leq (1 - \delta)^k,$$
-since a total variation distance is at most 1. The steps shrink geometrically, so $p\_1 P^{km}$ converges to a limit $\pi$. Since $p\_1 P^{(k+1)m} = (p\_1 P^{km}) P^m$ tends both to $\pi$ and to $\pi P^m$, $\pi P^m = \pi$. Let $\mu = \pi P$ be $\pi$ moved one step. Then $\mu P^m = (\pi P^m) P = \pi P = \mu$: $\mu$ is also unchanged by $m$ steps, so $\mu = \pi$ by uniqueness, that is, $\pi P = \pi$.
+since a total variation distance is at most 1. The steps shrink geometrically, so $p\_1 P^{km}$ converges to a limit $\pi$. Since $p\_1 P^{(k+1)m} = (p\_1 P^{km}) P^m$ tends both to $\pi$ and to $\pi P^m$, $\pi P^m = \pi$. Let $\mu = \pi P$ be $\pi$ moved one step. Then $\mu P^m = (\pi P) P^m = (\pi P^m) P = \pi P = \mu$: $\mu$ is also unchanged by $m$ steps, so $\mu = \pi$ by uniqueness, that is, $\pi P = \pi$.
 
 ---
 
