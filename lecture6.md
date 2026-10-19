@@ -260,6 +260,10 @@ class: middle
 - (Convergence) The chain starts at $x\_1$, so $x\_t$ comes $t - 1$ steps later: $p(x\_t) = p(x\_1) P^{t-1}$. Since $\pi$ is stationary, $\pi = \pi P^{t-1}$. Applying $(\star)$ $t - 1$ times,
 $$\\| p(x\_t) - \pi \\|\_\text{TV} = \\| p(x\_1) P^{t-1} - \pi P^{t-1} \\|\_\text{TV} \leq (1 - \delta)^{t-1}.$$
 
+---
+
+class: middle
+
 For $m > 1$, observe the chain every $m$ steps: $x\_1, x\_{1+m}, x\_{1+2m}, \ldots$ This is again a Markov chain, with transition $P^m$, which satisfies the Doeblin condition with $m = 1$. By the case $m = 1$:
 
 - (Uniqueness) At most one distribution is unchanged by $m$ steps. Stationary distributions are, so there is at most one.
