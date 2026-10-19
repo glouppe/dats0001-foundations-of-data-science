@@ -221,16 +221,16 @@ The total variation distance between two distributions $p\_1$ and $p\_1'$ is $\\
 
 class: middle
 
-.italic[Proof.] Consider two initial distributions $p\_1$ and $p\_1'$. Let $p\_1 P^n$ be the distribution of $x\_{t+n}$ when $x\_t \sim p\_1$, after $n$ steps of the chain. The proof uses $n = m$ on this slide, then $1$, $km$ and $t - 1$. Let $p\_1 \bar{P}$ be the distribution of $x\_{t+m}$ when $x\_t \sim p\_1$ and $x\_{t+m}$ is drawn from $\bar{p}(x\_{t+m} \mid x\_t)$. Like $P^m$, $\bar{P}$ moves $m$ steps ahead at once. By the split,
-$$p\_1 P^m = \delta \nu + (1 - \delta) p\_1 \bar{P},$$
+.italic[Proof.] Consider two initial distributions $p\_1$ and $p\_1'$. Let $p\_1 P^m$ be the distribution of $x\_{t+m}$ when $x\_t \sim p\_1$, and $p\_1 \bar{P}^m$ likewise when $x\_{t+m}$ is drawn from $\bar{p}$. By the split,
+$$p\_1 P^m = \delta \nu + (1 - \delta) p\_1 \bar{P}^m,$$
 so the terms in $\delta \nu$ cancel:
 $$\begin{aligned}
-p\_1 P^m - p\_1' P^m &= \delta \nu + (1 - \delta) p\_1 \bar{P} - \delta \nu - (1 - \delta) p\_1' \bar{P} \\\\
-&= (1 - \delta)(p\_1 \bar{P} - p\_1' \bar{P}).
+p\_1 P^m - p\_1' P^m &= \delta \nu + (1 - \delta) p\_1 \bar{P}^m - \delta \nu - (1 - \delta) p\_1' \bar{P}^m \\\\
+&= (1 - \delta)(p\_1 \bar{P}^m - p\_1' \bar{P}^m).
 \end{aligned}$$
 Taking the total variation distance of both sides,
 $$\begin{aligned}
-\\| p\_1 P^m - p\_1' P^m \\|\_\text{TV} &= (1 - \delta) \\| p\_1 \bar{P} - p\_1' \bar{P} \\|\_\text{TV} \\\\
+\\| p\_1 P^m - p\_1' P^m \\|\_\text{TV} &= (1 - \delta) \\| p\_1 \bar{P}^m - p\_1' \bar{P}^m \\|\_\text{TV} \\\\
 &\leq (1 - \delta) \\| p\_1 - p\_1' \\|\_\text{TV}, \qquad (\star)
 \end{aligned}$$
 since moving two distributions with the same transition model $\bar{p}$ cannot make them more different.
@@ -241,7 +241,7 @@ Every $m$ steps, any two distributions get closer by a factor $1 - \delta$.
 
 class: middle
 
-With the notation $p\_1 P^n$, a distribution $\pi$ is stationary if and only if $\pi P = \pi$. The three parts of the theorem follow, uniqueness first:
+Write likewise $p\_1 P^n$ for the distribution $n$ steps later. A distribution $\pi$ is stationary if and only if $\pi P = \pi$. The three parts of the theorem follow, uniqueness first:
 
 - (Uniqueness) Two distributions unchanged by $m$ steps, $\pi P^m = \pi$ and $\pi' P^m = \pi'$, satisfy
 $$\\| \pi - \pi' \\|\_\text{TV} = \\| \pi P^m - \pi' P^m \\|\_\text{TV} \leq (1 - \delta) \\| \pi - \pi' \\|\_\text{TV},$$
