@@ -458,7 +458,7 @@ class: middle
 $$\pi(\mathbf{x}, \mathbf{v}) \propto \tilde{\pi}(\mathbf{x}) \mathcal{N}(\mathbf{v} \mid \mathbf{0}, \mathbf{I}) \propto \exp(-H(\mathbf{x}, \mathbf{v})),$$
 where the .bold[Hamiltonian] is
 $$H(\mathbf{x}, \mathbf{v}) = -\log \tilde{\pi}(\mathbf{x}) + \frac{1}{2} \mathbf{v}^T \mathbf{v}.$$
-Since $\mathbf{v}$ is independent of $\mathbf{x}$, the marginal of $\mathbf{x}$ is $\pi$: discarding $\mathbf{v}$ gives samples of $\pi$.
+Since $\mathbf{v}$ is independent of $\mathbf{x}$, discarding $\mathbf{v}$ gives samples of $\pi$.
 
 On the pairs, a constant density means a constant $H$. Unlike on the previous slide, a move at constant $H$ can change $\tilde{\pi}(\mathbf{x})$: $-\log \tilde{\pi}(\mathbf{x})$ goes up or down, and $\frac{1}{2} \mathbf{v}^T \mathbf{v}$ by the opposite amount.
 
