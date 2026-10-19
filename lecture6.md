@@ -257,7 +257,9 @@ Repeating, $d\_n \leq (1 - \delta)^n d\_0 \leq (1 - \delta)^n$, since a total va
 
 class: middle
 
-- (Convergence) The chain starts at $x\_1$, so $x\_t$ comes $t - 1$ steps later: $p(x\_t) = p(x\_1) P^{t-1}$. Since $\pi$ is stationary, $\pi = \pi P^{t-1}$. Applying $(\star)$ $t - 1$ times,
+- (Convergence) The chain starts at $x\_1$, so $x\_t$ comes $t - 1$ steps later: $p(x\_t) = p(x\_1) P^{t-1}$. Since $\pi$ is stationary, $\pi = \pi P^{t-1}$. By $(\star)$ with $p(x\_1) P^{n-1}$ and $\pi P^{n-1}$ in place of $p\_1$ and $p\_1'$,
+$$\\| p(x\_1) P^n - \pi P^n \\|\_\text{TV} \leq (1 - \delta) \\| p(x\_1) P^{n-1} - \pi P^{n-1} \\|\_\text{TV}.$$
+Applying this for $n = t - 1, t - 2, \ldots, 1$,
 $$\begin{aligned}
 \\| p(x\_t) - \pi \\|\_\text{TV} &= \\| p(x\_1) P^{t-1} - \pi P^{t-1} \\|\_\text{TV} \\\\
 &\leq (1 - \delta)^{t-1} \\| p(x\_1) - \pi \\|\_\text{TV} \\\\
