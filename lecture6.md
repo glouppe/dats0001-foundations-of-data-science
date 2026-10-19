@@ -254,13 +254,13 @@ since a total variation distance is at most 1. The steps shrink geometrically, s
 
 class: middle
 
-- (Convergence) Write $t - 1 = km + r$, with $k = \lfloor (t-1)/m \rfloor$ and $r < m$. Since $\pi$ is stationary, $\pi = \pi P^{t-1}$, and
+- (Convergence) The chain starts at $x\_1$, so $x\_t$ comes $n = t - 1$ steps later: $p(x\_t) = p(x\_1) P^n$. Count these steps in blocks of $m$: $n = km + r$, with $k = \lfloor (t-1)/m \rfloor$ full blocks and $r < m$ steps left over. Since $\pi$ is stationary, $\pi = \pi P^n$, and
 $$\begin{aligned}
-\\| p(x\_t) - \pi \\|\_\text{TV} &= \\| p(x\_1) P^{t-1} - \pi P^{t-1} \\|\_\text{TV} \\\\
+\\| p(x\_t) - \pi \\|\_\text{TV} &= \\| p(x\_1) P^n - \pi P^n \\|\_\text{TV} \\\\
 &\leq \\| p(x\_1) P^{km} - \pi P^{km} \\|\_\text{TV} \\\\
 &\leq (1 - \delta)^k \\| p(x\_1) - \pi \\|\_\text{TV} \leq (1 - \delta)^k.
 \end{aligned}$$
-The first inequality drops the last $r$ steps, which cannot make the two distributions more different. The second applies $(\star)$ $k$ times.
+The first inequality drops the $r$ steps left over, which cannot make the two distributions more different. The second applies $(\star)$ once per block.
 
 ---
 
