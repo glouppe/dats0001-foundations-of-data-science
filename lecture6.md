@@ -221,21 +221,21 @@ The total variation distance between two distributions $p\_1$ and $p\_1'$ is $\\
 
 class: middle
 
-.italic[Proof.] Consider two initial distributions $p\_1$ and $p\_1'$. Let $p\_1 P^m$ be the distribution of $x\_{t+m}$ when $x\_t \sim p\_1$, and $p\_1 \bar{P}^m$ likewise when $x\_{t+m}$ is drawn from $\bar{p}$. By the split,
-$$p\_1 P^m = \delta \nu + (1 - \delta) p\_1 \bar{P}^m,$$
+.italic[Proof.] We first take $m = 1$: the split reads $p(x\_{t+1} \mid x\_t) = \delta \nu(x\_{t+1}) + (1 - \delta) \bar{p}(x\_{t+1} \mid x\_t)$. Consider two initial distributions $p\_1$ and $p\_1'$. Let $p\_1 P$ be the distribution of $x\_{t+1}$ when $x\_t \sim p\_1$, and $p\_1 \bar{P}$ likewise when $x\_{t+1}$ is drawn from $\bar{p}$. By the split,
+$$p\_1 P = \delta \nu + (1 - \delta) p\_1 \bar{P},$$
 so the terms in $\delta \nu$ cancel:
 $$\begin{aligned}
-p\_1 P^m - p\_1' P^m &= \delta \nu + (1 - \delta) p\_1 \bar{P}^m - \delta \nu - (1 - \delta) p\_1' \bar{P}^m \\\\
-&= (1 - \delta)(p\_1 \bar{P}^m - p\_1' \bar{P}^m).
+p\_1 P - p\_1' P &= \delta \nu + (1 - \delta) p\_1 \bar{P} - \delta \nu - (1 - \delta) p\_1' \bar{P} \\\\
+&= (1 - \delta)(p\_1 \bar{P} - p\_1' \bar{P}).
 \end{aligned}$$
 Taking the total variation distance of both sides,
 $$\begin{aligned}
-\\| p\_1 P^m - p\_1' P^m \\|\_\text{TV} &= (1 - \delta) \\| p\_1 \bar{P}^m - p\_1' \bar{P}^m \\|\_\text{TV} \\\\
+\\| p\_1 P - p\_1' P \\|\_\text{TV} &= (1 - \delta) \\| p\_1 \bar{P} - p\_1' \bar{P} \\|\_\text{TV} \\\\
 &\leq (1 - \delta) \\| p\_1 - p\_1' \\|\_\text{TV}, \qquad (\star)
 \end{aligned}$$
 since moving two distributions with the same transition model $\bar{p}$ cannot make them more different.
 
-Every $m$ steps, any two distributions get closer by a factor $1 - \delta$.
+At every step, any two distributions get closer by a factor $1 - \delta$.
 
 ---
 
@@ -243,24 +243,25 @@ class: middle
 
 Write likewise $p\_1 P^n$ for the distribution $n$ steps later. A distribution $\pi$ is stationary if $\pi P = \pi$. It is then unchanged by any number of steps: $\pi P^n = \pi$.
 
-- (Uniqueness) Let $\pi$ and $\pi'$ be unchanged by $m$ steps, as stationary distributions are. By $(\star)$,
-$$\\| \pi - \pi' \\|\_\text{TV} = \\| \pi P^m - \pi' P^m \\|\_\text{TV} \leq (1 - \delta) \\| \pi - \pi' \\|\_\text{TV}.$$
+- (Uniqueness) Let $\pi$ and $\pi'$ be stationary. By $(\star)$,
+$$\\| \pi - \pi' \\|\_\text{TV} = \\| \pi P - \pi' P \\|\_\text{TV} \leq (1 - \delta) \\| \pi - \pi' \\|\_\text{TV}.$$
 A distance at most $1 - \delta < 1$ times itself is zero, so $\pi = \pi'$.
-- (Existence) Start from any $p\_1$ and look every $m$ steps. By $(\star)$, the step $d\_k = \\| p\_1 P^{(k+1)m} - p\_1 P^{km} \\|\_\text{TV}$ is at most $1 - \delta$ times the previous one:
-$$d\_k \leq (1 - \delta) d\_{k-1} \leq \ldots \leq (1 - \delta)^k d\_0 \leq (1 - \delta)^k,$$
-since a total variation distance is at most 1. The steps shrink geometrically, so $p\_1 P^{km}$ converges to a limit $\pi$. Since $p\_1 P^{(k+1)m} = (p\_1 P^{km}) P^m$ tends both to $\pi$ and to $\pi P^m$, $\pi P^m = \pi$. Let $\mu = \pi P$ be $\pi$ moved one step. Then $\mu P^m = (\pi P) P^m = (\pi P^m) P = \pi P = \mu$: $\mu$ is also unchanged by $m$ steps, so $\pi = \mu$ by uniqueness, and $\pi = \pi P$.
+- (Existence) Start from any $p\_1$. By $(\star)$, the step $d\_n = \\| p\_1 P^{n+1} - p\_1 P^n \\|\_\text{TV}$ is at most $1 - \delta$ times the previous one:
+$$d\_n \leq (1 - \delta) d\_{n-1} \leq \ldots \leq (1 - \delta)^n d\_0 \leq (1 - \delta)^n,$$
+since a total variation distance is at most 1. The steps shrink geometrically, so $p\_1 P^n$ converges to a limit $\pi$. Since $p\_1 P^{n+1} = (p\_1 P^n) P$ tends both to $\pi$ and to $\pi P$, $\pi P = \pi$.
+- (Convergence) The chain starts at $x\_1$, so $x\_t$ comes $t - 1$ steps later: $p(x\_t) = p(x\_1) P^{t-1}$. Since $\pi = \pi P^{t-1}$, applying $(\star)$ $t - 1$ times gives
+$$\\| p(x\_t) - \pi \\|\_\text{TV} = \\| p(x\_1) P^{t-1} - \pi P^{t-1} \\|\_\text{TV} \leq (1 - \delta)^{t-1} \\| p(x\_1) - \pi \\|\_\text{TV} \leq (1 - \delta)^{t-1}.$$
 
 ---
 
 class: middle
 
-- (Convergence) The chain starts at $x\_1$, so $x\_t$ comes $n = t - 1$ steps later: $p(x\_t) = p(x\_1) P^n$. Count these steps in blocks of $m$: $n = km + r$, with $k = \lfloor (t-1)/m \rfloor$ full blocks and $r < m$ steps left over. Since $\pi$ is stationary, $\pi = \pi P^n$, and
-$$\begin{aligned}
-\\| p(x\_t) - \pi \\|\_\text{TV} &= \\| p(x\_1) P^n - \pi P^n \\|\_\text{TV} \\\\
-&\leq \\| p(x\_1) P^{km} - \pi P^{km} \\|\_\text{TV} \\\\
-&\leq (1 - \delta)^k \\| p(x\_1) - \pi \\|\_\text{TV} \leq (1 - \delta)^k.
-\end{aligned}$$
-The first inequality drops the $r$ steps left over, which cannot make the two distributions more different. The second applies $(\star)$ once per block.
+For $m > 1$, observe the chain every $m$ steps: $x\_1, x\_{1+m}, x\_{1+2m}, \ldots$ This is again a Markov chain, with transition $P^m$, and it satisfies the Doeblin condition with $m = 1$. By the case $m = 1$:
+
+- (Uniqueness) At most one distribution is unchanged by $m$ steps. Stationary distributions are, so there is at most one.
+- (Existence) Some $\pi$ satisfies $\pi P^m = \pi$. Let $\mu = \pi P$ be $\pi$ moved one step. Then $\mu P^m = (\pi P) P^m = (\pi P^m) P = \pi P = \mu$: $\mu$ is also unchanged by $m$ steps, so $\pi = \mu$ by uniqueness, and $\pi = \pi P$.
+- (Convergence) From $x\_1$ to $x\_t$, the chain makes $k = \lfloor (t-1)/m \rfloor$ blocks of $m$ steps and $r < m$ steps left over. The blocks bring $p(x\_t)$ within $(1 - \delta)^k$ of $\pi$, and the steps left over cannot make the two distributions more different:
+$$\\| p(x\_t) - \pi \\|\_\text{TV} \leq \\| p(x\_1) P^{km} - \pi P^{km} \\|\_\text{TV} \leq (1 - \delta)^{\lfloor (t-1)/m \rfloor}.$$
 
 ---
 
