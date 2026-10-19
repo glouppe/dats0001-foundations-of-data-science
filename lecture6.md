@@ -460,7 +460,9 @@ $$\begin{aligned}
 where the .bold[Hamiltonian] is
 $$H(\mathbf{x}, \mathbf{v}) = -\log \tilde{\pi}(\mathbf{x}) + \frac{1}{2} \mathbf{v}^T \mathbf{v}.$$
 
-Along a move that keeps the joint density constant, $\tilde{\pi}(\mathbf{x})$ can now go up or down, as long as $\mathbf{v}$ compensates. Since $\mathbf{v}$ is independent of $\mathbf{x}$, the marginal of $\mathbf{x}$ is still $\pi$: discarding $\mathbf{v}$ gives samples of $\pi$.
+A move that keeps $H$ constant keeps the joint density constant, so it is always accepted, however far it goes. Unlike on the previous slide, $\mathbf{x}$ is no longer bound to a contour line: $-\log \tilde{\pi}(\mathbf{x})$ can go up or down, as long as $\frac{1}{2} \mathbf{v}^T \mathbf{v}$ changes by the opposite amount. Drawing a new $\mathbf{v}$ at each iteration changes the value of $H$, so that the chain also moves between levels.
+
+Since $\mathbf{v}$ is independent of $\mathbf{x}$, the marginal of $\mathbf{x}$ is still $\pi$: discarding $\mathbf{v}$ gives samples of $\pi$.
 
 ???
 
