@@ -278,7 +278,9 @@ For $m > 1$, we reduce to the case $m = 1$. Observe the chain every $m$ steps: $
 The previous slides apply to $y$. Its stationary distributions are those unchanged by $m$ steps, $\pi P^m = \pi$. It remains to carry the results back to $x$.
 
 - (Uniqueness) A stationary distribution of $x$ is unchanged by $m$ steps, so it is also stationary for $y$. Since $y$ has only one, so does $x$.
-- (Existence) Let $\pi$ be the stationary distribution of $y$, with $\pi P^m = \pi$. To show that $\pi P = \pi$, let $\mu = \pi P$ be $\pi$ moved one step. Then $\mu P^m = (\pi P) P^m = (\pi P^m) P = \pi P = \mu$: $\mu$ is also stationary for $y$, so $\pi = \mu$ by uniqueness for $y$, and $\pi = \pi P$.
+- (Existence) Let $\pi$ be the stationary distribution of $y$, with $\pi P^m = \pi$. To show that $\pi P = \pi$, let $\mu = \pi P$ be $\pi$ moved one step. Then
+$$\mu P^m = (\pi P) P^m = (\pi P^m) P = \pi P = \mu:$$
+$\mu$ is also stationary for $y$, so $\pi = \mu$ by uniqueness for $y$, and $\pi = \pi P$.
 
 ---
 
