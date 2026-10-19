@@ -246,8 +246,8 @@ Write likewise $p\_1 P^n$ for the distribution $n$ steps later. A distribution $
 - (Uniqueness) Let $\pi$ and $\pi'$ be unchanged by $m$ steps, as stationary distributions are. By $(\star)$,
 $$\\| \pi - \pi' \\|\_\text{TV} = \\| \pi P^m - \pi' P^m \\|\_\text{TV} \leq (1 - \delta) \\| \pi - \pi' \\|\_\text{TV}.$$
 A distance at most $1 - \delta < 1$ times itself is zero, so $\pi = \pi'$.
-- (Existence) Start from any $p\_1$ and look every $m$ steps. By $(\star)$, each step is at most $1 - \delta$ times the previous one:
-$$\\| p\_1 P^{(k+1)m} - p\_1 P^{km} \\|\_\text{TV} \leq (1 - \delta) \\| p\_1 P^{km} - p\_1 P^{(k-1)m} \\|\_\text{TV} \leq \ldots \leq (1 - \delta)^k,$$
+- (Existence) Start from any $p\_1$ and look every $m$ steps. By $(\star)$, the step $d\_k = \\| p\_1 P^{(k+1)m} - p\_1 P^{km} \\|\_\text{TV}$ is at most $1 - \delta$ times the previous one:
+$$d\_k \leq (1 - \delta) d\_{k-1} \leq \ldots \leq (1 - \delta)^k d\_0 \leq (1 - \delta)^k,$$
 since a total variation distance is at most 1. The steps shrink geometrically, so $p\_1 P^{km}$ converges to a limit $\pi$. Since $p\_1 P^{(k+1)m} = (p\_1 P^{km}) P^m$ tends both to $\pi$ and to $\pi P^m$, $\pi P^m = \pi$. Then $(\pi P) P^m = (\pi P^m) P = \pi P$: $\pi P$ is also unchanged by $m$ steps, so $\pi P = \pi$ by uniqueness.
 
 ---
