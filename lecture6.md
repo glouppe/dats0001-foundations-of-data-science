@@ -301,13 +301,13 @@ class: middle
 
 .success[
 
-After a .bold[warm-up], the states of an irreducible, aperiodic chain with stationary distribution $\pi$ are samples from $\pi$.
+Run an irreducible, aperiodic chain with stationary distribution $\pi$. Whatever its initial state, the distribution $p(x\_t)$ of its state gets closer to $\pi$ as $t$ grows. Discard the first states, the .bold[warm-up]: the states that follow are samples from $\pi$, dependent on each other, and their averages estimate expectations under $\pi$ by the ergodic theorem.
 
 ]
 
 .alert[
 
-We still need to build such a chain for a given $\pi$, and to know how long to run it.
+Two questions remain. How do we build a chain whose stationary distribution is a given $\pi$, such as a posterior? This is the topic of the next slides. And how long must the warm-up be, and how many states do we need? This is the topic of the diagnostics, at the end of the lecture.
 
 ]
 
