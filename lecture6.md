@@ -464,6 +464,8 @@ $$H(\mathbf{x}, \mathbf{v}) = -\log \tilde{\pi}(\mathbf{x}) + \frac{1}{2} \mathb
 
 Using Metropolis-Hastings over the pairs $(\mathbf{x}, \mathbf{v})$, with a symmetric proposal, the acceptance ratio is $\exp(H(\mathbf{x}, \mathbf{v}) - H(\mathbf{x}', \mathbf{v}'))$: it is 1 if $H$ stays constant. Yet $\tilde{\pi}(\mathbf{x})$ can now go up or down, as long as $\mathbf{v}$ compensates.
 
+An HMC iteration alternates two moves: a fresh $\mathbf{v} \sim \mathcal{N}(\mathbf{0}, \mathbf{I})$, which needs no acceptance step and changes $H$, and a long move at constant $H$, which is accepted.
+
 ???
 
 In physics, the Hamiltonian is the total energy of a system with position $\mathbf{x}$ and momentum $\mathbf{v}$: a potential energy that depends on the position, here $-\log \tilde{\pi}(\mathbf{x})$, plus a kinetic energy that depends on the momentum, here $\frac{1}{2} \mathbf{v}^T \mathbf{v}$. Think of a ball rolling without friction on the surface $-\log \tilde{\pi}(\mathbf{x})$: it speeds up downhill, towards high density, and slows down uphill, trading one energy for the other while their sum stays constant.
