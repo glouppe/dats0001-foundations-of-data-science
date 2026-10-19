@@ -241,21 +241,26 @@ Every $m$ steps, any two distributions get closer by a factor $1 - \delta$.
 
 class: middle
 
-Write likewise $p\_1 P^n$ for the distribution $n$ steps later. A distribution $\pi$ is stationary if and only if $\pi P = \pi$. The three parts of the theorem follow, uniqueness first:
+Write likewise $p\_1 P^n$ for the distribution $n$ steps later. A distribution $\pi$ is stationary if $\pi P = \pi$. It is then unchanged by any number of steps: $\pi P^n = \pi$.
 
-- (Uniqueness) Two distributions unchanged by $m$ steps, $\pi P^m = \pi$ and $\pi' P^m = \pi'$, satisfy
-$$\\| \pi - \pi' \\|\_\text{TV} = \\| \pi P^m - \pi' P^m \\|\_\text{TV} \leq (1 - \delta) \\| \pi - \pi' \\|\_\text{TV},$$
-hence $\pi = \pi'$.
-- (Existence) Applying $(\star)$ $k$ times to $p\_1 P^m$ and $p\_1$,
-$$\\| p\_1 P^{(k+1)m} - p\_1 P^{km} \\|\_\text{TV} \leq (1 - \delta)^k \\| p\_1 P^m - p\_1 \\|\_\text{TV} \leq (1 - \delta)^k.$$
-The steps shrink geometrically, so $p\_1 P^{km}$ converges to a limit $\pi$, with $\pi P^m = \pi$. Then $(\pi P) P^m = (\pi P^m) P = \pi P$: $\pi P$ is also unchanged by $m$ steps, so $\pi P = \pi$ by uniqueness.
+- (Uniqueness) Let $\pi$ and $\pi'$ be unchanged by $m$ steps, as stationary distributions are. By $(\star)$,
+$$\\| \pi - \pi' \\|\_\text{TV} = \\| \pi P^m - \pi' P^m \\|\_\text{TV} \leq (1 - \delta) \\| \pi - \pi' \\|\_\text{TV}.$$
+A distance at most $1 - \delta < 1$ times itself is zero, so $\pi = \pi'$.
+- (Existence) Start from any $p\_1$ and look every $m$ steps. By $(\star)$, each step is at most $1 - \delta$ times the previous one:
+$$\\| p\_1 P^{(k+1)m} - p\_1 P^{km} \\|\_\text{TV} \leq (1 - \delta) \\| p\_1 P^{km} - p\_1 P^{(k-1)m} \\|\_\text{TV} \leq \ldots \leq (1 - \delta)^k,$$
+since a total variation distance is at most 1. The steps shrink geometrically, so $p\_1 P^{km}$ converges to a limit $\pi$. Since $p\_1 P^{(k+1)m} = (p\_1 P^{km}) P^m$ tends both to $\pi$ and to $\pi P^m$, $\pi P^m = \pi$. Then $(\pi P) P^m = (\pi P^m) P = \pi P$: $\pi P$ is also unchanged by $m$ steps, so $\pi P = \pi$ by uniqueness.
 
 ---
 
 class: middle
 
-- (Convergence) Since $\pi$ is stationary, $\pi = \pi P^{t-1}$. Applying $(\star)$ $\lfloor (t-1)/m \rfloor$ times to $p(x\_1)$ and $\pi$, since the remaining steps cannot increase the distance, and since the total variation distance is at most 1,
-$$\\| p(x\_t) - \pi \\|\_\text{TV} = \\| p(x\_1) P^{t-1} - \pi P^{t-1} \\|\_\text{TV} \leq (1 - \delta)^{\lfloor (t-1)/m \rfloor}.$$
+- (Convergence) Write $t - 1 = km + r$, with $k = \lfloor (t-1)/m \rfloor$ and $r < m$. Since $\pi$ is stationary, $\pi = \pi P^{t-1}$, and
+$$\begin{aligned}
+\\| p(x\_t) - \pi \\|\_\text{TV} &= \\| p(x\_1) P^{t-1} - \pi P^{t-1} \\|\_\text{TV} \\\\
+&\leq \\| p(x\_1) P^{km} - \pi P^{km} \\|\_\text{TV} \\\\
+&\leq (1 - \delta)^k \\| p(x\_1) - \pi \\|\_\text{TV} \leq (1 - \delta)^k.
+\end{aligned}$$
+The first inequality drops the last $r$ steps, which cannot make the two distributions more different. The second applies $(\star)$ $k$ times.
 
 ---
 
