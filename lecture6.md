@@ -262,6 +262,8 @@ $$\\| p(x\_1) P^n - \pi P^n \\|\_\text{TV} \leq (1 - \delta) \\| p(x\_1) P^{n-1}
 Applying this for $n = t - 1, t - 2, \ldots, 1$,
 $$\begin{aligned}
 \\| p(x\_t) - \pi \\|\_\text{TV} &= \\| p(x\_1) P^{t-1} - \pi P^{t-1} \\|\_\text{TV} \\\\
+&\leq (1 - \delta) \\| p(x\_1) P^{t-2} - \pi P^{t-2} \\|\_\text{TV} \\\\
+&\leq (1 - \delta)^2 \\| p(x\_1) P^{t-3} - \pi P^{t-3} \\|\_\text{TV} \leq \ldots \\\\
 &\leq (1 - \delta)^{t-1} \\| p(x\_1) - \pi \\|\_\text{TV} \\\\
 &\leq (1 - \delta)^{t-1},
 \end{aligned}$$
