@@ -12,14 +12,26 @@ Prof. Gilles Louppe<br>
 
 class: middle
 
+.center.width-55[![](figures/lec5/wolf-gps-observations.svg)]
+
+.question[
+
+The normalizing constants of the Kalman filter updates multiply into the likelihood $p(\mathbf{x}\_{1:T} \mid \theta)$ of the parameters $\theta$ of the wolf model. How do we obtain their posterior $p(\theta \mid \mathbf{x}\_{1:T})$?
+
+]
+
+---
+
+class: middle
+
 .center.width-10[![](figures/lec6/dices.png)]
 
-How to sample from a distribution $p(x)$ for which we can only evaluate an unnormalized version $\tilde{p}(x)$ of its density?
+More generally, how to sample from a distribution $p(x)$ when only an unnormalized version $\tilde{p}(x)$ of its density can be evaluated?
 
 Use cases:
 - Generating data points $x$ from a generative model $p(x)$.
-- Computing expectations $\mathbb{E}_{p(x)}[f(x)]$ or integrals $\int f(x) p(x) dx$.
-- Computing posterior distributions $p(z \mid x)$ in Bayesian inference.
+- Computing expectations $\mathbb{E}\_{p(x)}[f(x)]$ or integrals $\int f(x) p(x) dx$.
+- Computing posterior distributions $p(\mathbf{z} \mid \mathbf{x})$ in Bayesian inference.
 
 ---
 
@@ -31,7 +43,7 @@ class: middle
 
 class: middle
 
-.center[![](figures/lec6/markov-chain.svg)]
+.center.width-50[![](figures/lec6/markov-chain.svg)]
 
 ## Markov chains
 
@@ -51,11 +63,11 @@ When the transition model does not depend on $t$, i.e., $p(x\_{t+1} \mid x\_t) =
 
 class: middle
 
-.center.width-60[![](figures/lec6/gaussian_random_walk_1d.png)]
+.center.width-70[![](figures/lec6/gaussian_random_walk_1d.png)]
 
 .center[
 
-.italic[Example 1.] Gaussian random walk with $p(x\_1) = \mathcal{N}(x\_1 | 0, 1)$ and transition model $p(x\_{t+1} \mid x\_t) = \mathcal{N}(x\_{t+1} | x\_t, \sigma^2)$.
+.italic[Example 1.] Gaussian random walk with $p(x\_1) = \mathcal{N}(x\_1 \mid 0, 1)$ and transition model $p(x\_{t+1} \mid x\_t) = \mathcal{N}(x\_{t+1} \mid x\_t, \sigma^2)$.
 
 ]
 
@@ -76,7 +88,7 @@ Therefore, if $x\_t \sim \pi(x)$, then $x\_{t+1} \sim \pi(x)$.
 
 class: middle
 
-.center.width-60[![](figures/lec6/gaussian_random_walk_1d_variance.png)]
+.center.width-70[![](figures/lec6/gaussian_random_walk_1d_variance.png)]
 
 .center[
 
@@ -84,19 +96,15 @@ class: middle
 
 ]
 
-???
-
-The marginal $p(x\_t)$ is Gaussian with mean 0 and variance $1 + (t-1)\sigma^2$.
-
 ---
 
 class: middle
 
-.center.width-60[![](figures/lec6/gaussian_random_walk_1d_drift.png)]
+.center.width-70[![](figures/lec6/gaussian_random_walk_1d_drift.png)]
 
 .center[
 
-.italic[Example 2.] Gaussian random walk with $p(x\_1) = \mathcal{N}(x\_1 | 0, 1)$ and transition model $p(x\_{t+1} \mid x\_t) = \mathcal{N}(x\_{t+1} | x\_t - \kappa(x\_t - \mu), \sigma^2)$.
+.italic[Example 2.] Mean-reverting random walk with $p(x\_1) = \mathcal{N}(x\_1 \mid 0, 1)$ and transition model $p(x\_{t+1} \mid x\_t) = \mathcal{N}(x\_{t+1} \mid x\_t - \kappa(x\_t - \mu), \sigma^2)$.
 
 ]
 
@@ -104,18 +112,14 @@ class: middle
 
 class: middle
 
-.center.width-60[![](figures/lec6/gaussian_random_walk_variance_comparison.png)]
+.center.width-70[![](figures/lec6/gaussian_random_walk_variance_comparison.png)]
 
 .center[
 
-The Gaussian random walk with drift has a stationary distribution $\pi(x) = \mathcal{N}(x | \mu, \frac{\sigma^2}{2\kappa - \kappa^2})$.
+For $0 < \kappa < 2$, the mean-reverting random walk has the stationary distribution
+$$\pi(x) = \mathcal{N}\left(x \,\middle|\, \mu, \frac{\sigma^2}{2\kappa - \kappa^2}\right).$$
 
 ]
-
-???
-
-Proof: The stationary distribution must satisfy
-$$\pi(x') = \int \pi(x) \mathcal{N}(x' | x - \kappa(x - \mu), \sigma^2) dx.$$ This can be proved using the properties of Gaussian integrals.
 
 ---
 
@@ -123,16 +127,9 @@ class: middle
 
 ## Regularity conditions
 
-A markov chain is said to be:
-- .bold[irreducible] if any state $x'$ can be reached from any state $x$, i.e., for any $x$, $x'$, there exists $t$ such that $p(x\_t = x' \mid x\_1 = x) > 0$.
-- .bold[aperiodic] if there is no deterministic cycle, i.e., for all $x$, the greatest common divisor of the set $\\{t : p(x\_t = x \mid x\_1 = x) > 0\\}$ is 1.
-- for discrete state spaces, .bold[positive recurrent] if the expected return time to any state is finite; for continuous state spaces, .bold[Harris recurrent] if the chain returns to any set $A$ with positive measure infinitely often with probability 1.
-
-???
-
-- Irreducibility ensures that the chain can explore the entire state space and does not get stuck in a subset of states.
-- Aperiodicity ensures that the chain does not get trapped in cycles, which would prevent convergence to a stationary distribution.
-- Recurrence is the most technical condition. Intuitively, it prevents the chain from "drifting away" to infinity. Without it, you could have an "improper" stationary distribution that doesn't integrate to 1.
+Let $\nu$ be a distribution on the state space, such as $\mathcal{N}(0, 1)$ on the real line. A set $A$ has positive measure if its probability $\nu(A)$ under $\nu$ is positive. A Markov chain is said to be:
+- .bold[irreducible] if any set $A$ with positive measure $\nu(A) > 0$ can be reached from any state $x$, i.e., there exists $t$ such that $p(x\_t \in A \mid x\_1 = x) > 0$.
+- .bold[aperiodic] if it is not forced to cycle through sets, as in $A \to B \to A \to \cdots$.
 
 ---
 
@@ -140,28 +137,179 @@ class: middle
 
 ## Basic limit theorem for Markov chains
 
-.italic[Theorem.] If a time-homogeneous Markov chain is irreducible, aperiodic, and (positive/Harris) recurrent, then it satisfies the following properties:
+.italic[Theorem.] If a time-homogeneous Markov chain has a stationary distribution $\pi$ and is irreducible and aperiodic, then:
 
-- (Existence and uniqueness) There exists a .bold[unique] stationary distribution $\pi$;
-- (Convergence) For any initial distribution of $p(x\_1)$, $p(x\_t) \to \pi(x)$ as $t \to \infty$;
+- (Uniqueness) $\pi$ is its .bold[only] stationary distribution;
+- (Convergence) For almost any initial state $x\_1$, $p(x\_t) \to \pi(x)$ as $t \to \infty$;
 - (Ergodic theorem) For any function $f$ with $\mathbb{E}\_{\pi}[|f(x)|] < \infty$, $$\lim\_{T \to \infty} \frac{1}{T} \sum\_{t=1}^T f(x\_t) = \mathbb{E}\_{\pi}[f(x)]$$ almost surely.
 
-.italic[Proof.] (Omitted and beyond scope.)
+.italic[Proof.] Beyond scope in the general case. The next slides prove it under a stronger condition.
 
-???
-
-The three conditions each play a role:
-- Irreducibility → uniqueness
-- Aperiodicity → convergence (not oscillation)
-- Recurrence → proper distribution (integrates to 1)
+.footnote[Credits: [Meyn and Tweedie](https://doi.org/10.1017/CBO9780511626630), Markov Chains and Stochastic Stability, 2009; [Tierney](https://doi.org/10.1214/aos/1176325750), 1994.]
 
 ---
 
 class: middle
 
-The theorem leaves two questions open: how to build a chain whose stationary distribution is a given target, and how fast the chain converges to it.
+## Doeblin condition
 
-Detailed balance and Metropolis-Hastings answer the first. Diagnostics, at the end of the lecture, address the second.
+A Markov chain satisfies the .bold[Doeblin condition] if there exist $m \geq 1$, $0 < \delta < 1$ and a distribution $\nu$ such that
+$$p(x\_{t+m} \in A \mid x\_t = x) \geq \delta \nu(A)$$
+for all states $x$ and sets $A$.
+
+Wherever the chain is, the distribution of its state $m$ steps later contains a .bold[common part] $\delta \nu$. A fraction $\delta$ of the probability goes to the same places, whatever the current state.
+
+---
+
+class: middle
+
+.center.width-80[![](figures/lec6/doeblin-overlap.png)]
+
+.center[
+
+Top: densities of $x\_{t+m}$ given $x\_t = -3, \ldots, 3$, for a random walk on $[-3, 3]$. <br>All lie above the shaded common part $\delta \nu$, of area $\delta$, as the condition requires. <br>Bottom: $\nu$, the common part rescaled to area 1.
+
+]
+
+---
+
+class: middle
+
+Remove the common part from the $m$-step transition model and rescale what remains:
+$$\bar{p}(x\_{t+m} \mid x\_t) = \frac{p(x\_{t+m} \mid x\_t) - \delta \nu(x\_{t+m})}{1 - \delta}.$$
+By the Doeblin condition, $\bar{p}$ is non-negative. It integrates to $\frac{1 - \delta}{1 - \delta} = 1$, since $p$ and $\nu$ both integrate to 1. So $\bar{p}$ is a transition model, and
+$$p(x\_{t+m} \mid x\_t) = \delta \nu(x\_{t+m}) + (1 - \delta) \bar{p}(x\_{t+m} \mid x\_t).$$
+
+The $m$-step transition is a mixture. Every $m$ steps, the chain draws its next state from $\nu$ with probability $\delta$, whatever its current state, and moves with $\bar{p}$ otherwise.
+
+A draw from $\nu$ is a .bold[restart]: the new state does not depend on the current one.
+
+---
+
+class: middle
+
+.italic[Example.] The chain
+$$p(x' \mid x) = \delta \nu(x') + (1 - \delta) \mathcal{N}(x' \mid x, 1),$$
+with $\nu = \mathcal{N}(0, 1)$ and $\delta = 0.05$, satisfies the Doeblin condition with $m = 1$.
+
+We simulate two copies of this chain from $x\_1 = -10$ and $x\_1 = 10$, with the same random numbers.
+
+.center.width-80[![](figures/lec6/doeblin.png)]
+
+.center[
+
+The two copies coincide from the first restart on.
+
+]
+
+---
+
+class: middle
+
+.italic[Theorem.] Under the Doeblin condition,
+- (Existence) the chain has a stationary distribution $\pi$;
+- (Uniqueness) $\pi$ is its only stationary distribution;
+- (Convergence) for any $p(x\_1)$,
+$$\\| p(x\_{t}) - \pi \\|\_\text{TV} \leq (1 - \delta)^{\lfloor (t-1)/m \rfloor},$$
+the probability of no restart in $t - 1$ steps, as in the example.
+
+???
+
+The total variation distance between two distributions $p\_1$ and $p\_1'$ is $\\| p\_1 - p\_1' \\|\_\text{TV} = \sup\_A |p\_1(A) - p\_1'(A)|$, the largest difference between the probabilities they give to the same set.
+
+---
+
+class: middle
+
+.italic[Proof.] We first take $m = 1$: the split reads $p(x\_{t+1} \mid x\_t) = \delta \nu(x\_{t+1}) + (1 - \delta) \bar{p}(x\_{t+1} \mid x\_t)$. Consider two initial distributions $p\_1$ and $p\_1'$. Let $p\_1 P$ be the distribution of $x\_{t+1}$ when $x\_t \sim p\_1$, and $p\_1 \bar{P}$ likewise when $x\_{t+1}$ is drawn from $\bar{p}$. By the split,
+$$p\_1 P = \delta \nu + (1 - \delta) p\_1 \bar{P},$$
+so the terms in $\delta \nu$ cancel:
+$$\begin{aligned}
+p\_1 P - p\_1' P &= \delta \nu + (1 - \delta) p\_1 \bar{P} - \delta \nu - (1 - \delta) p\_1' \bar{P} \\\\
+&= (1 - \delta)(p\_1 \bar{P} - p\_1' \bar{P}).
+\end{aligned}$$
+Taking the total variation distance of both sides,
+$$\begin{aligned}
+\\| p\_1 P - p\_1' P \\|\_\text{TV} &= (1 - \delta) \\| p\_1 \bar{P} - p\_1' \bar{P} \\|\_\text{TV} \\\\
+&\leq (1 - \delta) \\| p\_1 - p\_1' \\|\_\text{TV}, \qquad (\star)
+\end{aligned}$$
+since moving two distributions with the same transition model $\bar{p}$ cannot make them more different.
+
+At every step, any two distributions get closer by a factor $1 - \delta$.
+
+---
+
+class: middle
+
+A distribution $\pi$ is stationary if $\pi P = \pi$.
+
+- (Uniqueness) Let $\pi$ and $\pi'$ be stationary. By $(\star)$ with $p\_1 = \pi$ and $p\_1' = \pi'$,
+$$\\| \pi - \pi' \\|\_\text{TV} = \\| \pi P - \pi' P \\|\_\text{TV} \leq (1 - \delta) \\| \pi - \pi' \\|\_\text{TV}.$$
+A distance at most $1 - \delta < 1$ times itself is zero, so $\pi = \pi'$.
+- (Existence) Start from any $p\_1$, and write $p\_1 P^n$ for the distribution $n$ steps later. Let $d\_n = \\| p\_1 P^{n+1} - p\_1 P^n \\|\_\text{TV}$ be the distance between two consecutive distributions. By $(\star)$ with $p\_1 P^n$ and $p\_1 P^{n-1}$ in place of $p\_1$ and $p\_1'$,
+$$\begin{aligned}
+d\_n = \\| (p\_1 P^n) P - (p\_1 P^{n-1}) P \\|\_\text{TV} &\leq (1 - \delta) \\| p\_1 P^n - p\_1 P^{n-1} \\|\_\text{TV} \\\\
+&= (1 - \delta) d\_{n-1}.
+\end{aligned}$$
+Repeating, $d\_n \leq (1 - \delta)^n d\_0 \leq (1 - \delta)^n$, since a total variation distance is at most 1. The steps shrink geometrically, so $p\_1 P^n$ converges to a limit $\pi$. Since $p\_1 P^{n+1} = (p\_1 P^n) P$ tends both to $\pi$ and to $\pi P$, $\pi P = \pi$.
+
+---
+
+class: middle
+
+- (Convergence) The chain starts at $x\_1$, so $x\_t$ comes $t - 1$ steps later: $p(x\_t) = p(x\_1) P^{t-1}$. Since $\pi$ is stationary, $\pi = \pi P^{t-1}$. By $(\star)$ with $p(x\_1) P^{n-1}$ and $\pi P^{n-1}$ in place of $p\_1$ and $p\_1'$,
+$$\\| p(x\_1) P^n - \pi P^n \\|\_\text{TV} \leq (1 - \delta) \\| p(x\_1) P^{n-1} - \pi P^{n-1} \\|\_\text{TV}.$$
+Applying this for $n = t - 1, t - 2, \ldots, 1$,
+$$\begin{aligned}
+\\| p(x\_t) - \pi \\|\_\text{TV} &= \\| p(x\_1) P^{t-1} - \pi P^{t-1} \\|\_\text{TV} \\\\
+&\leq (1 - \delta) \\| p(x\_1) P^{t-2} - \pi P^{t-2} \\|\_\text{TV} \\\\
+&\leq (1 - \delta)^2 \\| p(x\_1) P^{t-3} - \pi P^{t-3} \\|\_\text{TV} \leq \ldots \\\\
+&\leq (1 - \delta)^{t-1} \\| p(x\_1) - \pi \\|\_\text{TV} \\\\
+&\leq (1 - \delta)^{t-1},
+\end{aligned}$$
+since a total variation distance is at most 1.
+
+---
+
+class: middle
+
+For $m > 1$, we reduce to the case $m = 1$. Observe the chain every $m$ steps: $y\_k = x\_{1+km}$. One step of $y$ is $m$ steps of $x$, so $y$ is a Markov chain with transition $P^m$. By the Doeblin condition for $x$, this transition contains the common part $\delta \nu$: $y$ satisfies the condition with $m = 1$.
+
+The previous slides apply to $y$. Its stationary distributions are those unchanged by $m$ steps, $\pi P^m = \pi$. It remains to carry the results back to $x$.
+
+- (Uniqueness) A stationary distribution of $x$ is unchanged by $m$ steps, so it is also stationary for $y$. Since $y$ has only one, so does $x$.
+- (Existence) Let $\pi$ be the stationary distribution of $y$, with $\pi P^m = \pi$. To show that $\pi P = \pi$, let $\mu = \pi P$ be $\pi$ moved one step. Then
+$$\mu P^m = (\pi P) P^m = (\pi P^m) P = \pi P = \mu:$$
+$\mu$ is also stationary for $y$, so $\pi = \mu$ by uniqueness for $y$, and $\pi = \pi P$.
+
+---
+
+class: middle
+
+- (Convergence) Write $t - 1 = km + r$, with $k = \lfloor (t-1)/m \rfloor$ and $r < m$. Started from $p(x\_1)$, the chain $y$ makes $k$ steps in $km$ steps of $x$, and convergence for $y$ gives
+$$\\| p(x\_1) P^{km} - \pi \\|\_\text{TV} \leq (1 - \delta)^k.$$
+The $r$ steps left over move $p(x\_1) P^{km}$ and $\pi = \pi P^r$ with the same transition model, which cannot make them more different:
+$$\begin{aligned}
+\\| p(x\_t) - \pi \\|\_\text{TV} &= \\| (p(x\_1) P^{km}) P^r - \pi P^r \\|\_\text{TV} \\\\
+&\leq \\| p(x\_1) P^{km} - \pi \\|\_\text{TV} \\\\
+&\leq (1 - \delta)^{\lfloor (t-1)/m \rfloor}.
+\end{aligned}$$
+
+---
+
+class: middle
+
+.success[
+
+For an irreducible, aperiodic chain with stationary distribution $\pi$, $p(x\_t)$ approaches $\pi$. Once the first states, the .bold[warm-up], are discarded, the states are (dependent) samples from $\pi$.
+
+]
+
+.alert[
+
+It remains to build such a chain for a given $\pi$ (next slides), and to know how long to run it (diagnostics, end of the lecture).
+
+]
 
 ---
 
@@ -174,10 +322,6 @@ class: middle
 A transition model $p(x' \mid x)$ satisfies detailed balance with respect to a distribution $\pi$ if
 $$\pi(x) p(x' \mid x) = \pi(x') p(x \mid x')$$
 for all $x$, $x'$.
-
-???
-
-Intuitively, detailed balance means that the flow of probability from $x$ to $x'$ is equal to the flow from $x'$ to $x$ when the system is in equilibrium (i.e., when the distribution of states is given by $\pi$).
 
 ---
 
@@ -224,6 +368,32 @@ $$\alpha(x' \mid x\_t) = \min\\left(\frac{\tilde{\pi}(x') q(x\_t \mid x')}{\tild
 
 This process generates a sequence of samples $x\_1, x\_2, \ldots$ that form a Markov chain.
 
+.footnote[Credits: [Metropolis et al.](https://doi.org/10.1063/1.1699114), 1953; [Hastings](https://doi.org/10.1093/biomet/57.1.97), 1970.]
+
+---
+
+class: middle
+
+.center.width-60[![](figures/lec6/mh.gif)]
+
+.center[
+
+Metropolis-Hastings on a mixture of two Gaussians, with the random-walk proposal $q(\mathbf{x}' \mid \mathbf{x}) = \mathcal{N}(\mathbf{x}' \mid \mathbf{x}, \sigma^2 \mathbf{I})$. Proposals are accepted (green) or rejected (red), and the histograms of the chain approach the marginals of the target.
+
+]
+
+---
+
+class: middle
+
+.center.width-80[![](figures/lec6/mh-traces.png)]
+
+.center[
+
+Trace of $x\_1$ along the same chain, and a zoom on 100 iterations. <br>Each flat segment is a run of rejected proposals.
+
+]
+
 ---
 
 class: middle
@@ -241,7 +411,7 @@ where $r(x) = 1 - \int q(x' \mid x) \alpha(x' \mid x) dx'$ is the probability of
 
 class: middle
 
-To show that $\pi(x)$ is stationary, we verify the detailed balance condition for $x' \neq x$:
+For $x' \neq x$, the chain satisfies detailed balance with respect to $\pi$:
 $$\begin{aligned}
 \tilde{\pi}(x) p(x' \mid x) &= \tilde{\pi}(x) q(x' \mid x) \alpha(x' \mid x) \\\\
 &= \tilde{\pi}(x) q(x' \mid x) \min\\left(\frac{\tilde{\pi}(x') q(x \mid x')}{\tilde{\pi}(x) q(x' \mid x)}, 1\right) \\\\
@@ -249,7 +419,7 @@ $$\begin{aligned}
 &= \tilde{\pi}(x') q(x \mid x') \min\\left(\frac{\tilde{\pi}(x) q(x' \mid x)}{\tilde{\pi}(x') q(x \mid x')}, 1\right) \\\\
 &= \tilde{\pi}(x') p(x \mid x').
 \end{aligned}$$
-Since $\pi(x) = \frac{\tilde{\pi}(x)}{Z}$ for some normalization constant $Z$, the detailed balance condition also holds for $\pi(x)$. Hence, $\pi(x)$ is a stationary distribution of the Markov chain.
+Since $\pi(x) = \frac{\tilde{\pi}(x)}{Z}$ for some normalization constant $Z$, the detailed balance condition also holds for $\pi(x)$. By the proposition on detailed balance, $\pi(x)$ is a stationary distribution of the Markov chain.
 
 For $x' = x$, detailed balance holds trivially.
 
@@ -257,66 +427,125 @@ For $x' = x$, detailed balance holds trivially.
 
 class: middle
 
-.italic[Proposition.] The Markov chain constructed by the Metropolis-Hastings algorithm satisfies the regularity conditions under appropriate conditions on $q$.
+.italic[Proposition.] If $q(x' \mid x) > 0$ and $\pi(x) > 0$ for all $x$ and $x'$, as with a Gaussian random-walk proposal, the Metropolis-Hastings chain satisfies the conditions of the basic limit theorem.
 
-.italic[Sketch of proof.]
-- Aperiodicity: The chain can stay at the same state when proposals are rejected, so $p(x|x) > 0$. This breaks any periodic cycles.
+.italic[Proof.]
+- Stationarity: $\pi$ is a stationary distribution, by the previous proposition.
+- Irreducibility: for $x' \neq x$, $p(x' \mid x) = q(x' \mid x) \alpha(x' \mid x) > 0$, since both factors are positive. Taking $\nu = \pi$, any set $A$ with positive measure is reached in one step from any state.
+- Aperiodicity: since any set with positive measure can be reached in one step from any state, the chain is never forced to cycle through sets.
 
-- Irreducibility: If the proposal $q$ has appropriate support, then for any $x, x'$ where $\pi(x), \pi(x') > 0$, there exists a sequence of proposals with positive probability connecting them.
-
-- Recurrence: If $\pi$ is a proper probability distribution, the chain is positive/Harris recurrent. (Proof beyond scope)
-
-These conditions ensure convergence to $\pi(x)$ by the basic limit theorem.
-
-???
-
-For irreducibility: We don't need q(x'|x) > 0 for ALL pairs. We just need the proposal to be able to reach all regions where π > 0, possibly through multiple steps.
+By the basic limit theorem, the chain converges to $\pi$.
 
 ---
 
 class: middle
 
-## Proposal distributions
+## Hamiltonian Monte Carlo
 
-The efficiency of the Metropolis-Hastings algorithm heavily depends on the choice of the proposal distribution $q(x' \mid x)$.
+The traces show that random-walk proposals explore the target by small steps: larger steps land in regions of low density and are rejected. We look for proposals that take large steps and are still always accepted.
 
-Common choices include:
-- .bold[Random walk]: $q(x' \mid x) = \mathcal{N}(x' | x, \sigma^2 I)$ for continuous state spaces. 
-  Simple and general, but efficiency depends on tuning $\sigma$ 
-  (optimal acceptance rate: ~20-40%).
-  
-- .bold[Langevin]: $q(x' \mid x) = \mathcal{N}(x' | x + \frac{\epsilon^2}{2} \nabla \log \tilde{\pi}(x), \epsilon^2 I)$, 
-  which uses gradient information to guide proposals toward high-probability regions. 
-  Requires differentiable $\tilde{\pi}(x)$.
+The acceptance probability is
+$$\alpha(x' \mid x) = \min\left(1, \frac{\tilde{\pi}(x')}{\tilde{\pi}(x)} \frac{q(x \mid x')}{q(x' \mid x)}\right).$$
+It equals 1 when both ratios are 1:
+- $\tilde{\pi}(x') = \tilde{\pi}(x)$: the proposal stays on the contour line of $\tilde{\pi}$ through $x$;
+- $q(x \mid x') = q(x' \mid x)$: the proposal is symmetric.
 
-- .bold[Independence]: $q(x' \mid x) = q(x')$, independent of current state.
-  Can be efficient if $q(x')$ closely approximates $\pi(x)$.
+Such a proposal can go far and is always accepted. But it never leaves its contour line, so it never visits regions of higher or lower density.
 
-???
+.footnote[Credits: [Duane et al.](https://doi.org/10.1016/0370-2693%2887%2991197-X), 1987; [Neal](https://arxiv.org/abs/1206.1901), 2011.]
 
-Random walk: Most common in practice. The σ parameter controls exploration speed.
-Langevin: Drift term pushes toward high probability - like "gradient ascent + noise"
-Independence: Useful when you have a good initial guess (e.g., Laplace approximation)
 
 ---
 
 class: middle
 
-## Beyond Metropolis-Hastings
+.bold[Hamiltonian Monte Carlo] (HMC) adds an auxiliary variable $\mathbf{v} \in \mathbb{R}^d$, the .bold[momentum], independent of $\mathbf{x}$, and samples the pairs $(\mathbf{x}, \mathbf{v})$ from
+$$\pi(\mathbf{x}, \mathbf{v}) \propto \tilde{\pi}(\mathbf{x}) \mathcal{N}(\mathbf{v} \mid \mathbf{0}, \mathbf{I}) \propto \exp(-H(\mathbf{x}, \mathbf{v})),$$
+where the .bold[Hamiltonian] is
+$$H(\mathbf{x}, \mathbf{v}) = -\log \tilde{\pi}(\mathbf{x}) + \frac{1}{2} \mathbf{v}^T \mathbf{v}.$$
+Since $\mathbf{v}$ is independent of $\mathbf{x}$, discarding $\mathbf{v}$ gives samples of $\pi$.
 
-Several extensions of Metropolis-Hastings explore the target more efficiently:
+On the pairs, a contour line of $\pi(\mathbf{x}, \mathbf{v})$ is a set where $H$ is constant. Unlike in $\mathbf{x}$ alone, $\tilde{\pi}(\mathbf{x})$ is not constant along it: $-\log \tilde{\pi}(\mathbf{x})$ goes up or down while $\frac{1}{2} \mathbf{v}^T \mathbf{v}$ changes by the opposite amount. A proposal that stays on such a contour line can therefore visit regions of higher and lower density of $\mathbf{x}$.
 
-- .bold[Hamiltonian Monte Carlo (HMC)]: Uses Hamiltonian dynamics to propose 
-  new states, enabling larger, informed jumps through parameter space. 
-  Requires gradient $\nabla \log \pi(x)$.
+???
 
-- .bold[No-U-Turn Sampler (NUTS)]: An adaptive variant of HMC that automatically 
-  tunes trajectory length, eliminating manual parameter tuning.
-  Default sampler in Stan and PyMC.
+In physics, the Hamiltonian is the total energy of a system with position $\mathbf{x}$ and momentum $\mathbf{v}$: a potential energy that depends on the position, here $-\log \tilde{\pi}(\mathbf{x})$, plus a kinetic energy that depends on the momentum, here $\frac{1}{2} \mathbf{v}^T \mathbf{v}$. Think of a ball rolling without friction on the surface $-\log \tilde{\pi}(\mathbf{x})$: it speeds up downhill, towards high density, and slows down uphill, trading one energy for the other while their sum stays constant.
 
-- .bold[Gibbs sampling]: Updates variables one at a time from conditional 
-  distributions. A special case of MH with acceptance probability = 1 
-  when conditionals are tractable.
+---
+
+class: middle
+
+To move along a contour line of $\pi(\mathbf{x}, \mathbf{v})$, we look for paths $(\mathbf{x}(s), \mathbf{v}(s))$ along which $H$ stays constant. By the chain rule,
+$$\frac{dH}{ds} = \nabla\_{\mathbf{x}} H \cdot \frac{d\mathbf{x}}{ds} + \nabla\_{\mathbf{v}} H \cdot \frac{d\mathbf{v}}{ds},$$
+and choosing
+$$\frac{d\mathbf{x}}{ds} = \nabla\_{\mathbf{v}} H = \mathbf{v}, \quad \frac{d\mathbf{v}}{ds} = -\nabla\_{\mathbf{x}} H = \nabla \log \tilde{\pi}(\mathbf{x})$$
+makes the two terms cancel, $\frac{dH}{ds} = \nabla\_{\mathbf{x}} H \cdot \nabla\_{\mathbf{v}} H - \nabla\_{\mathbf{v}} H \cdot \nabla\_{\mathbf{x}} H = 0$. Along these dynamics, $H$ stays constant: the path follows its contour line, from one mode to the other below.
+
+.center.width-35[![](figures/lec6/hmc-contours.png)]
+
+---
+
+class: middle
+
+Each HMC iteration makes two moves on the pair $(\mathbf{x}, \mathbf{v})$. Each move leaves $\pi(\mathbf{x}, \mathbf{v})$ unchanged: if $(\mathbf{x}, \mathbf{v}) \sim \pi(\mathbf{x}, \mathbf{v})$ before it, it still is after.
+
+1. Keep $\mathbf{x}$ and propose a new momentum $\mathbf{v}'$ from $\pi(\mathbf{v}' \mid \mathbf{x}) = \mathcal{N}(\mathbf{v}' \mid \mathbf{0}, \mathbf{I})$, written $\mathcal{N}(\mathbf{v}')$. The change of density is exactly compensated by the proposal, so the acceptance probability is
+$$\alpha = \min\left(1, \frac{\tilde{\pi}(\mathbf{x}) \mathcal{N}(\mathbf{v}')}{\tilde{\pi}(\mathbf{x}) \mathcal{N}(\mathbf{v})} \frac{\mathcal{N}(\mathbf{v})}{\mathcal{N}(\mathbf{v}')}\right) = 1.$$
+The candidate is always accepted: $(\mathbf{x}, \mathbf{v}) := (\mathbf{x}, \mathbf{v}')$. $H$ takes a new value.
+2. Follow the dynamics from $(\mathbf{x}, \mathbf{v})$, which keep $H$ at this value, and propose the end $(\mathbf{x}', \mathbf{v}')$ of the path. For Metropolis-Hastings over the pairs, with a symmetric proposal, the acceptance probability is
+$$\alpha = \min\left(1, \frac{\pi(\mathbf{x}', \mathbf{v}')}{\pi(\mathbf{x}, \mathbf{v})}\right) = \min\left(1, \exp(H(\mathbf{x}, \mathbf{v}) - H(\mathbf{x}', \mathbf{v}'))\right) = 1.$$
+The candidate is always accepted: $(\mathbf{x}, \mathbf{v}) := (\mathbf{x}', \mathbf{v}')$.
+
+---
+
+class: middle
+
+In summary, the HMC algorithm proceeds as follows:
+
+1. Given the current state $\mathbf{x}\_t$, draw $\mathbf{v} \sim \mathcal{N}(\mathbf{0}, \mathbf{I})$.
+2. Starting from $(\mathbf{x}\_t, \mathbf{v})$, simulate the dynamics with $L$ .bold[leapfrog] steps of size $\epsilon$ to obtain $(\mathbf{x}', \mathbf{v}')$:
+$$\mathbf{v} \leftarrow \mathbf{v} + \frac{\epsilon}{2} \nabla \log \tilde{\pi}(\mathbf{x}), \quad \mathbf{x} \leftarrow \mathbf{x} + \epsilon \mathbf{v}, \quad \mathbf{v} \leftarrow \mathbf{v} + \frac{\epsilon}{2} \nabla \log \tilde{\pi}(\mathbf{x}).$$
+3. Accept $\mathbf{x}\_{t+1} = \mathbf{x}'$ with probability
+$$\alpha = \min\left(1, \exp(H(\mathbf{x}\_t, \mathbf{v}) - H(\mathbf{x}', \mathbf{v}'))\right).$$
+Otherwise, set $\mathbf{x}\_{t+1} = \mathbf{x}\_t$. In both cases, discard $\mathbf{v}$.
+
+With exact paths, $\alpha = 1$. The leapfrog steps leave a small change of $H$, which step 3 corrects.
+
+---
+
+class: middle
+
+.center.width-100[![](figures/lec6/hmc-dynamics.gif)]
+
+.center[
+
+Six HMC iterations. Each new $v$ (orange) changes $H$, each path (blue) keeps it. <br>Only the iteration with the largest $H$ crosses to the other mode.
+
+]
+
+---
+
+class: middle
+
+.center.width-100[![](figures/lec6/mh-hmc.gif)]
+
+.center[
+
+Metropolis-Hastings and HMC on the same target, from the same starting point. <br>Each HMC iteration follows a leapfrog trajectory (orange).
+
+]
+
+---
+
+class: middle
+
+.center.width-80[![](figures/lec6/mh-hmc-traces.png)]
+
+.center[
+
+Traces of $x\_1$ for Metropolis-Hastings and HMC, with zooms on 100 iterations.
+
+]
 
 ---
 
@@ -338,9 +567,11 @@ class: middle
 
 ## Bayesian inference with MCMC
 
-In Bayesian inference, we are often interested in computing the posterior distribution $$p(z, \theta \mid x) = \frac{p(x \mid z, \theta) p(z, \theta)}{p(x)}$$ of latent variables $z$ and parameters $\theta$ given observed data $x$.
+In Bayesian inference, we are often interested in computing the posterior distribution $$p(\mathbf{z}, \theta \mid \mathbf{x}\_\text{obs}) = \frac{p(\mathbf{x}\_\text{obs} \mid \mathbf{z}, \theta) p(\mathbf{z}, \theta)}{p(\mathbf{x}\_\text{obs})}$$ of latent variables $\mathbf{z}$ and parameters $\theta$ given observed data $\mathbf{x}\_\text{obs}$.
 
-.alert[In general, the normalizer $p(x) = \int p(x \mid z, \theta) p(z, \theta) dz d\theta$ has no closed form.]
+In general, the normalizer
+$$p(\mathbf{x}\_\text{obs}) = \int p(\mathbf{x}\_\text{obs} \mid \mathbf{z}, \theta) p(\mathbf{z}, \theta) d\mathbf{z} d\theta$$
+has no closed form.
 
 ---
 
@@ -348,34 +579,34 @@ class: middle
 
 .center.width-10[![](figures/lec6/light-bulb.png)]
 
-MCMC methods, such as Metropolis-Hastings, can be used to generate samples from the posterior distribution $p(z, \theta \mid x)$ even when the marginal density $p(x)$ is intractable.
+MCMC methods, such as Metropolis-Hastings, generate samples from the posterior $p(\mathbf{z}, \theta \mid \mathbf{x}\_\text{obs})$ even when the normalizer $p(\mathbf{x}\_\text{obs})$ has no closed form.
 
-Since MCMC methods only require an unnormalized density $\tilde{p}$, .bold[we can use the joint tractable density $p(x, z, \theta) = p(x \mid z, \theta) p(z, \theta)$] as the target distribution, ignoring the marginalization constant $p(x)$.
-
----
-
-class: middle
-
-.italic[Example 3.] Bayesian linear regression. Consider a data set of $N$ observations $x = \\{(x\_i, y\_i)\\}\_{i=1}^N$, where $x\_i \in \mathbb{R}^d$ are input features and $y\_i \in \mathbb{R}$ are target values.
-.center.width-60[![](figures/lec6/example1-data.png)]
+MCMC methods only require an unnormalized density. The .bold[joint density]
+$$p(\mathbf{x}\_\text{obs}, \mathbf{z}, \theta) = p(\mathbf{x}\_\text{obs} \mid \mathbf{z}, \theta) p(\mathbf{z}, \theta)$$
+can therefore be used as the unnormalized target $\tilde{\pi}$ of Metropolis-Hastings, without the normalizer $p(\mathbf{x}\_\text{obs})$.
 
 ---
 
 class: middle
 
-.center[![](figures/lec6/example1.svg)]
+.italic[Example 3.] Bayesian linear regression. Consider a data set $\mathcal{D} = \\{(x\_i, y\_i)\\}\_{i=1}^N$ of $N$ pairs of an input $x\_i \in \mathbb{R}$ and a target $y\_i \in \mathbb{R}$.
 
-We model the conditional distribution of $y$ given $x$ using a Bayesian linear regression model $$p(y \mid x, w, \log \sigma) p(w) p(\log \sigma),$$ where $p(y \mid x, w, \log \sigma) = \mathcal{N}(y \mid w^T x, \sigma^2)$ is the likelihood, $p(w) = \mathcal{N}(w \mid 0, \tau\_1^2 I)$ is the prior over weights $w$, $p(\log \sigma) = \mathcal{N}(\log \sigma \mid 0, \tau\_2^2)$ is the prior over the log-noise standard deviation, and $\tau\_1, \tau\_2$ are hyperparameters.
+.center.width-70[![](figures/lec6/example1-data.png)]
 
 ---
 
 class: middle
 
-The target distribution is the posterior $p(w, \log \sigma \mid \\{x\_i, y\_i\\}\_{i=1}^N)$, which is proportional to the joint density 
-$$\begin{aligned}
-& p(\\{y\_i\\}\_{i=1}^N \mid \\{x\_i\\}\_{i=1}^N, w, \log \sigma) p(w) p(\log \sigma) \\\\
-&= \left( \prod\_{i=1}^N p(y\_i \mid x\_i, w, \log \sigma) \right) p(w) p(\log \sigma).
-\end{aligned}$$
+.center.width-50[![](figures/lec6/example1.svg)]
+
+We model $y$ given $x$ as a line with Gaussian noise, $$p(y \mid x, \mathbf{w}, \log \sigma) = \mathcal{N}(y \mid w\_0 x + w\_1, \sigma^2),$$ where $\mathbf{w} = (w\_0, w\_1)$ holds the slope and the intercept. The priors are $p(\mathbf{w}) = \mathcal{N}(\mathbf{w} \mid \mathbf{0}, \tau\_1^2 \mathbf{I})$ and $p(\log \sigma) = \mathcal{N}(\log \sigma \mid 0, \tau\_2^2)$, with hyperparameters $\tau\_1$ and $\tau\_2$.
+
+---
+
+class: middle
+
+The target distribution is the posterior $p(\mathbf{w}, \log \sigma \mid \mathcal{D})$, which is proportional to the joint density
+$$p(\mathbf{w}, \log \sigma \mid \mathcal{D}) \propto \left( \prod\_{i=1}^N p(y\_i \mid x\_i, \mathbf{w}, \log \sigma) \right) p(\mathbf{w}) p(\log \sigma).$$
 
 We can use Metropolis-Hastings to sample from this posterior distribution using the joint density as the unnormalized target density.
 
@@ -384,21 +615,37 @@ We can use Metropolis-Hastings to sample from this posterior distribution using 
 class: middle
 
 .center.width-70[![](figures/lec6/example1-traces.png)]
-.center[Markov chain traces for $w\_0$, $w\_1$, and $\log \sigma$ using Metropolis-Hastings.]
+.center[
+
+Traces of $w\_0$, $w\_1$ and $\log \sigma$ along the Markov chain of Metropolis-Hastings.
+
+]
 
 ---
 
 class: middle
 
-.center.width-70[![](figures/lec6/example1-corner.png)]
-.center[Posterior samples visualized using a corner plot.]
+.center.width-60[![](figures/lec6/example1-corner.png)]
+.center[Posterior samples, after a warm-up of 1000 iterations.]
 
 ---
 
 class: middle
 
 .center.width-70[![](figures/lec6/example1-pp.png)]
-.center[Posterior predictive distribution $p(y \mid x, \\\\{x\\\_i, y\\\_i\\\\}\_{i=1}^N)$.]
+.center[
+
+Posterior predictive distribution $p(y \mid x, \mathcal{D})$, median and 5-95% band, <br>with 20 lines $y = w\_0 x + w\_1$ drawn from the posterior.
+
+]
+
+---
+
+class: middle, center
+
+.center.width-10[![](figures/lec6/laptop.png)]
+
+Run the end of `nb06b-mcmc.ipynb` to sample the posterior of the wolf's parameters.
 
 ---
 
@@ -408,7 +655,7 @@ class: middle
 
 ## Diagnostics for MCMC
 
-MCMC algorithms produce only approximate samples from the target distribution. It is important to assess the quality of these samples using diagnostics in terms of .bold[autocorrelation], .bold[mixing] and .bold[convergence].
+The limit theorem guarantees that a chain converges to the target, but not how fast. Diagnostics check the chains themselves in terms of .bold[autocorrelation], .bold[mixing] and .bold[convergence].
 
 ---
 
@@ -425,7 +672,7 @@ class: middle
 class: middle
 
 .center.width-70[![](figures/lec6/trace-autocorrelation.png)]
-.center[High vs. low autocorrelation. For highly autocorrelated chains, <br> mixing is poor and effective sample size is low.]
+.center[High vs. low autocorrelation. Highly autocorrelated chains mix poorly.]
 
 ---
 
@@ -439,7 +686,7 @@ class: middle
 class: middle
 
 .center.width-70[![](figures/lec6/trace-convergence.png)]
-.center[Two chains run on the same target but initialized differently. <br> Traces show convergence to a same distribution.]
+.center[Two chains run on the same target but initialized differently. <br> Traces show convergence to the same distribution.]
 
 ---
 
@@ -451,62 +698,130 @@ The first quantitative diagnostic to monitor is the .bold[acceptance rate], defi
 
 - A very low acceptance rate (e.g., < 10%) indicates that the proposal distribution is making too large jumps, leading to many rejections.
 - A very high acceptance rate (e.g., > 80%) suggests that the proposal distribution is making too small jumps, resulting in slow exploration of the state space.
-- An optimal acceptance rate often lies between 20% and 40%, depending on the dimensionality of the target distribution.
-
-???
-
-Here optimal means that the chain explores the target distribution efficiently, balancing exploration and exploitation.
 
 ---
 
 class: middle
 
-## Effective Sample Size
+## Effective sample size
 
-Quantitatively, the .bold[effective sample size] 
-$$\text{ESS} = \frac{T}{1 + 2\sum\_{k=1}^{\infty} \rho\_k}$$ 
-accounts for autocorrelation in MCMC samples, where $T$ is the number of samples in the chain and 
-$$\rho\_k = \frac{\text{Cov}(X\_t, X\_{t+k})}{\text{Var}(X\_t)}$$ 
-is the .bold[autocorrelation at lag $k$] computed over the samples.
+By the ergodic theorem, the average of $f(x\_t)$ along the chain converges to $\mathbb{E}\_\pi[f(x)]$. Its precision depends on the autocorrelation at lag $k$,
+$$\rho\_k = \frac{\text{Cov}(f(x\_t), f(x\_{t+k}))}{\text{Var}(f(x\_t))}.$$
 
-A higher ESS indicates more independent samples and better mixing.
+The integrated autocorrelation time $\tau\_\text{int} = 1 + 2\sum\_{k=1}^{\infty} \rho\_k$ sets the variance of the average of $T$ samples:
+$$\text{Var}\left[\frac{1}{T} \sum\_{t=1}^T f(x\_t)\right] \approx \frac{\tau\_\text{int}}{T} \text{Var}(f(x\_t)).$$
 
----
-
-class: middle
-
-## Integrated Autocorrelation Time
-
-The .bold[integrated autocorrelation time] 
-$$\tau\_{\text{int}} = 1 + 2\sum\_{k=1}^{\infty} \rho\_k$$ 
-quantifies the number of correlated samples equivalent to one independent sample.
-
-A smaller $\tau\_{\text{int}}$ indicates better mixing and more efficient sampling.
-
-The effective sample size is therefore $\text{ESS} = T / \tau\_{\text{int}}$.
+The .bold[effective sample size] $\text{ESS} = T / \tau\_\text{int}$ is the number of independent samples whose average has the same variance.
 
 ---
 
 class: middle
 
-## Gelman-Rubin Statistic
+.center.width-80[![](figures/lec6/autocorrelation.png)]
 
-The .bold[Gelman-Rubin statistic] $\hat{R}$ serves as a convergence diagnostic when running $M$ chains in parallel, each with $T$ samples (after burn-in). 
-Let 
-$$W = \frac{1}{M} \sum\_{m=1}^M s\_m^2$$ 
-be the within-chain variance, where $s\_m^2$ is the sample variance of chain $m$, and 
-$$B = \frac{T}{M-1} \sum_{m=1}^M (\bar{x}\_m - \bar{x})^2$$ 
-be the between-chain variance, where $\bar{x}\_m$ is the sample mean of chain $m$ and $\bar{x}$ is the overall mean across chains. 
-Then, 
-$$\hat{R} = \sqrt{\frac{\frac{T-1}{T} W + \frac{1}{T} B}{W}}.$$
+.center[
+
+Autocorrelation of two random-walk chains of 10000 iterations. <br>$\tau\_\text{int}$ is one plus twice the shaded area.
+
+]
 
 ---
 
 class: middle
 
-Typically,
-- values of $\hat{R}$ approximately 1 indicate convergence across chains;
-- values greater than 1.1 suggest lack of convergence.
+## Gelman-Rubin statistic
+
+Run $M$ independent chains of $T$ iterations from dispersed starting points. Once they have all converged to $\pi$, the chains look alike, and the variance within a chain matches the variance of all chains pooled.
+
+The .bold[Gelman-Rubin statistic] compares the two:
+$$\hat{R} = \sqrt{\frac{\frac{T-1}{T} W + \frac{1}{T} B}{W}},$$
+where the .bold[within-chain variance] $W$ and the .bold[between-chain variance] $B$ are
+$$W = \frac{1}{M} \sum\_{j=1}^M s\_j^2, \quad B = \frac{T}{M-1} \sum\_{j=1}^M (\bar{x}\_j - \bar{x})^2,$$
+with $s\_j^2$ and $\bar{x}\_j$ the variance and the mean of chain $j$, and $\bar{x}$ the mean of all draws.
+
+$\hat{R}$ approaches 1 as the chains agree.
+
+.footnote[Credits: [Gelman and Rubin](https://doi.org/10.1214/ss/1177011136), 1992.]
+
+---
+
+class: middle
+
+.center.width-80[![](figures/lec6/rhat.png)]
+
+.center[
+
+Four Metropolis-Hastings chains on the two-mode target, started at its corners. <br>In practice, chains are run until $\hat{R} < 1.01$.
+
+]
+
+.footnote[Credits: [Vehtari et al.](https://doi.org/10.1214/20-BA1221), 2021.]
+
+---
+
+class: middle
+
+## Calibration
+
+Diagnostics cannot detect an error in the log density, the sampler or the posterior approximation.
+
+In simulated experiments, draw $\theta^\* \sim p(\theta)$, simulate $\mathcal{D} \sim p(\mathcal{D} \mid \theta^\*)$, and compute a credible region $C\_\alpha(\mathcal{D})$ of level $\alpha$. A posterior is .bold[calibrated] if
+$$P(\theta^\* \in C\_\alpha(\mathcal{D})) = \alpha.$$
+The exact posterior is calibrated, so a sampler that is not calibrated is wrong. Calibration is necessary, but not sufficient: the prior is calibrated too.
+
+---
+
+class: middle
+
+.center.width-90[![](figures/lec6/calibration-intervals.png)]
+
+.center[
+
+90% credible intervals of a Gaussian mean, in 50 simulated experiments. <br>The exact posterior misses $\theta^\*$ in about 10% of them.
+
+]
+
+---
+
+class: middle
+
+## Simulation-based calibration
+
+Simulation-based calibration tests whether a sampler is calibrated. For a scalar parameter $\theta$, repeat for $s = 1, \ldots, S$:
+1. Draw $\theta^\*\_s \sim p(\theta)$ and $\mathcal{D}\_s \sim p(\mathcal{D} \mid \theta^\*\_s)$.
+2. Draw $L$ samples $\theta\_1, \ldots, \theta\_L$ with the sampler targeting $p(\theta \mid \mathcal{D}\_s)$.
+3. Compute the rank $r\_s = \sum\_{l=1}^L \mathbb{1}[\theta\_l < \theta^\*\_s] \in \\{0, \ldots, L\\}$, where $\mathbb{1}[\cdot]$ is 1 if the condition holds and 0 otherwise.
+
+.italic[Proposition.] If the sampler draws independent samples from the exact posterior, the ranks $r\_s$ are uniformly distributed over $\\{0, \ldots, L\\}$.
+
+The true value $\theta^\*\_s$ lies in the central credible interval of level $\alpha$ when its rank lies in the central fraction $\alpha$ of $\\{0, \ldots, L\\}$. Uniform ranks make this happen with probability $\alpha$, for every $\alpha$: the sampler is calibrated.
+
+
+.footnote[Credits: [Talts et al.](https://arxiv.org/abs/1804.06788), 2018.]
+
+---
+
+class: middle
+
+.center.width-80[![](figures/lec6/sbc.png)]
+
+.center[
+
+Rank histograms of simulation-based calibration for the Bayesian linear regression. <br>The grey band holds 99% of the counts of uniform ranks.
+
+]
+
+---
+
+class: middle
+
+.center.width-80[![](figures/lec6/coverage.png)]
+
+.center[
+
+Coverage of the central credible intervals of level $\alpha$, read from the same ranks. <br>A calibrated sampler follows the diagonal, $P(\theta^\* \in C\_\alpha(\mathcal{D})) = \alpha$.
+
+]
 
 ---
 

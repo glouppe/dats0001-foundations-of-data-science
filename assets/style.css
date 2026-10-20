@@ -264,6 +264,11 @@ img {
     margin-bottom: 0;
 }
 
+/* consecutive boxes are separated by one line */
+:is(.question, .success, .alert, .quote, .info) + :is(.question, .success, .alert, .quote, .info) {
+    margin-top: 1em;
+}
+
 .question, .success {
     background-color: rgba(40, 167, 69, 0.08);
     border-left-color: rgb(40, 167, 69);

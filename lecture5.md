@@ -212,6 +212,7 @@ Other models need approximate inference, by sampling (L6) or optimization (L9).
 ---
 
 class: middle
+name: lgssm
 
 ## Linear Gaussian state-space models
 
@@ -230,6 +231,7 @@ $$\mathbf{A} = (1 - \kappa \Delta t) \mathbf{I}, \quad \mathbf{b} = \kappa \Delt
 ---
 
 class: middle
+name: kalman-filter
 
 The .bold[Kalman filter] provides a closed-form expression for the filtering distributions in linear Gaussian state-space models.
 
@@ -239,6 +241,7 @@ These parameters can be computed recursively by adapting the Bayes filter equati
 ---
 
 class: middle
+name: kalman-filter-proof
 
 .italic[Proof.] By recursion, assume that at time step $t-1$, the filtering distribution is Gaussian, $p(\mathbf{z}\_{t-1} | \mathbf{x}\_{1:t-1}) = \mathcal{N}(\mathbf{z}\_{t-1} | \mathbf{m}\_{t-1}, \mathbf{P}\_{t-1})$, with the base case $p(\mathbf{z}\_1 | \mathbf{x}\_1) = \mathcal{N}(\mathbf{z}\_1 | \mathbf{m}\_1, \mathbf{P}\_1)$.
 
@@ -300,6 +303,7 @@ class: middle
 ---
 
 class: middle
+name: kalman-smoother
 
 The smoothing distributions $p(\mathbf{z}\_t | \mathbf{x}\_{1:T}) = \mathcal{N}(\mathbf{z}\_t | \mathbf{m}^s\_t, \mathbf{P}^s\_t)$ are also Gaussian with mean $\mathbf{m}^s\_t$ and covariance $\mathbf{P}^s\_t$.
 
@@ -422,6 +426,7 @@ Smoothing uses the whole sequence: a single slow speed in the middle of a long r
 ---
 
 class: middle
+name: learning-parameters
 
 ## Learning the parameters
 
@@ -441,6 +446,7 @@ Maximizing it is the frequentist inference of Lecture 4; sampling the posterior 
 ---
 
 class: middle
+name: likelihood-kappa
 
 .center.width-80[![](figures/lec5/likelihood-kappa.svg)]
 
@@ -576,6 +582,7 @@ There is no exact way to simulate this SDE. The grey curve uses Euler-Maruyama w
 ---
 
 class: middle
+name: ou-process
 
 .italic[Example 3.] The wolf model in continuous time is Example 1 in two dimensions, towards the home location $\boldsymbol{\mu}$, with noise,
 $$d\mathbf{z}(t) = -\kappa (\mathbf{z}(t) - \boldsymbol{\mu}) \\, dt + \sigma \\, d\mathbf{W}(t),$$
@@ -599,6 +606,7 @@ The discrete-time model of Part I is an approximation of the process that genera
 ---
 
 class: middle
+name: ou-discretization
 
 The OU process can be discretized exactly, even at irregular observation times $t\_1 < t\_2 < \ldots$. With $\Delta\_i = t\_i - t\_{i-1}$,
 $$p(\mathbf{z}(t\_i) \mid \mathbf{z}(t\_{i-1})) = \mathcal{N}\left(\boldsymbol{\mu} + e^{-\kappa \Delta\_i} (\mathbf{z}(t\_{i-1}) - \boldsymbol{\mu}), \\, \frac{\sigma^2}{2\kappa} \left(1 - e^{-2\kappa \Delta\_i}\right) \mathbf{I}\right).$$
@@ -614,6 +622,7 @@ Any linear SDE $d\mathbf{z} = \mathbf{F} \mathbf{z} \\, dt + \mathbf{L} \\, d\ma
 ---
 
 class: middle
+name: continuous-or-discrete
 
 ## Continuous or discrete time?
 

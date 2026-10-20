@@ -15,7 +15,7 @@ Prof. Gilles Louppe<br>
 Instructions and materials are all available on GitHub [github.com/glouppe/dats0001-foundations-of-data-science](https://github.com/glouppe/dats0001-foundations-of-data-science):
 - Schedule
 - Slides and notebooks
-- Project
+- Case study
 
 Official course description: [engagements pédagogiques](https://www.programmes.uliege.be/cocoon/20262027/cours/DATS0001-1.html).
 
@@ -46,8 +46,8 @@ Gelman, Vehtari, McElreath et al., [Bayesian Workflow](https://avehtari.github.i
 
 # Case study
 
-- Practice your data science skills through an end-to-end analysis. 
-- Presentation/defense of your analysis and results. 
+- Practice your data science skills through an end-to-end analysis, due on December 18, 2026.
+- Oral discussion of your analysis and results during the January exam session, separate from the oral exam on theory.
 
 ---
 
