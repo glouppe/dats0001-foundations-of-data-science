@@ -459,19 +459,12 @@ Such a proposal can go far and is always accepted. But it never leaves its conto
 
 class: middle
 
-The idea of HMC is to apply the same two properties to pairs $(\mathbf{x}, \mathbf{v})$, where $\mathbf{v}$ is an auxiliary variable:
-- The proposals stay on the contour line of the joint density $\pi(\mathbf{x}, \mathbf{v})$, and are symmetric. They are always accepted.
-- Along this contour line, the joint density is constant, but $\tilde{\pi}(\mathbf{x})$ is not: it can go up or down while $\mathbf{v}$ compensates. The chain now visits regions of higher and lower density.
+The idea of .bold[Hamiltonian Monte Carlo] (HMC) is to apply the same two properties to pairs $(\mathbf{x}, \mathbf{v})$, where $\mathbf{v} \in \mathbb{R}^d$ is an auxiliary variable, the .bold[momentum], independent of $\mathbf{x}$. The pairs are sampled from
+$$\pi(\mathbf{x}, \mathbf{v}) \propto \tilde{\pi}(\mathbf{x}) \mathcal{N}(\mathbf{v} \mid \mathbf{0}, \mathbf{I}) \propto \exp(-H(\mathbf{x}, \mathbf{v})), \quad \text{with} \quad H(\mathbf{x}, \mathbf{v}) = -\log \tilde{\pi}(\mathbf{x}) + \frac{1}{2} \mathbf{v}^T \mathbf{v}$$
+the .bold[Hamiltonian]. Since $\mathbf{v}$ is independent of $\mathbf{x}$, discarding $\mathbf{v}$ gives samples of $\pi$.
+- The proposals stay on a contour line of $\pi(\mathbf{x}, \mathbf{v})$, where $H$ is constant, and are symmetric. They are always accepted.
+- Along this contour line, $\tilde{\pi}(\mathbf{x})$ can go up or down while $\mathbf{v}$ compensates. The chain now visits regions of higher and lower density.
 - Redrawing $\mathbf{v}$ at each iteration moves the pair to another contour line.
----
-
-class: middle
-
-.bold[Hamiltonian Monte Carlo] (HMC) adds an auxiliary variable $\mathbf{v} \in \mathbb{R}^d$, the .bold[momentum], independent of $\mathbf{x}$, and samples the pairs $(\mathbf{x}, \mathbf{v})$ from
-$$\pi(\mathbf{x}, \mathbf{v}) \propto \tilde{\pi}(\mathbf{x}) \mathcal{N}(\mathbf{v} \mid \mathbf{0}, \mathbf{I}) \propto \exp(-H(\mathbf{x}, \mathbf{v})),$$
-where the .bold[Hamiltonian] is
-$$H(\mathbf{x}, \mathbf{v}) = -\log \tilde{\pi}(\mathbf{x}) + \frac{1}{2} \mathbf{v}^T \mathbf{v}.$$
-Since $\mathbf{v}$ is independent of $\mathbf{x}$, discarding $\mathbf{v}$ gives samples of $\pi$.
 
 ???
 
@@ -482,8 +475,6 @@ In physics, the Hamiltonian is the total energy of a system with position $\math
 class: middle
 
 ## Paths at constant $H$
-
-On the pairs, a constant density means a constant $H$. Unlike in $\mathbf{x}$ alone, a move at constant $H$ can change $\tilde{\pi}(\mathbf{x})$: $-\log \tilde{\pi}(\mathbf{x})$ goes up or down, and $\frac{1}{2} \mathbf{v}^T \mathbf{v}$ by the opposite amount.
 
 Along a path $(\mathbf{x}(s), \mathbf{v}(s))$, by the chain rule,
 $$\frac{dH}{ds} = \nabla\_{\mathbf{x}} H \cdot \frac{d\mathbf{x}}{ds} + \nabla\_{\mathbf{v}} H \cdot \frac{d\mathbf{v}}{ds}.$$
