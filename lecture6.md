@@ -479,8 +479,6 @@ The candidate is always accepted: $(\mathbf{x}, \mathbf{v}) := (\mathbf{x}, \mat
 $$\alpha = \min\left(1, \frac{\pi(\mathbf{x}', \mathbf{v}')}{\pi(\mathbf{x}, \mathbf{v})}\right) = \min\left(1, \exp(H(\mathbf{x}, \mathbf{v}) - H(\mathbf{x}', \mathbf{v}'))\right) = 1.$$
 The candidate is always accepted: $(\mathbf{x}, \mathbf{v}) := (\mathbf{x}', \mathbf{v}')$.
 
-The first move changes the value of $H$, the second travels far at this value. It remains to find such paths.
-
 ---
 
 class: middle
