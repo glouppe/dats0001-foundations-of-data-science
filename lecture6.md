@@ -479,15 +479,9 @@ To move along a contour line of $\pi(\mathbf{x}, \mathbf{v})$, we look for paths
 $$\frac{dH}{ds} = \nabla\_{\mathbf{x}} H \cdot \frac{d\mathbf{x}}{ds} + \nabla\_{\mathbf{v}} H \cdot \frac{d\mathbf{v}}{ds},$$
 and choosing
 $$\frac{d\mathbf{x}}{ds} = \nabla\_{\mathbf{v}} H = \mathbf{v}, \quad \frac{d\mathbf{v}}{ds} = -\nabla\_{\mathbf{x}} H = \nabla \log \tilde{\pi}(\mathbf{x})$$
-makes the two terms cancel, $\frac{dH}{ds} = \nabla\_{\mathbf{x}} H \cdot \nabla\_{\mathbf{v}} H - \nabla\_{\mathbf{v}} H \cdot \nabla\_{\mathbf{x}} H = 0$. Along these dynamics, $H$ stays constant.
+makes the two terms cancel, $\frac{dH}{ds} = \nabla\_{\mathbf{x}} H \cdot \nabla\_{\mathbf{v}} H - \nabla\_{\mathbf{v}} H \cdot \nabla\_{\mathbf{x}} H = 0$. Along these dynamics, $H$ stays constant: the path follows its contour line, from one mode to the other below.
 
 .center.width-35[![](figures/lec6/hmc-contours.png)]
-
-.center[
-
-A path (blue) follows its contour line of $H$ (dashed), from one mode to the other.
-
-]
 
 ---
 
