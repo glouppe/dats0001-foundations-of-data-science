@@ -500,7 +500,7 @@ The candidate is always accepted: $(\mathbf{x}, \mathbf{v}) := (\mathbf{x}', \ma
 
 class: middle
 
-The HMC algorithm proceeds as follows:
+In summary, the HMC algorithm proceeds as follows:
 
 1. Given the current state $\mathbf{x}\_t$, draw $\mathbf{v} \sim \mathcal{N}(\mathbf{0}, \mathbf{I})$.
 2. Starting from $(\mathbf{x}\_t, \mathbf{v})$, simulate the dynamics with $L$ .bold[leapfrog] steps of size $\epsilon$ to obtain $(\mathbf{x}', \mathbf{v}')$:
