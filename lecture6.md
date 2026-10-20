@@ -472,9 +472,9 @@ class: middle
 
 Each HMC iteration makes two moves on the pair $(\mathbf{x}, \mathbf{v})$. Each keeps $(\mathbf{x}, \mathbf{v})$ distributed as $\pi(\mathbf{x}, \mathbf{v})$, so the iteration does too.
 
-1. Keep $\mathbf{x}$ and replace the momentum $\mathbf{u}$ by a draw $\mathbf{v}$ from $\pi(\mathbf{v} \mid \mathbf{x}) = \mathcal{N}(\mathbf{v} \mid \mathbf{0}, \mathbf{I})$, written $\mathcal{N}(\mathbf{v})$. Seen as a Metropolis-Hastings proposal, the change of density is exactly compensated by the proposal:
-$$\frac{\pi(\mathbf{x}, \mathbf{v})}{\pi(\mathbf{x}, \mathbf{u})} \frac{\mathcal{N}(\mathbf{u})}{\mathcal{N}(\mathbf{v})} = \frac{\tilde{\pi}(\mathbf{x}) \mathcal{N}(\mathbf{v})}{\tilde{\pi}(\mathbf{x}) \mathcal{N}(\mathbf{u})} \frac{\mathcal{N}(\mathbf{u})}{\mathcal{N}(\mathbf{v})} = 1.$$
-The move is always accepted, although $H$ takes a new value.
+1. Keep $\mathbf{x}$ and propose a new momentum $\mathbf{v}'$ from $\pi(\mathbf{v}' \mid \mathbf{x}) = \mathcal{N}(\mathbf{v}' \mid \mathbf{0}, \mathbf{I})$, written $\mathcal{N}(\mathbf{v}')$. The change of density is exactly compensated by the proposal:
+$$\frac{\pi(\mathbf{x}, \mathbf{v}')}{\pi(\mathbf{x}, \mathbf{v})} \frac{\mathcal{N}(\mathbf{v})}{\mathcal{N}(\mathbf{v}')} = \frac{\tilde{\pi}(\mathbf{x}) \mathcal{N}(\mathbf{v}')}{\tilde{\pi}(\mathbf{x}) \mathcal{N}(\mathbf{v})} \frac{\mathcal{N}(\mathbf{v})}{\mathcal{N}(\mathbf{v}')} = 1.$$
+The candidate is always accepted: $(\mathbf{x}, \mathbf{v}) := (\mathbf{x}, \mathbf{v}')$. $H$ takes a new value.
 2. Follow a path from $(\mathbf{x}, \mathbf{v})$ along which $H$ keeps this value, and propose its end $(\mathbf{x}', \mathbf{v}')$. For Metropolis-Hastings over the pairs, with a symmetric proposal, the acceptance probability is
 $$\alpha = \min\left(1, \frac{\pi(\mathbf{x}', \mathbf{v}')}{\pi(\mathbf{x}, \mathbf{v})}\right) = \min\left(1, \exp(H(\mathbf{x}, \mathbf{v}) - H(\mathbf{x}', \mathbf{v}'))\right) = 1.$$
 
