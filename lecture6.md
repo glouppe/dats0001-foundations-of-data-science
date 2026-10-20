@@ -479,7 +479,7 @@ The candidate is always accepted: $(\mathbf{x}, \mathbf{v}) := (\mathbf{x}, \mat
 $$\alpha = \min\left(1, \frac{\pi(\mathbf{x}', \mathbf{v}')}{\pi(\mathbf{x}, \mathbf{v})}\right) = \min\left(1, \exp(H(\mathbf{x}, \mathbf{v}) - H(\mathbf{x}', \mathbf{v}'))\right) = 1.$$
 The candidate is always accepted: $(\mathbf{x}, \mathbf{v}) := (\mathbf{x}', \mathbf{v}')$.
 
-Both moves are always accepted: in the first, the density changes and the proposal compensates; in the second, the density is constant and the proposal symmetric. The first changes the value of $H$, the second travels far at this value. It remains to find such paths.
+In the first move, the density changes and the proposal compensates; in the second, the density is constant and the proposal symmetric. The first changes the value of $H$, the second travels far at this value. It remains to find such paths.
 
 ---
 
