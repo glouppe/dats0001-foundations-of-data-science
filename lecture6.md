@@ -481,11 +481,11 @@ and choosing
 $$\frac{d\mathbf{x}}{ds} = \nabla\_{\mathbf{v}} H = \mathbf{v}, \quad \frac{d\mathbf{v}}{ds} = -\nabla\_{\mathbf{x}} H = \nabla \log \tilde{\pi}(\mathbf{x})$$
 makes the two terms cancel, $\frac{dH}{ds} = \nabla\_{\mathbf{x}} H \cdot \nabla\_{\mathbf{v}} H - \nabla\_{\mathbf{v}} H \cdot \nabla\_{\mathbf{x}} H = 0$. Along these dynamics, $H$ stays constant.
 
-.center.width-30[![](figures/lec6/hmc-contours.png)]
+.center.width-35[![](figures/lec6/hmc-contours.png)]
 
 .center[
 
-Paths at constant $H$ (blue): around one mode at low $H$, around both after a new $v$ (orange).
+Paths at constant $H$ (blue), before and after a new $v$ (orange).
 
 ]
 
