@@ -448,7 +448,7 @@ Consider instead a proposal with two properties: it stays on the contour line of
 $$\alpha(x' \mid x) = \min\\left(\frac{\tilde{\pi}(x')}{\tilde{\pi}(x)} \frac{q(x \mid x')}{q(x' \mid x)}, 1\right) = \min(1, 1) = 1.$$
 Such moves are always accepted, however far they go. But they never leave their contour line: they cannot visit regions of higher or lower density.
 
-The idea of HMC is to add a variable $\mathbf{v}$, and to move along the contour lines of the joint density of $(\mathbf{x}, \mathbf{v})$. Along them, $\tilde{\pi}(\mathbf{x})$ can go up or down while $\mathbf{v}$ compensates, and redrawing $\mathbf{v}$ jumps to another contour line.
+HMC keeps both properties, on pairs: it adds a variable $\mathbf{v}$, and proposes symmetric moves that stay on the contour line of the joint density of $(\mathbf{x}, \mathbf{v})$. Both ratios are again 1, but $\tilde{\pi}(\mathbf{x})$ alone can now go up or down while $\mathbf{v}$ compensates. Redrawing $\mathbf{v}$ jumps to another contour line.
 
 .footnote[Credits: [Duane et al.](https://doi.org/10.1016/0370-2693%2887%2991197-X), 1987; [Neal](https://arxiv.org/abs/1206.1901), 2011.]
 
