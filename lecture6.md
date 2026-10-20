@@ -470,7 +470,7 @@ In physics, the Hamiltonian is the total energy of a system with position $\math
 
 class: middle
 
-Each HMC iteration makes two moves on the pair $(\mathbf{x}, \mathbf{v})$. Each keeps $(\mathbf{x}, \mathbf{v})$ distributed as $\pi(\mathbf{x}, \mathbf{v})$, so the iteration does too.
+Each HMC iteration makes two moves on the pair $(\mathbf{x}, \mathbf{v})$. Each leaves $\pi(\mathbf{x}, \mathbf{v})$ unchanged: if $(\mathbf{x}, \mathbf{v}) \sim \pi(\mathbf{x}, \mathbf{v})$ before the move, it still is after.
 
 1. Keep $\mathbf{x}$ and propose a new momentum $\mathbf{v}'$ from $\pi(\mathbf{v}' \mid \mathbf{x}) = \mathcal{N}(\mathbf{v}' \mid \mathbf{0}, \mathbf{I})$, written $\mathcal{N}(\mathbf{v}')$. The change of density is exactly compensated by the proposal:
 $$\frac{\pi(\mathbf{x}, \mathbf{v}')}{\pi(\mathbf{x}, \mathbf{v})} \frac{\mathcal{N}(\mathbf{v})}{\mathcal{N}(\mathbf{v}')} = \frac{\tilde{\pi}(\mathbf{x}) \mathcal{N}(\mathbf{v}')}{\tilde{\pi}(\mathbf{x}) \mathcal{N}(\mathbf{v})} \frac{\mathcal{N}(\mathbf{v})}{\mathcal{N}(\mathbf{v}')} = 1.$$
