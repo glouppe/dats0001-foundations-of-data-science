@@ -460,8 +460,10 @@ Such a proposal can go far and is always accepted. But it never leaves its conto
 class: middle
 
 The idea of .bold[Hamiltonian Monte Carlo] (HMC) is to apply the same two properties to pairs $(\mathbf{x}, \mathbf{v})$, where $\mathbf{v} \in \mathbb{R}^d$ is an auxiliary variable, the .bold[momentum], independent of $\mathbf{x}$. The pairs are sampled from
-$$\pi(\mathbf{x}, \mathbf{v}) \propto \tilde{\pi}(\mathbf{x}) \mathcal{N}(\mathbf{v} \mid \mathbf{0}, \mathbf{I}) \propto \exp(-H(\mathbf{x}, \mathbf{v})), \quad \text{with} \quad H(\mathbf{x}, \mathbf{v}) = -\log \tilde{\pi}(\mathbf{x}) + \frac{1}{2} \mathbf{v}^T \mathbf{v}$$
-the .bold[Hamiltonian]. Since $\mathbf{v}$ is independent of $\mathbf{x}$, discarding $\mathbf{v}$ gives samples of $\pi$.
+$$\pi(\mathbf{x}, \mathbf{v}) \propto \tilde{\pi}(\mathbf{x}) \mathcal{N}(\mathbf{v} \mid \mathbf{0}, \mathbf{I}) \propto \exp(-H(\mathbf{x}, \mathbf{v})),$$
+where the .bold[Hamiltonian] is
+$$H(\mathbf{x}, \mathbf{v}) = -\log \tilde{\pi}(\mathbf{x}) + \frac{1}{2} \mathbf{v}^T \mathbf{v}.$$
+Since $\mathbf{v}$ is independent of $\mathbf{x}$, discarding $\mathbf{v}$ gives samples of $\pi$.
 - The proposals stay on a contour line of $\pi(\mathbf{x}, \mathbf{v})$, where $H$ is constant, and are symmetric. They are always accepted.
 - Along this contour line, $\tilde{\pi}(\mathbf{x})$ can go up or down while $\mathbf{v}$ compensates. The chain now visits regions of higher and lower density.
 - Redrawing $\mathbf{v}$ at each iteration moves the pair to another contour line.
