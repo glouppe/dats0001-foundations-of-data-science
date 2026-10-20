@@ -500,19 +500,11 @@ The candidate is always accepted: $(\mathbf{x}, \mathbf{v}) := (\mathbf{x}', \ma
 
 class: middle
 
-## Leapfrog
-
-The dynamics at constant $H$ are simulated with steps of size $\epsilon$. Euler steps let $H$ drift, so long moves would be rejected. The .bold[leapfrog] scheme keeps $H$ nearly constant:
-$$\mathbf{v} \leftarrow \mathbf{v} + \frac{\epsilon}{2} \nabla \log \tilde{\pi}(\mathbf{x}), \quad \mathbf{x} \leftarrow \mathbf{x} + \epsilon \mathbf{v}, \quad \mathbf{v} \leftarrow \mathbf{v} + \frac{\epsilon}{2} \nabla \log \tilde{\pi}(\mathbf{x}).$$
-
----
-
-class: middle
-
 The HMC algorithm proceeds as follows:
 
 1. Given the current state $\mathbf{x}\_t$, draw $\mathbf{v} \sim \mathcal{N}(\mathbf{0}, \mathbf{I})$.
-2. Starting from $(\mathbf{x}\_t, \mathbf{v})$, run $L$ leapfrog steps of size $\epsilon$ to obtain $(\mathbf{x}', \mathbf{v}')$.
+2. Starting from $(\mathbf{x}\_t, \mathbf{v})$, simulate the dynamics with $L$ .bold[leapfrog] steps of size $\epsilon$ to obtain $(\mathbf{x}', \mathbf{v}')$:
+$$\mathbf{v} \leftarrow \mathbf{v} + \frac{\epsilon}{2} \nabla \log \tilde{\pi}(\mathbf{x}), \quad \mathbf{x} \leftarrow \mathbf{x} + \epsilon \mathbf{v}, \quad \mathbf{v} \leftarrow \mathbf{v} + \frac{\epsilon}{2} \nabla \log \tilde{\pi}(\mathbf{x}).$$
 3. Accept $\mathbf{x}\_{t+1} = \mathbf{x}'$ with probability
 $$\alpha = \min\left(1, \exp(H(\mathbf{x}\_t, \mathbf{v}) - H(\mathbf{x}', \mathbf{v}'))\right).$$
 Otherwise, set $\mathbf{x}\_{t+1} = \mathbf{x}\_t$. In both cases, discard $\mathbf{v}$.
