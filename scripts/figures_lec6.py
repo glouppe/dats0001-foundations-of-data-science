@@ -445,34 +445,35 @@ def diagnostics():
 # Metropolis-Hastings at work ---------------------------------------------------------------
 
 def hmc_contours():
-    """Contour lines of H in the (x, v) plane for the two-mode 1-D target of the HMC animation, with
-    two paths of the dynamics: at low H, the path circles one mode; at high H, it wraps both modes.
-    Along each, x goes through regions of higher and lower density."""
+    """Contour lines of H in the (x, v) plane for the two-mode 1-D target of the HMC animation, drawn
+    as the middle panel of the animation: two paths of the dynamics (blue) on their contour lines
+    (dashed), around one mode at low H and around both at higher H, joined by a new v (orange)."""
     logp = lambda x: np.logaddexp(np.log(.4) + norm.logpdf(x, -1.5, .6), np.log(.6) + norm.logpdf(x, 1.5, .7))
     grad = lambda x, h=1e-5: (logp(x + h) - logp(x - h)) / (2 * h)
     H = lambda x, v: -logp(x) + .5 * v ** 2
-    gx = np.linspace(-3.5, 3.5, 400)
-    gv = np.linspace(-3.2, 3.2, 400)
+    gx = np.linspace(-3.5, 3.5, 300)
+    gv = np.linspace(-3.5, 3.5, 300)
     GX, GV = np.meshgrid(gx, gv)
-    fig, ax = plt.subplots(figsize=(5, 3), dpi=200)
-    ax.contour(gx, gv, H(GX, GV), levels=np.linspace(1.2, 6, 9), colors=LIGHT, linewidths=.7)
-    for (x0, v0), col in [((-1.5, 1.0), ORANGE), ((-1.5, 2.3), BLUE)]:
-        eps, path = .01, [(x0, v0)]
-        x, v = x0, v0
+    HH = H(GX, GV)
+    x0, v_low, v_high = -1.5, 1.0, 2.3
+    fig, ax = plt.subplots(figsize=(3.2, 3), dpi=200)
+    ax.contour(gx, gv, HH, levels=np.linspace(1.2, 6, 7), colors=LIGHT, linewidths=.7)
+    for v0 in (v_low, v_high):
+        ax.contour(gx, gv, HH, levels=[H(x0, v0)], colors=GREY, linewidths=1, linestyles="dashed")
+        path, x, v = [(x0, v0)], x0, v0
         for _ in range(3000):
-            v = v + eps / 2 * grad(x)
-            x = x + eps * v
-            v = v + eps / 2 * grad(x)
+            v = v + .005 * grad(x)
+            x = x + .01 * v
+            v = v + .005 * grad(x)
             path.append((x, v))
-        path = np.array(path)
-        ax.plot(*path.T, color=col, lw=1.8)
-        k = 60
-        ax.annotate("", xy=path[k + 5], xytext=path[k], arrowprops=dict(arrowstyle="-|>", color=col, lw=1.5))
-        ax.plot(x0, v0, "o", color=col, ms=5)
+        ax.plot(*np.array(path).T, color=BLUE, lw=2)
+    ax.plot([x0, x0], [v_low, v_high], color=ORANGE, lw=2)
+    ax.plot(x0, v_low, "o", color=BLUE, ms=6)
     ax.set_xlim(-3.5, 3.5)
-    ax.set_ylim(-3.2, 3.2)
+    ax.set_ylim(-3.5, 3.5)
     ax.set_xlabel("$x$")
     ax.set_ylabel("$v$")
+    ax.set_title("$(x, v)$ plane", fontsize=11, pad=3)
     tidy(ax)
     save(fig, "hmc-contours.png")
 
