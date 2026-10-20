@@ -460,8 +460,6 @@ where the .bold[Hamiltonian] is
 $$H(\mathbf{x}, \mathbf{v}) = -\log \tilde{\pi}(\mathbf{x}) + \frac{1}{2} \mathbf{v}^T \mathbf{v}.$$
 Since $\mathbf{v}$ is independent of $\mathbf{x}$, discarding $\mathbf{v}$ gives samples of $\pi$.
 
-On the pairs, a constant density means a constant $H$. Unlike on the previous slide, a move at constant $H$ can change $\tilde{\pi}(\mathbf{x})$: $-\log \tilde{\pi}(\mathbf{x})$ goes up or down, and $\frac{1}{2} \mathbf{v}^T \mathbf{v}$ by the opposite amount.
-
 ???
 
 In physics, the Hamiltonian is the total energy of a system with position $\mathbf{x}$ and momentum $\mathbf{v}$: a potential energy that depends on the position, here $-\log \tilde{\pi}(\mathbf{x})$, plus a kinetic energy that depends on the momentum, here $\frac{1}{2} \mathbf{v}^T \mathbf{v}$. Think of a ball rolling without friction on the surface $-\log \tilde{\pi}(\mathbf{x})$: it speeds up downhill, towards high density, and slows down uphill, trading one energy for the other while their sum stays constant.
@@ -471,6 +469,8 @@ In physics, the Hamiltonian is the total energy of a system with position $\math
 class: middle
 
 ## Paths at constant $H$
+
+On the pairs, a constant density means a constant $H$. Unlike in $\mathbf{x}$ alone, a move at constant $H$ can change $\tilde{\pi}(\mathbf{x})$: $-\log \tilde{\pi}(\mathbf{x})$ goes up or down, and $\frac{1}{2} \mathbf{v}^T \mathbf{v}$ by the opposite amount.
 
 Along a path $(\mathbf{x}(s), \mathbf{v}(s))$, by the chain rule,
 $$\frac{dH}{ds} = \nabla\_{\mathbf{x}} H \cdot \frac{d\mathbf{x}}{ds} + \nabla\_{\mathbf{v}} H \cdot \frac{d\mathbf{v}}{ds}.$$
