@@ -470,19 +470,6 @@ In physics, the Hamiltonian is the total energy of a system with position $\math
 
 class: middle
 
-Each HMC iteration makes two moves on the pair $(\mathbf{x}, \mathbf{v})$. Each move leaves $\pi(\mathbf{x}, \mathbf{v})$ unchanged: if $(\mathbf{x}, \mathbf{v}) \sim \pi(\mathbf{x}, \mathbf{v})$ before it, it still is after.
-
-1. Keep $\mathbf{x}$ and propose a new momentum $\mathbf{v}'$ from $\pi(\mathbf{v}' \mid \mathbf{x}) = \mathcal{N}(\mathbf{v}' \mid \mathbf{0}, \mathbf{I})$, written $\mathcal{N}(\mathbf{v}')$. The change of density is exactly compensated by the proposal, so the acceptance probability is
-$$\alpha = \min\left(1, \frac{\tilde{\pi}(\mathbf{x}) \mathcal{N}(\mathbf{v}')}{\tilde{\pi}(\mathbf{x}) \mathcal{N}(\mathbf{v})} \frac{\mathcal{N}(\mathbf{v})}{\mathcal{N}(\mathbf{v}')}\right) = 1.$$
-The candidate is always accepted: $(\mathbf{x}, \mathbf{v}) := (\mathbf{x}, \mathbf{v}')$. $H$ takes a new value.
-2. Follow a path from $(\mathbf{x}, \mathbf{v})$ along which $H$ keeps this value, and propose its end $(\mathbf{x}', \mathbf{v}')$. For Metropolis-Hastings over the pairs, with a symmetric proposal, the acceptance probability is
-$$\alpha = \min\left(1, \frac{\pi(\mathbf{x}', \mathbf{v}')}{\pi(\mathbf{x}, \mathbf{v})}\right) = \min\left(1, \exp(H(\mathbf{x}, \mathbf{v}) - H(\mathbf{x}', \mathbf{v}'))\right) = 1.$$
-The candidate is always accepted: $(\mathbf{x}, \mathbf{v}) := (\mathbf{x}', \mathbf{v}')$.
-
----
-
-class: middle
-
 ## Paths at constant $H$
 
 Along a path $(\mathbf{x}(s), \mathbf{v}(s))$, by the chain rule,
@@ -498,6 +485,19 @@ The state moves in the direction $\mathbf{v}$, and $\mathbf{v}$ is pushed toward
 
 class: middle
 
+Each HMC iteration makes two moves on the pair $(\mathbf{x}, \mathbf{v})$. Each move leaves $\pi(\mathbf{x}, \mathbf{v})$ unchanged: if $(\mathbf{x}, \mathbf{v}) \sim \pi(\mathbf{x}, \mathbf{v})$ before it, it still is after.
+
+1. Keep $\mathbf{x}$ and propose a new momentum $\mathbf{v}'$ from $\pi(\mathbf{v}' \mid \mathbf{x}) = \mathcal{N}(\mathbf{v}' \mid \mathbf{0}, \mathbf{I})$, written $\mathcal{N}(\mathbf{v}')$. The change of density is exactly compensated by the proposal, so the acceptance probability is
+$$\alpha = \min\left(1, \frac{\tilde{\pi}(\mathbf{x}) \mathcal{N}(\mathbf{v}')}{\tilde{\pi}(\mathbf{x}) \mathcal{N}(\mathbf{v})} \frac{\mathcal{N}(\mathbf{v})}{\mathcal{N}(\mathbf{v}')}\right) = 1.$$
+The candidate is always accepted: $(\mathbf{x}, \mathbf{v}) := (\mathbf{x}, \mathbf{v}')$. $H$ takes a new value.
+2. Follow the dynamics from $(\mathbf{x}, \mathbf{v})$, which keep $H$ at this value, and propose the end $(\mathbf{x}', \mathbf{v}')$ of the path. For Metropolis-Hastings over the pairs, with a symmetric proposal, the acceptance probability is
+$$\alpha = \min\left(1, \frac{\pi(\mathbf{x}', \mathbf{v}')}{\pi(\mathbf{x}, \mathbf{v})}\right) = \min\left(1, \exp(H(\mathbf{x}, \mathbf{v}) - H(\mathbf{x}', \mathbf{v}'))\right) = 1.$$
+The candidate is always accepted: $(\mathbf{x}, \mathbf{v}) := (\mathbf{x}', \mathbf{v}')$.
+
+---
+
+class: middle
+
 .center.width-100[![](figures/lec6/hmc-dynamics.gif)]
 
 .center[
@@ -506,7 +506,7 @@ Six HMC iterations. Each new $v$ (orange) changes $H$, each path (blue) keeps it
 
 ]
 
-These dynamics are simulated with steps of size $\epsilon$. Euler steps let $H$ drift, so long moves would be rejected. The .bold[leapfrog] scheme keeps $H$ nearly constant:
+The dynamics at constant $H$ are simulated with steps of size $\epsilon$. Euler steps let $H$ drift, so long moves would be rejected. The .bold[leapfrog] scheme keeps $H$ nearly constant:
 $$\mathbf{v} \leftarrow \mathbf{v} + \frac{\epsilon}{2} \nabla \log \tilde{\pi}(\mathbf{x}), \quad \mathbf{x} \leftarrow \mathbf{x} + \epsilon \mathbf{v}, \quad \mathbf{v} \leftarrow \mathbf{v} + \frac{\epsilon}{2} \nabla \log \tilde{\pi}(\mathbf{x}).$$
 
 ---
