@@ -477,6 +477,7 @@ $$\frac{\pi(\mathbf{x}, \mathbf{v}')}{\pi(\mathbf{x}, \mathbf{v})} \frac{\mathca
 The candidate is always accepted: $(\mathbf{x}, \mathbf{v}) := (\mathbf{x}, \mathbf{v}')$. $H$ takes a new value.
 2. Follow a path from $(\mathbf{x}, \mathbf{v})$ along which $H$ keeps this value, and propose its end $(\mathbf{x}', \mathbf{v}')$. For Metropolis-Hastings over the pairs, with a symmetric proposal, the acceptance probability is
 $$\alpha = \min\left(1, \frac{\pi(\mathbf{x}', \mathbf{v}')}{\pi(\mathbf{x}, \mathbf{v})}\right) = \min\left(1, \exp(H(\mathbf{x}, \mathbf{v}) - H(\mathbf{x}', \mathbf{v}'))\right) = 1.$$
+The candidate is always accepted: $(\mathbf{x}, \mathbf{v}) := (\mathbf{x}', \mathbf{v}')$.
 
 Both moves are always accepted: in the first, the density changes and the proposal compensates; in the second, the density is constant and the proposal symmetric. The first changes the value of $H$, the second travels far at this value. It remains to find such paths.
 
