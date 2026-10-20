@@ -465,7 +465,7 @@ where the .bold[Hamiltonian] is
 $$H(\mathbf{x}, \mathbf{v}) = -\log \tilde{\pi}(\mathbf{x}) + \frac{1}{2} \mathbf{v}^T \mathbf{v}.$$
 Since $\mathbf{v}$ is independent of $\mathbf{x}$, discarding $\mathbf{v}$ gives samples of $\pi$.
 
-On the pairs, HMC uses proposals with the two properties of the previous slide: they stay on a contour line of $\pi(\mathbf{x}, \mathbf{v})$, where $H$ is constant, and they are symmetric. They are always accepted. Unlike in $\mathbf{x}$ alone, $\tilde{\pi}(\mathbf{x})$ is not constant along such a contour line: it goes up or down while $\frac{1}{2} \mathbf{v}^T \mathbf{v}$ changes by the opposite amount. To move to another contour line, HMC redraws $\mathbf{v}$ at each iteration.
+On the pairs, a contour line of $\pi(\mathbf{x}, \mathbf{v})$ is a set where $H$ is constant. Unlike in $\mathbf{x}$ alone, $\tilde{\pi}(\mathbf{x})$ is not constant along it: $-\log \tilde{\pi}(\mathbf{x})$ goes up or down while $\frac{1}{2} \mathbf{v}^T \mathbf{v}$ changes by the opposite amount. A proposal that stays on such a contour line can therefore visit regions of higher and lower density of $\mathbf{x}$.
 
 ???
 
@@ -503,13 +503,7 @@ The candidate is always accepted: $(\mathbf{x}, \mathbf{v}) := (\mathbf{x}', \ma
 
 class: middle
 
-.center.width-100[![](figures/lec6/hmc-dynamics.gif)]
-
-.center[
-
-Six HMC iterations. Each new $v$ (orange) changes $H$, each path (blue) keeps it. <br>Only the iteration with the largest $H$ crosses to the other mode.
-
-]
+## Leapfrog
 
 The dynamics at constant $H$ are simulated with steps of size $\epsilon$. Euler steps let $H$ drift, so long moves would be rejected. The .bold[leapfrog] scheme keeps $H$ nearly constant:
 $$\mathbf{v} \leftarrow \mathbf{v} + \frac{\epsilon}{2} \nabla \log \tilde{\pi}(\mathbf{x}), \quad \mathbf{x} \leftarrow \mathbf{x} + \epsilon \mathbf{v}, \quad \mathbf{v} \leftarrow \mathbf{v} + \frac{\epsilon}{2} \nabla \log \tilde{\pi}(\mathbf{x}).$$
@@ -527,6 +521,18 @@ $$\alpha = \min\left(1, \exp(H(\mathbf{x}\_t, \mathbf{v}) - H(\mathbf{x}', \math
 Otherwise, set $\mathbf{x}\_{t+1} = \mathbf{x}\_t$. In both cases, discard $\mathbf{v}$.
 
 With exact paths, $\alpha = 1$. The leapfrog steps leave a small change of $H$, which step 3 corrects.
+
+---
+
+class: middle
+
+.center.width-100[![](figures/lec6/hmc-dynamics.gif)]
+
+.center[
+
+Six HMC iterations. Each new $v$ (orange) changes $H$, each path (blue) keeps it. <br>Only the iteration with the largest $H$ crosses to the other mode.
+
+]
 
 ---
 
