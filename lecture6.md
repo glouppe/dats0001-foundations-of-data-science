@@ -472,11 +472,13 @@ class: middle
 
 Each HMC iteration makes two moves on the pair $(\mathbf{x}, \mathbf{v})$. Each keeps $(\mathbf{x}, \mathbf{v})$ distributed as $\pi(\mathbf{x}, \mathbf{v})$, so the iteration does too.
 
-1. Keep $\mathbf{x}$ and redraw $\mathbf{v} \sim \pi(\mathbf{v} \mid \mathbf{x}) = \mathcal{N}(\mathbf{0}, \mathbf{I})$. The draw is exact, so there is nothing to accept or reject. $H$ takes a new value.
+1. Keep $\mathbf{x}$ and replace the momentum $\mathbf{u}$ by a draw $\mathbf{v}$ from $\pi(\mathbf{v} \mid \mathbf{x}) = \mathcal{N}(\mathbf{v} \mid \mathbf{0}, \mathbf{I})$, written $\mathcal{N}(\mathbf{v})$. Seen as a Metropolis-Hastings proposal, the change of density is exactly compensated by the proposal:
+$$\frac{\pi(\mathbf{x}, \mathbf{v})}{\pi(\mathbf{x}, \mathbf{u})} \frac{\mathcal{N}(\mathbf{u})}{\mathcal{N}(\mathbf{v})} = \frac{\tilde{\pi}(\mathbf{x}) \mathcal{N}(\mathbf{v})}{\tilde{\pi}(\mathbf{x}) \mathcal{N}(\mathbf{u})} \frac{\mathcal{N}(\mathbf{u})}{\mathcal{N}(\mathbf{v})} = 1.$$
+The move is always accepted, although $H$ takes a new value.
 2. Follow a path from $(\mathbf{x}, \mathbf{v})$ along which $H$ keeps this value, and propose its end $(\mathbf{x}', \mathbf{v}')$. For Metropolis-Hastings over the pairs, with a symmetric proposal, the acceptance probability is
 $$\alpha = \min\left(1, \frac{\pi(\mathbf{x}', \mathbf{v}')}{\pi(\mathbf{x}, \mathbf{v})}\right) = \min\left(1, \exp(H(\mathbf{x}, \mathbf{v}) - H(\mathbf{x}', \mathbf{v}'))\right) = 1.$$
 
-The first move changes the value of $H$. The second travels far at this value, and is always accepted. It remains to find such paths.
+Both moves are always accepted: in the first, the density changes and the proposal compensates; in the second, the density is constant and the proposal symmetric. The first changes the value of $H$, the second travels far at this value. It remains to find such paths.
 
 ---
 
