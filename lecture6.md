@@ -475,16 +475,19 @@ In physics, the Hamiltonian is the total energy of a system with position $\math
 
 class: middle
 
-## Paths at constant $H$
-
-Along a path $(\mathbf{x}(s), \mathbf{v}(s))$, by the chain rule,
-$$\frac{dH}{ds} = \nabla\_{\mathbf{x}} H \cdot \frac{d\mathbf{x}}{ds} + \nabla\_{\mathbf{v}} H \cdot \frac{d\mathbf{v}}{ds}.$$
-Choosing
+To move along a contour line of $\pi(\mathbf{x}, \mathbf{v})$, we look for paths $(\mathbf{x}(s), \mathbf{v}(s))$ along which $H$ stays constant. By the chain rule,
+$$\frac{dH}{ds} = \nabla\_{\mathbf{x}} H \cdot \frac{d\mathbf{x}}{ds} + \nabla\_{\mathbf{v}} H \cdot \frac{d\mathbf{v}}{ds},$$
+and choosing
 $$\frac{d\mathbf{x}}{ds} = \nabla\_{\mathbf{v}} H = \mathbf{v}, \quad \frac{d\mathbf{v}}{ds} = -\nabla\_{\mathbf{x}} H = \nabla \log \tilde{\pi}(\mathbf{x})$$
-makes the two terms cancel:
-$$\frac{dH}{ds} = \nabla\_{\mathbf{x}} H \cdot \nabla\_{\mathbf{v}} H - \nabla\_{\mathbf{v}} H \cdot \nabla\_{\mathbf{x}} H = 0.$$
+makes the two terms cancel, $\frac{dH}{ds} = \nabla\_{\mathbf{x}} H \cdot \nabla\_{\mathbf{v}} H - \nabla\_{\mathbf{v}} H \cdot \nabla\_{\mathbf{x}} H = 0$. Along these dynamics, $H$ stays constant.
 
-Along these dynamics, $H$ therefore stays constant.
+.center.width-50[![](figures/lec6/hmc-contours.png)]
+
+.center[
+
+Contour lines of $H$ for a target with two modes, and two paths of the dynamics. <br>At low $H$ (orange), the path circles one mode; at higher $H$ (blue), it wraps both.
+
+]
 
 ---
 
