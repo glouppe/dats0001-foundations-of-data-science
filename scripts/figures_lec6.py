@@ -446,8 +446,8 @@ def diagnostics():
 
 def hmc_contours():
     """Contour lines of H in the (x, v) plane for the two-mode 1-D target of the HMC animation, drawn
-    as the middle panel of the animation: two paths of the dynamics (blue) on their contour lines
-    (dashed), around one mode at low H and around both at higher H, joined by a new v (orange)."""
+    as the middle panel of the animation: one path of the dynamics (blue) follows its contour line
+    (dashed), through regions of higher and lower density of x."""
     logp = lambda x: np.logaddexp(np.log(.4) + norm.logpdf(x, -1.5, .6), np.log(.6) + norm.logpdf(x, 1.5, .7))
     grad = lambda x, h=1e-5: (logp(x + h) - logp(x - h)) / (2 * h)
     H = lambda x, v: -logp(x) + .5 * v ** 2
@@ -455,20 +455,20 @@ def hmc_contours():
     gv = np.linspace(-3.5, 3.5, 300)
     GX, GV = np.meshgrid(gx, gv)
     HH = H(GX, GV)
-    x0, v_low, v_high = -1.5, 1.0, 2.3
+    x0, v0 = -1.5, 2.3
+    path, x, v = [(x0, v0)], x0, v0
+    for _ in range(140):
+        v = v + .005 * grad(x)
+        x = x + .01 * v
+        v = v + .005 * grad(x)
+        path.append((x, v))
+    path = np.array(path)
     fig, ax = plt.subplots(figsize=(3.2, 3), dpi=200)
     ax.contour(gx, gv, HH, levels=np.linspace(1.2, 6, 7), colors=LIGHT, linewidths=.7)
-    for v0 in (v_low, v_high):
-        ax.contour(gx, gv, HH, levels=[H(x0, v0)], colors=GREY, linewidths=1, linestyles="dashed")
-        path, x, v = [(x0, v0)], x0, v0
-        for _ in range(3000):
-            v = v + .005 * grad(x)
-            x = x + .01 * v
-            v = v + .005 * grad(x)
-            path.append((x, v))
-        ax.plot(*np.array(path).T, color=BLUE, lw=2)
-    ax.plot([x0, x0], [v_low, v_high], color=ORANGE, lw=2)
-    ax.plot(x0, v_low, "o", color=BLUE, ms=6)
+    ax.contour(gx, gv, HH, levels=[H(x0, v0)], colors=GREY, linewidths=1, linestyles="dashed")
+    ax.plot(*path.T, color=BLUE, lw=2)
+    ax.annotate("", xy=path[-1], xytext=path[-8], arrowprops=dict(arrowstyle="-|>", color=BLUE, lw=2))
+    ax.plot(x0, v0, "o", color=BLUE, ms=6)
     ax.set_xlim(-3.5, 3.5)
     ax.set_ylim(-3.5, 3.5)
     ax.set_xlabel("$x$")

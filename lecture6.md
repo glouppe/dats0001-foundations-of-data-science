@@ -485,7 +485,7 @@ makes the two terms cancel, $\frac{dH}{ds} = \nabla\_{\mathbf{x}} H \cdot \nabla
 
 .center[
 
-Paths at constant $H$ (blue), before and after a new $v$ (orange).
+A path (blue) follows its contour line of $H$ (dashed), from one mode to the other.
 
 ]
 
