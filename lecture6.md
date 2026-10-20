@@ -442,16 +442,27 @@ class: middle
 
 ## Hamiltonian Monte Carlo
 
-The traces show that random-walk proposals explore the target by small steps. Larger steps land in regions of low density and are rejected.
+The traces show that random-walk proposals explore the target by small steps: larger steps land in regions of low density and are rejected. We look for proposals that take large steps and are still always accepted.
 
-Consider instead a proposal with two properties: it stays on the contour line of $\tilde{\pi}$ through $x$, so that $\tilde{\pi}(x') = \tilde{\pi}(x)$, and it is symmetric, $q(x \mid x') = q(x' \mid x)$. Both ratios in the acceptance probability are then 1:
-$$\alpha(x' \mid x) = \min\\left(\frac{\tilde{\pi}(x')}{\tilde{\pi}(x)} \frac{q(x \mid x')}{q(x' \mid x)}, 1\right) = \min(1, 1) = 1.$$
-Such moves are always accepted, however far they go. But they never leave their contour line: they cannot visit regions of higher or lower density.
+The acceptance probability is
+$$\alpha(x' \mid x) = \min\left(1, \frac{\tilde{\pi}(x')}{\tilde{\pi}(x)} \frac{q(x \mid x')}{q(x' \mid x)}\right).$$
+It equals 1 when both ratios are 1:
+- $\tilde{\pi}(x') = \tilde{\pi}(x)$: the proposal stays on the contour line of $\tilde{\pi}$ through $x$;
+- $q(x \mid x') = q(x' \mid x)$: the proposal is symmetric.
 
-HMC keeps both properties, on pairs: it adds a variable $\mathbf{v}$, and proposes symmetric moves that stay on the contour line of the joint density of $(\mathbf{x}, \mathbf{v})$. Both ratios are again 1, but $\tilde{\pi}(\mathbf{x})$ alone can now go up or down while $\mathbf{v}$ compensates. Redrawing $\mathbf{v}$ jumps to another contour line.
+Such a proposal can go far and is always accepted. But it never leaves its contour line, so it never visits regions of higher or lower density.
 
 .footnote[Credits: [Duane et al.](https://doi.org/10.1016/0370-2693%2887%2991197-X), 1987; [Neal](https://arxiv.org/abs/1206.1901), 2011.]
 
+
+---
+
+class: middle
+
+The idea of HMC is to apply the same two properties to pairs $(\mathbf{x}, \mathbf{v})$, where $\mathbf{v}$ is an auxiliary variable:
+- The proposals stay on the contour line of the joint density $\pi(\mathbf{x}, \mathbf{v})$, and are symmetric. They are always accepted.
+- Along this contour line, the joint density is constant, but $\tilde{\pi}(\mathbf{x})$ is not: it can go up or down while $\mathbf{v}$ compensates. The chain now visits regions of higher and lower density.
+- Redrawing $\mathbf{v}$ at each iteration moves the pair to another contour line.
 ---
 
 class: middle
