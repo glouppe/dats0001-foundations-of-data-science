@@ -479,7 +479,7 @@ $$\frac{d\mathbf{x}}{ds} = \nabla\_{\mathbf{v}} H = \mathbf{v}, \quad \frac{d\ma
 makes the two terms cancel:
 $$\frac{dH}{ds} = \nabla\_{\mathbf{x}} H \cdot \nabla\_{\mathbf{v}} H - \nabla\_{\mathbf{v}} H \cdot \nabla\_{\mathbf{x}} H = 0.$$
 
-The state moves in the direction $\mathbf{v}$, and $\mathbf{v}$ is pushed towards higher density: this is gradient ascent with momentum.
+Along these dynamics, $H$ therefore stays constant.
 
 ---
 
