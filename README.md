@@ -26,7 +26,7 @@ Materials for DATS0001 Foundations of Data Science, ULiège, Fall 2026.
 | November 30 | Lecture 10: Simulation-based inference |
 | December 7 | Lecture 11: Wrap-up case study<br>`nb11`: Estimating air pollution from satellite data |
 | December 14 | _No lecture_ |
-| December 18 | **Case study due** |
+| December 18 | [Case study](./project/case-study.ipynb) due |
 
 ## Case study
 
