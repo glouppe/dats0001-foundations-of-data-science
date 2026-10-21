@@ -442,7 +442,7 @@ class: middle
 
 ## Hamiltonian Monte Carlo
 
-The traces show that random-walk proposals explore the target by small steps: larger steps land in regions of low density and are rejected. We look for proposals that take large steps and are still always accepted.
+Random-walk proposals explore the target by small steps: larger steps land in low density and are rejected. We want large steps that are still always accepted.
 
 The acceptance probability is
 $$\alpha(x' \mid x) = \min\left(1, \frac{\tilde{\pi}(x')}{\tilde{\pi}(x)} \frac{q(x \mid x')}{q(x' \mid x)}\right).$$
@@ -450,7 +450,7 @@ It equals 1 when both ratios are 1:
 - $\tilde{\pi}(x') = \tilde{\pi}(x)$: the proposal stays on the contour line of $\tilde{\pi}$ through $x$;
 - $q(x \mid x') = q(x' \mid x)$: the proposal is symmetric.
 
-Such a proposal can go far and is always accepted. But it never leaves its contour line, so it never visits regions of higher or lower density.
+Such a proposal goes far and is always accepted, but it never leaves its contour line: it cannot visit regions of higher or lower density.
 
 .footnote[Credits: [Duane et al.](https://doi.org/10.1016/0370-2693%2887%2991197-X), 1987; [Neal](https://arxiv.org/abs/1206.1901), 2011.]
 
@@ -465,7 +465,7 @@ where the .bold[Hamiltonian] is
 $$H(\mathbf{x}, \mathbf{v}) = -\log \tilde{\pi}(\mathbf{x}) + \frac{1}{2} \mathbf{v}^T \mathbf{v}.$$
 Since $\mathbf{v}$ is independent of $\mathbf{x}$, discarding $\mathbf{v}$ gives samples of $\pi$.
 
-On the pairs, a contour line of $\pi(\mathbf{x}, \mathbf{v})$ is a set where $H$ is constant. Unlike in $\mathbf{x}$ alone, $\tilde{\pi}(\mathbf{x})$ is not constant along it: $-\log \tilde{\pi}(\mathbf{x})$ goes up or down while $\frac{1}{2} \mathbf{v}^T \mathbf{v}$ changes by the opposite amount. A proposal that stays on such a contour line can therefore visit regions of higher and lower density of $\mathbf{x}$.
+A contour line of $\pi(\mathbf{x}, \mathbf{v})$ is a set where $H$ is constant. Along it, $\tilde{\pi}(\mathbf{x})$ is no longer constant: $-\log \tilde{\pi}(\mathbf{x})$ goes up or down while $\frac{1}{2} \mathbf{v}^T \mathbf{v}$ changes by the opposite amount. A proposal that stays on it can therefore visit regions of higher and lower density.
 
 ???
 
@@ -479,7 +479,7 @@ To move along a contour line of $\pi(\mathbf{x}, \mathbf{v})$, we look for paths
 $$\frac{dH}{ds} = \nabla\_{\mathbf{x}} H \cdot \frac{d\mathbf{x}}{ds} + \nabla\_{\mathbf{v}} H \cdot \frac{d\mathbf{v}}{ds},$$
 and choosing
 $$\frac{d\mathbf{x}}{ds} = \nabla\_{\mathbf{v}} H = \mathbf{v}, \quad \frac{d\mathbf{v}}{ds} = -\nabla\_{\mathbf{x}} H = \nabla \log \tilde{\pi}(\mathbf{x})$$
-makes the two terms cancel, $\frac{dH}{ds} = \nabla\_{\mathbf{x}} H \cdot \nabla\_{\mathbf{v}} H - \nabla\_{\mathbf{v}} H \cdot \nabla\_{\mathbf{x}} H = 0$. Along these dynamics, $H$ stays constant: the path follows its contour line, from one mode to the other below.
+makes the two terms cancel, $\frac{dH}{ds} = \nabla\_{\mathbf{x}} H \cdot \nabla\_{\mathbf{v}} H - \nabla\_{\mathbf{v}} H \cdot \nabla\_{\mathbf{x}} H = 0$. Along these dynamics, $H$ is constant: the path below follows its contour line from one mode to the other.
 
 .center.width-35[![](figures/lec6/hmc-contours.png)]
 
@@ -487,12 +487,12 @@ makes the two terms cancel, $\frac{dH}{ds} = \nabla\_{\mathbf{x}} H \cdot \nabla
 
 class: middle
 
-Each HMC iteration makes two moves on the pair $(\mathbf{x}, \mathbf{v})$. Each move leaves $\pi(\mathbf{x}, \mathbf{v})$ unchanged: if $(\mathbf{x}, \mathbf{v}) \sim \pi(\mathbf{x}, \mathbf{v})$ before it, it still is after.
+Each HMC iteration makes two moves. Each leaves $\pi(\mathbf{x}, \mathbf{v})$ unchanged: if $(\mathbf{x}, \mathbf{v}) \sim \pi(\mathbf{x}, \mathbf{v})$ before it, it still is after.
 
-1. Keep $\mathbf{x}$ and propose a new momentum $\mathbf{v}'$ from $\pi(\mathbf{v}' \mid \mathbf{x}) = \mathcal{N}(\mathbf{v}' \mid \mathbf{0}, \mathbf{I})$, written $\mathcal{N}(\mathbf{v}')$. The change of density is exactly compensated by the proposal, so the acceptance probability is
+1. Keep $\mathbf{x}$ and propose $\mathbf{v}' \sim \pi(\mathbf{v}' \mid \mathbf{x}) = \mathcal{N}(\mathbf{v}' \mid \mathbf{0}, \mathbf{I})$, written $\mathcal{N}(\mathbf{v}')$. The proposal exactly compensates the change of density:
 $$\alpha = \min\left(1, \frac{\tilde{\pi}(\mathbf{x}) \mathcal{N}(\mathbf{v}')}{\tilde{\pi}(\mathbf{x}) \mathcal{N}(\mathbf{v})} \frac{\mathcal{N}(\mathbf{v})}{\mathcal{N}(\mathbf{v}')}\right) = 1.$$
-The candidate is always accepted: $(\mathbf{x}, \mathbf{v}) := (\mathbf{x}, \mathbf{v}')$. $H$ takes a new value.
-2. Follow the dynamics from $(\mathbf{x}, \mathbf{v})$, which keep $H$ at this value, and propose the end $(\mathbf{x}', \mathbf{v}')$ of the path. For Metropolis-Hastings over the pairs, with a symmetric proposal, the acceptance probability is
+The candidate is always accepted, $(\mathbf{x}, \mathbf{v}) := (\mathbf{x}, \mathbf{v}')$, and $H$ takes a new value.
+2. Follow the dynamics from $(\mathbf{x}, \mathbf{v})$, at this value of $H$, and propose the end $(\mathbf{x}', \mathbf{v}')$ of the path. The proposal is symmetric, so
 $$\alpha = \min\left(1, \frac{\pi(\mathbf{x}', \mathbf{v}')}{\pi(\mathbf{x}, \mathbf{v})}\right) = \min\left(1, \exp(H(\mathbf{x}, \mathbf{v}) - H(\mathbf{x}', \mathbf{v}'))\right) = 1.$$
 The candidate is always accepted: $(\mathbf{x}, \mathbf{v}) := (\mathbf{x}', \mathbf{v}')$.
 
@@ -500,16 +500,16 @@ The candidate is always accepted: $(\mathbf{x}, \mathbf{v}) := (\mathbf{x}', \ma
 
 class: middle
 
-In summary, the HMC algorithm proceeds as follows:
+In summary, HMC proceeds as follows:
 
 1. Given the current state $\mathbf{x}\_t$, draw $\mathbf{v} \sim \mathcal{N}(\mathbf{0}, \mathbf{I})$.
-2. Starting from $(\mathbf{x}\_t, \mathbf{v})$, simulate the dynamics with $L$ .bold[leapfrog] steps of size $\epsilon$ to obtain $(\mathbf{x}', \mathbf{v}')$:
+2. From $(\mathbf{x}\_t, \mathbf{v})$, simulate the dynamics with $L$ .bold[leapfrog] steps of size $\epsilon$ to obtain $(\mathbf{x}', \mathbf{v}')$:
 $$\mathbf{v} \leftarrow \mathbf{v} + \frac{\epsilon}{2} \nabla \log \tilde{\pi}(\mathbf{x}), \quad \mathbf{x} \leftarrow \mathbf{x} + \epsilon \mathbf{v}, \quad \mathbf{v} \leftarrow \mathbf{v} + \frac{\epsilon}{2} \nabla \log \tilde{\pi}(\mathbf{x}).$$
 3. Accept $\mathbf{x}\_{t+1} = \mathbf{x}'$ with probability
 $$\alpha = \min\left(1, \exp(H(\mathbf{x}\_t, \mathbf{v}) - H(\mathbf{x}', \mathbf{v}'))\right).$$
 Otherwise, set $\mathbf{x}\_{t+1} = \mathbf{x}\_t$. In both cases, discard $\mathbf{v}$.
 
-With exact paths, $\alpha = 1$. The leapfrog steps leave a small change of $H$, which step 3 corrects.
+With exact paths, $\alpha = 1$; step 3 corrects the small change of $H$ left by the leapfrog.
 
 ---
 
