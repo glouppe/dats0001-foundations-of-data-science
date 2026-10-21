@@ -25,7 +25,8 @@ Materials for DATS0001 Foundations of Data Science, ULiège, Fall 2026.
 | November 23 | Lecture 9: Variational inference<br>`nb09a`: Coordinate ascent variational inference<br>`nb09b`: Automatic differentiation variational inference<br>Reading: Kucukelbir et al, [Automatic differentiation variational inference](https://arxiv.org/abs/1603.00788), 2016 |
 | November 30 | Lecture 10: Simulation-based inference |
 | December 7 | Lecture 11: Wrap-up case study<br>`nb11`: Estimating air pollution from satellite data |
-| December 14 | _No lecture_<br>**Case study due on Friday, December 18** |
+| December 14 | _No lecture_ |
+| December 18 | **Case study due** |
 
 ## Case study
 
