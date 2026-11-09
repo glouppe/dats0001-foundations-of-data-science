@@ -319,11 +319,11 @@ def kfold(k=5):
         for fold in range(k):
             held = fold == run
             ax.add_patch(Rectangle((fold, y + .12), .94, .76, lw=0,
-                                   facecolor=ORANGE if held else LIGHT))
+                                   facecolor=BLUE if held else LIGHT))
         ax.text(-.15, y + .5, "split %d" % (run + 1), ha="right", va="center")
     ax.add_patch(Rectangle((0, -1), .3, .45, facecolor=LIGHT, lw=0))
     ax.text(.4, -.78, "training", va="center")
-    ax.add_patch(Rectangle((1.9, -1), .3, .45, facecolor=ORANGE, lw=0))
+    ax.add_patch(Rectangle((1.9, -1), .3, .45, facecolor=BLUE, lw=0))
     ax.text(2.3, -.78, "validation", va="center")
     ax.set_xlim(-1.3, k)
     ax.set_ylim(-1.1, k)
