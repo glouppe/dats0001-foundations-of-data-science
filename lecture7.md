@@ -28,10 +28,7 @@ class: middle
 
 class: middle
 
-The critique of a fitted model asks two questions.
-
-- Can the computation be trusted? Diagnostics and calibration check that the sampler draws from the posterior of the model.
-- Does the model explain the data? Only the data can tell. A sampler can be exact for a model that is wrong, and pass every check of the computation.
+Model checking takes the computation as correct, with samples from the posterior of the model, and asks whether the model explains the data. Only the data can tell: an exact sampler for a wrong model passes every check of the computation.
 
 ---
 
