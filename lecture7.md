@@ -173,11 +173,13 @@ class: middle
 
 ## Residual analysis
 
-Suppose the model is a deterministic function plus additive noise,
-$$x\_i = f(\theta) + \sigma\epsilon\_i,$$
-with a scale $\sigma$ and noise $\epsilon\_i \sim p(\epsilon)$. The standardized .bold[residuals] are
-$$r\_i = \frac{x\_i - f(\theta)}{\sigma}, \quad i = 1, \ldots, N,$$
+Suppose each measurement is a prediction plus additive noise,
+$$x\_i = f\_i(\theta) + \sigma\epsilon\_i,$$
+where $f\_i(\theta)$ is the value the model predicts for measurement $i$ (it may depend on an input, as in a regression), $\sigma$ is a scale and $\epsilon\_i \sim p(\epsilon)$ is noise. The standardized .bold[residuals] are
+$$r\_i = \frac{x\_i - f\_i(\theta)}{\sigma}, \quad i = 1, \ldots, N,$$
 with $\theta \sim p(\theta \mid \mathbf{x}\_\text{obs})$.
+
+In a state-space model, the residuals are the standardized innovations of the Kalman filter: each observation minus its prediction from the previous ones, divided by the predicted standard deviation.
 
 ---
 
@@ -338,6 +340,10 @@ For Newcomb's data, 5-fold cross-validation, summed over the 66 held-out measure
 ---
 
 class: middle
+
+The ELPD measures how close the predictions are to the data distribution. The Kullback-Leibler divergence from $p\_r$ to the posterior predictive distribution is
+$$\text{KL}(p\_r \,\\|\, p(\cdot \mid \mathbf{x}\_\text{obs})) = \mathbb{E}\_{p\_r(\mathbf{x}')}[\log p\_r(\mathbf{x}')] - \mathbb{E}\_{p\_r(\mathbf{x}')}[\log p(\mathbf{x}' \mid \mathbf{x}\_\text{obs})].$$
+The first term does not depend on the model, so a higher ELPD means a smaller divergence. Neither model needs to be true: the ELPD ranks them by how close they come to $p\_r$.
 
 If the posterior is replaced by a point estimate $\hat{\theta}$, the ELPD reduces to the log-likelihood $\log p(\mathbf{x}' \mid \hat{\theta})$ of the held-out data.
 
