@@ -114,11 +114,12 @@ class: middle
 
 ## p-values
 
-A .bold[test statistic] $T(\mathbf{x})$ summarizes one aspect of a data set, such as its mean or its minimum.
-
-A .bold[p-value] measures how surprising the observed statistic is under the model. Fix the parameters $\theta$, simulate data sets from $p(\mathbf{x} \mid \theta)$, and compute the probability that their statistic is at least as large as the observed one,
+A .bold[p-value] fixes the parameters $\theta$, simulates data sets from $p(\mathbf{x} \mid \theta)$, and measures how often a .bold[test statistic] $T$, such as the mean, is at least as large as on the observed data,
 $$P(T(\mathbf{x}^\text{rep}) \geq T(\mathbf{x}\_\text{obs}) \mid \theta).$$
-A p-value close to 0 means the observed value is larger than almost all simulated ones, close to 1 that it is smaller: either way, the model rarely produces data like these. A test at level 5% rejects the model when the p-value falls below 0.05.
+
+.center.width-70[![](./figures/lec7/pvalue.png)]
+
+Near 0 or 1, the model rarely produces data like these. A test at level 5% rejects $\theta$ below 0.05: here, $\mu = 24$ ns is just rejected.
 
 ---
 

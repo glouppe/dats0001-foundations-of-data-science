@@ -378,8 +378,38 @@ def elpd_figure(k=5, seed=42):
     save(fig, "elpd-pointwise.png")
 
 
+def pvalue_figure(mu=24., sigma=10.8, n=20000, seed=2):
+    """The ordinary p-value: the mean of data sets simulated with theta fixed, against the
+    observed mean, with the tail beyond it shaded."""
+    rng = np.random.default_rng(seed)
+    means = (mu + sigma * rng.standard_normal((n, len(NEWCOMB)))).mean(1)
+    observed = NEWCOMB.mean()
+    p = np.mean(means >= observed)
+    bins = np.linspace(mu - 4.5 * sigma / np.sqrt(len(NEWCOMB)),
+                       mu + 4.5 * sigma / np.sqrt(len(NEWCOMB)), 61)
+    fig, ax = plt.subplots(figsize=(W, 2.8), dpi=200)
+    counts, edges, patches = ax.hist(means, bins=bins, density=True, color=BLUE, lw=0,
+                                     label=r"simulated data sets, $\mu = %g$, $\sigma = %g$"
+                                     % (mu, sigma))
+    for left, patch in zip(edges[:-1], patches):
+        if left >= observed:
+            patch.set_facecolor(ORANGE)
+    ax.axvline(observed, color=GREY, lw=1.6, label="observed data")
+    ax.text(observed + .25, .6 * counts.max(), "$p = %.2f$" % p, color=ORANGE)
+    ax.set_ylim(0, 1.45 * counts.max())
+    ax.set_xlabel(r"mean $T(\mathbf{x})$ (ns above 24800 ns)")
+    ax.set_yticks([])
+    ax.spines["left"].set_visible(False)
+    ax.legend(frameon=False, loc="upper left")
+    tidy(ax)
+    fig.tight_layout()
+    save(fig, "pvalue.png")
+    print("  p-value of the mean at mu = %g, sigma = %g: %.3f" % (mu, sigma, p))
+
+
 def newcomb():
     data_figure()
+    pvalue_figure()
     thetas = sample(log_posterior_gaussian, [26., 10.], NEWCOMB)
     print("  Gaussian model: %d draws, mu %.2f (sd %.2f), 95%% equal-tailed [%.2f, %.2f]"
           % (len(thetas), thetas[:, 0].mean(), thetas[:, 0].std(),
