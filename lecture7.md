@@ -104,7 +104,7 @@ For Newcomb's data, draw $(\mu^{(m)}, \sigma^{(m)})$ from the posterior, then $N
 class: middle
 
 .center.width-70[![](./figures/lec7/newcomb-replicates.png)]
-.center[The observed data among 19 data sets replicated from the posterior predictive distribution.]
+.center[The observed data among 19 data sets replicated from the posterior predictive.]
 
 ---
 
