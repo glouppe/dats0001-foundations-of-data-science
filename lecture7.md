@@ -30,40 +30,43 @@ class: middle
 
 ## Newcomb's experiment (1882)
 
-In a famous experiment, Simon Newcomb measured the speed of light using a rotating mirror. He collected 66 measurements of the time taken by light to travel a known distance.
-.center.width-100[![](./figures/lec7/newcomb-data.png)]
-.center[Histogram of Newcomb's measurements of the speed of light<br> (in deviations from 24800 nanoseconds).]
+Simon Newcomb measured the speed of light with a rotating mirror. He recorded $N = 66$ measurements of the time light takes to travel a known distance.
+
+.center.width-70[![](./figures/lec7/newcomb-data.png)]
+.center[Newcomb's 66 measurements, in nanoseconds above 24800 ns.]
 
 ---
 
 class: middle
 
-We consider a simple Gaussian model for these measurements:
+.italic[Example.] We model the measurements $\mathbf{x}\_\text{obs} = (x\_1, \ldots, x\_N)$ as independent Gaussian draws,
 
-.center[![](./figures/lec7/newcomb-model.svg)]
+.center.width-50[![](./figures/lec7/newcomb-model.svg)]
 
 $$\begin{aligned}
 \mu &\sim \mathcal{U}(-1000, 1000) \\\\
 \sigma &\sim \mathcal{U}(0.1, 1000) \\\\
-x_n &\sim \mathcal{N}(\mu, \sigma^2) \\quad \text{for } n=1,\ldots,66.
+x\_i &\sim \mathcal{N}(\mu, \sigma^2) \quad \text{for } i = 1, \ldots, N.
 \end{aligned}$$
 
 ---
 
 class: middle
 
-Using MCMC, we obtain samples from the posterior $p(\mu, \sigma \mid x\_{1:N})$:
-.center.width-70[![](./figures/lec7/newcomb-posterior.png)]
+MCMC gives samples $(\mu^{(m)}, \sigma^{(m)})$, $m = 1, \ldots, M$, from the posterior $p(\mu, \sigma \mid \mathbf{x}\_\text{obs})$.
 
+.center.width-45[![](./figures/lec7/newcomb-posterior.png)]
+
+.center[Posterior samples, with the 2.5%, 50% and 97.5% quantiles.]
 
 ---
 
 class: middle
 
-From the samples, we can estimate the speed of light (in deviations from 24800 nanoseconds) as the empirical mean of the posterior samples of $\mu$,
-$$ \hat{\mu} = \frac{1}{M} \sum_{m=1}^M \mu^{(m)} = 26.20949771717204 \text{ nanoseconds}. $$
+The posterior mean of $\mu$ estimates the passage time, in nanoseconds above 24800 ns,
+$$\hat{\mu} = \frac{1}{M} \sum\_{m=1}^M \mu^{(m)} = 26.199182694915095.$$
 
-.alert[Reporting this many digits is misleading, as it suggests a precision that is not supported by the data or model. Do not report more digits than justified by the uncertainty in the estimate $\hat{\mu}$!]
+Most of these digits are noise: the posterior standard deviation of $\mu$ is about 1.4 ns. Report no more digits than the uncertainty supports.
 
 ---
 
@@ -71,20 +74,18 @@ class: middle
 
 ## Credible intervals
 
-In the Bayesian framework, .bold[credible intervals] provide a way to quantify uncertainty in parameter estimates. 
-
-Assuming a joint model $p(\theta, x)$ over parameters $\theta$ and data $x$, a credible interval at level $1 - \alpha$ is an interval $[a, b]$ such that
-$$ P(a \leq \theta \leq b \mid x) = 1 - \alpha. $$
-The highest posterior density (HPD) interval is a common choice, defined as the narrowest interval containing $1 - \alpha$ of the posterior probability.
+A credible interval of level $1 - \alpha$ is an interval $[a, b]$ such that
+$$P(a \leq \mu \leq b \mid \mathbf{x}\_\text{obs}) = 1 - \alpha.$$
+The highest posterior density (HPD) interval is the narrowest one. The equal-tailed interval leaves $\alpha / 2$ of the posterior on each side.
 
 ---
 
 class: middle
 
-For our speed of light estimate, a 95% credible interval would be computed from the posterior samples of $\mu$ as the interval between the 2.5th and 97.5th percentiles of the samples, yielding
-$$ [\mu\_{2.5\%}, \mu\_{97.5\%}] = (23.71, 28.89). $$
+From the samples, the 95% equal-tailed interval runs from the 2.5% to the 97.5% quantile of the $\mu^{(m)}$,
+$$[\mu\_{2.5\%}, \mu\_{97.5\%}] = [23.6, 28.9].$$
 
-.alert[Note that credible intervals capture our Bayesian uncertainty about parameter estimates given the data $x$, unlike .bold[Frequentist confidence intervals] which would capture the variability of estimates across hypothetical repeated samples, assuming the parameters are fixed but unknown.]
+The probability is over $\mu$, with the data fixed. A confidence interval instead holds the parameter fixed and describes the variability of the interval over repeated data sets.
 
 ---
 
@@ -92,70 +93,64 @@ class: middle
 
 ## Posterior predictive checks
 
-The posterior predictive distribution is the distribution
-$$ p(x^{\text{rep}} \mid x) = \int p(x^{\text{rep}} \mid \theta) p(\theta \mid x) d\theta$$
-of replicated data $x^{\text{rep}}$ given observed data $x$.
+The .bold[posterior predictive distribution] of replicated data $\mathbf{x}^\text{rep}$ is
+$$p(\mathbf{x}^\text{rep} \mid \mathbf{x}\_\text{obs}) = \int p(\mathbf{x}^\text{rep} \mid \theta) p(\theta \mid \mathbf{x}\_\text{obs}) d\theta.$$
 
-.success[If our model is a good fit to the data, then replicated data $x^{\text{rep}}$ should resemble the observed data $x$: .bold[posterior predictive checks] aim to assess this resemblance or lack thereof.]
+If the model fits, replicated data resemble the observed data. A .bold[posterior predictive check] compares the two.
 
 ---
 
 class: middle
 
-In our example, we generate replicated datasets by 
-- sampling parameters $(\mu^{(m)}, \sigma^{(m)}) \sim p(\mu, \sigma \mid x\_{1:N})$ from the posterior, 
-- and simulating new data points $x_n^{\text{rep}(m)} \sim \mathcal{N}(\mu^{(m)}, \sigma^{2(m)})$ for $n=1,\ldots,N$ and $m=1,\ldots,M$.
+For Newcomb's data, each replicated data set is drawn in two steps:
+- draw $(\mu^{(m)}, \sigma^{(m)}) \sim p(\mu, \sigma \mid \mathbf{x}\_\text{obs})$;
+- draw $x\_i^{\text{rep}(m)} \sim \mathcal{N}(\mu^{(m)}, (\sigma^{(m)})^2)$ for $i = 1, \ldots, N$.
 
 ---
 
 class: middle
 
 .center.width-70[![](./figures/lec7/newcomb-replicates.png)]
-.center[Histograms of 25 replicated datasets drawn<br> from the posterior predictive distribution.]
+.center[The observed data among 19 data sets replicated from the posterior predictive distribution.]
 
 ---
 
 class: middle
 
-To quantify specific aspects of the model fit, we can also compare .bold[summary statistics] $T(x)$ of the observed data to the distribution $p(T(x^{\text{rep}}) | x)$ of those statistics computed on replicated datasets.
+To check one aspect of the fit, compare a .bold[test statistic] $T(\mathbf{x}\_\text{obs})$ with its distribution $p(T(\mathbf{x}^\text{rep}) \mid \mathbf{x}\_\text{obs})$ over replicated data sets.
+
+.center.width-70[![](./figures/lec7/newcomb-replicate-stats.png)]
+
+The mean and the variance of the observed data are typical of the replicated data: the model captures location and spread.
 
 ---
 
 class: middle
 
-.center.width-60[![](./figures/lec7/newcomb-replicate-means.png)]
-.center.width-60[![](./figures/lec7/newcomb-replicate-vars.png)]
+.center.width-70[![](./figures/lec7/newcomb-replicate-mins.png)]
 
-For our Gaussian model, posterior predictive distributions of the mean and variance of replicated datasets are consistent with the observed statistics, indicating a good fit in terms of location and spread.
-
----
-
-class: middle
-
-.center.width-60[![](./figures/lec7/newcomb-replicate-mins.png)]
-
-For the minimum statistic, however, the situation is different. The observed statistic is poorly captured, indicating a potential model misfit.
+The observed minimum is lower than the minimum of every replicated data set. The Gaussian model cannot produce the lowest measurements.
 
 ---
 
 class: middle
 
-Beyond visual checks, we can also quantify whether the observed statistics are extreme under the posterior predictive distribution, using .bold[Bayesian p-values] defined as
-$$P(T(x^{\text{rep}}) \geq T(x) \mid x) = \int P(T(x^{\text{rep}}) \geq T(x) \mid \theta) p(\theta \mid x) d\theta.$$
-A Bayesian p-value close to 0 or 1 indicates a poor model fit for the statistic $T$.
+The .bold[Bayesian p-value] of a test statistic $T$ is
+$$P(T(\mathbf{x}^\text{rep}) \geq T(\mathbf{x}\_\text{obs}) \mid \mathbf{x}\_\text{obs}) = \int P(T(\mathbf{x}^\text{rep}) \geq T(\mathbf{x}\_\text{obs}) \mid \theta) p(\theta \mid \mathbf{x}\_\text{obs}) d\theta.$$
+A value close to 0 or 1 signals a misfit for $T$.
 
-.alert[Note that Bayesian p-values account for uncertainty in parameters via the posterior distribution, whereas Frequentist p-values $$P(T(x^{\text{rep}}) \geq T(x) \mid \theta)$$ condition on a fixed parameter value $\theta$.]
+A frequentist p-value $P(T(\mathbf{x}^\text{rep}) \geq T(\mathbf{x}\_\text{obs}) \mid \theta)$ conditions on a single value of $\theta$. The Bayesian p-value averages over the posterior.
 
 ---
 
 class: middle
 
-For our example, we find the following Bayesian p-values:
-- Mean: 0.513
-- Variance: 0.528
-- Minimum: 1.0
+For Newcomb's data, the Bayesian p-values are
+- 0.49 for the mean;
+- 0.52 for the variance;
+- 1.00 for the minimum.
 
-The extreme p-value for the minimum statistic confirms the poor fit of our Gaussian model to the lower tail of the data. 
+The model fails on the lower tail of the data.
 
 ---
 
@@ -163,45 +158,31 @@ class: middle
 
 ## Residual analysis
 
-When we have multiple observations $x\_{1:N}$, another way to assess model fit is through .bold[residual analysis].
-Assuming the forward model is defined as a deterministic function plus additive noise, i.e.,
-$$ x\_n = f(\theta) + \sigma\epsilon\_n,$$
-where $\sigma$ is a scale parameter and $\epsilon\_n \sim p(\epsilon)$ is noise, (standardized) .bold[residuals] are computed as
-$$ r\_n = \frac{x\_n - f(\theta)}{\sigma} $$
-for $n=1,\ldots,N$ and $\theta \sim p(\theta \mid x\_{1:N})$.
+Suppose the model is a deterministic function plus additive noise,
+$$x\_i = f(\theta) + \sigma\epsilon\_i,$$
+with a scale $\sigma$ and noise $\epsilon\_i \sim p(\epsilon)$. The standardized .bold[residuals] are
+$$r\_i = \frac{x\_i - f(\theta)}{\sigma}, \quad i = 1, \ldots, N,$$
+with $\theta \sim p(\theta \mid \mathbf{x}\_\text{obs})$.
 
 ---
 
 class: middle
 
-If the model is appropriate, the distribution of residuals $p(r \mid x\_{1:N})$ for the observed data should match the distribution $p(r \mid x^{\text{rep}})$ of residuals for replicated data.
+If the model fits, the residuals of the observed data are distributed as the residuals of replicated data. If the posterior is concentrated, both are close to the noise distribution $p(\epsilon)$.
 
-If the posterior is concentrated, then residuals should approximately follow the noise distribution $p(\epsilon)$.
+A .bold[quantile-quantile (Q-Q) plot] compares two distributions by drawing the quantiles of one against those of the other. Points on the diagonal mean the two distributions agree.
 
 ---
 
 class: middle
 
-For our Gaussian model, standardized residuals are computed as
-$$r\_n = \frac{x\_n - \mu}{\sigma},$$
-for $n=1,\ldots,66$ and $\mu, \sigma \sim p(\mu, \sigma \mid x\_{1:66})$.
+For the Gaussian model, the standardized residuals are
+$$r\_i = \frac{x\_i - \mu}{\sigma}, \quad i = 1, \ldots, N,$$
+with $(\mu, \sigma) \sim p(\mu, \sigma \mid \mathbf{x}\_\text{obs})$.
 
 .center.width-70[![](./figures/lec7/newcomb-residuals.png)]
 
----
-
-class: middle
-
-A .bold[quantile-quantile (Q-Q) plot] compares the quantiles of two distributions.
-
-In our context, a Q-Q plot can be used to compare the distribution of residuals for the observed data to the distribution of residuals for replicated data. Systematic deviations from the diagonal line indicate model misfit.
-
----
-
-class: middle
-
-.center.width-70[![](./figures/lec7/newcomb-qqplot.png)]
-.center[Deviations from the diagonal line indicate model misfit, particularly in the lower tail.]
+.center[Residuals of observed and replicated data (left), and their Q-Q plot (right). <br>The observed residuals have a heavier lower tail and a narrower core.]
 
 ---
 
@@ -209,9 +190,7 @@ class: middle
 
 .center.width-10[![](./figures/lec7/repair.png)]
 
-In summary, model checking provides a principled way to assess model fit by comparing observed data to data simulated from the model, using both visualizations and summary statistics.
-
-It is meant to reveal .bold[model misspecifications]     and failures, guiding us towards better models.
+Model checking compares the observed data with data simulated from the fitted model, by plots and by test statistics. It reveals .bold[misspecifications], and points to what the next model must fix.
 
 ---
 
@@ -223,24 +202,27 @@ class: middle
 
 class: middle
 
-We now assume an alternative .italic[t]-location-scale model for Newcomb's data to account for the heavy tails observed in the measurements:
+.italic[Example.] A Student's $t$ model gives large deviations a larger probability than the Gaussian model:
 
-.center[![](./figures/lec7/newcomb-model2.svg)]
+.center.width-50[![](./figures/lec7/newcomb-model2.svg)]
 
 $$\begin{aligned}
 \mu &\sim \mathcal{U}(-1000, 1000) \\\\
 \sigma &\sim \mathcal{U}(0.1, 1000) \\\\
 \nu &\sim \text{Gamma}(2, 0.1) \\\\
-\epsilon\_n &\sim t_{\nu} \\\\
-x\_n &= \mu + \sigma \epsilon\_n \\quad \text{for } n=1,\ldots,66.
+\epsilon\_i &\sim t\_{\nu} \\\\
+x\_i &= \mu + \sigma \epsilon\_i \quad \text{for } i = 1, \ldots, N.
 \end{aligned}$$
 
 ---
 
 class: middle
 
-Again, we use MCMC to obtain samples from the posterior $p(\mu, \sigma, \nu \mid x\_{1:N})$ under this new model.
-.center.width-70[![](./figures/lec7/newcomb-model2-posterior.png)]
+MCMC gives samples from the posterior $p(\mu, \sigma, \nu \mid \mathbf{x}\_\text{obs})$.
+
+.center.width-55[![](./figures/lec7/newcomb-model2-posterior.png)]
+
+.center[Posterior samples of the $t$ model, with the 2.5%, 50% and 97.5% quantiles.]
 
 ---
 
@@ -248,53 +230,49 @@ class: middle
 
 ## Bayes factors
 
-Assume we have two competing models, $\mathcal{M}\_1$ and $\mathcal{M}\_2$. As good Bayesian citizens, we also assign prior probabilities to each model, $p(\mathcal{M}\_1)$ and $p(\mathcal{M}\_2)$.
+Consider two models $\mathcal{M}\_1$ and $\mathcal{M}\_2$, with prior probabilities $p(\mathcal{M}\_1)$ and $p(\mathcal{M}\_2)$. Bayes' rule gives the ratio of their posterior probabilities,
+$$\frac{p(\mathcal{M}\_1 \mid \mathbf{x}\_\text{obs})}{p(\mathcal{M}\_2 \mid \mathbf{x}\_\text{obs})} = \frac{p(\mathbf{x}\_\text{obs} \mid \mathcal{M}\_1)}{p(\mathbf{x}\_\text{obs} \mid \mathcal{M}\_2)} \frac{p(\mathcal{M}\_1)}{p(\mathcal{M}\_2)}.$$
+The first factor on the right is the .bold[Bayes factor] $\text{BF}\_{1,2}$.
 
-The Bayesian approach to model comparison then consists in comparing the posterior probabilities of each model given the data $x$,
+---
+
+class: middle
+
+The Bayes factor measures how much more probable the data are under one model than under the other. $\text{BF}\_{1,2} > 1$ favours $\mathcal{M}\_1$.
+
+A common scale reads a Bayes factor
+- from 1 to 3 as weak evidence;
+- from 3 to 10 as moderate evidence;
+- above 10 as strong evidence.
+
+For Newcomb's data, $\log \text{BF}\_{t, \text{Gaussian}} \approx 30$: strong evidence for the $t$ model.
+
+---
+
+class: middle
+
+A Bayes factor is a ratio of .bold[marginal likelihoods],
+$$p(\mathbf{x}\_\text{obs} \mid \mathcal{M}) = \int p(\mathbf{x}\_\text{obs} \mid \theta, \mathcal{M}) p(\theta \mid \mathcal{M}) d\theta,$$
+an integral over all the parameters, which rarely has a closed form.
+
+---
+
+class: middle
+
+The .bold[Laplace approximation] replaces the posterior by a Gaussian. Let $\hat{\theta} = \arg\max\_{\theta} p(\theta \mid \mathbf{x}\_\text{obs}, \mathcal{M})$ be the maximum a posteriori (MAP) estimate. Then
+$$p(\theta \mid \mathbf{x}\_\text{obs}, \mathcal{M}) \approx \mathcal{N}(\theta \mid \hat{\theta}, \boldsymbol{\Sigma}),$$
+where $\boldsymbol{\Sigma}$ is the inverse Hessian of $-\log p(\theta \mid \mathbf{x}\_\text{obs}, \mathcal{M})$ at $\hat{\theta}$.
+
+---
+
+class: middle
+
+Bayes' rule, evaluated at $\hat{\theta}$, and the approximation give
 $$\begin{aligned}
-\frac{p(\mathcal{M}\_1 \mid x)}{p(\mathcal{M}\_2 \mid x)} &= \frac{p(x \mid \mathcal{M}\_1)}{p(x \mid \mathcal{M}\_2)} \frac{p(\mathcal{M}\_1)}{p(\mathcal{M}\_2)}
+p(\mathbf{x}\_\text{obs} \mid \mathcal{M}) &= \frac{p(\mathbf{x}\_\text{obs} \mid \hat{\theta}, \mathcal{M}) p(\hat{\theta} \mid \mathcal{M})}{p(\hat{\theta} \mid \mathbf{x}\_\text{obs}, \mathcal{M})} \\\\
+&\approx p(\mathbf{x}\_\text{obs} \mid \hat{\theta}, \mathcal{M}) p(\hat{\theta} \mid \mathcal{M}) (2\pi)^{d/2} |\boldsymbol{\Sigma}|^{1/2},
 \end{aligned}$$
-where the first term on the right-hand side is called the .bold[Bayes factor] $\text{BF}\_{1,2}$.
-
----
-
-class: middle
-
-The Bayes factor quantifies how much more likely the observed data is under one model compared to another.  If $\text{BF}\_{1,2} > 1$, the data favors model $\mathcal{M}\_1$ over $\mathcal{M}\_2$, and vice versa.
-
-A common scale for interpreting Bayes factors is:
-- 1 to 3: Weak evidence
-- 3 to 10: Moderate evidence
-- 10+: Strong evidence
-
-.success[For Newcomb's data, we find that $\log \text{BF}\_{t, \text{Gaussian}} \approx 30$, indicating strong evidence in favor of the .italic[t]-location-scale model over the Gaussian model.]
-
----
-
-class: middle
-
-In practice, evaluating Bayes factors requires computing the .bold[marginal likelihoods] $$p(x \mid \mathcal{M}\_i) = \int p(x \mid \theta, \mathcal{M}\_i) p(\theta \mid \mathcal{M}\_i) d\theta,$$ which is typically challenging, even for simple models.
-
----
-
-class: middle
-
-One practical approach to approximate the marginal likelihood is the .bold[Laplace approximation].
-
-Let $\hat{\theta} = \arg\max\_{\theta} p(\theta \mid x, \mathcal{M})$ be the MAP estimate. The Laplace approximation approximates the posterior as
-$$p(\theta \mid x, \mathcal{M}) \approx \mathcal{N}(\theta \mid \hat{\theta}, \Sigma)$$
-where $\Sigma$ is the inverse Hessian of $-\log p(\theta \mid x, \mathcal{M})$ evaluated at $\hat{\theta}$.
-
----
-
-class: middle
-
-Using this approximation, the marginal likelihood can be approximated as
-$$\begin{aligned}
-p(x \mid \mathcal{M}) &= \frac{p(x \mid \hat{\theta}, \mathcal{M}) p(\hat{\theta} \mid \mathcal{M})}{p(\hat{\theta} \mid x, \mathcal{M})} \\\\
-&\approx p(x \mid \hat{\theta}, \mathcal{M}) p(\hat{\theta} \mid \mathcal{M}) (2\pi)^{d/2} |\Sigma|^{1/2}
-\end{aligned}$$
-where $(2\pi)^{d/2} |\Sigma|^{1/2}$ is the inverse posterior density at the MAP estimate under the Laplace approximation.
+where $d$ is the number of parameters and $(2\pi)^{-d/2} |\boldsymbol{\Sigma}|^{-1/2}$ is the density of the Gaussian at its mode.
 
 ---
 
@@ -302,16 +280,17 @@ class: middle
 
 .center.width-10[![](./figures/lec7/razor.png)]
 
-Since the marginal likelihood integrates over all parameter values, using it for model comparison automatically implements a form of Bayesian .bold[Occam's razor]: simpler models with less capacity are favored unless the data strongly supports the need for a more complex model.
+The marginal likelihood averages the likelihood over the prior. A flexible model spreads its prior over many data sets, and gives each a small probability. Comparing marginal likelihoods therefore implements a Bayesian .bold[Occam's razor]: a simpler model is preferred unless the data require a more flexible one.
 
 ---
 
 class: middle
 
+.italic[Example.] Polynomial regression of degree 3 and 7, on 20 noisy points.
+
 .center.width-70[![](./figures/lec7/polynomial-fit.png)]
 
-Polynomial regression fits of varying degrees to noisy data.
-The marginal likelihood favors the 3-degree model ($\log p(x \mid \mathcal{M}) \approx -26$) over the 7-degree model ($\log p(x \mid \mathcal{M}) \approx -45$), balancing fit and complexity, even if the 7-degree model includes the 3-degree model as a special case.
+The marginal likelihood favours degree 3 ($\log p(\mathbf{x}\_\text{obs} \mid \mathcal{M}) \approx -26$) over degree 7 ($\approx -45$), although degree 7 contains degree 3 as a special case.
 
 ---
 
@@ -319,39 +298,27 @@ class: middle
 
 ## Cross-validation
 
-An alternative approach to model comparison is .bold[cross-validation], which estimates the predictive performance of models on held-out data.
+.bold[Cross-validation] compares models by how well they predict data they were not fitted on.
 
-Assume we have a dataset $x\_{1:N}$ and we want to evaluate how well a model $\mathcal{M}$ predicts unseen data.
+In .bold[$k$-fold cross-validation], the data are split into $k$ folds of $N / k$ observations. Each fold serves once as the validation set, and the other $k - 1$ folds as the training set. The scores are averaged over the $k$ splits.
 
----
-
-class: middle
-
-The most common form of cross-validation is .bold[k-fold cross-validation], where the data $x\_{1:N}$ is partitioned into $k$ equally sized folds of $N/k$ observations each. 
-
-Each fold is used once as a validation set while the remaining $k-1$ folds form the training set. The predictive performance is averaged over the $k$ folds.
-
-<br>
-
-.center.width-50[![](./figures/lec7/kfold.png)]
+.center.width-70[![](./figures/lec7/kfold.png)]
 
 ---
 
 class: middle
 
-A built-in performance metric for Bayesian models is the .bold[expected log predictive density (ELPD)], defined as
-$$\mathbb{E}\_{p\_{\text{true}}(x')}[\log p(x' | x)]$$
-where $p\_{\text{true}}(x')$ is the true data-generating distribution and $p(x' | x)$ is the posterior predictive distribution given observed data $x$ (those in the training set).
+The score of a Bayesian model is the .bold[expected log predictive density] (ELPD),
+$$\mathbb{E}\_{p\_r(\mathbf{x}')}[\log p(\mathbf{x}' \mid \mathbf{x}\_\text{obs})],$$
+where $p\_r$ is the data distribution and $p(\mathbf{x}' \mid \mathbf{x}\_\text{obs})$ is the posterior predictive distribution, fitted on the training set. Cross-validation estimates the expectation with the validation set.
 
-ELPD ideally combines with cross-validation, as held-out data can be used to estimate the expectation.
-
-.success[For Newcomb's data, using 5-fold cross-validation, we find that the ELPD for the .italic[t]-location-scale model (EPLD=$-48$) is higher than that of the Gaussian model (EPLD=$-68$), confirming its superior predictive performance.]
+For Newcomb's data, 5-fold cross-validation gives an ELPD of $-48$ for the $t$ model and $-68$ for the Gaussian model.
 
 ---
 
 class: middle
 
-Note that approximating the posterior distribution by a point estimate (e.g., MAP) reduces ELPD to the familiar .bold[log-likelihood] evaluated on held-out data.
+If the posterior is replaced by a point estimate $\hat{\theta}$, the ELPD reduces to the log-likelihood $\log p(\mathbf{x}' \mid \hat{\theta})$ of the held-out data.
 
 ---
 
