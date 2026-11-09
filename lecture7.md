@@ -28,6 +28,15 @@ class: middle
 
 class: middle
 
+The critique of a fitted model asks two questions.
+
+- Can the computation be trusted? Diagnostics and calibration check that the sampler draws from the posterior of the model.
+- Does the model explain the data? Only the data can tell. A sampler can be exact for a model that is wrong, and pass every check of the computation.
+
+---
+
+class: middle
+
 ## Newcomb's experiment (1882)
 
 Simon Newcomb measured the speed of light with a rotating mirror. He recorded $N = 66$ measurements of the time light takes to travel a known distance.
@@ -66,7 +75,11 @@ class: middle
 The posterior mean of $\mu$ estimates the passage time, in nanoseconds above 24800 ns,
 $$\hat{\mu} = \frac{1}{M} \sum\_{m=1}^M \mu^{(m)} = 26.199182694915095.$$
 
-Most of these digits are noise: the posterior standard deviation of $\mu$ is about 1.4 ns. Report no more digits than the uncertainty supports.
+Two uncertainties decide which digits mean something:
+- the .bold[Monte Carlo standard error] $\text{sd}(\mu^{(m)}) / \sqrt{\text{ESS}}$ of the average, where the effective sample size ESS counts the independent samples with the same precision; here about 0.01 ns, with $\text{ESS} \approx 9000$;
+- the posterior standard deviation of $\mu$, about 1.4 ns, the uncertainty about $\mu$ itself.
+
+The second dominates. Report $\mu = 26.2 \pm 1.4$ ns.
 
 ---
 
@@ -92,6 +105,8 @@ The probability is over $\mu$, with the data fixed. A confidence interval instea
 class: middle
 
 ## Posterior predictive checks
+
+Before any data are observed, a prior predictive check simulates data from the prior predictive distribution $p(\mathbf{x}) = \int p(\mathbf{x} \mid \theta) p(\theta) d\theta$, and compares them with what is known. After the data, the same simulation with the posterior in place of the prior checks the fitted model.
 
 The .bold[posterior predictive distribution] of replicated data $\mathbf{x}^\text{rep}$ is
 $$p(\mathbf{x}^\text{rep} \mid \mathbf{x}\_\text{obs}) = \int p(\mathbf{x}^\text{rep} \mid \theta) p(\theta \mid \mathbf{x}\_\text{obs}) d\theta.$$
@@ -139,7 +154,7 @@ The .bold[Bayesian p-value] of a test statistic $T$ is
 $$P(T(\mathbf{x}^\text{rep}) \geq T(\mathbf{x}\_\text{obs}) \mid \mathbf{x}\_\text{obs}) = \int P(T(\mathbf{x}^\text{rep}) \geq T(\mathbf{x}\_\text{obs}) \mid \theta) p(\theta \mid \mathbf{x}\_\text{obs}) d\theta.$$
 A value close to 0 or 1 signals a misfit for $T$.
 
-A frequentist p-value $P(T(\mathbf{x}^\text{rep}) \geq T(\mathbf{x}\_\text{obs}) \mid \theta)$ conditions on a single value of $\theta$. The Bayesian p-value averages over the posterior.
+A frequentist p-value fixes $\theta$, at a hypothesized value $\theta^\*$ or at the estimate $\hat{\theta}$, and computes $P(T(\mathbf{x}^\text{rep}) \geq T(\mathbf{x}\_\text{obs}) \mid \theta)$ over data sets drawn from $p(\mathbf{x} \mid \theta)$. A test at level 5% rejects $\theta$ when this probability falls below 0.05. The Bayesian p-value averages it over the posterior instead.
 
 ---
 
@@ -202,7 +217,7 @@ class: middle
 
 class: middle
 
-.italic[Example.] A Student's $t$ model gives large deviations a larger probability than the Gaussian model:
+.italic[Example.] The two lowest measurements could be deleted as outliers, but nothing in the data says they are errors. A heavy-tailed model keeps them: a Student's $t$ gives large deviations a larger probability than a Gaussian.
 
 .center.width-50[![](./figures/lec7/newcomb-model2.svg)]
 
@@ -255,15 +270,19 @@ class: middle
 
 A Bayes factor is a ratio of .bold[marginal likelihoods],
 $$p(\mathbf{x}\_\text{obs} \mid \mathcal{M}) = \int p(\mathbf{x}\_\text{obs} \mid \theta, \mathcal{M}) p(\theta \mid \mathcal{M}) d\theta,$$
-an integral over all the parameters, which rarely has a closed form.
+the probability of the data averaged over the prior. It is the normalizer of Bayes' rule,
+$$p(\theta \mid \mathbf{x}\_\text{obs}, \mathcal{M}) = \frac{p(\mathbf{x}\_\text{obs} \mid \theta, \mathcal{M}) p(\theta \mid \mathcal{M})}{p(\mathbf{x}\_\text{obs} \mid \mathcal{M})}.$$
+
+The integral rarely has a closed form, and MCMC never computes it: it samples the posterior from the unnormalized density alone.
 
 ---
 
 class: middle
 
-The .bold[Laplace approximation] replaces the posterior by a Gaussian. Let $\hat{\theta} = \arg\max\_{\theta} p(\theta \mid \mathbf{x}\_\text{obs}, \mathcal{M})$ be the maximum a posteriori (MAP) estimate. Then
-$$p(\theta \mid \mathbf{x}\_\text{obs}, \mathcal{M}) \approx \mathcal{N}(\theta \mid \hat{\theta}, \boldsymbol{\Sigma}),$$
-where $\boldsymbol{\Sigma}$ is the inverse Hessian of $-\log p(\theta \mid \mathbf{x}\_\text{obs}, \mathcal{M})$ at $\hat{\theta}$.
+The .bold[Laplace approximation] replaces the posterior by a Gaussian. Let $\hat{\theta} = \arg\max\_{\theta} p(\theta \mid \mathbf{x}\_\text{obs}, \mathcal{M})$ be the mode of the posterior, the maximum a posteriori (MAP) estimate. At the mode the gradient vanishes, and a second-order Taylor expansion of the log posterior is a parabola,
+$$\log p(\theta \mid \mathbf{x}\_\text{obs}, \mathcal{M}) \approx \log p(\hat{\theta} \mid \mathbf{x}\_\text{obs}, \mathcal{M}) - \frac{1}{2} (\theta - \hat{\theta})^T \boldsymbol{\Sigma}^{-1} (\theta - \hat{\theta}),$$
+where $\boldsymbol{\Sigma}^{-1}$ is the Hessian of $-\log p(\theta \mid \mathbf{x}\_\text{obs}, \mathcal{M})$ at $\hat{\theta}$. Exponentiating,
+$$p(\theta \mid \mathbf{x}\_\text{obs}, \mathcal{M}) \approx \mathcal{N}(\theta \mid \hat{\theta}, \boldsymbol{\Sigma}).$$
 
 ---
 
@@ -292,7 +311,7 @@ class: middle
 
 .center.width-70[![](./figures/lec7/polynomial-fit.png)]
 
-The marginal likelihood favours degree 3 ($\log p(\mathbf{x}\_\text{obs} \mid \mathcal{M}) \approx -26$) over degree 7 ($\approx -45$), although degree 7 contains degree 3 as a special case.
+The marginal likelihood favours degree 3 ($\log p(\mathbf{x}\_\text{obs} \mid \mathcal{M}) \approx -67$) over degree 7 ($\approx -86$), although degree 7 contains degree 3 as a special case.
 
 ---
 
