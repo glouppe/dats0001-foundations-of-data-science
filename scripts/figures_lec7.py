@@ -253,6 +253,131 @@ def residuals_figures(thetas, reps):
     save(fig, "newcomb-residuals.png")
 
 
+def hpd(samples, mass=.95):
+    """The narrowest interval holding a fraction `mass` of the samples."""
+    d = np.sort(samples)
+    k = int(np.floor(mass * len(d)))
+    j = np.argmin(d[k:] - d[:len(d) - k])
+    return d[j], d[j + k]
+
+
+def intervals_figure(thetas):
+    """Posterior histograms of mu and sigma, with the 95% equal-tailed and HPD intervals."""
+    fig, axes = plt.subplots(1, 2, figsize=(W, 2.9), dpi=200)
+    for ax, values, label in zip(axes, thetas.T, [r"$\mu$", r"$\sigma$"]):
+        ax.hist(values, bins=60, density=True, color=LIGHT, lw=0)
+        top = ax.get_ylim()[1]
+        for (lo, hi), color, name, y in [(np.percentile(values, [2.5, 97.5]), BLUE,
+                                          "equal-tailed", 1.06), (hpd(values), ORANGE, "HPD", 1.16)]:
+            ax.plot([lo, hi], [y * top] * 2, color=color, lw=3, solid_capstyle="butt",
+                    label="95%% %s" % name)
+        ax.set_ylim(0, 1.22 * top)
+        ax.set_xlabel(label)
+        ax.set_yticks([])
+        ax.spines["left"].set_visible(False)
+        tidy(ax)
+    fig.legend(*axes[0].get_legend_handles_labels(), frameon=False, loc="lower center", ncol=2)
+    fig.tight_layout(rect=(0, .1, 1, 1))
+    save(fig, "newcomb-intervals.png")
+    for values, name in zip(thetas.T, ["mu", "sigma"]):
+        print("  %s: equal-tailed [%.2f, %.2f], HPD [%.2f, %.2f]"
+              % (name, *np.percentile(values, [2.5, 97.5]), *hpd(values)))
+
+
+def predictive_figure(gaussian, student):
+    """The data against the posterior predictive densities of both models, on a log scale."""
+    xs = np.linspace(-60, 60, 600)
+    pg = norm.pdf(xs[:, None], gaussian[:, 0], gaussian[:, 1]).mean(1)
+    pt = t.pdf(xs[:, None], student[:, 2], student[:, 0], student[:, 1]).mean(1)
+    fig, ax = plt.subplots(figsize=(W, 2.9), dpi=200)
+    ax.hist(NEWCOMB, bins=np.arange(-60, 62, 2), density=True, color=LIGHT, lw=0,
+            label="measurements")
+    ax.plot(xs, pg, color=BLUE, lw=1.6, label="Gaussian model")
+    ax.plot(xs, pt, color=GREEN, lw=1.6, label="$t$ model")
+    ax.set_yscale("log")
+    ax.set_ylim(1e-5, .3)
+    ax.set_xlabel(XLABEL)
+    ax.set_ylabel("predictive density")
+    ax.legend(frameon=False, loc="upper left")
+    tidy(ax)
+    fig.tight_layout()
+    save(fig, "newcomb-predictive.png")
+
+
+def laplace_figure(student):
+    """Posterior of log nu under the t model, against the marginal of the Laplace approximation."""
+    from numdifftools import Hessian
+    neg = lambda th: -log_posterior_t(th, NEWCOMB)  # noqa: E731
+    mode = minimize(neg, [27., 4., 1.], method="Nelder-Mead",
+                    options=dict(xatol=1e-8, fatol=1e-10, maxiter=20000)).x
+    cov = np.linalg.inv(Hessian(neg)(mode))
+    values = np.log(student[:, 2])
+    xs = np.linspace(-.5, 3, 400)
+    fig, ax = plt.subplots(figsize=(W, 2.9), dpi=200)
+    ax.hist(values, bins=60, range=(-.5, 3), density=True, color=LIGHT, lw=0,
+            label="posterior samples (MCMC)")
+    ax.plot(xs, norm.pdf(xs, mode[2], np.sqrt(cov[2, 2])), color=BLUE, lw=1.6,
+            label="Laplace approximation")
+    ax.axvline(mode[2], color=GREY, lw=1, ls=(0, (4, 3)), label="mode")
+    ax.set_xlabel(r"$\log \nu$")
+    ax.set_yticks([])
+    ax.spines["left"].set_visible(False)
+    ax.legend(frameon=False, loc="upper right")
+    tidy(ax)
+    fig.tight_layout()
+    save(fig, "laplace.png")
+
+
+def occam():
+    """MacKay's picture: the marginal likelihood of a simple and of a flexible model, over all
+    possible data sets."""
+    xs = np.linspace(0, 10, 500)
+    simple = norm.pdf(xs, 3, .9)
+    flexible = .5 * norm.pdf(xs, 3.5, 2.6) + .5 * norm.pdf(xs, 6.5, 2.6)
+    fig, ax = plt.subplots(figsize=(W, 2.6), dpi=200)
+    ax.plot(xs, simple, color=BLUE, lw=1.8, label="simple model")
+    ax.plot(xs, flexible, color=GREEN, lw=1.8, label="flexible model")
+    ax.axvline(3.4, color=ORANGE, lw=1.6)
+    ax.text(3.55, .43, r"$\mathbf{x}_\mathrm{obs}$", color=ORANGE)
+    ax.set_xlabel("all possible data sets")
+    ax.set_ylabel(r"$p(\mathbf{x} \mid \mathcal{M})$")
+    ax.set_xticks([])
+    ax.set_yticks([])
+    ax.set_xlim(0, 10)
+    ax.set_ylim(0, .48)
+    ax.legend(frameon=False, loc="upper right")
+    tidy(ax)
+    fig.tight_layout()
+    save(fig, "occam.png")
+
+
+def elpd_figure(k=5, seed=42):
+    """Pointwise log predictive densities of 5-fold cross-validation, t model minus Gaussian."""
+    from scipy.special import logsumexp
+    from sklearn.model_selection import KFold
+    lppd = np.zeros((2, len(NEWCOMB)))
+    for train, test in KFold(n_splits=k, shuffle=True, random_state=seed).split(NEWCOMB):
+        g = sample(log_posterior_gaussian, [26., 10.], NEWCOMB[train], steps=6000)
+        s = sample(log_posterior_t, [26., 5., np.log(3.)], NEWCOMB[train], steps=6000)
+        x = NEWCOMB[test][None, :]
+        ll = [norm.logpdf(x, g[:, :1], g[:, 1:2]),
+              t.logpdf(x, np.exp(s[:, 2:3]), s[:, :1], s[:, 1:2])]
+        for j in range(2):
+            lppd[j, test] = logsumexp(ll[j], axis=0) - np.log(len(ll[j]))
+    diff = lppd[1] - lppd[0]
+    print("  ELPD: Gaussian %.0f, t %.0f; two lowest points account for %.0f of %.0f"
+          % (lppd[0].sum(), lppd[1].sum(), np.sort(diff)[-2:].sum(), diff.sum()))
+    fig, ax = plt.subplots(figsize=(W, 2.9), dpi=200)
+    ax.axhline(0, color=LIGHT, lw=1)
+    ax.scatter(NEWCOMB, diff, s=22, color=BLUE, zorder=3)
+    ax.set_xlabel(XLABEL)
+    ax.set_ylabel("$t$ minus Gaussian")
+    ax.set_title("log predictive density of each held-out measurement")
+    tidy(ax)
+    fig.tight_layout()
+    save(fig, "elpd-pointwise.png")
+
+
 def newcomb():
     data_figure()
     thetas = sample(log_posterior_gaussian, [26., 10.], NEWCOMB)
@@ -260,6 +385,8 @@ def newcomb():
           % (len(thetas), thetas[:, 0].mean(), thetas[:, 0].std(),
              *np.percentile(thetas[:, 0], [2.5, 97.5])))
     corner_plot(thetas, [r"$\mu$", r"$\sigma$"], "newcomb-posterior.png", 45)
+    intervals_figure(thetas)
+    gaussian = thetas
 
     rng = np.random.default_rng(1)
     draws = thetas[rng.choice(len(thetas), 4000, replace=False)]
@@ -270,6 +397,8 @@ def newcomb():
 
     thetas = sample(log_posterior_t, [26., 5., np.log(3.)], NEWCOMB)
     thetas[:, 2] = np.exp(thetas[:, 2])
+    predictive_figure(gaussian, thetas)
+    laplace_figure(thetas)
     print("  t model: %d draws, mu %.2f, sigma %.2f, nu median %.2f"
           % (len(thetas), thetas[:, 0].mean(), thetas[:, 1].mean(), np.median(thetas[:, 2])))
     corner_plot(thetas, [r"$\mu$", r"$\sigma$", r"$\nu$"], "newcomb-model2-posterior.png", 55)
@@ -336,4 +465,6 @@ if __name__ == "__main__":
     graphical_models()
     newcomb()
     polynomials()
+    occam()
     kfold()
+    elpd_figure()
