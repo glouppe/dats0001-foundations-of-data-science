@@ -62,11 +62,9 @@ x\_i &\sim \mathcal{N}(\mu, \sigma^2) \quad \text{for } i = 1, \ldots, N.
 
 class: middle
 
-MCMC gives samples $(\mu^{(m)}, \sigma^{(m)})$, $m = 1, \ldots, M$, from the posterior $p(\mu, \sigma \mid \mathbf{x}\_\text{obs})$.
-
 .center.width-45[![](./figures/lec7/newcomb-posterior.png)]
 
-.center[Posterior samples, with the 2.5%, 50% and 97.5% quantiles.]
+.center[MCMC samples $(\mu^{(m)}, \sigma^{(m)})$, $m = 1, \ldots, M$, from the posterior $p(\mu, \sigma \mid \mathbf{x}\_\text{obs})$ <br>of the Gaussian model, with the 2.5%, 50% and 97.5% quantiles.]
 
 ---
 
