@@ -197,11 +197,9 @@ x\_i &= \mu + \sigma \epsilon\_i \quad \text{for } i = 1, \ldots, N.
 
 class: middle
 
-MCMC gives samples from the posterior $p(\mu, \sigma, \nu \mid \mathbf{x}\_\text{obs})$.
-
 .center.width-55[![](./figures/lec7/newcomb-model2-posterior.png)]
 
-.center[Posterior samples of the $t$ model, with the 2.5%, 50% and 97.5% quantiles.]
+.center[MCMC samples from the posterior $p(\mu, \sigma, \nu \mid \mathbf{x}\_\text{obs})$ of the $t$ model, <br>with the 2.5%, 50% and 97.5% quantiles.]
 
 ---
 
