@@ -21,7 +21,7 @@ Materials for DATS0001 Foundations of Data Science, ULiège, Fall 2026.
 | October 26 | _No lecture (Toussaint break)_ |
 | November 2 | _No lecture_ |
 | November 9 | _No lecture_ |
-| November 16 | Lecture 7: Model criticism and validation<br>`nb07a`: Model checking<br>`nb07b`: Model comparison<br>`nb07c`: Bayesian Occam's razor  |
+| November 16 | Lecture 7: Model criticism and validation<br>`nb07a`: Model checking<br>`nb07b`: Model comparison<br>`nb07c`: Bayesian Occam's razor<br>Reading: Gelman, Vehtari, McElreath et al, [Bayesian Workflow](https://avehtari.github.io/Bayesian-Workflow/), 2026 [Chapters 8, 9]<br>Reading: Vehtari, Gelman & Gabry, [Practical Bayesian model evaluation using leave-one-out cross-validation and WAIC](https://arxiv.org/abs/1507.04544), 2017 |
 | November 23 | Lecture 8: Expectation-maximization<br>`nb08`: Expectation-maximization<br>Reading: Dempster et al, [Maximum Likelihood from Incomplete Data via EM](https://www.jstor.org/stable/2984875), 1977 |
 | November 30 | Lecture 9: Variational inference<br>`nb09a`: Coordinate ascent variational inference<br>`nb09b`: Automatic differentiation variational inference<br>Reading: Kucukelbir et al, [Automatic differentiation variational inference](https://arxiv.org/abs/1603.00788), 2016 |
 | December 7 | Lecture 10: Simulation-based inference |

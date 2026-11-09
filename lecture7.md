@@ -2,7 +2,7 @@ class: middle, center, title-slide
 
 # Foundations of Data Science
 
-Lecture 7: Model criticism and comparison
+Lecture 7: Model criticism and validation
 
 <br><br>
 Prof. Gilles Louppe<br>
@@ -247,6 +247,8 @@ A common scale reads a Bayes factor
 
 For Newcomb's data, $\log \text{BF}\_{t, \text{Gaussian}} \approx 30$: strong evidence for the $t$ model.
 
+The Bayes factor depends on the priors. A prior on $\mu$ ten times wider leaves it unchanged, since both models share it. A prior on $\nu$ ten times wider, $\text{Gamma}(2, 0.01)$, lowers $\log \text{BF}\_{t, \text{Gaussian}}$ to about 25.
+
 ---
 
 class: middle
@@ -312,7 +314,7 @@ The score of a Bayesian model is the .bold[expected log predictive density] (ELP
 $$\mathbb{E}\_{p\_r(\mathbf{x}')}[\log p(\mathbf{x}' \mid \mathbf{x}\_\text{obs})],$$
 where $p\_r$ is the data distribution and $p(\mathbf{x}' \mid \mathbf{x}\_\text{obs})$ is the posterior predictive distribution, fitted on the training set. Cross-validation estimates the expectation with the validation set.
 
-For Newcomb's data, 5-fold cross-validation gives an ELPD of $-48$ for the $t$ model and $-68$ for the Gaussian model.
+For Newcomb's data, 5-fold cross-validation, summed over the 66 held-out measurements, gives $-225$ for the $t$ model and $-287$ for the Gaussian model.
 
 ---
 
