@@ -64,7 +64,7 @@ class: middle
 
 .center.width-45[![](./figures/lec7/newcomb-posterior.png)]
 
-.center[MCMC samples $(\mu^{(m)}, \sigma^{(m)})$, $m = 1, \ldots, M$, from the posterior $p(\mu, \sigma \mid \mathbf{x}\_\text{obs})$ of the Gaussian model, with the 2.5%, 50% and 97.5% quantiles.]
+.center[MCMC samples $(\mu^{(m)}, \sigma^{(m)})$, $m = 1, \ldots, M$, from the posterior $p(\mu, \sigma \mid \mathbf{x}\_\text{obs})$ <br>of the Gaussian model, with the 2.5%, 50% and 97.5% quantiles.]
 
 ---
 
@@ -159,7 +159,7 @@ For the Gaussian model, $r\_i = (x\_i - \mu) / \sigma$. A .bold[quantile-quantil
 
 .center.width-70[![](./figures/lec7/newcomb-residuals.png)]
 
-.center[Residuals of observed and replicated data (left), and their Q-Q plot (right). The observed residuals have a heavier lower tail and a narrower core.]
+.center[Residuals of observed and replicated data (left), and their Q-Q plot (right). <br>The observed residuals have a heavier lower tail and a narrower core.]
 
 ---
 
@@ -197,7 +197,7 @@ class: middle
 
 .center.width-55[![](./figures/lec7/newcomb-model2-posterior.png)]
 
-.center[MCMC samples from the posterior $p(\mu, \sigma, \nu \mid \mathbf{x}\_\text{obs})$ of the $t$ model, with the 2.5%, 50% and 97.5% quantiles.]
+.center[MCMC samples from the posterior $p(\mu, \sigma, \nu \mid \mathbf{x}\_\text{obs})$ of the $t$ model, <br>with the 2.5%, 50% and 97.5% quantiles.]
 
 ---
 
@@ -205,7 +205,7 @@ class: middle
 
 .center.width-70[![](./figures/lec7/newcomb-predictive.png)]
 
-.center[Posterior predictive densities of the two models, on a log scale. The Gaussian gives the two lowest measurements almost no probability.]
+.center[Posterior predictive densities of the two models, on a log scale. <br>The Gaussian gives the two lowest measurements almost no probability.]
 
 ---
 
