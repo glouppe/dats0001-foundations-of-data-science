@@ -106,7 +106,7 @@ def graphical_models():
 
 # Newcomb's experiment ------------------------------------------------------------------
 
-def newcomb_animation(distance=3721., time=24.83e-6, turns=230., exaggerate=5, path=None):
+def newcomb_animation(distance=3721., time=24.83e-6, turns=230., exaggerate=10, path=None):
     """Newcomb's rotating-mirror measurement (1882), as a GIF. Light leaves the rotating mirror
     at Fort Myer, is sent back by a fixed mirror at the base of the Washington Monument, 3721 m
     away, and returns about 24.83 microseconds later. Meanwhile the mirror, a square steel prism
@@ -120,6 +120,7 @@ def newcomb_animation(distance=3721., time=24.83e-6, turns=230., exaggerate=5, p
     alpha = omega * time                            # rad, about 2 degrees
     shown = exaggerate * alpha
     base = -.85                                     # height of the fixed mirror on the map
+    PRE, TRIP, POST = 8, 50, 10                     # frames before, during and after the trip
     fixed = distance - 70                           # its position, just before the Monument
     fig, (ax, mx) = plt.subplots(1, 2, figsize=(W, 3.0), dpi=150,
                                  gridspec_kw=dict(width_ratios=[1.9, 1]))
@@ -177,7 +178,8 @@ def newcomb_animation(distance=3721., time=24.83e-6, turns=230., exaggerate=5, p
         ax.set_axis_off()
 
         # Close-up of the rotating mirror, angles exaggerated.
-        phi = shown * (u if stage == 1 else 0 if stage == 0 else 1)
+        # The mirror turns at a constant rate in every frame, before, during and after the trip.
+        phi = shown * {0: (u - 1) * PRE / TRIP, 1: u, 2: 1 + u * POST / TRIP}[stage]
         # The light meets the middle of the lower-right face of the prism, at p0 when the
         # mirror has not turned; the returning light meets the turned face at q.
         p0 = np.array([.1, -.1])
@@ -191,8 +193,9 @@ def newcomb_animation(distance=3721., time=24.83e-6, turns=230., exaggerate=5, p
             mx.plot([p0[0], p0[0]], [-1, -1 + u * (p0[1] + 1)], color=ORANGE, lw=1.5)
         else:
             mx.plot([p0[0], p0[0]], [-1, p0[1]], color=ORANGE, lw=1.5, alpha=.4)
+            # The light has left the mirror: its path stays, faded, while the mirror turns on.
             mx.plot([p0[0], 1.1], [p0[1], p0[1]], color=ORANGE, lw=1.5,
-                    alpha=.4 if stage == 2 else 1)
+                    alpha=1 if stage == 1 and u < .06 else .4)
         out = reflect(np.array([-1., 0]), shown)
         tele = q + .9 * out
         mx.plot([q[0], tele[0]], [q[1], tele[1]], color=GREY, lw=.6, ls=(0, (3, 3)))
@@ -209,14 +212,14 @@ def newcomb_animation(distance=3721., time=24.83e-6, turns=230., exaggerate=5, p
         mx.add_patch(mirror(phi))
         mx.text(1.12, .08, "to the\nMonument", ha="right", va="bottom", fontsize=9)
         mx.set_title(r"rotating mirror (angles $\times %d$)" % exaggerate, fontsize=10)
-        mx.set_xlim(-.6, 1.15)
+        mx.set_xlim(-.6, 1.3)
         mx.set_ylim(-1.35, .55)
         mx.set_aspect("equal")
         mx.set_axis_off()
         fig.subplots_adjust(left=.01, right=.99, bottom=.02, top=.92, wspace=.05)
 
-    plan = ([(0, u) for u in np.linspace(0, 1, 8)] + [(1, u) for u in np.linspace(0, 1, 50)]
-            + [(2, u) for u in np.linspace(0, 1, 10)])
+    plan = ([(0, u) for u in np.linspace(0, 1, PRE)] + [(1, u) for u in np.linspace(0, 1, TRIP)]
+            + [(2, u) for u in np.linspace(0, 1, POST)])
     durations = [80] * (len(plan) - 1) + [4000]
     images = []
     for stage, u in plan:
