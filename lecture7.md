@@ -45,7 +45,7 @@ Simon Newcomb sent light from a rotating mirror at Fort Myer to a fixed mirror a
 class: middle
 
 .center.width-70[![](./figures/lec7/newcomb-data.png)]
-.center[Newcomb's $N = 66$ measurements of the passage time, in nanoseconds above 24800 ns.]
+.center[Newcomb's $N = 66$ measurements of the passage time, <br>in nanoseconds above 24800 ns.]
 
 ---
 
