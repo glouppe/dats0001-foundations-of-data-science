@@ -178,23 +178,34 @@ def newcomb_animation(distance=3721., time=24.83e-6, turns=230., exaggerate=5, p
 
         # Close-up of the rotating mirror, angles exaggerated.
         phi = shown * (u if stage == 1 else 0 if stage == 0 else 1)
-        mx.plot([0, 0], [-1, 0], color=GREY, lw=.6, ls=(0, (3, 3)))
-        mx.text(-.06, -1, "light\nsource", ha="right", va="center", fontsize=9)
+        # The light meets the middle of the lower-right face of the prism, at p0 when the
+        # mirror has not turned; the returning light meets the turned face at q.
+        p0 = np.array([.1, -.1])
+        c, s_ = np.cos(shown), np.sin(shown)
+        a, b = c * p0[0] - s_ * p0[1], s_ * p0[0] + c * p0[1]
+        n = np.array([np.cos(-np.pi / 4 + shown), np.sin(-np.pi / 4 + shown)])
+        q = np.array([a + (b - p0[1]) * n[1] / n[0], p0[1]])
+        mx.plot([p0[0], p0[0]], [-1, p0[1]], color=GREY, lw=.6, ls=(0, (3, 3)))
+        mx.text(p0[0] - .06, -1, "light\nsource", ha="right", va="center", fontsize=9)
         if stage == 0:
-            mx.plot([0, 0], [-1, -1 + u * .8], color=ORANGE, lw=1.5)
+            mx.plot([p0[0], p0[0]], [-1, -1 + u * (p0[1] + 1)], color=ORANGE, lw=1.5)
         else:
-            mx.plot([0, 0], [-1, 0], color=ORANGE, lw=1.5, alpha=.4)
-            mx.plot([0, 1.1], [0, 0], color=ORANGE, lw=1.5, alpha=.4 if stage == 2 else 1)
+            mx.plot([p0[0], p0[0]], [-1, p0[1]], color=ORANGE, lw=1.5, alpha=.4)
+            mx.plot([p0[0], 1.1], [p0[1], p0[1]], color=ORANGE, lw=1.5,
+                    alpha=.4 if stage == 2 else 1)
         out = reflect(np.array([-1., 0]), shown)
-        mx.plot([0, out[0]], [0, out[1]], color=GREY, lw=.6, ls=(0, (3, 3)))
-        mx.text(out[0] + .05, out[1], "telescope", ha="left", va="center", fontsize=9)
+        tele = q + .9 * out
+        mx.plot([q[0], tele[0]], [q[1], tele[1]], color=GREY, lw=.6, ls=(0, (3, 3)))
+        mx.text(tele[0] + .05, tele[1], "telescope", ha="left", va="center", fontsize=9)
         if stage == 2:
-            mx.plot([0, u * out[0]], [0, u * out[1]], color=ORANGE, lw=1.5)
+            mx.plot([1.1, q[0]], [p0[1], q[1]], color=ORANGE, lw=1.5)
+            mx.plot([q[0], q[0] + u * (tele[0] - q[0])], [q[1], q[1] + u * (tele[1] - q[1])],
+                    color=ORANGE, lw=1.5)
             if u > .3:
-                mx.add_patch(Arc((0, 0), .9, .9, theta1=270,
+                mx.add_patch(Arc(q, .8, .8, theta1=270,
                                  theta2=np.degrees(np.arctan2(out[1], out[0])) + 360,
                                  color=GREY, lw=.8))
-                mx.text(.1, -.6, r"$2\alpha$", fontsize=11)
+                mx.text(q[0] + .08, q[1] - .52, r"$2\alpha$", fontsize=11)
         mx.add_patch(mirror(phi))
         mx.text(1.12, .08, "to the\nMonument", ha="right", va="bottom", fontsize=9)
         mx.set_title(r"rotating mirror (angles $\times %d$)" % exaggerate, fontsize=10)
