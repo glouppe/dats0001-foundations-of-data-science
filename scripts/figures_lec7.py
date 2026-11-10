@@ -108,125 +108,159 @@ def graphical_models():
 
 def newcomb_animation(distance=3721., time=24.83e-6, turns=230., exaggerate=10, path=None):
     """Newcomb's rotating-mirror measurement (1882), as a GIF. Light leaves the rotating mirror
-    at Fort Myer, is sent back by a fixed mirror at the base of the Washington Monument, 3721 m
-    away, and returns about 24.83 microseconds later. Meanwhile the mirror, a square steel prism
-    driven by air turbines at 200 to 250 turns per second, has turned by an angle alpha, so the
-    returning light leaves at 2 alpha from its way in. The time is alpha / omega. The map is
-    schematic; the angles on the right are drawn `exaggerate` times larger than the real ones."""
-    from matplotlib.patches import Arc, Polygon
+    at Fort Myer, on the heights west of the Potomac, is sent back by a fixed mirror at the base
+    of the Washington Monument, 3721 m away, and returns about 24.83 microseconds later.
+    Meanwhile the mirror, a square steel prism driven by air turbines at 200 to 250 turns per
+    second, has turned by an angle alpha, so the returning light leaves at 2 alpha from its way
+    in. The time is alpha / omega. The profile is schematic, with heights exaggerated; the
+    angles of the close-up are drawn `exaggerate` times larger than the real ones."""
+    from matplotlib.collections import LineCollection
+    from matplotlib.patches import Arc, FancyArrowPatch, Polygon, Rectangle
     from PIL import Image
     path = path or "figures/lec7/newcomb-experiment.gif"
     omega = 2 * np.pi * turns                       # rad/s
     alpha = omega * time                            # rad, about 2 degrees
     shown = exaggerate * alpha
-    base = -.85                                     # height of the fixed mirror on the map
-    PRE, TRIP, POST = 8, 50, 10                     # frames before, during and after the trip
-    fixed = distance - 70                           # its position, just before the Monument
-    fig, (ax, mx) = plt.subplots(1, 2, figsize=(W, 3.0), dpi=150,
-                                 gridspec_kw=dict(width_ratios=[1.9, 1]))
+    PRE, TRIP, POST = 8, 56, 12                     # frames before, during and after the trip
+    GROUND, WATER, STEEL = "#e6e2da", "#cfe1ee", "#9aa5ad"
+    station = np.array([0., .62])                   # the rotating mirror, on the heights
+    fixed = np.array([distance - 60, .05])          # the fixed mirror, at the Monument's base
+    fig = plt.figure(figsize=(W, 3.0), dpi=150)
+    ax = fig.add_axes((0, .02, .64, .96))
+    mx = fig.add_axes((.64, .02, .36, .96))
 
-    def reflect(d, angle):
-        """Direction of a ray d after the face with normal at -45 degrees + angle."""
-        n = np.array([np.cos(-np.pi / 4 + angle), np.sin(-np.pi / 4 + angle)])
-        return d - 2 * (d @ n) * n
+    def ground(ax):
+        x = np.linspace(-700, 4100, 400)
+        heights = (.55 * np.exp(-((x + 80) / 520) ** 2) + .02
+                   - .14 * ((x > 1150) & (x < 2050)) * np.sin(np.pi * np.clip((x - 1150) / 900, 0, 1)) ** .3)
+        ax.fill_between(x, -.6, heights, color=GROUND, lw=0, zorder=1)
+        ax.plot(x, heights, color=GREY, lw=.7, zorder=2)
+        river = (x > 1150) & (x < 2050)
+        ax.fill_between(x[river], heights[river], -.02, color=WATER, lw=0, zorder=2)
+        ax.text(1600, -.25, "Potomac", ha="center", fontsize=9, style="italic", color=BLUE, zorder=3)
 
-    def mirror(phi):
-        """The square prism, with a face normal at -45 degrees + phi."""
-        corners = [(.2 * np.cos(np.pi / 2 * k + phi), .2 * np.sin(np.pi / 2 * k + phi))
-                   for k in range(4)]
-        return Polygon(corners, closed=True, facecolor=LIGHT, edgecolor=GREY, lw=1.2, zorder=3)
+    def monument(ax):
+        x0, w, h = distance, 55, 1.55
+        ax.add_patch(Polygon([(x0 - w, .02), (x0 + w, .02), (x0 + .68 * w, h), (x0, h + .14),
+                              (x0 - .68 * w, h)], closed=True, facecolor="white",
+                             edgecolor=GREY, lw=.8, zorder=3))
+        ax.text(x0, h + .3, "Washington\nMonument", ha="center", va="bottom", fontsize=9, zorder=3)
+
+    def pulse(ax, a, b, f, back=False):
+        """A short bright pulse at fraction f of the way from a to b, with a fading trail."""
+        head = a + f * (b - a)
+        tail = a + max(f - .07, 0) * (b - a)
+        pts = np.linspace(tail, head, 12)
+        segs = np.stack([pts[:-1], pts[1:]], 1)
+        lc = LineCollection(segs, colors=[(*plt.matplotlib.colors.to_rgb(ORANGE), a_)
+                                          for a_ in np.linspace(.05, 1, 11)], lw=3, zorder=6,
+                            capstyle="round")
+        ax.add_collection(lc)
+        ax.plot(*head, "o", color=ORANGE, ms=4.5, zorder=7)
 
     def draw(stage, u):
-        """stage 0: light from the source to the mirror; 1: the round trip, u in [0, 1] of the
-        24.83 microseconds; 2: light from the mirror to the telescope."""
         ax.cla()
         mx.cla()
-        # Map: schematic, with the distance along the line of sight to scale.
-        ax.fill_between([900, 1800], -1, 1.0, color="#d6e6f2", lw=0)
-        ax.text(1350, -.75, "Potomac", ha="center", fontsize=10, color=BLUE)
-        hill = np.linspace(-700, 900, 60)
-        ax.fill_between(hill, -1, -1 + .9 * np.exp(-((hill + 50) / 450) ** 2), color=LIGHT, lw=0)
-        ax.plot([0], [0], "s", color=GREY, ms=6, zorder=4)
-        ax.text(0, .3, "Fort Myer\nrotating mirror", ha="center", fontsize=10)
-        ax.add_patch(Polygon([(distance - 45, -1), (distance + 45, -1), (distance + 30, .9),
-                              (distance, 1.15), (distance - 30, .9)], closed=True,
-                             facecolor=LIGHT, edgecolor=GREY, lw=.8))
-        ax.plot([fixed], [base], "s", color=GREY, ms=5, zorder=4)
-        ax.text(distance, 1.3, "Washington Monument", ha="center", fontsize=10)
-        ax.text(fixed - 90, base + .15, "fixed\nmirror", ha="right", va="bottom", fontsize=9)
-        ax.annotate("", (distance, -1.35), (0, -1.35),
-                    arrowprops=dict(arrowstyle="<->", color=GREY, lw=.8))
-        ax.text(distance / 2, -1.62, "%d m" % distance, ha="center", va="top", fontsize=10)
-        elapsed = 0.
+        # Profile: Fort Myer to the Monument, heights exaggerated.
+        ground(ax)
+        monument(ax)
+        ax.add_patch(Rectangle(station - (35, .05), 70, .1, facecolor=GREY, lw=0, zorder=4))
+        ax.text(*(station + (0, .22)), "Fort Myer", ha="center", va="bottom", fontsize=9)
+        ax.add_patch(Rectangle(fixed - (8, .09), 16, .18, facecolor=GREY, lw=0, zorder=4))
+        ax.plot(*np.array([station, fixed]).T, color=ORANGE, lw=.7, alpha=.25, zorder=5)
+        elapsed = {0: 0., 1: u * time, 2: time}[stage]
         if stage == 1:
-            elapsed = u * time
             f = 2 * u if u < .5 else 2 - 2 * u
-            end = f if u < .5 else 1
-            ax.plot([0, end * fixed], [0, end * base], color=ORANGE, lw=1, alpha=.5)
-            ax.plot([f * fixed], [f * base], "o", color=ORANGE, ms=7, zorder=5)
-        elif stage == 2:
-            elapsed = time
-        ax.text(-650, 2.2, r"time since the light left the mirror: %5.2f $\mu$s" % (elapsed * 1e6),
-                fontsize=10, va="top")
-        ax.text(-650, 1.8, r"angle turned by the mirror: %4.2f$^\circ$"
-                % np.degrees(omega * elapsed), fontsize=10, va="top")
+            if u < .5:
+                pulse(ax, station, fixed, f)
+            else:
+                pulse(ax, fixed, station, 1 - f)
+        ax.annotate("", (distance, -.48), (0, -.48),
+                    arrowprops=dict(arrowstyle="<|-|>", color=GREY, lw=.7, mutation_scale=7))
+        ax.text(distance / 2, -.44, "3721 m", ha="center", va="bottom", fontsize=9,
+                bbox=dict(facecolor=GROUND, edgecolor="none", pad=1))
+        ax.text(-620, 2.05, r"$t = %5.2f\ \mu\mathrm{s}$" % (elapsed * 1e6), fontsize=13,
+                va="top")
+        ax.text(-620, 1.7, r"$\alpha = %4.2f^\circ$" % np.degrees(omega * elapsed),
+                fontsize=13, va="top")
         if stage == 2 and u > .3:
-            ax.text(-650, 1.4, r"time $= \alpha / \omega$, $\omega \approx %d$ turns/s"
-                    % turns, fontsize=10, va="top", color=ORANGE)
-        ax.set_xlim(-700, 4000)
-        ax.set_ylim(-1.9, 2.3)
+            ax.text(-620, 1.33, r"$t = \alpha / \omega$, $\omega \approx %d$ turns/s" % turns,
+                    fontsize=10, va="top", color=ORANGE)
+        ax.set_xlim(-700, 4100)
+        ax.set_ylim(-.6, 2.15)
         ax.set_axis_off()
 
-        # Close-up of the rotating mirror, angles exaggerated.
-        # The mirror turns at a constant rate in every frame, before, during and after the trip.
-        phi = shown * {0: (u - 1) * PRE / TRIP, 1: u, 2: 1 + u * POST / TRIP}[stage]
-        # The light meets the middle of the lower-right face of the prism, at p0 when the
-        # mirror has not turned; the returning light meets the turned face at q.
-        p0 = np.array([.1, -.1])
+        # Close-up of the rotating mirror: a square steel prism, angles exaggerated.
+        phi = shown * {0: (u - 1) * PRE / TRIP, 1: u, 2: 1}[stage]
+        p0 = np.array([.1, -.1])                    # middle of the face in use, before turning
         c, s_ = np.cos(shown), np.sin(shown)
         a, b = c * p0[0] - s_ * p0[1], s_ * p0[0] + c * p0[1]
         n = np.array([np.cos(-np.pi / 4 + shown), np.sin(-np.pi / 4 + shown)])
-        q = np.array([a + (b - p0[1]) * n[1] / n[0], p0[1]])
-        mx.plot([p0[0], p0[0]], [-1, p0[1]], color=GREY, lw=.6, ls=(0, (3, 3)))
-        mx.text(p0[0] - .06, -1, "light\nsource", ha="right", va="center", fontsize=9)
+        q = np.array([a + (b - p0[1]) * n[1] / n[0], p0[1]])   # where the returning light lands
+        src = np.array([p0[0], -1.02])
+        out = q + .95 * (lambda d: d - 2 * (d @ n) * n)(np.array([-1., 0]))
+        mx.plot(*np.array([src, p0]).T, color=ORANGE, lw=.7, alpha=.25)
+        mx.plot([p0[0], 1.25], [p0[1], p0[1]], color=ORANGE, lw=.7, alpha=.25)
         if stage == 0:
-            mx.plot([p0[0], p0[0]], [-1, -1 + u * (p0[1] + 1)], color=ORANGE, lw=1.5)
-        else:
-            mx.plot([p0[0], p0[0]], [-1, p0[1]], color=ORANGE, lw=1.5, alpha=.4)
-            # The light has left the mirror: its path stays, faded, while the mirror turns on.
-            mx.plot([p0[0], 1.1], [p0[1], p0[1]], color=ORANGE, lw=1.5,
-                    alpha=1 if stage == 1 and u < .06 else .4)
-        out = reflect(np.array([-1., 0]), shown)
-        tele = q + .9 * out
-        mx.plot([q[0], tele[0]], [q[1], tele[1]], color=GREY, lw=.6, ls=(0, (3, 3)))
-        mx.text(tele[0] + .05, tele[1], "telescope", ha="left", va="center", fontsize=9)
-        if stage == 2:
-            mx.plot([1.1, q[0]], [p0[1], q[1]], color=ORANGE, lw=1.5)
-            mx.plot([q[0], q[0] + u * (tele[0] - q[0])], [q[1], q[1] + u * (tele[1] - q[1])],
-                    color=ORANGE, lw=1.5)
+            pulse(mx, src, p0, u)
+        elif stage == 1 and u < .08:
+            pulse(mx, p0, np.array([1.25, p0[1]]), u / .08)
+        elif stage == 1 and u > .92:
+            pulse(mx, np.array([1.25, p0[1]]), q, (u - .92) / .08)
+        elif stage == 2:
+            mx.plot(*np.array([q, q + u * (out - q)]).T, color=ORANGE, lw=2, zorder=6)
+            mx.plot([1.25, q[0]], [p0[1], q[1]], color=ORANGE, lw=1, alpha=.5)
             if u > .3:
-                mx.add_patch(Arc(q, .8, .8, theta1=270,
-                                 theta2=np.degrees(np.arctan2(out[1], out[0])) + 360,
-                                 color=GREY, lw=.8))
-                mx.text(q[0] + .08, q[1] - .52, r"$2\alpha$", fontsize=11)
-        mx.add_patch(mirror(phi))
-        mx.text(1.12, .08, "to the\nMonument", ha="right", va="bottom", fontsize=9)
-        mx.set_title(r"rotating mirror (angles $\times %d$)" % exaggerate, fontsize=10)
-        mx.set_xlim(-.6, 1.3)
-        mx.set_ylim(-1.35, .55)
+                angle = np.degrees(np.arctan2(*(out - q)[::-1])) % 360
+                mx.add_patch(Arc(q, .7, .7, theta1=270, theta2=angle, color=ORANGE, lw=1.4))
+                mid = np.radians((270 + angle) / 2)
+                mx.text(q[0] + .48 * np.cos(mid), q[1] + .48 * np.sin(mid), r"$2\alpha$",
+                        ha="center", va="center", fontsize=12, color=ORANGE)
+        corners = np.array([(.2 * np.cos(np.pi / 2 * k + phi), .2 * np.sin(np.pi / 2 * k + phi))
+                            for k in range(4)])
+        mx.add_patch(Polygon(corners, closed=True, facecolor=STEEL, edgecolor=GREY, lw=1.1,
+                             zorder=4))
+        # The angle alpha turned since the light left: a fixed reference and a mark on the prism.
+        ref = np.radians(135)
+        mx.plot([.24 * np.cos(ref), .55 * np.cos(ref)], [.24 * np.sin(ref), .55 * np.sin(ref)],
+                color=GREY, lw=.7,
+                ls=(0, (3, 2)), zorder=5)
+        if phi > 0:
+            mx.plot([.2 * np.cos(ref + phi), .55 * np.cos(ref + phi)],
+                    [.2 * np.sin(ref + phi), .55 * np.sin(ref + phi)], color=GREY, lw=1.1, zorder=5)
+            mx.add_patch(Arc((0, 0), .9, .9, theta1=135, theta2=135 + np.degrees(phi),
+                             color=ORANGE, lw=1.4, zorder=5))
+            mid = ref + phi / 2
+            mx.text(.6 * np.cos(mid), .6 * np.sin(mid), r"$\alpha$", ha="center",
+                    va="center", fontsize=12, color=ORANGE)
+        mx.add_patch(FancyArrowPatch((.3, .14), (.06, .33), connectionstyle="arc3,rad=.45",
+                                     arrowstyle="-|>", mutation_scale=9, color=GREY, lw=.8))
+        # Source slit and telescope.
+        mx.add_patch(Rectangle(src - (.07, .025), .14, .05, facecolor=GREY, lw=0))
+        mx.text(src[0], src[1] - .07, "slit", ha="center", va="top", fontsize=9)
+        d = (out - q) / np.linalg.norm(out - q)
+        tube = np.array([out - .02 * d + .04 * d[::-1] * (1, -1), out + .2 * d + .04 * d[::-1] * (1, -1),
+                         out + .2 * d - .04 * d[::-1] * (1, -1), out - .02 * d - .04 * d[::-1] * (1, -1)])
+        mx.add_patch(Polygon(tube, closed=True, facecolor="white", edgecolor=GREY, lw=.9, zorder=5))
+        mx.text(*(out + (-.02, -.2)), "telescope", ha="left", va="top", fontsize=9)
+        mx.text(1.24, p0[1] + .05, "to the\nMonument", ha="right", va="bottom", fontsize=9)
+        mx.text(1.26, -1.3, r"angles $\times %d$" % exaggerate, fontsize=9, color=GREY,
+                ha="right", va="bottom", style="italic")
+        mx.text(-.3, .5, "rotating mirror", fontsize=9, va="top")
+        mx.set_xlim(-.58, 1.28)
+        mx.set_ylim(-1.32, .55)
         mx.set_aspect("equal")
         mx.set_axis_off()
-        fig.subplots_adjust(left=.01, right=.99, bottom=.02, top=.92, wspace=.05)
 
     plan = ([(0, u) for u in np.linspace(0, 1, PRE)] + [(1, u) for u in np.linspace(0, 1, TRIP)]
             + [(2, u) for u in np.linspace(0, 1, POST)])
-    durations = [80] * (len(plan) - 1) + [4000]
+    durations = [70] * (len(plan) - 1) + [4000]
     images = []
     for stage, u in plan:
         draw(stage, u)
         fig.canvas.draw()
         images.append(Image.frombuffer("RGBA", fig.canvas.get_width_height(), fig.canvas.buffer_rgba())
-                      .convert("RGB").quantize(colors=64, method=Image.Quantize.MEDIANCUT))
+                      .convert("RGB").quantize(colors=96, method=Image.Quantize.MEDIANCUT))
     plt.close(fig)
     images[0].save(path, save_all=True, append_images=images[1:], duration=durations, loop=0,
                    optimize=True)
