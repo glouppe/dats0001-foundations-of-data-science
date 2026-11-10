@@ -38,7 +38,7 @@ class: middle
 
 .center.width-70[![](./figures/lec7/newcomb-experiment.gif)]
 
-Simon Newcomb sent light from a rotating mirror at Fort Myer to a fixed mirror at the Washington Monument, 3721 m away. While the light travelled there and back, the mirror turned by an angle $\alpha$ and sent the returning light $2\alpha$ away from its way in. Measuring $\alpha$ and the rotation speed $\omega$ gives the time, $\alpha / \omega \approx 24.8$ $\mu$s.
+Simon Newcomb sent light from a rotating mirror at Fort Myer to a fixed mirror at the Washington Monument, 3721 m away. While the light travelled there and back, the mirror turned by an angle $\alpha$ and sent the returning light $2\alpha$ away from its way in, which shifts the image of the slit in the eyepiece. The shift gives $\alpha$, and with the rotation speed $\omega$, the time $\alpha / \omega \approx 24.8$ $\mu$s.
 
 ---
 

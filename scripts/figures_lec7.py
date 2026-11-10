@@ -106,14 +106,16 @@ def graphical_models():
 
 # Newcomb's experiment ------------------------------------------------------------------
 
-def newcomb_animation(distance=3721., time=24.83e-6, turns=230., exaggerate=10, path=None):
+def newcomb_animation(distance=3721., time=24.83e-6, turns=230., exaggerate=4, path=None):
     """Newcomb's rotating-mirror measurement (1882), as a GIF. Light leaves the rotating mirror
     at Fort Myer, on the heights west of the Potomac, is sent back by a fixed mirror at the base
     of the Washington Monument, 3721 m away, and returns about 24.83 microseconds later.
     Meanwhile the mirror, a square steel prism driven by air turbines at 200 to 250 turns per
     second, has turned by an angle alpha, so the returning light leaves at 2 alpha from its way
-    in. The time is alpha / omega. The profile is schematic, with heights exaggerated; the
-    angles of the close-up are drawn `exaggerate` times larger than the real ones."""
+    in. A beam splitter below the mirror sends the returning light to the eyepiece, where the
+    image of the slit appears shifted by an amount set by 2 alpha (the layout of Carter & Carter,
+    2002, Fig. 2). The time is alpha / omega. The profile is schematic, with heights exaggerated;
+    the angles of the close-up are drawn `exaggerate` times larger than the real ones."""
     from matplotlib.collections import LineCollection
     from matplotlib.patches import Arc, FancyArrowPatch, Polygon, Rectangle
     from PIL import Image
@@ -197,25 +199,44 @@ def newcomb_animation(distance=3721., time=24.83e-6, turns=230., exaggerate=10, 
         a, b = c * p0[0] - s_ * p0[1], s_ * p0[0] + c * p0[1]
         n = np.array([np.cos(-np.pi / 4 + shown), np.sin(-np.pi / 4 + shown)])
         q = np.array([a + (b - p0[1]) * n[1] / n[0], p0[1]])   # where the returning light lands
-        src = np.array([p0[0], -1.02])
-        out = q + .95 * (lambda d: d - 2 * (d @ n) * n)(np.array([-1., 0]))
+        src = np.array([p0[0], -.8])
+        # Beam splitter: a half-silvered plate at 45 degrees below the mirror. Light from the
+        # slit goes through it; the returning light is partly reflected towards the eyepiece.
+        g0, ng = np.array([p0[0], -.4]), np.array([1., -1.]) / np.sqrt(2)
+        dr = (lambda d: d - 2 * (d @ n) * n)(np.array([-1., 0]))       # back from the mirror
+        h = q + ((g0 - q) @ ng) / (dr @ ng) * dr                         # on the beam splitter
+        de = dr - 2 * (dr @ ng) * ng                                     # towards the eyepiece
+        xe = -.25
+        land = h + (xe - h[0]) / de[0] * de                              # image in the eyepiece
         mx.plot(*np.array([src, p0]).T, color=ORANGE, lw=.7, alpha=.25)
-        mx.plot([p0[0], 1.25], [p0[1], p0[1]], color=ORANGE, lw=.7, alpha=.25)
+        mx.plot([p0[0], .95], [p0[1], p0[1]], color=ORANGE, lw=.7, alpha=.25)
+        mx.plot([g0[0], xe], [g0[1], g0[1]], color=GREY, lw=.6, ls=(0, (3, 2)))
         if stage == 0:
             pulse(mx, src, p0, u)
         elif stage == 1 and u < .08:
-            pulse(mx, p0, np.array([1.25, p0[1]]), u / .08)
+            pulse(mx, p0, np.array([.95, p0[1]]), u / .08)
         elif stage == 1 and u > .92:
-            pulse(mx, np.array([1.25, p0[1]]), q, (u - .92) / .08)
+            pulse(mx, np.array([.95, p0[1]]), q, (u - .92) / .08)
         elif stage == 2:
-            mx.plot(*np.array([q, q + u * (out - q)]).T, color=ORANGE, lw=2, zorder=6)
-            mx.plot([1.25, q[0]], [p0[1], q[1]], color=ORANGE, lw=1, alpha=.5)
+            mx.plot([.95, q[0]], [p0[1], q[1]], color=ORANGE, lw=1, alpha=.5)
+            l1, l2 = np.linalg.norm(h - q), np.linalg.norm(land - h)
+            r = u * (l1 + l2)
+            path = [q, q + min(r, l1) / l1 * (h - q)]
+            if r > l1:
+                path.append(h + (r - l1) / l2 * (land - h))
+            mx.plot(*np.array(path).T, color=ORANGE, lw=2, zorder=6)
             if u > .3:
-                angle = np.degrees(np.arctan2(*(out - q)[::-1])) % 360
-                mx.add_patch(Arc(q, .7, .7, theta1=270, theta2=angle, color=ORANGE, lw=1.4))
+                angle = np.degrees(np.arctan2(dr[1], dr[0])) % 360
+                mx.add_patch(Arc(q, .44, .44, theta1=270, theta2=angle, color=ORANGE, lw=1.4))
                 mid = np.radians((270 + angle) / 2)
-                mx.text(q[0] + .48 * np.cos(mid), q[1] + .48 * np.sin(mid), r"$2\alpha$",
+                mx.text(q[0] + .16, q[1] - .1, r"$2\alpha$",
                         ha="center", va="center", fontsize=12, color=ORANGE)
+            if u > .95:
+                mx.add_patch(Rectangle((xe - .005, land[1] - .035), .03, .07, facecolor=ORANGE,
+                                       lw=0, zorder=7))
+                mx.annotate("", (xe - .1, land[1]), (xe - .1, g0[1]),
+                            arrowprops=dict(arrowstyle="<|-|>", color=ORANGE, lw=1,
+                                            mutation_scale=7, shrinkA=0, shrinkB=0), zorder=7)
         corners = np.array([(.2 * np.cos(np.pi / 2 * k + phi), .2 * np.sin(np.pi / 2 * k + phi))
                             for k in range(4)])
         mx.add_patch(Polygon(corners, closed=True, facecolor=STEEL, edgecolor=GREY, lw=1.1,
@@ -223,8 +244,7 @@ def newcomb_animation(distance=3721., time=24.83e-6, turns=230., exaggerate=10, 
         # The angle alpha turned since the light left: a fixed reference and a mark on the prism.
         ref = np.radians(135)
         mx.plot([.24 * np.cos(ref), .55 * np.cos(ref)], [.24 * np.sin(ref), .55 * np.sin(ref)],
-                color=GREY, lw=.7,
-                ls=(0, (3, 2)), zorder=5)
+                color=GREY, lw=.7, ls=(0, (3, 2)), zorder=5)
         if phi > 0:
             mx.plot([.2 * np.cos(ref + phi), .55 * np.cos(ref + phi)],
                     [.2 * np.sin(ref + phi), .55 * np.sin(ref + phi)], color=GREY, lw=1.1, zorder=5)
@@ -235,20 +255,23 @@ def newcomb_animation(distance=3721., time=24.83e-6, turns=230., exaggerate=10, 
                     va="center", fontsize=12, color=ORANGE)
         mx.add_patch(FancyArrowPatch((.3, .14), (.06, .33), connectionstyle="arc3,rad=.45",
                                      arrowstyle="-|>", mutation_scale=9, color=GREY, lw=.8))
-        # Source slit and telescope.
+        # Slit, beam splitter and eyepiece with its scale.
         mx.add_patch(Rectangle(src - (.07, .025), .14, .05, facecolor=GREY, lw=0))
-        mx.text(src[0], src[1] - .07, "slit", ha="center", va="top", fontsize=9)
-        d = (out - q) / np.linalg.norm(out - q)
-        tube = np.array([out - .02 * d + .04 * d[::-1] * (1, -1), out + .2 * d + .04 * d[::-1] * (1, -1),
-                         out + .2 * d - .04 * d[::-1] * (1, -1), out - .02 * d - .04 * d[::-1] * (1, -1)])
-        mx.add_patch(Polygon(tube, closed=True, facecolor="white", edgecolor=GREY, lw=.9, zorder=5))
-        mx.text(*(out + (-.02, -.2)), "telescope", ha="left", va="top", fontsize=9)
-        mx.text(1.24, p0[1] + .05, "to the\nMonument", ha="right", va="bottom", fontsize=9)
-        mx.text(1.26, -1.3, r"angles $\times %d$" % exaggerate, fontsize=9, color=GREY,
+        mx.text(src[0] + .1, src[1], "slit", ha="left", va="center", fontsize=9)
+        mx.plot(*np.array([g0 - (.12, .12), g0 + (.12, .12)]).T, color=BLUE, lw=2.2,
+                alpha=.6, solid_capstyle="butt", zorder=5)
+        mx.text(g0[0] + .2, g0[1] - .22, "beam\nsplitter", ha="left", va="center", fontsize=9)
+        mx.add_patch(Rectangle((xe - .14, -.66), .14, .56, facecolor="white", edgecolor=GREY,
+                               lw=.9, zorder=3))
+        for k, y in enumerate(np.linspace(-.6, -.2, 9)):
+            mx.plot([xe - .04 if k % 4 else xe - .07, xe], [y, y], color=GREY, lw=.6, zorder=4)
+        mx.text(xe - .15, -.72, "eyepiece", ha="left", va="top", fontsize=9)
+        mx.text(.94, p0[1] + .04, "to the\nMonument", ha="right", va="bottom", fontsize=9)
+        mx.text(.94, -.9, r"angles $\times %d$" % exaggerate, fontsize=9, color=GREY,
                 ha="right", va="bottom", style="italic")
-        mx.text(-.3, .5, "rotating mirror", fontsize=9, va="top")
-        mx.set_xlim(-.58, 1.28)
-        mx.set_ylim(-1.32, .55)
+        mx.text(-.15, .52, "rotating mirror", fontsize=9, va="top")
+        mx.set_xlim(-.5, .96)
+        mx.set_ylim(-.92, .55)
         mx.set_aspect("equal")
         mx.set_axis_off()
 
