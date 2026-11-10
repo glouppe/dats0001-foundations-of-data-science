@@ -36,10 +36,16 @@ class: middle
 
 ## Newcomb's experiment (1882)
 
-Simon Newcomb measured the speed of light with a rotating mirror. He recorded $N = 66$ measurements of the time light takes to travel a known distance.
+.center.width-70[![](./figures/lec7/newcomb-experiment.gif)]
+
+Simon Newcomb sent light from a rotating mirror at Fort Myer to a fixed mirror at the Washington Monument, 3721 m away. While the light travelled there and back, the mirror turned by an angle $\alpha$ and sent the returning light $2\alpha$ away from its way in. Measuring $\alpha$ and the rotation speed $\omega$ gives the time, $\alpha / \omega \approx 24.8$ $\mu$s.
+
+---
+
+class: middle
 
 .center.width-70[![](./figures/lec7/newcomb-data.png)]
-.center[Newcomb's 66 measurements, in nanoseconds above 24800 ns.]
+.center[Newcomb's $N = 66$ measurements of the passage time, in nanoseconds above 24800 ns.]
 
 ---
 

@@ -104,6 +104,121 @@ def graphical_models():
         print("wrote %-28s %.2f x %.2f in" % (path, *fig.get_size_inches()))
 
 
+# Newcomb's experiment ------------------------------------------------------------------
+
+def newcomb_animation(distance=3721., time=24.83e-6, turns=230., exaggerate=5, path=None):
+    """Newcomb's rotating-mirror measurement (1882), as a GIF. Light leaves the rotating mirror
+    at Fort Myer, is sent back by a fixed mirror at the base of the Washington Monument, 3721 m
+    away, and returns about 24.83 microseconds later. Meanwhile the mirror, a square steel prism
+    driven by air turbines at 200 to 250 turns per second, has turned by an angle alpha, so the
+    returning light leaves at 2 alpha from its way in. The time is alpha / omega. The map is
+    schematic; the angles on the right are drawn `exaggerate` times larger than the real ones."""
+    from matplotlib.patches import Arc, Polygon
+    from PIL import Image
+    path = path or "figures/lec7/newcomb-experiment.gif"
+    omega = 2 * np.pi * turns                       # rad/s
+    alpha = omega * time                            # rad, about 2 degrees
+    shown = exaggerate * alpha
+    base = -.85                                     # height of the fixed mirror on the map
+    fixed = distance - 70                           # its position, just before the Monument
+    fig, (ax, mx) = plt.subplots(1, 2, figsize=(W, 3.0), dpi=150,
+                                 gridspec_kw=dict(width_ratios=[1.9, 1]))
+
+    def reflect(d, angle):
+        """Direction of a ray d after the face with normal at -45 degrees + angle."""
+        n = np.array([np.cos(-np.pi / 4 + angle), np.sin(-np.pi / 4 + angle)])
+        return d - 2 * (d @ n) * n
+
+    def mirror(phi):
+        """The square prism, with a face normal at -45 degrees + phi."""
+        corners = [(.2 * np.cos(np.pi / 2 * k + phi), .2 * np.sin(np.pi / 2 * k + phi))
+                   for k in range(4)]
+        return Polygon(corners, closed=True, facecolor=LIGHT, edgecolor=GREY, lw=1.2, zorder=3)
+
+    def draw(stage, u):
+        """stage 0: light from the source to the mirror; 1: the round trip, u in [0, 1] of the
+        24.83 microseconds; 2: light from the mirror to the telescope."""
+        ax.cla()
+        mx.cla()
+        # Map: schematic, with the distance along the line of sight to scale.
+        ax.fill_between([900, 1800], -1, 1.0, color="#d6e6f2", lw=0)
+        ax.text(1350, -.75, "Potomac", ha="center", fontsize=10, color=BLUE)
+        hill = np.linspace(-700, 900, 60)
+        ax.fill_between(hill, -1, -1 + .9 * np.exp(-((hill + 50) / 450) ** 2), color=LIGHT, lw=0)
+        ax.plot([0], [0], "s", color=GREY, ms=6, zorder=4)
+        ax.text(0, .3, "Fort Myer\nrotating mirror", ha="center", fontsize=10)
+        ax.add_patch(Polygon([(distance - 45, -1), (distance + 45, -1), (distance + 30, .9),
+                              (distance, 1.15), (distance - 30, .9)], closed=True,
+                             facecolor=LIGHT, edgecolor=GREY, lw=.8))
+        ax.plot([fixed], [base], "s", color=GREY, ms=5, zorder=4)
+        ax.text(distance, 1.3, "Washington Monument", ha="center", fontsize=10)
+        ax.text(fixed - 90, base + .15, "fixed\nmirror", ha="right", va="bottom", fontsize=9)
+        ax.annotate("", (distance, -1.35), (0, -1.35),
+                    arrowprops=dict(arrowstyle="<->", color=GREY, lw=.8))
+        ax.text(distance / 2, -1.62, "%d m" % distance, ha="center", va="top", fontsize=10)
+        elapsed = 0.
+        if stage == 1:
+            elapsed = u * time
+            f = 2 * u if u < .5 else 2 - 2 * u
+            end = f if u < .5 else 1
+            ax.plot([0, end * fixed], [0, end * base], color=ORANGE, lw=1, alpha=.5)
+            ax.plot([f * fixed], [f * base], "o", color=ORANGE, ms=7, zorder=5)
+        elif stage == 2:
+            elapsed = time
+        ax.text(-650, 2.2, r"time since the light left the mirror: %5.2f $\mu$s" % (elapsed * 1e6),
+                fontsize=10, va="top")
+        ax.text(-650, 1.8, r"angle turned by the mirror: %4.2f$^\circ$"
+                % np.degrees(omega * elapsed), fontsize=10, va="top")
+        if stage == 2 and u > .3:
+            ax.text(-650, 1.4, r"time $= \alpha / \omega$, $\omega \approx %d$ turns/s"
+                    % turns, fontsize=10, va="top", color=ORANGE)
+        ax.set_xlim(-700, 4000)
+        ax.set_ylim(-1.9, 2.3)
+        ax.set_axis_off()
+
+        # Close-up of the rotating mirror, angles exaggerated.
+        phi = shown * (u if stage == 1 else 0 if stage == 0 else 1)
+        mx.plot([0, 0], [-1, 0], color=GREY, lw=.6, ls=(0, (3, 3)))
+        mx.text(-.06, -1, "light\nsource", ha="right", va="center", fontsize=9)
+        if stage == 0:
+            mx.plot([0, 0], [-1, -1 + u * .8], color=ORANGE, lw=1.5)
+        else:
+            mx.plot([0, 0], [-1, 0], color=ORANGE, lw=1.5, alpha=.4)
+            mx.plot([0, 1.1], [0, 0], color=ORANGE, lw=1.5, alpha=.4 if stage == 2 else 1)
+        out = reflect(np.array([-1., 0]), shown)
+        mx.plot([0, out[0]], [0, out[1]], color=GREY, lw=.6, ls=(0, (3, 3)))
+        mx.text(out[0] + .05, out[1], "telescope", ha="left", va="center", fontsize=9)
+        if stage == 2:
+            mx.plot([0, u * out[0]], [0, u * out[1]], color=ORANGE, lw=1.5)
+            if u > .3:
+                mx.add_patch(Arc((0, 0), .9, .9, theta1=270,
+                                 theta2=np.degrees(np.arctan2(out[1], out[0])) + 360,
+                                 color=GREY, lw=.8))
+                mx.text(.1, -.6, r"$2\alpha$", fontsize=11)
+        mx.add_patch(mirror(phi))
+        mx.text(1.12, .08, "to the\nMonument", ha="right", va="bottom", fontsize=9)
+        mx.set_title(r"rotating mirror (angles $\times %d$)" % exaggerate, fontsize=10)
+        mx.set_xlim(-.6, 1.15)
+        mx.set_ylim(-1.35, .55)
+        mx.set_aspect("equal")
+        mx.set_axis_off()
+        fig.subplots_adjust(left=.01, right=.99, bottom=.02, top=.92, wspace=.05)
+
+    plan = ([(0, u) for u in np.linspace(0, 1, 8)] + [(1, u) for u in np.linspace(0, 1, 50)]
+            + [(2, u) for u in np.linspace(0, 1, 10)])
+    durations = [80] * (len(plan) - 1) + [4000]
+    images = []
+    for stage, u in plan:
+        draw(stage, u)
+        fig.canvas.draw()
+        images.append(Image.frombuffer("RGBA", fig.canvas.get_width_height(), fig.canvas.buffer_rgba())
+                      .convert("RGB").quantize(colors=64, method=Image.Quantize.MEDIANCUT))
+    plt.close(fig)
+    images[0].save(path, save_all=True, append_images=images[1:], duration=durations, loop=0,
+                   optimize=True)
+    print("wrote", path, "(%d frames); alpha = %.2f deg, c = %.0f km/s"
+          % (len(images), np.degrees(alpha), 2 * distance / time / 1e3))
+
 # Models of Newcomb's data (nb07a, nb07b) ------------------------------------------------
 
 def log_prior_gaussian(theta):
@@ -493,6 +608,7 @@ def kfold(k=5):
 
 if __name__ == "__main__":
     graphical_models()
+    newcomb_animation()
     newcomb()
     polynomials()
     occam()
