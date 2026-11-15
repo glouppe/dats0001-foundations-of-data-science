@@ -256,12 +256,12 @@ with $\boldsymbol{\Sigma}^{-1}$ the Hessian of $-\log p(\theta \mid \mathbf{x}\_
 
 class: middle
 
-Bayes' rule, evaluated at $\hat{\theta}$, and the approximation give
-$$\begin{aligned}
-p(\mathbf{x}\_\text{obs} \mid \mathcal{M}) &= \frac{p(\mathbf{x}\_\text{obs} \mid \hat{\theta}, \mathcal{M}) p(\hat{\theta} \mid \mathcal{M})}{p(\hat{\theta} \mid \mathbf{x}\_\text{obs}, \mathcal{M})} \\\\
-&\approx p(\mathbf{x}\_\text{obs} \mid \hat{\theta}, \mathcal{M}) p(\hat{\theta} \mid \mathcal{M}) (2\pi)^{d/2} |\boldsymbol{\Sigma}|^{1/2},
-\end{aligned}$$
-where $d$ is the number of parameters and $(2\pi)^{-d/2} |\boldsymbol{\Sigma}|^{-1/2}$ is the density of the Gaussian at its mode.
+Solving Bayes' rule for the marginal likelihood gives, for every $\theta$,
+$$p(\mathbf{x}\_\text{obs} \mid \mathcal{M}) = \frac{p(\mathbf{x}\_\text{obs} \mid \theta, \mathcal{M}) p(\theta \mid \mathcal{M})}{p(\theta \mid \mathbf{x}\_\text{obs}, \mathcal{M})}.$$
+The numerator is easy to evaluate, and the denominator is the unknown posterior. At $\theta = \hat{\theta}$, the Laplace approximation replaces the posterior by its Gaussian, whose density at its own mode is
+$$\mathcal{N}(\hat{\theta} \mid \hat{\theta}, \boldsymbol{\Sigma}) = (2\pi)^{-d/2} |\boldsymbol{\Sigma}|^{-1/2},$$
+where $d$ is the number of parameters. Hence
+$$p(\mathbf{x}\_\text{obs} \mid \mathcal{M}) \approx p(\mathbf{x}\_\text{obs} \mid \hat{\theta}, \mathcal{M}) p(\hat{\theta} \mid \mathcal{M}) (2\pi)^{d/2} |\boldsymbol{\Sigma}|^{1/2}.$$
 
 ---
 
