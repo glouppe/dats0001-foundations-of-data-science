@@ -84,7 +84,11 @@ class: middle
 The posterior mean of $\mu$ estimates the passage time, in nanoseconds above 24800 ns,
 $$\hat{\mu} = \frac{1}{M} \sum\_{m=1}^M \mu^{(m)} = 26.199182694915095.$$
 
+.alert[
+
 The Monte Carlo standard error of this average, $\text{sd}(\mu^{(m)}) / \sqrt{\text{ESS}}$ with $\text{ESS} \approx 9000$ effective samples, is about 0.01 ns. The posterior standard deviation of $\mu$, the uncertainty about $\mu$ itself, is about 1.4 ns. It decides the digits: report $\mu = 26.2 \pm 1.4$ ns.
+
+]
 
 ---
 
