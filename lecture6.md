@@ -711,7 +711,7 @@ $$\rho\_k = \frac{\text{Cov}(f(x\_t), f(x\_{t+k}))}{\text{Var}(f(x\_t))}.$$
 The integrated autocorrelation time $\tau\_\text{int} = 1 + 2\sum\_{k=1}^{\infty} \rho\_k$ sets the variance of the average of $T$ samples:
 $$\text{Var}\left[\frac{1}{T} \sum\_{t=1}^T f(x\_t)\right] \approx \frac{\tau\_\text{int}}{T} \text{Var}(f(x\_t)).$$
 
-Independent samples would give $\text{Var}(f(x\_t)) / T$. The $T$ samples of the chain are therefore worth $\text{ESS} = T / \tau\_\text{int}$ independent ones: the .bold[effective sample size].
+With independent samples, the variance would be $\text{Var}(f(x\_t)) / T$. Correlation inflates it by $\tau\_\text{int}$, as if the chain had only $\text{ESS} = T / \tau\_\text{int}$ independent samples: the .bold[effective sample size]. With $\tau\_\text{int} = 10$, for example, 10000 iterations are worth 1000 independent samples.
 
 ---
 
