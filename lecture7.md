@@ -28,7 +28,7 @@ class: middle
 
 class: middle
 
-Model checking assumes that the computation is correct, so that the samples come from the posterior of the model. It asks whether the model explains the data.
+Model checking asks whether the model explains the data. Whether the posterior is correctly approximated is a separate question, and is assumed here.
 
 ---
 
