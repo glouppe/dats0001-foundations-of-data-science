@@ -767,7 +767,7 @@ class: middle
 
 ## Calibration
 
-Diagnostics cannot detect an error in the log density, the sampler or the posterior approximation.
+Trace plots, the effective sample size and $\hat{R}$ cannot detect an error in the log density, the sampler or the posterior approximation.
 
 In simulated experiments, draw $\theta^\* \sim p(\theta)$, simulate $\mathcal{D} \sim p(\mathcal{D} \mid \theta^\*)$, and compute a credible region $C\_\alpha(\mathcal{D})$ of level $\alpha$. A posterior is .bold[calibrated] if
 $$P(\theta^\* \in C\_\alpha(\mathcal{D})) = \alpha.$$
