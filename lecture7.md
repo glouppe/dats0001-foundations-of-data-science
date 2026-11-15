@@ -28,7 +28,7 @@ class: middle
 
 class: middle
 
-Model checking takes the computation as correct, with samples from the posterior of the model, and asks whether the model explains the data. Only the data can tell: an exact sampler for a wrong model passes every check of the computation.
+Model checking assumes that the computation is correct, so that the samples come from the posterior of the model. It asks whether the model explains the data. An exact sampler for a wrong model passes every check of the computation, so only a comparison with the data can answer.
 
 ---
 
@@ -88,9 +88,9 @@ $$\hat{\mu} = \frac{1}{M} \sum\_{m=1}^M \mu^{(m)} = 26.199182694915095.$$
 
 The digits of $\hat{\mu}$ are uncertain for two reasons.
 - $\hat{\mu}$ averages finitely many samples, so it differs from the exact posterior mean. As for the average of $\text{ESS} \approx 9000$ independent samples, this .bold[Monte Carlo error] has standard deviation $\text{sd}(\mu^{(m)}) / \sqrt{\text{ESS}} \approx 0.01$ ns.
-- $\mu$ itself is uncertain given the data: its posterior standard deviation $\text{sd}(\mu^{(m)})$ is about 1.4 ns.
+- $\mu$ itself is uncertain given the data. Its posterior standard deviation $\text{sd}(\mu^{(m)})$ is about 1.4 ns.
 
-The second is far larger, so it decides the digits: report $\mu = 26.2 \pm 1.4$ ns.
+The second is far larger and decides the digits. We report $\mu = 26.2 \pm 1.4$ ns.
 
 ]
 
@@ -136,7 +136,7 @@ $$P(T(\mathbf{x}^\text{rep}) \geq T(\mathbf{x}\_\text{obs}) \mid \theta).$$
 
 .center.width-70[![](./figures/lec7/pvalue.png)]
 
-Near 0 or 1, the model rarely produces data like these. A test at level 5% rejects $\theta$ below 0.05: here, $\mu = 24$ ns is just rejected.
+Near 0 or 1, the model rarely produces data like these. A test at level 5% rejects $\theta$ when the p-value is below 0.05, so $\mu = 24$ ns is just rejected here.
 
 ---
 
@@ -198,7 +198,7 @@ class: middle
 
 class: middle
 
-.italic[Example.] The two lowest measurements could be deleted as outliers, but nothing in the data says they are errors. A heavy-tailed model keeps them: a Student's $t$ gives large deviations a larger probability than a Gaussian.
+.italic[Example.] The two lowest measurements could be deleted as outliers, but nothing in the data says they are errors. A heavy-tailed model keeps them. A Student's $t$ gives large deviations a larger probability than a Gaussian.
 
 .center.width-50[![](./figures/lec7/newcomb-model2.svg)]
 
@@ -234,9 +234,9 @@ class: middle
 
 Consider two models $\mathcal{M}\_1$ and $\mathcal{M}\_2$, with prior probabilities $p(\mathcal{M}\_1)$ and $p(\mathcal{M}\_2)$. Bayes' rule gives the ratio of their posterior probabilities,
 $$\frac{p(\mathcal{M}\_1 \mid \mathbf{x}\_\text{obs})}{p(\mathcal{M}\_2 \mid \mathbf{x}\_\text{obs})} = \frac{p(\mathbf{x}\_\text{obs} \mid \mathcal{M}\_1)}{p(\mathbf{x}\_\text{obs} \mid \mathcal{M}\_2)} \frac{p(\mathcal{M}\_1)}{p(\mathcal{M}\_2)}.$$
-The first factor on the right is the .bold[Bayes factor] $\text{BF}\_{1,2}$: how much more probable the data are under $\mathcal{M}\_1$ than under $\mathcal{M}\_2$. A common scale reads 1 to 3 as weak evidence for $\mathcal{M}\_1$, 3 to 10 as moderate, above 10 as strong.
+The first factor on the right is the .bold[Bayes factor] $\text{BF}\_{1,2}$. It measures how much more probable the data are under $\mathcal{M}\_1$ than under $\mathcal{M}\_2$. A common scale reads 1 to 3 as weak evidence for $\mathcal{M}\_1$, 3 to 10 as moderate, above 10 as strong.
 
-For Newcomb's data, $\log \text{BF}\_{t, \text{Gaussian}} \approx 30$. The value depends on the priors: a prior on $\nu$ ten times wider lowers it to about 25, while the priors on $\mu$ and $\sigma$, shared by both models, cancel.
+For Newcomb's data, $\log \text{BF}\_{t, \text{Gaussian}} \approx 30$. The value depends on the priors. A prior on $\nu$ ten times wider lowers it to about 25. The priors on $\mu$ and $\sigma$ are shared by both models and cancel.
 
 ---
 
@@ -247,7 +247,7 @@ $$p(\mathbf{x}\_\text{obs} \mid \mathcal{M}) = \int p(\mathbf{x}\_\text{obs} \mi
 the probability of the data averaged over the prior. It is the normalizer of Bayes' rule,
 $$p(\theta \mid \mathbf{x}\_\text{obs}, \mathcal{M}) = \frac{p(\mathbf{x}\_\text{obs} \mid \theta, \mathcal{M}) p(\theta \mid \mathcal{M})}{p(\mathbf{x}\_\text{obs} \mid \mathcal{M})}.$$
 
-The integral rarely has a closed form, and MCMC never computes it: it samples the posterior from the unnormalized density alone.
+The integral rarely has a closed form. MCMC never computes it, since it samples the posterior from the unnormalized density alone.
 
 ---
 
