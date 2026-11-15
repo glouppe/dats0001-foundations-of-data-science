@@ -158,7 +158,7 @@ class: middle
 
 ## Residual analysis
 
-When each measurement is a prediction plus noise, $x\_i = f\_i(\theta) + \sigma\epsilon\_i$ with $\epsilon\_i \sim p(\epsilon)$, the standardized .bold[residuals] are
+Suppose each measurement is the model's prediction $f\_i(\theta)$ for it, plus noise, $x\_i = f\_i(\theta) + \sigma\epsilon\_i$ with $\epsilon\_i \sim p(\epsilon)$. The standardized .bold[residuals] are
 $$r\_i = \frac{x\_i - f\_i(\theta)}{\sigma}, \quad \theta \sim p(\theta \mid \mathbf{x}\_\text{obs}).$$
 
 If the model fits, the residuals of the observed data are distributed as those of replicated data, and close to $p(\epsilon)$ when the posterior is concentrated.
