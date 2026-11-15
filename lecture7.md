@@ -88,11 +88,7 @@ $$\hat{\mu} = \frac{1}{M} \sum\_{m=1}^M \mu^{(m)} = 26.199182694915095.$$
 
 .alert[
 
-The digits of $\hat{\mu}$ are uncertain for two reasons.
-- $\hat{\mu}$ averages finitely many samples, so it differs from the exact posterior mean. The chain was thinned to one sample every $\tau\_\text{int} \approx 34$ iterations, which leaves $M = 8672$ nearly independent samples. This .bold[Monte Carlo error] has standard deviation $\text{sd}(\mu^{(m)}) / \sqrt{M} \approx 0.01$ ns.
-- $\mu$ itself is uncertain given the data. Its posterior standard deviation $\text{sd}(\mu^{(m)})$ is about 1.4 ns.
-
-The second is far larger and decides the digits. We report $\mu = 26.2 \pm 1.4$ ns.
+Most of these digits are meaningless. Given the data, $\mu$ is uncertain, with a posterior standard deviation $\text{sd}(\mu^{(m)})$ of about 1.4 ns. We report $\mu = 26.2 \pm 1.4$ ns.
 
 ]
 
