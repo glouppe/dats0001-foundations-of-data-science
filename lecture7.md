@@ -289,9 +289,7 @@ class: middle
 
 ## Cross-validation
 
-.bold[Cross-validation] compares models by how well they predict data they were not fitted on.
-
-In .bold[$k$-fold cross-validation], the data are split into $k$ folds of $N / k$ observations. Each fold serves once as the validation set, and the other $k - 1$ folds as the training set. The scores are averaged over the $k$ splits.
+.bold[Cross-validation] scores a model on data it was not fitted on. In $k$-fold cross-validation, each of $k$ folds serves once as the validation set, and the other $k - 1$ as the training set.
 
 .center.width-70[![](./figures/lec7/kfold.png)]
 
@@ -301,21 +299,17 @@ class: middle
 
 The score of a Bayesian model is the .bold[expected log predictive density] (ELPD),
 $$\mathbb{E}\_{p\_r(\mathbf{x}')}[\log p(\mathbf{x}' \mid \mathbf{x}\_\text{obs})],$$
-where $p\_r$ is the data distribution and $p(\mathbf{x}' \mid \mathbf{x}\_\text{obs})$ is the posterior predictive distribution, fitted on the training set. Cross-validation estimates the expectation with the validation set.
+where $p(\mathbf{x}' \mid \mathbf{x}\_\text{obs})$ is the posterior predictive distribution of the training set, and the validation set stands for $p\_r$.
 
-The KL divergence from $p\_r$ to the predictive distribution is $\mathbb{E}\_{p\_r}[\log p\_r(\mathbf{x}')]$ minus the ELPD. The first term does not depend on the model, so a higher ELPD means predictions closer to $p\_r$, with no need for either model to be true.
+The ELPD is the KL divergence from $p\_r$ to the predictive distribution, up to a sign and a constant. A higher ELPD means predictions closer to $p\_r$.
 
 ---
 
 class: middle
 
-For Newcomb's data, 5-fold cross-validation, summed over the 66 held-out measurements, gives an ELPD of $-225$ for the $t$ model and $-287$ for the Gaussian model.
-
 .center.width-70[![](./figures/lec7/elpd-pointwise.png)]
 
-.center[The two lowest measurements account for about two thirds of the difference.]
-
-With a point estimate $\hat{\theta}$ in place of the posterior, the ELPD reduces to the log-likelihood $\log p(\mathbf{x}' \mid \hat{\theta})$ of the held-out data.
+.center[5-fold cross-validation gives an ELPD of $-225$ for the $t$ model and $-287$ for the Gaussian. <br>The two lowest measurements account for two thirds of the difference.]
 
 ---
 
