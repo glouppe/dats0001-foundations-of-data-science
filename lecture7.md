@@ -55,6 +55,8 @@ class: middle
 .center.width-70[![](./figures/lec7/newcomb-data.png)]
 .center[Newcomb's $N = 66$ measurements of the passage time, <br>in nanoseconds above 24800 ns.]
 
+.question[How would you model these data?]
+
 ---
 
 class: middle
