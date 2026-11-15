@@ -28,7 +28,7 @@ class: middle
 
 class: middle
 
-Model checking assumes that the computation is correct, so that the samples come from the posterior of the model. It asks whether the model explains the data. An exact sampler for a wrong model passes every check of the computation, so only a comparison with the data can answer.
+Model checking assumes that the computation is correct, so that the samples come from the posterior of the model. It asks whether the model explains the data. An exact sampler for a wrong model passes trace plots, $\hat{R}$ and simulation-based calibration, so only a comparison with the data can answer.
 
 ---
 
