@@ -144,8 +144,6 @@ which is the fraction of replicated data sets whose statistic is at least as lar
 
 .center.width-70[![](./figures/lec7/newcomb-replicate-stats.png)]
 
-The mean and the variance of the observed data are typical of the replicated data.
-
 ---
 
 class: middle
