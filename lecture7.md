@@ -134,8 +134,6 @@ $$P(T(\mathbf{x}^\text{rep}) \geq T(\mathbf{x}\_\text{obs}) \mid \theta).$$
 
 .center.width-70[![](./figures/lec7/pvalue.png)]
 
-Near 0 or 1, the model rarely produces data like these. A test at level 5% rejects $\theta$ when the p-value is below 0.05, so $\mu = 24$ ns is just rejected here.
-
 ---
 
 class: middle
