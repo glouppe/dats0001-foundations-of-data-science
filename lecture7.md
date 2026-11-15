@@ -88,7 +88,7 @@ $$\hat{\mu} = \frac{1}{M} \sum\_{m=1}^M \mu^{(m)} = 26.199182694915095.$$
 
 .alert[
 
-Most of these digits are meaningless. Given the data, $\mu$ is uncertain, with a posterior standard deviation $\text{sd}(\mu^{(m)})$ of about 1.4 ns. We report $\mu = 26.2 \pm 1.4$ ns.
+Most of these digits are meaningless, since the posterior standard deviation of $\mu$ is about 1.4 ns. A credible interval reports this uncertainty together with the estimate.
 
 ]
 
