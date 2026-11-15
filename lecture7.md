@@ -269,7 +269,7 @@ class: middle
 
 ## Occam's razor
 
-$p(\mathbf{x} \mid \mathcal{M})$ sums to one over all data sets. A flexible model spreads it thinner, so the simpler model scores higher on data it can explain.
+$p(\mathbf{x} \mid \mathcal{M})$ sums to one over all data sets. A flexible model spreads it over more data sets, so it gives less probability to each. On data that both models explain, the simpler one scores higher.
 
 .center.width-70[![](./figures/lec7/occam.png)]
 
