@@ -174,7 +174,7 @@ If the model fits, the residuals of the observed data are distributed as those o
 
 class: middle
 
-For the Gaussian model, the residuals are $r\_i = (x\_i - \mu) / \sigma$. A .bold[quantile-quantile (Q-Q) plot] compares two distributions by plotting the quantiles of one against the quantiles of the other. If the two distributions are the same, the points lie on the diagonal.
+For the Gaussian model, the residuals are $r\_i = (x\_i - \mu) / \sigma$. A .bold[quantile-quantile (Q-Q) plot] compares two distributions by plotting the quantiles of one against those of the other. If the distributions are equal, the points lie on the diagonal.
 
 .center.width-70[![](./figures/lec7/newcomb-residuals.png)]
 
