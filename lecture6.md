@@ -713,6 +713,10 @@ $$\text{Var}\left[\frac{1}{T} \sum\_{t=1}^T f(x\_t)\right] \approx \frac{\tau\_\
 
 With independent samples, the variance would be $\text{Var}(f(x\_t)) / T$. Correlation inflates it by $\tau\_\text{int}$, as if the chain had only $\text{ESS} = T / \tau\_\text{int}$ independent samples: the .bold[effective sample size]. With $\tau\_\text{int} = 10$, for example, 10000 iterations are worth 1000 independent samples.
 
+???
+
+For independent samples, the variance of a sum is the sum of the variances: $\text{Var}[\sum\_t f(x\_t)] = T \, \text{Var}(f(x\_t))$, and dividing the sum by $T$ divides its variance by $T^2$, which gives $\text{Var}(f(x\_t)) / T$. For a chain, the covariances between samples add to the sum: $\text{Var}[\sum\_t f(x\_t)] = \sum\_{s,t} \text{Cov}(f(x\_s), f(x\_t)) \approx T \, \text{Var}(f(x\_t)) (1 + 2 \sum\_{k \geq 1} \rho\_k)$ for large $T$, hence the factor $\tau\_\text{int}$.
+
 ---
 
 class: middle
