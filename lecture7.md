@@ -166,7 +166,7 @@ class: middle
 
 When each measurement is a prediction plus noise, $x\_i = f\_i(\theta) + \sigma\epsilon\_i$ with $\epsilon\_i \sim p(\epsilon)$, the standardized .bold[residuals] are
 $$r\_i = \frac{x\_i - f\_i(\theta)}{\sigma}, \quad \theta \sim p(\theta \mid \mathbf{x}\_\text{obs}).$$
-$f\_i(\theta)$ may depend on an input, as in a regression; in a state-space model, the residuals are the standardized innovations of the Kalman filter.
+$f\_i(\theta)$ may depend on an input, as in a regression.
 
 If the model fits, the residuals of the observed data are distributed as those of replicated data, and close to $p(\epsilon)$ when the posterior is concentrated.
 
