@@ -269,7 +269,7 @@ class: middle
 
 ## Occam's razor
 
-A model spreads a total probability of one over all possible data sets. A flexible model can produce many of them, so it gives each a small probability. The marginal likelihood therefore prefers the simpler model, unless the data require the flexible one.
+$p(\mathbf{x} \mid \mathcal{M})$ sums to one over all data sets. A flexible model spreads it thinner, so the simpler model scores higher on data it can explain.
 
 .center.width-70[![](./figures/lec7/occam.png)]
 
