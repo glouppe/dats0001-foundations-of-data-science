@@ -309,7 +309,7 @@ class: middle
 
 .center.width-70[![](./figures/lec7/elpd-pointwise.png)]
 
-.center[5-fold cross-validation gives an ELPD of $-225$ for the $t$ model and $-287$ for the Gaussian. <br>The two lowest measurements account for two thirds of the difference.]
+.center[With 5 folds, the ELPD is $-225$ for the $t$ model and $-287$ for the Gaussian. <br>The two lowest measurements account for two thirds of the difference.]
 
 ---
 
