@@ -28,7 +28,7 @@ class: middle
 
 class: middle
 
-Model checking assumes that the computation is correct, so that the samples come from the posterior of the model. It asks whether the model explains the data. Trace plots, $\hat{R}$ and calibration check the sampler, not the model.
+Model checking assumes that the computation is correct, so that the samples come from the posterior of the model. It asks whether the model explains the data. Trace plots, $\hat{R}$ and calibration only check the sampler.
 
 ---
 
