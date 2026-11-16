@@ -24,7 +24,7 @@ class: middle
 
 ## Gaussian mixture model
 
-Each penguin $i$ belongs to one of $K$ components (here $K = 3$), $z\_i \in \\{1, \ldots, K\\}$, and its bill measurements $\mathbf{x}\_i \in \mathbb{R}^2$ are Gaussian given its component,
+To find groups, we assume that the data come from a few groups, each with its own distribution. Each penguin $i$ belongs to one of $K$ components (here $K = 3$), $z\_i \in \\{1, \ldots, K\\}$, and its bill measurements $\mathbf{x}\_i \in \mathbb{R}^2$ are Gaussian given its component,
 $$\begin{aligned}
 p(z\_i = k \mid \theta) &= \pi\_k, \\\\
 p(\mathbf{x}\_i \mid z\_i = k, \theta) &= \mathcal{N}(\mathbf{x}\_i \mid \boldsymbol{\mu}\_k, \boldsymbol{\Sigma}\_k).
@@ -105,7 +105,7 @@ class: middle
 
 .center.width-50[![](figures/lec8/lvm.svg)]
 
-Consider a model $p(\mathbf{x}, \mathbf{z} \mid \theta)$ with latent variables $\mathbf{z}$ and parameters $\theta$. Expectation-maximization (EM) looks for the maximum likelihood estimate
+The iteration above is an instance of a general algorithm. Consider a model $p(\mathbf{x}, \mathbf{z} \mid \theta)$ with latent variables $\mathbf{z}$ and parameters $\theta$. Expectation-maximization (EM) looks for the maximum likelihood estimate
 $$\hat{\theta} = \arg\max\_\theta \log p(\mathbf{x} \mid \theta), \quad \text{with } p(\mathbf{x} \mid \theta) = \int p(\mathbf{x}, \mathbf{z} \mid \theta) d\mathbf{z}.$$
 
 EM returns one value $\hat{\theta}$, with no uncertainty on $\theta$. Sampling the posterior of $\theta$ with MCMC keeps that uncertainty, at a higher cost.
@@ -115,6 +115,8 @@ EM returns one value $\hat{\theta}$, with no uncertainty on $\theta$. Sampling t
 class: middle
 
 ## Two tools
+
+The log-likelihood $\log p(\mathbf{x} \mid \theta)$ is hard to maximize. EM maximizes instead a lower bound on it, built with two tools.
 
 The logarithm is concave. For any positive random variable $Y$, this gives .bold[Jensen's inequality],
 $$\log \mathbb{E}[Y] \geq \mathbb{E}[\log Y],$$
@@ -173,7 +175,7 @@ class: middle
 
 ## The algorithm
 
-Start from initial parameters $\theta^{(0)}$, then repeat for $t = 0, 1, 2, \ldots$
+The bound is tight when $q$ is the posterior, and it can be raised by moving $\theta$. EM alternates between the two. Start from initial parameters $\theta^{(0)}$, then repeat for $t = 0, 1, 2, \ldots$
 - .bold[E-step]: $q^{(t+1)} = \arg\max\_q \mathcal{L}(q, \theta^{(t)})$,
 - .bold[M-step]: $\theta^{(t+1)} = \arg\max\_\theta \mathcal{L}(q^{(t+1)}, \theta)$.
 
@@ -225,21 +227,9 @@ $$\begin{aligned}
 
 class: middle
 
-EM converges to a local maximum of the likelihood, which depends on $\theta^{(0)}$. In practice, it is run from several initial values, and the run with the highest log-likelihood is kept.
-
-.center.width-70[![](figures/lec8/em-local.png)]
-
-.center[Two runs of EM on the penguin bills, from different initial values. <br>The second stops at a local maximum.]
-
-Relabelling the components gives the same likelihood, so each maximum comes in $K!$ equivalent copies.
-
----
-
-class: middle
-
 ## EM for the Gaussian mixture
 
-With the current parameters $\theta^{(t)}$, the E-step computes for each penguin $i$ and component $k$ the .bold[responsibility]
+For the mixture, the two steps give back the iteration of the opening slides. With the current parameters $\theta^{(t)}$, the E-step computes for each penguin $i$ and component $k$ the .bold[responsibility]
 $$r\_{ik} = q^{(t+1)}(z\_i = k) = \frac{\pi\_k \mathcal{N}(\mathbf{x}\_i \mid \boldsymbol{\mu}\_k, \boldsymbol{\Sigma}\_k)}{\sum\_{j=1}^K \pi\_j \mathcal{N}(\mathbf{x}\_i \mid \boldsymbol{\mu}\_j, \boldsymbol{\Sigma}\_j)}.$$
 It is the weight that appeared in the gradient of the log-likelihood.
 
@@ -307,9 +297,21 @@ count: false
 
 class: middle
 
+Since the log-likelihood only increases, EM climbs to a maximum, which depends on $\theta^{(0)}$ and may be local. In practice, it is run from several initial values, and the run with the highest log-likelihood is kept.
+
+.center.width-70[![](figures/lec8/em-local.png)]
+
+.center[Two runs of EM on the penguin bills, from different initial values. <br>The second stops at a local maximum.]
+
+Relabelling the components gives the same likelihood, so each maximum comes in $K!$ equivalent copies.
+
+---
+
+class: middle
+
 ## Empirical Bayes
 
-In a Bayesian model, the prior $p(\theta \mid \alpha)$ has hyperparameters $\alpha$, so far fixed. .bold[Empirical Bayes] estimates them from the data, by maximizing
+EM estimates parameters by maximizing a marginal likelihood. The same idea applies one level up. In a Bayesian model, the prior $p(\theta \mid \alpha)$ has hyperparameters $\alpha$, so far fixed. .bold[Empirical Bayes] estimates them from the data, by maximizing
 $$p(\mathbf{x} \mid \alpha) = \iint p(\mathbf{x}, \mathbf{z} \mid \theta) p(\theta \mid \alpha) d\mathbf{z} d\theta,$$
 and uses the prior $p(\theta \mid \hat{\alpha})$.
 
@@ -334,7 +336,7 @@ class: middle
 
 ## Learning diffusion priors by EM
 
-EM can learn a prior parameterized by a deep generative model, such as a diffusion model, from noisy and incomplete observations only.
+The prior can itself be a deep generative model, such as a diffusion model. EM then learns it from noisy and incomplete observations only.
 
 .center.width-90[![](figures/lec8/diffusion-prior-cifar10.png)]
 
