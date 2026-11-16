@@ -326,9 +326,11 @@ The score of a Bayesian model is the .bold[expected log predictive density] (ELP
 $$\mathbb{E}\_{p\_r(\mathbf{x}')}[\log p(\mathbf{x}' \mid \mathbf{x}\_\text{obs})],$$
 where $p(\mathbf{x}' \mid \mathbf{x}\_\text{obs})$ is the posterior predictive distribution of the training set, and the validation set stands for $p\_r$.
 
-The .bold[Kullback-Leibler (KL) divergence] $\text{KL}(p \\| q) = \mathbb{E}\_{p(\mathbf{x})}\left[\log \frac{p(\mathbf{x})}{q(\mathbf{x})}\right]$ measures how far a distribution $q$ is from $p$. It is zero when $q = p$. The ELPD is
+Equivalently,
 $$\mathbb{E}\_{p\_r(\mathbf{x}')}[\log p(\mathbf{x}' \mid \mathbf{x}\_\text{obs})] = -\text{KL}(p\_r \\| p(\cdot \mid \mathbf{x}\_\text{obs})) + \mathbb{E}\_{p\_r(\mathbf{x}')}[\log p\_r(\mathbf{x}')],$$
-where the second term does not depend on the model. A higher ELPD means predictions closer to $p\_r$.
+where the second term does not depend on the model, and
+$$\text{KL}(p \\| q) = \mathbb{E}\_{p(\mathbf{x})}\left[\log \frac{p(\mathbf{x})}{q(\mathbf{x})}\right]$$
+is the .bold[Kullback-Leibler (KL) divergence], which measures how far a distribution $q$ is from $p$. A higher ELPD means predictions closer to $p\_r$.
 
 ---
 
