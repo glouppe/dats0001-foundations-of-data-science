@@ -272,7 +272,7 @@ class: middle
 
 ## Occam's razor
 
-Bayesian model comparison favours a simple model over a flexible one, when both explain the data. The marginal likelihood $p(\mathbf{x} \mid \mathcal{M})$ sums to one over all data sets. A flexible model spreads it over more data sets than a simple one. When both explain $\mathbf{x}\_\text{obs}$, the simple model gives it more probability.
+Bayesian model comparison favours a simple model over a flexible one, when both explain the data. The marginal likelihood $p(\mathbf{x} \mid \mathcal{M})$ sums to one over all data sets, and a flexible model spreads it over more of them.
 
 .center.width-70[![](./figures/lec7/occam.png)]
 
