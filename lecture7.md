@@ -272,6 +272,14 @@ class: middle
 
 ## Occam's razor
 
+Bayesian model comparison favours a simple model over a flexible one, when both explain the data. The marginal likelihood $p(\mathbf{x} \mid \mathcal{M})$ sums to one over all data sets. A flexible model spreads it over more data sets than a simple one. When both explain $\mathbf{x}\_\text{obs}$, the simple model gives it more probability.
+
+.center.width-70[![](./figures/lec7/occam.png)]
+
+---
+
+class: middle
+
 The marginal likelihood averages the likelihood over the prior. It splits as
 $$\log p(\mathbf{x}\_\text{obs} \mid \mathcal{M}) = \underbrace{\log p(\mathbf{x}\_\text{obs} \mid \hat{\theta}, \mathcal{M})}\_\text{fit} + \underbrace{\log \frac{p(\mathbf{x}\_\text{obs} \mid \mathcal{M})}{p(\mathbf{x}\_\text{obs} \mid \hat{\theta}, \mathcal{M})}}\_\text{log Occam factor}.$$
 The .bold[Occam factor] is roughly the fraction of the prior that fits the data as well as $\hat{\theta}$. The Laplace approximation gives it as $p(\hat{\theta} \mid \mathcal{M}) (2\pi)^{d/2} |\boldsymbol{\Sigma}|^{1/2}$, that is $\Delta\_\text{post} / \Delta\_\text{prior}$ for one parameter with a uniform prior.
@@ -299,14 +307,6 @@ A flexible model fits better, but pays one such fraction per parameter.
 .center.width-70[![](./figures/lec7/occam-polynomials.png)]
 
 .center[Beyond degree 3, the fit barely improves while the Occam factor keeps falling.]
-
----
-
-class: middle
-
-Equivalently, $p(\mathbf{x} \mid \mathcal{M})$ sums to one over all data sets. A flexible model spreads it over more data sets than a simple one. When both explain $\mathbf{x}\_\text{obs}$, the simple model gives it more probability.
-
-.center.width-70[![](./figures/lec7/occam.png)]
 
 ---
 
