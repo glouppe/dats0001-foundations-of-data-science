@@ -2,7 +2,7 @@ class: middle, center, title-slide
 
 # Foundations of Data Science
 
-Lecture 8: Expectation-Maximization
+Lecture 8: Expectation-maximization
 
 <br><br>
 Prof. Gilles Louppe<br>
@@ -12,89 +12,75 @@ Prof. Gilles Louppe<br>
 
 class: middle
 
-.center.width-10[![](figures/lec8/geyser.png)]
+.center.width-70[![](figures/lec8/penguin-bills.png)]
 
-The Old Faithful geyser in Yellowstone National Park (USA) is famous for its frequent and predictable eruptions of hot water and steam.
+.center[Bill length and depth of 342 penguins, with their species left out.]
 
----
-
-class: middle, black-slide
-
-.center[
-<iframe width="640" height="400" src="https://www.youtube.com/embed/Qxf3xzirBrs?cc_load_policy=1&hl=en&version=3" frameborder="0" allowfullscreen></iframe>
-]
+.question[How many groups are there, and which penguin belongs to which?]
 
 ---
 
 class: middle
 
-.center.width-70[![](figures/lec8/faithful-data.png)]
+## Gaussian mixture model
 
----
-
-class: middle
-
-## 2-component GMM
-
-The observed data $\\{ x\_n \in \mathbb{R}^2 \\}\_{n=1}^N$ can be modeled as being generated from a mixture of two Gaussian distributions, with latents $z\_n \in \\{1, 2\\}$ labeling observation membership and hyper-parameters $\pi, \mu = (\\mu\_1, \\mu\_2), \sigma^2 = (\\sigma\_1^2, \\sigma\_2^2)$ defining the mixture proportions, means and variances of the Gaussian components.
-
-.center[![](figures/lec8/geyser-model.svg)]
-
----
-
-class: middle
-
-## How to fit the model parameters?
-
-The marginal log-likelihood of the observed data is
-$$\\begin{aligned}
-\log p(\\{x\_n\\}\_{n=1}^N | \pi, \mu, \sigma^2) &= \log \prod\_{n=1}^N p(x\_n | \pi, \mu, \sigma^2) \\\\
-&= \log \prod\_{n=1}^N \sum\_{z\_n=1}^2 p(x\_n, z\_n | \pi, \mu, \sigma^2) \\\\
-&= \sum\_{n=1}^N \log \sum\_{z\_n=1}^2 p(x\_n | z\_n, \mu, \sigma^2) p(z\_n | \pi),
+Each penguin $i$ belongs to one of $K$ components (here $K = 3$), $z\_i \in \\{1, \ldots, K\\}$, and its bill measurements $\mathbf{x}\_i \in \mathbb{R}^2$ are Gaussian given its component,
+$$\begin{aligned}
+p(z\_i = k \mid \theta) &= \pi\_k, \\\\
+p(\mathbf{x}\_i \mid z\_i = k, \theta) &= \mathcal{N}(\mathbf{x}\_i \mid \boldsymbol{\mu}\_k, \boldsymbol{\Sigma}\_k).
 \end{aligned}$$
-where
-- $p(x\_n | z\_n = k, \mu, \sigma^2) = \mathcal{N}(x\_n | \mu\_k, \sigma\_k^2 I)$
-- $p(z\_n = k | \pi) = \pi\_k$ for $k = 1, 2$.
+The parameters $\theta = (\boldsymbol{\pi}, \boldsymbol{\mu}\_{1:K}, \boldsymbol{\Sigma}\_{1:K})$ are the weights, means and covariance matrices of the components. Here they are fixed unknowns, with no prior, to be estimated from the data.
+
+.center.width-50[![](figures/lec8/gmm-model.svg)]
 
 ---
 
 class: middle
 
-.center.width-10[![](figures/lec8/danger.png)]
+## Maximum likelihood
 
-Direct maximization of the marginal log-likelihood w.r.t. parameters $\\theta = (\\pi, \\mu, \\sigma^2)$ is difficult.
-- The objective is non-convex.
-- No closed-form solution.
-- Numerically unstable.
+The $z\_i$ are not observed. Summing them out gives the likelihood of the data alone,
+$$p(\mathbf{x}\_{1:N} \mid \theta) = \prod\_{i=1}^N \sum\_{k=1}^K \pi\_k \mathcal{N}(\mathbf{x}\_i \mid \boldsymbol{\mu}\_k, \boldsymbol{\Sigma}\_k).$$
+The latent variables are summed out, and $\theta$ is held fixed. Integrating $\theta$ out too would give $p(\mathbf{x}\_{1:N} \mid \mathcal{M})$, the quantity used to compare models with Bayes factors.
 
-.alert[More generally, latent variable models lead to log-likelihoods involving sums or integrals inside the logarithm. As their domain grows, these sums/integrals .bold[become intractable to even just evaluate], let alone optimize.]
+The maximum likelihood estimate maximizes
+$$\log p(\mathbf{x}\_{1:N} \mid \theta) = \sum\_{i=1}^N \log \sum\_{k=1}^K \pi\_k \mathcal{N}(\mathbf{x}\_i \mid \boldsymbol{\mu}\_k, \boldsymbol{\Sigma}\_k).$$
 
 ---
 
 class: middle
 
-## If we knew the latent variables...
+The sum over components sits inside the logarithm. The gradient with respect to $\boldsymbol{\mu}\_k$ is
+$$\sum\_{i=1}^N \frac{\pi\_k \mathcal{N}(\mathbf{x}\_i \mid \boldsymbol{\mu}\_k, \boldsymbol{\Sigma}\_k)}{\sum\_{j=1}^K \pi\_j \mathcal{N}(\mathbf{x}\_i \mid \boldsymbol{\mu}\_j, \boldsymbol{\Sigma}\_j)} \boldsymbol{\Sigma}\_k^{-1} (\mathbf{x}\_i - \boldsymbol{\mu}\_k).$$
+The weight of each penguin depends on all the parameters, so setting the gradient to zero gives no closed-form solution.
 
-If the latent $\\{ z\_n \\}\_{n=1}^N$ were known, the complete-data log-likelihood would be
-$$\\begin{aligned}
-\log p(\\{x\_n, z\_n\\}\_{n=1}^N | \pi, \mu, \sigma^2) &= \log \prod\_{n=1}^N p(x\_n, z\_n | \pi, \mu, \sigma^2) \\\\
-&= \log \prod\_{n=1}^N p(x\_n | \mu\_{z\_n}, \sigma^2\_{z\_n}) p(z\_n | \pi) \\\\
-&= \sum\_{n=1}^N \log p(x\_n | \mu\_{z\_n}, \sigma^2\_{z\_n}) + \sum\_{n=1}^N \log p(z\_n | \pi).
+For other latent variable models, the sum becomes an integral over $\mathbf{z}$, which often cannot even be evaluated.
+
+---
+
+class: middle
+
+## If the components were known
+
+With the $z\_i$ observed, the log-likelihood of the complete data splits into one term per component,
+$$\log p(\mathbf{x}\_{1:N}, z\_{1:N} \mid \theta) = \sum\_{i=1}^N \log \pi\_{z\_i} + \sum\_{i=1}^N \log \mathcal{N}(\mathbf{x}\_i \mid \boldsymbol{\mu}\_{z\_i}, \boldsymbol{\Sigma}\_{z\_i}).$$
+
+The mean $\boldsymbol{\mu}\_k$ appears only in the terms of the $N\_k$ penguins with $z\_i = k$,
+$$-\frac{1}{2} \sum\_{i : z\_i = k} (\mathbf{x}\_i - \boldsymbol{\mu}\_k)^T \boldsymbol{\Sigma}\_k^{-1} (\mathbf{x}\_i - \boldsymbol{\mu}\_k) + \text{const}.$$
+Its gradient with respect to $\boldsymbol{\mu}\_k$ is $\sum\_{i : z\_i = k} \boldsymbol{\Sigma}\_k^{-1} (\mathbf{x}\_i - \boldsymbol{\mu}\_k)$. Setting it to zero gives
+$$\boldsymbol{\mu}\_k = \frac{1}{N\_k} \sum\_{i : z\_i = k} \mathbf{x}\_i.$$
+
+---
+
+class: middle
+
+In the same way, each parameter is the maximum likelihood estimate of its own component,
+$$\begin{aligned}
+\boldsymbol{\mu}\_k &= \frac{1}{N\_k} \sum\_{i : z\_i = k} \mathbf{x}\_i, \\\\
+\boldsymbol{\Sigma}\_k &= \frac{1}{N\_k} \sum\_{i : z\_i = k} (\mathbf{x}\_i - \boldsymbol{\mu}\_k)(\mathbf{x}\_i - \boldsymbol{\mu}\_k)^T, \\\\
+\pi\_k &= \frac{N\_k}{N},
 \end{aligned}$$
-
-The evaluation of the log-likelihood becomes tractable, and so does its optimization.
-
----
-
-class: middle
-
-For the Gaussian mixture model, differentiating the complete-data log-likelihood with respect to the parameters and setting to zero would even yield closed-form expressions for the maximum likelihood estimates:
-
-- $\mu\_k = \frac{1}{N\_k} \sum\_{\\{n: z\_n = k\\}} x\_n$
-- $\sigma\_k^2 = \frac{1}{N\_k} \sum\_{\\{n: z\_n = k\\}} |x\_n - \mu\_k|^2$
-- $\pi\_k = \frac{N\_k}{N}$
-
-where $N\_k = \sum\_{n=1}^N \mathbb{1}(z\_n = k)$.
+the mean, the covariance and the fraction of the penguins in component $k$.
 
 ---
 
@@ -102,280 +88,257 @@ class: middle
 
 .center.width-10[![](figures/lec8/light-bulb.png)]
 
-.center[What if we alternate between guessing the latent variables<br> and optimizing the hyperparameters?]
+The $z\_i$ are unknown, but given $\theta$ their posterior is easy to compute. This suggests an iteration.
+1. Compute the posterior of each $z\_i$ under the current $\theta$.
+2. Refit $\theta$ as if the components were known, with each penguin counted in each component with its posterior probability.
+3. Repeat.
 
 ---
 
 class: middle
 
-# Expectation-Maximization
+# Expectation-maximization
 
 ---
 
 class: middle
 
-.center[![](figures/lec8/lvm.svg)]
+.center.width-50[![](figures/lec8/lvm.svg)]
 
-Assume a generic latent variable model $p(x, z | \theta)$ where $\theta$ are parameters mediating the joint distribution.
+Consider a model $p(\mathbf{x}, \mathbf{z} \mid \theta)$ with latent variables $\mathbf{z}$ and parameters $\theta$. Expectation-maximization (EM) looks for the maximum likelihood estimate
+$$\hat{\theta} = \arg\max\_\theta \log p(\mathbf{x} \mid \theta), \quad \text{with } p(\mathbf{x} \mid \theta) = \int p(\mathbf{x}, \mathbf{z} \mid \theta) d\mathbf{z}.$$
+
+EM returns one value $\hat{\theta}$, with no uncertainty on $\theta$. Sampling the posterior of $\theta$ with MCMC keeps that uncertainty, at a higher cost.
 
 ---
 
 class: middle
 
-## Evidence lower bound 
+## Two tools
 
-The marginal log-likelihood for a single observation $x$ can be rewritten as
-$$\\begin{aligned}
-\log p(x | \theta) &= \log \int p(x, z | \theta) \, dz \\\\
-&= \log \int q(z) \frac{p(x, z | \theta)}{q(z)} \, dz \\\\
-&= \log \mathbb{E}\_{q(z)} \left[\frac{p(x, z | \theta)}{q(z)}\right],
+The logarithm is concave. For any positive random variable $Y$, this gives .bold[Jensen's inequality],
+$$\log \mathbb{E}[Y] \geq \mathbb{E}[\log Y],$$
+with equality when $Y$ is constant.
+
+The .bold[Kullback-Leibler divergence] between two distributions $q$ and $p$ is
+$$\text{KL}(q \\| p) = \mathbb{E}\_{q(\mathbf{z})}\left[\log \frac{q(\mathbf{z})}{p(\mathbf{z})}\right].$$
+By Jensen's inequality,
+$$-\text{KL}(q \\| p) = \mathbb{E}\_{q}\left[\log \frac{p(\mathbf{z})}{q(\mathbf{z})}\right] \leq \log \mathbb{E}\_{q}\left[\frac{p(\mathbf{z})}{q(\mathbf{z})}\right] = \log 1 = 0.$$
+The divergence is nonnegative, and zero only when $q = p$.
+
+---
+
+class: middle
+
+## Evidence lower bound
+
+Let $q(\mathbf{z})$ be any distribution over the latent variables. Then
+$$\begin{aligned}
+\log p(\mathbf{x} \mid \theta) &= \log \int q(\mathbf{z}) \frac{p(\mathbf{x}, \mathbf{z} \mid \theta)}{q(\mathbf{z})} d\mathbf{z} = \log \mathbb{E}\_{q(\mathbf{z})}\left[\frac{p(\mathbf{x}, \mathbf{z} \mid \theta)}{q(\mathbf{z})}\right] \\\\
+&\geq \mathbb{E}\_{q(\mathbf{z})}\left[\log \frac{p(\mathbf{x}, \mathbf{z} \mid \theta)}{q(\mathbf{z})}\right] = \mathcal{L}(q, \theta)
 \end{aligned}$$
-where $q(z)$ is any valid probability distribution over the latent variable $z$.
+by Jensen's inequality. $\mathcal{L}(q, \theta)$ is the .bold[evidence lower bound] (ELBO).
 
 ---
 
 class: middle
 
-By Jensen's inequality, the log-likelihood can be lower-bounded as
-$$\\begin{aligned}
-\log p(x | \theta) &\geq \mathbb{E}\_{q(z)} \left[\log \frac{p(x, z | \theta)}{q(z)}\right] = \mathcal{L}(q, \theta),
+Writing $p(\mathbf{x}, \mathbf{z} \mid \theta) = p(\mathbf{z} \mid \mathbf{x}, \theta) p(\mathbf{x} \mid \theta)$ gives the size of the gap,
+$$\begin{aligned}
+\mathcal{L}(q, \theta) &= \mathbb{E}\_{q(\mathbf{z})}\left[\log \frac{p(\mathbf{z} \mid \mathbf{x}, \theta)}{q(\mathbf{z})}\right] + \log p(\mathbf{x} \mid \theta) \\\\
+&= \log p(\mathbf{x} \mid \theta) - \text{KL}(q(\mathbf{z}) \\| p(\mathbf{z} \mid \mathbf{x}, \theta)).
 \end{aligned}$$
-where $\mathcal{L}(q, \theta)$ is known as the .bold[evidence lower bound objective] (ELBO).
 
----
-
-class: middle
-
-The ELBO can first be rewritten as
-$$\\begin{aligned}
-\mathcal{L}(q, \theta) &= \mathbb{E}\_{q(z)} \left[\log \frac{p(x, z | \theta)}{q(z)}\right] \\\\
-&= \mathbb{E}\_{q(z)} \left[\log \frac{p(x | z, \theta) p(z | \theta)}{q(z)}\right] \\\\
-&= \mathbb{E}\_{q(z)} \left[\log p(x | z, \theta)\right] - \text{KL}(q(z) || p(z | \theta)),
-\end{aligned}$$
-where $\text{KL}(q(z) || p(z | \theta)) = \mathbb{E}\_{q(z)} \left[\log \frac{q(z)}{p(z | \theta)}\right]$ is the Kullback-Leibler divergence between distributions $q(z)$ and $p(z | \theta)$.
-
-This expression highlights the trade-off between fitting the data well (first term) and keeping the variational distribution $q(z)$ close to the prior $p(z | \theta)$ (second term).
-
----
-
-class: middle
-
-By factorizing the joint in the other way, the ELBO can also be rewritten as
-$$\\begin{aligned}
-\mathcal{L}(q, \theta) &= \mathbb{E}\_{q(z)} \left[\log \frac{p(x, z | \theta)}{q(z)}\right] \\\\
-&= \mathbb{E}\_{q(z)} \left[\log \frac{p(z | x, \theta) p(x | \theta)}{q(z)}\right] \\\\
-&= \log p(x | \theta) - \text{KL}(q(z) || p(z | x, \theta)).
-\end{aligned}$$
-Therefore,
-$$\log p(x | \theta) = \mathcal{L}(q, \theta) + \text{KL}(q(z) || p(z | x, \theta)).$$
-
-This decomposition reveals that the ELBO is a lower bound on the log-likelihood, with a gap measured by the KL divergence between the variational distribution $q(z)$ and the posterior distribution $p(z | x, \theta)$.
+The ELBO lies below the log-likelihood by the KL divergence between $q$ and the posterior of the latent variables. It touches the log-likelihood when $q$ is that posterior.
 
 ---
 
 class: middle
 
 .center.width-70[![](figures/lec8/em-elbo-gap.png)]
-The KL gap $\text{KL}(q(z) || p(z | x, \theta))$ between the log-likelihood $\log p(x | \theta)$ and the ELBO $\mathcal{L}(q, \theta)$ measures the tightness of the bound. (Sketch.)
+
+.center[For a distribution $q$ other than the posterior at $\theta^{(t)}$, <br>the ELBO lies below the log-likelihood at $\theta^{(t)}$.]
 
 ---
 
 class: middle
 
 .center.width-70[![](figures/lec8/em-elbo-nogap.png)]
-The ELBO is tight when $q(z) = p(z | x, \theta)$. Maximizing the ELBO is then equivalent to maximizing the log-likelihood $\log p(x | \theta)$.
+
+.center[With $q$ set to the posterior at $\theta^{(t)}$, the gap at $\theta^{(t)}$ vanishes.]
 
 ---
 
 class: middle
 
-## Expectation-Maximization algorithm
+## The algorithm
 
-The EM algorithm maintains parameter estimates $\theta^{(t)}$ at iteration $t$ and a variational distribution $q^{(t)}(z)$ over the latent variables. It iteratively maximizes the ELBO by alternating between two steps:
-- E-step: maximize the ELBO $\mathcal{L}(q, \theta^{(t)})$ w.r.t. $q$ while keeping $\theta^{(t)}$ fixed.
-- M-step: maximize the ELBO $\mathcal{L}(q^{(t+1)}, \theta)$ w.r.t. $\theta$ while keeping $q^{(t+1)}(z)$ fixed.
+Start from initial parameters $\theta^{(0)}$, then repeat for $t = 0, 1, 2, \ldots$
+- .bold[E-step]: $q^{(t+1)} = \arg\max\_q \mathcal{L}(q, \theta^{(t)})$,
+- .bold[M-step]: $\theta^{(t+1)} = \arg\max\_\theta \mathcal{L}(q^{(t+1)}, \theta)$.
 
----
-
-class: middle
-
-The E-step consists in solving
-$$q^{(t+1)} = \arg\max\_q \mathcal{L}(q, \theta^{(t)})$$
-which is achieved by setting $q$ to the posterior distribution
-$$q^{(t+1)}(z) = p(z | x, \theta^{(t)})$$.
-
-.italic[Proof.] From the decomposition of the log-likelihood, we have
-$$\mathcal{L}(q, \theta^{(t)}) = \log p(x | \theta^{(t)}) - \text{KL}(q(z) || p(z | x, \theta^{(t)})).$$
-Since the log-likelihood term $\log p(x | \theta^{(t)})$ does not depend on $q$, maximizing the ELBO w.r.t. $q$ is equivalent to minimizing the KL divergence $\text{KL}(q(z) || p(z | x, \theta^{(t)}))$. The KL divergence is minimized when $q(z) = p(z | x, \theta^{(t)})$. □
+EM maximizes the ELBO over $q$ and $\theta$ in turn.
 
 ---
 
 class: middle
 
-The M-step consists in solving
-$$\theta^{(t+1)} = \arg\max\_\theta \mathcal{L}(q^{(t+1)}, \theta)$$
-which can be rewritten as
-$$
-\begin{aligned}
-\theta^{(t+1)} &= \arg\max\_\theta \mathbb{E}\_{q^{(t+1)}(z)} \left[\log \frac{p(x, z | \theta)}{q^{(t+1)}(z)}\right] \\\\
-&= \arg\max\_\theta \mathbb{E}\_{q^{(t+1)}(z)} \left[\log p(x, z | \theta)\right] - \mathbb{E}\_{q^{(t+1)}(z)} \left[\log q^{(t+1)}(z)\right] \\\\
-&= \arg\max\_\theta \mathbb{E}\_{q^{(t+1)}(z)} \left[\log p(x, z | \theta)\right]
-\end{aligned}
-$$
-since the entropy term $H(q^{(t+1)}(z)) = \mathbb{E}\_{q^{(t+1)}(z)} \left[- \log q^{(t+1)}(z)\right]$ does not depend on $\theta$.
+The E-step sets $q$ to the posterior,
+$$q^{(t+1)}(\mathbf{z}) = p(\mathbf{z} \mid \mathbf{x}, \theta^{(t)}).$$
+.italic[Proof.] $\mathcal{L}(q, \theta^{(t)}) = \log p(\mathbf{x} \mid \theta^{(t)}) - \text{KL}(q(\mathbf{z}) \\| p(\mathbf{z} \mid \mathbf{x}, \theta^{(t)}))$. The first term does not depend on $q$, and the KL divergence is smallest, zero, when $q$ is the posterior. □
 
-Depending on the model, this maximization can sometimes be done in closed-form. Otherwise, numerical optimization algorithms can be used.
+The M-step maximizes the expected complete-data log-likelihood,
+$$\theta^{(t+1)} = \arg\max\_\theta \mathbb{E}\_{q^{(t+1)}(\mathbf{z})}\left[\log p(\mathbf{x}, \mathbf{z} \mid \theta)\right].$$
+.italic[Proof.] $\mathcal{L}(q^{(t+1)}, \theta) = \mathbb{E}\_{q^{(t+1)}}\left[\log p(\mathbf{x}, \mathbf{z} \mid \theta)\right] - \mathbb{E}\_{q^{(t+1)}}\left[\log q^{(t+1)}(\mathbf{z})\right]$, and the second term does not depend on $\theta$. □
 
 ---
 
 class: middle
 
-Finally, to initialize the algorithm, we need to set initial parameters $\theta^{(0)}$, which can be done randomly or based on prior knowledge.
+.center.width-70[![](figures/lec8/em-elbo-mstep.png)]
+
+.center[The M-step moves $\theta^{(t)}$ to the maximum of the ELBO, $\theta^{(t+1)}$.]
 
 ---
 
 class: middle
 
-.center.width-70[![](figures/lec8/em-elbo-0.png)]
+.center.width-70[![](figures/lec8/em-elbo-next.png)]
 
----
-
-class: middle
-count: false
-
-.center.width-70[![](figures/lec8/em-elbo-1.png)]
-
----
-
-class: middle
-count: false
-
-.center.width-70[![](figures/lec8/em-elbo-2.png)]
+.center[The next E-step closes the gap at $\theta^{(t+1)}$, where the log-likelihood is higher.]
 
 ---
 
 class: middle
 
-.italic[Proposition.] The EM algorithm monotonically increases the marginal log-likelihood at each iteration, i.e.,
-$$\log p(x | \theta^{(t)}) \leq \log p(x | \theta^{(t+1)})$$
-for all $t \geq 0$.
+.italic[Proposition.] EM never decreases the log-likelihood,
+$$\log p(\mathbf{x} \mid \theta^{(t)}) \leq \log p(\mathbf{x} \mid \theta^{(t+1)}) \quad \text{for all } t \geq 0.$$
 
-.italic[Proof.] Assume we have parameter estimates $\theta^{(t)}$ at iteration $t$.
+.italic[Proof.]
 $$\begin{aligned}
-\log p(x | \theta^{(t)}) &= \mathcal{L}(q^{(t+1)}, \theta^{(t)}) + \text{KL}(q^{(t+1)}(z) || p(z | x, \theta^{(t)})) \\\\
-&= \mathcal{L}(q^{(t+1)}, \theta^{(t)}) \\\\
-&\leq \mathcal{L}(q^{(t+1)}, \theta^{(t+1)}) \\\\
-&\leq \log p(x | \theta^{(t+1)}),
+\log p(\mathbf{x} \mid \theta^{(t)}) &= \mathcal{L}(q^{(t+1)}, \theta^{(t)}) && \text{(the E-step closes the gap)} \\\\
+&\leq \mathcal{L}(q^{(t+1)}, \theta^{(t+1)}) && \text{(the M-step maximizes over } \theta\text{)} \\\\
+&\leq \log p(\mathbf{x} \mid \theta^{(t+1)}) && \text{(the ELBO is a lower bound)}. \quad □
 \end{aligned}$$
-where the second equality holds since the E-step sets $q^{(t+1)} = p(z|x,\theta^{(t)})$, making the KL gap zero; the first inequality follows from the M-step optimization; and the last inequality holds because the ELBO is always a lower bound on the log-likelihood. □
-
-
 
 ---
 
 class: middle
 
-## EM for the Old Faithful Geyser model
+EM converges to a local maximum of the likelihood, which depends on $\theta^{(0)}$. In practice, it is run from several initial values, and the run with the highest log-likelihood is kept.
 
-For the Gaussian mixture model introduced earlier, the E-step consists in computing the posterior distribution over the latent variables:
+.center.width-70[![](figures/lec8/em-local.png)]
+
+.center[Two runs of EM on the penguin bills, from different initial values. <br>The second stops at a local maximum.]
+
+Relabelling the components gives the same likelihood, so each maximum comes in $K!$ equivalent copies.
+
+---
+
+class: middle
+
+## EM for the Gaussian mixture
+
+With the current parameters $\theta^{(t)}$, the E-step computes for each penguin $i$ and component $k$ the .bold[responsibility]
+$$r\_{ik} = q^{(t+1)}(z\_i = k) = \frac{\pi\_k \mathcal{N}(\mathbf{x}\_i \mid \boldsymbol{\mu}\_k, \boldsymbol{\Sigma}\_k)}{\sum\_{j=1}^K \pi\_j \mathcal{N}(\mathbf{x}\_i \mid \boldsymbol{\mu}\_j, \boldsymbol{\Sigma}\_j)}.$$
+It is the weight that appeared in the gradient of the log-likelihood.
+
+The M-step maximizes
+$$\mathbb{E}\_{q^{(t+1)}}\left[\log p(\mathbf{x}\_{1:N}, z\_{1:N} \mid \theta)\right] = \sum\_{i=1}^N \sum\_{k=1}^K r\_{ik} \left[\log \pi\_k + \log \mathcal{N}(\mathbf{x}\_i \mid \boldsymbol{\mu}\_k, \boldsymbol{\Sigma}\_k)\right],$$
+the complete-data log-likelihood with each indicator of $z\_i = k$ replaced by $r\_{ik}$.
+
+---
+
+class: middle
+
+The derivation for known components carries over with weights. The gradient with respect to $\boldsymbol{\mu}\_k$ is $\sum\_{i} r\_{ik} \boldsymbol{\Sigma}\_k^{-1} (\mathbf{x}\_i - \boldsymbol{\mu}\_k)$, and setting it to zero gives the first update below. With $N\_k = \sum\_{i} r\_{ik}$,
 $$\begin{aligned}
-q^{(t+1)}(z\_n = k) &= p(z\_n = k | x\_n, \pi^{(t)}, \mu^{(t)}, \sigma^{2(t)}) \\\\
-&= \frac{p(x\_n | z\_n = k, \mu^{(t)}, \sigma^{2(t)}) p(z\_n = k | \pi^{(t)})}{\sum\_{j=1}^2 p(x\_n | z\_n = j, \mu^{(t)}, \sigma^{2(t)}) p(z\_n = j | \pi^{(t)})} \\\\
-&= \frac{\pi\_k^{(t)} \mathcal{N}(x\_n | \mu\_k^{(t)}, \sigma\_k^{2(t)} I)}{\sum\_{j=1}^2 \pi\_j^{(t)} \mathcal{N}(x\_n | \mu\_j^{(t)}, \sigma\_j^{2(t)} I)}
+\boldsymbol{\mu}\_k^{(t+1)} &= \frac{1}{N\_k} \sum\_{i=1}^N r\_{ik} \mathbf{x}\_i, \\\\
+\boldsymbol{\Sigma}\_k^{(t+1)} &= \frac{1}{N\_k} \sum\_{i=1}^N r\_{ik} (\mathbf{x}\_i - \boldsymbol{\mu}\_k^{(t+1)})(\mathbf{x}\_i - \boldsymbol{\mu}\_k^{(t+1)})^T, \\\\
+\pi\_k^{(t+1)} &= \frac{N\_k}{N}.
 \end{aligned}$$
-for $k = 1, 2$ and $n = 1, \ldots, N$.
 
 ---
 
 class: middle
 
-The M-step consists in updating the parameters as
-$$\begin{aligned}
-\mu\_k^{(t+1)} &= \frac{\sum\_{n=1}^N q^{(t+1)}(z\_n = k) x\_n}{\sum\_{n=1}^N q^{(t+1)}(z\_n = k)} \\\\
-\sigma\_k^{2(t+1)} &= \frac{\sum\_{n=1}^N q^{(t+1)}(z\_n = k) |x\_n - \mu\_k^{(t+1)}|^2}{\sum\_{n=1}^N q^{(t+1)}(z\_n = k)} \\\\
-\pi\_k^{(t+1)} &= \frac{1}{N} \sum\_{n=1}^N q^{(t+1)}(z\_n = k)
-\end{aligned}$$
-for $k = 1, 2$, which follows differentiating the expected complete-data log-likelihood and setting to zero.
+.center.width-70[![](figures/lec8/em-bills-0.png)]
 
----
-
-class: middle
-
-.center.width-70[![](figures/lec8/faithful-gmm-0.png)]
+.center[Each penguin is coloured by its responsibilities, <br>each component drawn at two standard deviations.]
 
 ---
 
 class: middle
 count: false
 
-.center.width-70[![](figures/lec8/faithful-gmm-1.png)]
+.center.width-70[![](figures/lec8/em-bills-1.png)]
 
 ---
 
 class: middle
 count: false
 
-.center.width-70[![](figures/lec8/faithful-gmm-2.png)]
+.center.width-70[![](figures/lec8/em-bills-2.png)]
 
 ---
 
 class: middle
 count: false
 
-.center.width-70[![](figures/lec8/faithful-gmm-3.png)]
+.center.width-70[![](figures/lec8/em-bills-3.png)]
 
 ---
 
 class: middle
 count: false
 
-.center.width-70[![](figures/lec8/faithful-gmm-4.png)]
+.center.width-70[![](figures/lec8/em-bills-4.png)]
 
 ---
 
 class: middle
+count: false
 
-.center[![](figures/lec8/hierarchical-lvm.svg)]
+.center.width-70[![](figures/lec8/em-bills-5.png)]
+
+.center[The three components match the species of 96% of the penguins.]
+
+---
+
+class: middle
 
 ## Empirical Bayes
 
-In hierarchical Bayesian models, model parameters $\theta$ are treated as random variables with prior distribution $p(\theta | \eta)$, where $\eta$ are hyper-parameters with their own hyper-prior $p(\eta)$.
+In a Bayesian model, the prior $p(\theta \mid \alpha)$ has hyperparameters $\alpha$, so far fixed. .bold[Empirical Bayes] estimates them from the data, by maximizing
+$$p(\mathbf{x} \mid \alpha) = \iint p(\mathbf{x}, \mathbf{z} \mid \theta) p(\theta \mid \alpha) d\mathbf{z} d\theta,$$
+and uses the prior $p(\theta \mid \hat{\alpha})$.
 
-A full Bayesian treatment to obtain $p(\theta | x)$ would require integrating out both the latent variables $z$ and the hyper-parameters $\eta$, thus computing
-$$p(\theta | x) = \iint p(\theta, z, \eta | x) \, dz \, d\eta.$$
-This is often intractable.
+For example, the distances of $N$ stars can share a prior whose length scale is estimated from all the stars together.
 
----
-
-class: middle
-
-An alternative is to use an .bold[empirical Bayes] approach, which consists in approximating $p(\theta) = \int p(\theta | \eta) p(\eta) \, d\eta$ by a point estimate $p(\theta | \hat{\eta})$, where
-$$\hat{\eta} = \arg\max\_\eta p(x | \eta) = \arg\max\_\eta \iint p(x, z | \theta) p(\theta | \eta) \, dz \, d\theta.$$
-Put otherwise, empirical Bayes consists in estimating the prior $p(\theta)$ over model parameters from the data.
-
-.alert[While empirical Bayes is unorthodox from a fully Bayesian perspective, it can lead to good practical results and is used in many applications.]
+The data are used twice, to set the prior and to update it. Empirical Bayes often works well in practice nonetheless.
 
 ---
 
 class: middle
 
-The maximization can be performed using the EM algorithm by treating both the latent variables $z$ and the model parameters $\theta$ as unobserved data. 
-- E-step: compute the posterior distribution over both latents and parameters
-$$q^{(t+1)}(z, \theta) = p(z, \theta | x, \eta^{(t)}).$$
-- M-step: update the hyper-parameters as
-$$\eta^{(t+1)} = \arg\max\_\\eta \mathbb{E}\_{q^{(t+1)}(z, \theta)} \left[\log p(x, z | \theta) + \log p(\theta | \eta)\right].$$
+.center.width-50[![](figures/lec8/hierarchical-lvm.svg)]
+
+EM applies with both $\mathbf{z}$ and $\theta$ as latent variables.
+- E-step: compute the posterior $q^{(t+1)}(\mathbf{z}, \theta) = p(\mathbf{z}, \theta \mid \mathbf{x}, \alpha^{(t)})$.
+- M-step: maximize $\mathbb{E}\_{q^{(t+1)}}\left[\log p(\mathbf{x}, \mathbf{z} \mid \theta) + \log p(\theta \mid \alpha)\right]$ over $\alpha$. Only the second term depends on $\alpha$, so
+$$\alpha^{(t+1)} = \arg\max\_\alpha \mathbb{E}\_{q^{(t+1)}(\theta)}\left[\log p(\theta \mid \alpha)\right].$$
 
 ---
 
 class: middle
 
-## Learning diffusion priors by EM (Rozet et al, 2024)
+## Learning diffusion priors by EM
 
-EM can also be used to learn complex prior distributions parameterized by deep generative models, such as diffusion models, from noisy and incomplete observations only.
+EM can learn a prior parameterized by a deep generative model, such as a diffusion model, from noisy and incomplete observations only.
 
 .center.width-90[![](figures/lec8/diffusion-prior-cifar10.png)]
 
-.footnote[Credits: [Rozet et al](https://arxiv.org/abs/2405.13712) (arXiv:2405.13712), 2024.]
+.footnote[Credits: [Rozet et al](https://arxiv.org/abs/2405.13712), 2024.]
 
 ---
 
@@ -383,7 +346,17 @@ class: middle
 
 .center.width-90[![](figures/lec8/diffusion-prior-accelerated-mri.png)]
 
-.footnote[Credits: [Rozet et al](https://arxiv.org/abs/2405.13712) (arXiv:2405.13712), 2024.]
+.footnote[Credits: [Rozet et al](https://arxiv.org/abs/2405.13712), 2024.]
+
+---
+
+class: middle
+
+## Beyond EM
+
+EM needs the exact posterior $p(\mathbf{z} \mid \mathbf{x}, \theta)$ in its E-step. It is available for a mixture, a sum over $K$ components, and for a linear Gaussian state-space model, where the E-step is the Kalman smoother.
+
+When the posterior is intractable, the ELBO can still be maximized over a family of simpler distributions $q$. This is .bold[variational inference].
 
 ---
 
