@@ -189,17 +189,22 @@ class: middle
 
 class: middle
 
-.italic[Example.] The two lowest measurements could be deleted as outliers, but nothing in the data says they are errors. A heavy-tailed model keeps them. A Student's $t$ gives large deviations a larger probability than a Gaussian.
+.italic[Example.] The two lowest measurements could be deleted as outliers, but nothing in the data says they are errors. A heavy-tailed model keeps them. Student's $t$ distribution $t\_\nu$ gives large deviations a larger probability than a Gaussian. The smaller its degrees of freedom $\nu$, the heavier its tails; as $\nu \to \infty$, it tends to the standard Gaussian.
 
-.center.width-50[![](./figures/lec7/newcomb-model2.svg)]
-
+.grid[
+.kol-1-2[.center.width-100[![](./figures/lec7/newcomb-model2.svg)]]
+.kol-1-2[
 $$\begin{aligned}
 \mu &\sim \mathcal{U}(-1000, 1000) \\\\
 \sigma &\sim \mathcal{U}(0.1, 1000) \\\\
 \nu &\sim \text{Gamma}(2, 0.1) \\\\
 \epsilon\_i &\sim t\_{\nu} \\\\
-x\_i &= \mu + \sigma \epsilon\_i \quad \text{for } i = 1, \ldots, N.
+x\_i &= \mu + \sigma \epsilon\_i
 \end{aligned}$$
+]
+]
+
+The Gamma prior on $\nu$ (shape 2, rate 0.1) is supported on positive values, has mean 20, and covers both heavy tails ($\nu$ of a few units) and nearly Gaussian ones ($\nu > 30$). The data decide between them.
 
 ---
 
