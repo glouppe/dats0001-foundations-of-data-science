@@ -93,7 +93,7 @@ Since the logarithm is concave, .bold[Jensen's inequality] gives
 $$\log \mathbb{E}[Y] \geq \mathbb{E}[\log Y]$$
 for any positive random variable $Y$, with equality when $Y$ is constant.
 
-The .bold[Kullback-Leibler divergence] between two distributions $q$ and $p$ is
+Recall the Kullback-Leibler divergence between two distributions $q$ and $p$,
 $$\text{KL}(q \\| p) = \mathbb{E}\_{q(\mathbf{z})}\left[\log \frac{q(\mathbf{z})}{p(\mathbf{z})}\right].$$
 It is nonnegative, and zero only when $q = p$, since by Jensen's inequality
 $$-\text{KL}(q \\| p) = \mathbb{E}\_{q}\left[\log \frac{p(\mathbf{z})}{q(\mathbf{z})}\right] \leq \log \mathbb{E}\_{q}\left[\frac{p(\mathbf{z})}{q(\mathbf{z})}\right] = \log 1 = 0.$$
