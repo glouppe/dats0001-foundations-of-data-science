@@ -189,7 +189,7 @@ class: middle
 
 class: middle
 
-.italic[Example.] Rather than deleting the two lowest measurements, we use a heavy-tailed model. Student's $t\_\nu$ has heavier tails than a Gaussian when its degrees of freedom $\nu$ are small, and tends to it as $\nu \to \infty$.
+.italic[Example.] Rather than deleting the two lowest measurements, we use a heavy-tailed model. Student's $t\_\nu$ has heavier tails than a Gaussian when its degrees of freedom $\nu$ are small, and tends to a Gaussian as $\nu \to \infty$.
 
 .grid[
 .kol-1-2[.center.width-100[![](./figures/lec7/newcomb-model2.svg)]]
