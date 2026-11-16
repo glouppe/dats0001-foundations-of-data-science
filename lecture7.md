@@ -274,15 +274,19 @@ class: middle
 
 The Laplace approximation splits the log marginal likelihood in two terms,
 $$\log p(\mathbf{x}\_\text{obs} \mid \mathcal{M}) \approx \underbrace{\log p(\mathbf{x}\_\text{obs} \mid \hat{\theta}, \mathcal{M})}\_\text{fit} + \underbrace{\log \left[ p(\hat{\theta} \mid \mathcal{M}) (2\pi)^{d/2} |\boldsymbol{\Sigma}|^{1/2} \right]}\_\text{log Occam factor}.$$
-The fit measures how well the best parameters explain the data. The .bold[Occam factor] measures how much of the prior the data keep. For one parameter with a uniform prior of width $\Delta\_\text{prior}$, we have $p(\hat{\theta} \mid \mathcal{M}) = 1 / \Delta\_\text{prior}$, and $\sqrt{2\pi} \sigma = \Delta\_\text{post}$ is the width of the posterior. The Occam factor is then $\Delta\_\text{post} / \Delta\_\text{prior} < 1$.
+For one parameter with a uniform prior, the .bold[Occam factor] is $\Delta\_\text{post} / \Delta\_\text{prior}$, the fraction of the prior that the data keep.
 
 .center.width-70[![](./figures/lec7/occam-factor.png)]
+
+???
+
+With a uniform prior of width $\Delta\_\text{prior}$, $p(\hat{\theta} \mid \mathcal{M}) = 1 / \Delta\_\text{prior}$, and $\sqrt{2\pi} \sigma = \Delta\_\text{post}$ is the width of a box with the same height and area as the Gaussian posterior.
 
 ---
 
 class: middle
 
-.italic[Example.] Polynomial regression of degree 3 and 7, on 20 noisy points. Degree 7 contains degree 3 as a special case, and fits the data slightly better.
+.italic[Example.] Polynomial regression of degree 3 and 7, on 20 noisy points.
 
 .center.width-70[![](./figures/lec7/polynomial-fit.png)]
 
@@ -290,17 +294,17 @@ class: middle
 
 class: middle
 
-With $d$ parameters, the Occam factor is roughly a product of $d$ such ratios. A flexible model fits the data at least as well as a simple one, but has a smaller Occam factor. It is favoured only if its gain in fit exceeds this cost.
+A flexible model fits better, but pays one such fraction per parameter.
 
 .center.width-70[![](./figures/lec7/occam-polynomials.png)]
 
-.center[Beyond degree 3, the fit barely improves while the Occam factor keeps falling. <br>The marginal likelihood peaks at degree 3, with $-67$ against $-86$ for degree 7.]
+.center[Beyond degree 3, the fit barely improves while the Occam factor keeps falling.]
 
 ---
 
 class: middle
 
-The same razor can be seen in the space of data sets. The marginal likelihood $p(\mathbf{x} \mid \mathcal{M})$ is a distribution over all data sets, and sums to one. A simple model predicts few data sets, and gives each a high probability. A flexible model predicts many, and gives each a lower one. When both explain $\mathbf{x}\_\text{obs}$, the simple model gives it more probability.
+Equivalently, $p(\mathbf{x} \mid \mathcal{M})$ sums to one over all data sets. A flexible model spreads it over more data sets than a simple one. When both explain $\mathbf{x}\_\text{obs}$, the simple model gives it more probability.
 
 .center.width-70[![](./figures/lec7/occam.png)]
 
