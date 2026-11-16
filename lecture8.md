@@ -135,7 +135,7 @@ class: middle
 
 class: middle
 
-## The algorithm
+## Expectation-maximization algorithm
 
 EM maximizes the ELBO over $q$ and $\theta$ in turn. Starting from $\theta^{(0)}$, it repeats
 - .bold[E-step]: $q^{(t+1)} = \arg\max\_q \mathcal{L}(q, \theta^{(t)})$,
