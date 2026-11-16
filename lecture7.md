@@ -228,11 +228,11 @@ class: middle
 
 ## Bayes factors
 
-Consider two models $\mathcal{M}\_1$ and $\mathcal{M}\_2$, with prior probabilities $p(\mathcal{M}\_1)$ and $p(\mathcal{M}\_2)$. Bayes' rule gives the ratio of their posterior probabilities,
+For two models $\mathcal{M}\_1$ and $\mathcal{M}\_2$, Bayes' rule gives
 $$\frac{p(\mathcal{M}\_1 \mid \mathbf{x}\_\text{obs})}{p(\mathcal{M}\_2 \mid \mathbf{x}\_\text{obs})} = \frac{p(\mathbf{x}\_\text{obs} \mid \mathcal{M}\_1)}{p(\mathbf{x}\_\text{obs} \mid \mathcal{M}\_2)} \frac{p(\mathcal{M}\_1)}{p(\mathcal{M}\_2)}.$$
-The first factor on the right is the .bold[Bayes factor] $\text{BF}\_{1,2}$. It measures how much more probable the data are under $\mathcal{M}\_1$ than under $\mathcal{M}\_2$. A common scale reads 1 to 3 as weak evidence for $\mathcal{M}\_1$, 3 to 10 as moderate, above 10 as strong.
+The first factor on the right is the .bold[Bayes factor] $\text{BF}\_{1,2}$. A Bayes factor above 10 is commonly read as strong evidence for $\mathcal{M}\_1$.
 
-For Newcomb's data, $\log \text{BF}\_{t, \text{Gaussian}} \approx 30$. The value depends on the priors. A prior on $\nu$ ten times wider lowers it to about 25. The priors on $\mu$ and $\sigma$ are shared by both models and cancel.
+For Newcomb's data, $\log \text{BF}\_{t, \text{Gaussian}} \approx 30$, that is $\text{BF}\_{t, \text{Gaussian}} \approx 10^{13}$. The value depends on the prior on $\nu$. With a prior ten times wider, $\log \text{BF} \approx 25$.
 
 ---
 
