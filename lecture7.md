@@ -282,13 +282,13 @@ class: middle
 
 The marginal likelihood averages the likelihood over the prior. It splits as
 $$\log p(\mathbf{x}\_\text{obs} \mid \mathcal{M}) = \underbrace{\log p(\mathbf{x}\_\text{obs} \mid \hat{\theta}, \mathcal{M})}\_\text{fit} + \underbrace{\log \frac{p(\mathbf{x}\_\text{obs} \mid \mathcal{M})}{p(\mathbf{x}\_\text{obs} \mid \hat{\theta}, \mathcal{M})}}\_\text{log Occam factor}.$$
-The .bold[Occam factor] is roughly the fraction of the prior that fits the data as well as $\hat{\theta}$. The Laplace approximation gives it as $p(\hat{\theta} \mid \mathcal{M}) (2\pi)^{d/2} |\boldsymbol{\Sigma}|^{1/2}$, that is $\Delta\_\text{post} / \Delta\_\text{prior}$ for one parameter with a uniform prior.
+The .bold[Occam factor] is roughly the fraction of the prior that fits the data as well as $\hat{\theta}$. For one parameter with a uniform prior, it is about $\Delta\_\text{post} / \Delta\_\text{prior}$.
 
 .center.width-70[![](./figures/lec7/occam-factor.png)]
 
 ???
 
-With a uniform prior of width $\Delta\_\text{prior}$, $p(\hat{\theta} \mid \mathcal{M}) = 1 / \Delta\_\text{prior}$, and $\sqrt{2\pi} \sigma = \Delta\_\text{post}$ is the width of a box with the same height and area as the Gaussian posterior.
+By the Laplace approximation of the previous slides, the Occam factor is $p(\hat{\theta} \mid \mathcal{M}) (2\pi)^{d/2} |\boldsymbol{\Sigma}|^{1/2}$. With a uniform prior of width $\Delta\_\text{prior}$, $p(\hat{\theta} \mid \mathcal{M}) = 1 / \Delta\_\text{prior}$, and $\sqrt{2\pi} \sigma = \Delta\_\text{post}$ is the width of a box with the same height and area as the Gaussian posterior.
 
 ---
 
