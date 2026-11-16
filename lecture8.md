@@ -14,8 +14,6 @@ class: middle
 
 .center.width-70[![](figures/lec8/penguin-bills.png)]
 
-.center[Bill length and depth of 342 penguins, with their species left out.]
-
 .question[How many groups are there, and which penguin belongs to which?]
 
 ---
