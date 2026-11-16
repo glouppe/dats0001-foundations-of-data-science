@@ -87,7 +87,7 @@ $$\hat{\theta} = \arg\max\_\theta \log p(\mathbf{x} \mid \theta), \quad \text{wi
 
 class: middle
 
-## Two tools
+## Jensen's inequality
 
 Since the logarithm is concave, .bold[Jensen's inequality] gives
 $$\log \mathbb{E}[Y] \geq \mathbb{E}[\log Y]$$
