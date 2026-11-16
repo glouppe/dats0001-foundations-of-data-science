@@ -767,9 +767,7 @@ class: middle
 
 ## Calibration
 
-Trace plots, the effective sample size and $\hat{R}$ cannot detect an error in the log density, the sampler or the posterior approximation.
-
-In simulated experiments, draw $\theta^\* \sim p(\theta)$, simulate $\mathcal{D} \sim p(\mathcal{D} \mid \theta^\*)$, and compute a credible region $C\_\alpha(\mathcal{D})$ of level $\alpha$. A posterior is .bold[calibrated] if
+Another diagnostic uses simulated experiments. Draw $\theta^\* \sim p(\theta)$, simulate $\mathcal{D} \sim p(\mathcal{D} \mid \theta^\*)$, and compute a credible region $C\_\alpha(\mathcal{D})$ of level $\alpha$. A posterior is .bold[calibrated] if
 $$P(\theta^\* \in C\_\alpha(\mathcal{D})) = \alpha.$$
 The exact posterior is calibrated, so a sampler that is not calibrated is wrong. Calibration is necessary, but not sufficient: the prior is calibrated too.
 
