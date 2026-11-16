@@ -272,9 +272,9 @@ class: middle
 
 ## Occam's razor
 
-The Laplace approximation splits the log marginal likelihood in two terms,
-$$\log p(\mathbf{x}\_\text{obs} \mid \mathcal{M}) \approx \underbrace{\log p(\mathbf{x}\_\text{obs} \mid \hat{\theta}, \mathcal{M})}\_\text{fit} + \underbrace{\log \left[ p(\hat{\theta} \mid \mathcal{M}) (2\pi)^{d/2} |\boldsymbol{\Sigma}|^{1/2} \right]}\_\text{log Occam factor}.$$
-For one parameter with a uniform prior, the .bold[Occam factor] is $\Delta\_\text{post} / \Delta\_\text{prior}$, the fraction of the prior that the data keep.
+The marginal likelihood averages the likelihood over the prior. It splits as
+$$\log p(\mathbf{x}\_\text{obs} \mid \mathcal{M}) = \underbrace{\log p(\mathbf{x}\_\text{obs} \mid \hat{\theta}, \mathcal{M})}\_\text{fit} + \underbrace{\log \frac{p(\mathbf{x}\_\text{obs} \mid \mathcal{M})}{p(\mathbf{x}\_\text{obs} \mid \hat{\theta}, \mathcal{M})}}\_\text{log Occam factor}.$$
+The .bold[Occam factor] is roughly the fraction of the prior that fits the data as well as $\hat{\theta}$. The Laplace approximation gives it as $p(\hat{\theta} \mid \mathcal{M}) (2\pi)^{d/2} |\boldsymbol{\Sigma}|^{1/2}$, that is $\Delta\_\text{post} / \Delta\_\text{prior}$ for one parameter with a uniform prior.
 
 .center.width-70[![](./figures/lec7/occam-factor.png)]
 
