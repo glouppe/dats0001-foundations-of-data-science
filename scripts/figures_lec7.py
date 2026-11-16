@@ -654,6 +654,72 @@ def polynomials():
     save(fig, "polynomial-fit.png")
 
 
+def occam_factor():
+    """One parameter with a uniform prior: the Occam factor is the fraction of the prior width
+    that the posterior keeps."""
+    lo, hi, m, sd = 0., 10., 4., .5
+    xs = np.linspace(-.5, 10.5, 1000)
+    prior = np.where((xs >= lo) & (xs <= hi), 1 / (hi - lo), 0.)
+    post = norm.pdf(xs, m, sd)
+    fig, ax = plt.subplots(figsize=(W, 2.4), dpi=200)
+    ax.fill_between(xs, prior, color=LIGHT, lw=0, label=r"prior $p(\theta \mid \mathcal{M})$")
+    ax.plot(xs, post, color=BLUE, lw=1.8,
+            label=r"posterior $p(\theta \mid \mathbf{x}_\mathrm{obs}, \mathcal{M})$")
+    w = np.sqrt(2 * np.pi) * sd
+    y = norm.pdf(m, m, sd) / 2
+    ax.annotate("", (m - w / 2, y), (m + w / 2, y),
+                arrowprops=dict(arrowstyle="<->", color=BLUE, lw=1.2, shrinkA=0, shrinkB=0))
+    ax.text(m + w / 2 + .15, y, r"$\Delta_\mathrm{post}$", color=BLUE, va="center")
+    ax.annotate("", (lo, .17), (hi, .17),
+                arrowprops=dict(arrowstyle="<->", color=GREY, lw=1.2, shrinkA=0, shrinkB=0))
+    ax.text((lo + hi) / 2 + 2, .2, r"$\Delta_\mathrm{prior}$", color=GREY, ha="center")
+    ax.set_xlabel(r"$\theta$")
+    ax.set_xticks([])
+    ax.set_yticks([])
+    ax.set_xlim(-.5, 10.5)
+    ax.set_ylim(0, .9)
+    ax.legend(frameon=False, loc="upper right")
+    tidy(ax)
+    fig.tight_layout()
+    save(fig, "occam-factor.png")
+
+
+def occam_polynomials(degrees=range(1, 9)):
+    """Exact log marginal likelihood of the polynomial regressions, split into the fit at the MAP
+    and the log Occam factor (the Laplace approximation is exact for a linear Gaussian model)."""
+    from scipy.stats import multivariate_normal
+    np.random.seed(123)
+    x = np.linspace(-3, 3, 20)
+    y = f_true(x) + np.random.normal(0, 3, size=len(x))
+    s2, t2 = 3. ** 2, 10. ** 2
+    rows = []
+    for degree in degrees:
+        X = np.vander(x, degree + 1, increasing=True)
+        evidence = multivariate_normal.logpdf(y, np.zeros(len(x)), s2 * np.eye(len(x)) + t2 * X @ X.T)
+        Sigma = np.linalg.inv(X.T @ X / s2 + np.eye(degree + 1) / t2)
+        fit = norm.logpdf(y, X @ (Sigma @ X.T @ y / s2), np.sqrt(s2)).sum()
+        rows.append((evidence, fit, evidence - fit))
+        print("  degree %d: log p(x|M) %.1f, fit %.1f, log Occam factor %.1f" % (degree, *rows[-1]))
+    evidence, fit, factor = np.array(rows).T
+    fig, ax = plt.subplots(figsize=(W, 3.), dpi=200)
+    degrees = list(degrees)
+    for values, color, label in [
+            (fit, GREEN, r"fit $\log p(\mathbf{x}_\mathrm{obs} \mid \hat{\theta}, \mathcal{M})$"),
+            (factor, ORANGE, "log Occam factor"),
+            (evidence, BLUE, r"$\log p(\mathbf{x}_\mathrm{obs} \mid \mathcal{M})$, their sum")]:
+        ax.plot(degrees, values, "o-", color=color, lw=1.6, ms=4)
+        ax.text(degrees[-1] + .25, values[-1], label, color=color, va="center")
+    best = int(np.argmax(evidence))
+    ax.plot(degrees[best], evidence[best], "o", ms=9, mfc="none", mec=BLUE, mew=1.4)
+    ax.set_xlabel("degree of the polynomial")
+    ax.set_xticks(degrees)
+    ax.set_xlim(.6, 12.4)
+    ax.spines["bottom"].set_bounds(1, degrees[-1])
+    tidy(ax)
+    fig.tight_layout()
+    save(fig, "occam-polynomials.png")
+
+
 # Cross-validation -----------------------------------------------------------------------
 
 def kfold(k=5):
@@ -682,5 +748,7 @@ if __name__ == "__main__":
     newcomb()
     polynomials()
     occam()
+    occam_factor()
+    occam_polynomials()
     kfold()
     elpd_figure()
