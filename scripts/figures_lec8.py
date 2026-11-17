@@ -187,7 +187,7 @@ def em_figures(x):
           "...", "%.1f" % history[-1][4])
 
     local = em(x, seed=2)
-    fig, axes = plt.subplots(1, 2, figsize=(W, 3.0), dpi=200, sharey=True)
+    fig, axes = plt.subplots(1, 2, figsize=(W * 90 / 70, 3.8), dpi=200, sharey=True)  # .width-90
     for ax, h in zip(axes, [history[-1], local[-1]]):
         state(ax, x, h)
         ax.set_title("log-likelihood %.0f" % h[4])
