@@ -263,11 +263,9 @@ count: false
 
 class: middle
 
-EM converges to a maximum that depends on $\theta^{(0)}$, and may be local. In practice, it is run from several initial values, and the best run is kept.
+.center.width-90[![](figures/lec8/em-local.png)]
 
-.center.width-70[![](figures/lec8/em-local.png)]
-
-.center[Two runs of EM from different initial values. <br>The second stops at a local maximum.]
+.center[Two runs of EM from different initial values. The second stops at a local maximum. <br>In practice, EM is run from several initial values, and the best run is kept.]
 
 ---
 
