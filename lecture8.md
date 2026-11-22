@@ -182,7 +182,11 @@ class: middle
 The M-step maximizes the expected complete-data log-likelihood,
 $$\theta^{(t+1)} = \arg\max\_\theta \mathbb{E}\_{q^{(t+1)}(\mathbf{z})}\left[\log p(\mathbf{x}, \mathbf{z} \mid \theta)\right].$$
 .italic[Proof.] We have
-$$\mathcal{L}(q^{(t+1)}, \theta) = \mathbb{E}\_{q^{(t+1)}(\mathbf{z})}\left[\log p(\mathbf{x}, \mathbf{z} \mid \theta)\right] - \mathbb{E}\_{q^{(t+1)}(\mathbf{z})}\left[\log q^{(t+1)}(\mathbf{z})\right],$$
+$$\begin{aligned}
+\mathcal{L}(q^{(t+1)}, \theta) &= \mathbb{E}\_{q^{(t+1)}(\mathbf{z})}\left[\log \frac{p(\mathbf{x}, \mathbf{z} \mid \theta)}{q^{(t+1)}(\mathbf{z})}\right] \\\\
+&= \mathbb{E}\_{q^{(t+1)}(\mathbf{z})}\left[\log p(\mathbf{x}, \mathbf{z} \mid \theta) - \log q^{(t+1)}(\mathbf{z})\right] \\\\
+&= \mathbb{E}\_{q^{(t+1)}(\mathbf{z})}\left[\log p(\mathbf{x}, \mathbf{z} \mid \theta)\right] - \mathbb{E}\_{q^{(t+1)}(\mathbf{z})}\left[\log q^{(t+1)}(\mathbf{z})\right],
+\end{aligned}$$
 where the second term does not depend on $\theta$. □
 
 ---
