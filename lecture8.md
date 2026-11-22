@@ -171,11 +171,19 @@ class: middle
 
 The E-step sets $q$ to the posterior,
 $$q^{(t+1)}(\mathbf{z}) = p(\mathbf{z} \mid \mathbf{x}, \theta^{(t)}).$$
-.italic[Proof.] $\mathcal{L}(q, \theta^{(t)}) = \log p(\mathbf{x} \mid \theta^{(t)}) - \text{KL}(q(\mathbf{z}) \\| p(\mathbf{z} \mid \mathbf{x}, \theta^{(t)}))$, and only the KL divergence depends on $q$. □
+.italic[Proof.] We have
+$$\mathcal{L}(q, \theta^{(t)}) = \log p(\mathbf{x} \mid \theta^{(t)}) - \text{KL}(q(\mathbf{z}) \\| p(\mathbf{z} \mid \mathbf{x}, \theta^{(t)})),$$
+where only the KL divergence depends on $q$. It is smallest, zero, when $q$ is the posterior. □
+
+---
+
+class: middle
 
 The M-step maximizes the expected complete-data log-likelihood,
 $$\theta^{(t+1)} = \arg\max\_\theta \mathbb{E}\_{q^{(t+1)}(\mathbf{z})}\left[\log p(\mathbf{x}, \mathbf{z} \mid \theta)\right].$$
-.italic[Proof.] $\mathcal{L}(q^{(t+1)}, \theta) = \mathbb{E}\_{q^{(t+1)}}\left[\log p(\mathbf{x}, \mathbf{z} \mid \theta)\right] - \mathbb{E}\_{q^{(t+1)}}\left[\log q^{(t+1)}(\mathbf{z})\right]$, and the second term does not depend on $\theta$. □
+.italic[Proof.] We have
+$$\mathcal{L}(q^{(t+1)}, \theta) = \mathbb{E}\_{q^{(t+1)}(\mathbf{z})}\left[\log p(\mathbf{x}, \mathbf{z} \mid \theta)\right] - \mathbb{E}\_{q^{(t+1)}(\mathbf{z})}\left[\log q^{(t+1)}(\mathbf{z})\right],$$
+where the second term does not depend on $\theta$. □
 
 ---
 
