@@ -278,9 +278,54 @@ def elbo_figures(x):
     panel("em-elbo-next.png", new, posterior(x, new), label=r"$\theta^{(t+1)}$")
 
 
+# Jensen's inequality and the KL divergence ---------------------------------------------
+
+def jensen_figure(y1=1., y2=5.):
+    """Y takes two values with probability 1/2: log E[Y] lies on the curve, E[log Y] on the
+    chord below it."""
+    ys = np.linspace(.4, 6.2, 300)
+    m = (y1 + y2) / 2
+    fig, ax = plt.subplots(figsize=(W, 2.8), dpi=200)
+    ax.plot(ys, np.log(ys), color=GREY, lw=1.6, label=r"$\log y$")
+    ax.plot([y1, y2], np.log([y1, y2]), color=LIGHT, lw=1.2, ls=(0, (4, 3)))
+    ax.plot([y1, y2], np.log([y1, y2]), "o", color=GREY, ms=5)
+    ax.plot(m, np.log(m), "o", color=BLUE, ms=7, label=r"$\log \mathbb{E}[Y]$")
+    ax.plot(m, np.log([y1, y2]).mean(), "o", color=ORANGE, ms=7, label=r"$\mathbb{E}[\log Y]$")
+    ax.vlines(m, np.log([y1, y2]).mean(), np.log(m), color=LIGHT, lw=1)
+    ax.set_xticks([y1, m, y2])
+    ax.set_xticklabels(["$y_1$", r"$\mathbb{E}[Y]$", "$y_2$"])
+    ax.set_yticks([])
+    ax.set_xlim(0, 6.4)
+    ax.legend(frameon=False, loc="lower right")
+    tidy(ax)
+    fig.tight_layout()
+    save(fig, "jensen.png")
+
+
+def kl_figure():
+    """A fixed p and two distributions q, with KL(q || p) computed in closed form."""
+    zs = np.linspace(-4, 5, 500)
+    fig, ax = plt.subplots(figsize=(W, 2.8), dpi=200)
+    ax.fill_between(zs, norm.pdf(zs), color=LIGHT, lw=0, label="$p$")
+    for (mu, sd), color in [((.5, 1.), BLUE), ((2., .7), ORANGE)]:
+        kl = np.log(1 / sd) + (sd ** 2 + mu ** 2) / 2 - .5
+        ax.plot(zs, norm.pdf(zs, mu, sd), color=color, lw=1.6,
+                label=r"$q$, $\mathrm{KL}(q \,\|\, p) = %.2f$" % kl)
+    ax.set_xlabel(r"$z$")
+    ax.set_xticks([])
+    ax.set_yticks([])
+    ax.set_xlim(-4, 5)
+    ax.legend(frameon=False, loc="upper left")
+    tidy(ax)
+    fig.tight_layout()
+    save(fig, "kl.png")
+
+
 if __name__ == "__main__":
     graphical_models()
     x = bills()
     bills_figure(x)
     em_figures(x)
     elbo_figures(flippers())
+    jensen_figure()
+    kl_figure()
