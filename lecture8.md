@@ -277,31 +277,50 @@ class: middle
 
 ## Empirical Bayes
 
-A prior $p(\theta \mid \alpha)$ has hyperparameters $\alpha$, so far fixed in advance. Often the data say something about them.
+Many data sets hold many similar units, such as restaurants, patients or schools. Each unit $i$ has its own parameter $\theta\_i$, drawn from a prior $p(\theta\_i \mid \alpha)$ shared by all. So far, the hyperparameters $\alpha$ were fixed in advance. Here, the data can estimate them.
 
-.italic[Example.] Each restaurant $i$ has a mean rating $\theta\_i$, observed through a few noisy reviews, with the prior $\mathcal{N}(\theta\_i \mid \mu, \tau^2)$. One restaurant says little about $\mu$ and $\tau$, but thousands together pin them down.
+.center.width-50[![](figures/lec8/eb-model.svg)]
 
-Estimating $\mu$ and $\tau$ from all the restaurants, and using the fitted prior for each, shares information between them. A restaurant with three reviews is pulled towards the typical rating $\mu$; one with a thousand reviews barely moves.
+.italic[Example.] Each restaurant $i$ has a mean rating $\theta\_i \sim \mathcal{N}(\mu, \tau^2)$, observed through $n\_i$ noisy reviews $x\_{ij} \sim \mathcal{N}(\theta\_i, \sigma^2)$. One restaurant says little about $\mu$ and $\tau$, but thousands together pin them down.
 
 ---
 
 class: middle
 
 .bold[Empirical Bayes] estimates the hyperparameters by maximizing the marginal likelihood,
-$$\hat{\alpha} = \arg\max\_\alpha p(\mathbf{x} \mid \alpha) = \arg\max\_\alpha \iint p(\mathbf{x}, \mathbf{z} \mid \theta) p(\theta \mid \alpha) d\mathbf{z} d\theta,$$
-and uses the prior $p(\theta \mid \hat{\alpha})$.
+$$\hat{\alpha} = \arg\max\_\alpha \log p(\mathbf{x} \mid \alpha) = \arg\max\_\alpha \sum\_{i=1}^N \log \int p(\mathbf{x}\_i \mid \theta\_i) p(\theta\_i \mid \alpha) d\theta\_i,$$
+and then infers each $\theta\_i$ with the fitted prior $p(\theta\_i \mid \hat{\alpha})$.
 
-.alert[The data are used twice, to set the prior and to update it. Empirical Bayes is unorthodox from a Bayesian perspective, but often works well in practice.]
+A fully Bayesian treatment would put a prior on $\alpha$ and integrate it out. With many units, the posterior of $\alpha$ is concentrated, and replacing it by $\hat{\alpha}$ changes little.
+
+.alert[The data are used twice, to set the prior and to update it. With few units, empirical Bayes understates the uncertainty.]
 
 ---
 
 class: middle
 
-.center.width-50[![](figures/lec8/hierarchical-lvm.svg)]
+The marginal likelihood has the form of the mixture's, with $\theta\_i$ in the role of $z\_i$ and $\alpha$ in the role of $\theta$. EM applies unchanged.
+- E-step: $q^{(t+1)}(\theta\_i) = p(\theta\_i \mid \mathbf{x}\_i, \alpha^{(t)})$ for each unit.
+- M-step: $\alpha^{(t+1)} = \arg\max\_\alpha \sum\_{i=1}^N \mathbb{E}\_{q^{(t+1)}(\theta\_i)}\left[\log p(\theta\_i \mid \alpha)\right]$.
 
-EM applies, with both $\mathbf{z}$ and $\theta$ as latent variables.
-- E-step: $q^{(t+1)}(\mathbf{z}, \theta) = p(\mathbf{z}, \theta \mid \mathbf{x}, \alpha^{(t)})$.
-- M-step: $\alpha^{(t+1)} = \arg\max\_\alpha \mathbb{E}\_{q^{(t+1)}(\theta)}\left[\log p(\theta \mid \alpha)\right]$.
+The M-step drops $\log p(\mathbf{x}\_i \mid \theta\_i)$ from the expected complete-data log-likelihood, since it does not depend on $\alpha$.
+
+---
+
+class: middle
+
+.italic[Example.] For the restaurants, with $\bar{x}\_i$ the average of the reviews, the E-step gives Gaussian posteriors of variance and mean
+$$v\_i = \left(\frac{1}{\tau^2} + \frac{n\_i}{\sigma^2}\right)^{-1}, \qquad m\_i = v\_i \left(\frac{\mu}{\tau^2} + \frac{n\_i \bar{x}\_i}{\sigma^2}\right),$$
+The posterior mean $m\_i$ is a weighted average of $\bar{x}\_i$ and $\mu$, with weights $n\_i / \sigma^2$ and $1 / \tau^2$. The M-step sets
+$$\mu = \frac{1}{N} \sum\_{i=1}^N m\_i, \qquad \tau^2 = \frac{1}{N} \sum\_{i=1}^N \left[(m\_i - \mu)^2 + v\_i\right].$$
+
+---
+
+class: middle
+
+.center.width-70[![](figures/lec8/eb-restaurants.png)]
+
+.center[EM on 150 simulated restaurants. <br>With few reviews, the posterior mean is pulled towards $\hat{\mu}$. <br>With many, it stays close to the average of the reviews.]
 
 ---
 

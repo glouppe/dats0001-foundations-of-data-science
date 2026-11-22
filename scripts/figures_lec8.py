@@ -83,17 +83,15 @@ def gmm():
 
 
 def hierarchical():
-    """Parameters theta with a prior of hyperparameter alpha, shared by N observations."""
+    """Empirical Bayes: N units, each with its own parameter theta_i drawn from a prior of
+    hyperparameter alpha, shared by all."""
     fig, ax = figure()
-    observations = plate(ax, [box((0, STEP)), box((0, 0))], "$N$")
-    node(ax, (0, STEP), r"$\mathbf{z}_i$")
+    units = plate(ax, [box((0, STEP)), box((0, 0))], "$N$")
+    node(ax, (0, STEP), r"$\theta_i$")
     node(ax, (0, 0), r"$\mathbf{x}_i$", observed=True)
     arrow(ax, (0, STEP), (0, 0))
-    theta = (0, observations[3] + GAP + R)
-    node(ax, theta, r"$\theta$")
-    arrow(ax, theta, (0, STEP))
-    hyper(ax, theta, r"$\alpha$", R)
-    return fig, ax, "figures/lec8/hierarchical-lvm.svg"
+    hyper(ax, (0, STEP), r"$\alpha$", units[2])
+    return fig, ax, "figures/lec8/eb-model.svg"
 
 
 def graphical_models():
@@ -333,6 +331,46 @@ def kl_figure():
     save(fig, "kl.png")
 
 
+# Empirical Bayes on simulated restaurant ratings ---------------------------------------
+
+def restaurants(N=150, sigma=1., seed=0, steps=200):
+    """N restaurants with mean ratings theta_i ~ N(3.6, 0.4^2), each with n_i reviews of noise
+    sigma. EM estimates mu and tau from the review averages; returns n, the averages, the
+    posterior means and the estimates."""
+    rng = np.random.default_rng(seed)
+    n = np.minimum(rng.geometric(1 / 15, N), 300)
+    theta = rng.normal(3.6, .4, N)
+    ybar = theta + sigma / np.sqrt(n) * rng.standard_normal(N)
+    mu, tau2 = ybar.mean(), ybar.var()
+    for _ in range(steps):
+        v = 1 / (1 / tau2 + n / sigma ** 2)                      # E-step
+        m = v * (mu / tau2 + n * ybar / sigma ** 2)
+        mu = m.mean()                                            # M-step
+        tau2 = np.mean((m - mu) ** 2 + v)
+    return n, ybar, m, mu, np.sqrt(tau2)
+
+
+def eb_figure():
+    n, ybar, m, mu, tau = restaurants()
+    print("  restaurants: mu %.2f, tau %.2f" % (mu, tau))
+    fig, ax = plt.subplots(figsize=(W, 3.2), dpi=200)
+    ax.axhline(mu, color=LIGHT, lw=1.2, ls=(0, (4, 3)))
+    ax.vlines(n, ybar, m, color=LIGHT, lw=.8)
+    ax.scatter(n, ybar, s=12, color=GREY, lw=0, label=r"average of the reviews $\bar{x}_i$")
+    ax.scatter(n, m, s=12, color=BLUE, lw=0, label=r"posterior mean of $\theta_i$")
+    ax.text(n.max() * 1.25, mu, r"$\hat{\mu}$", color=GREY, va="center")
+    ax.set_xscale("log")
+    ax.set_xticks([1, 3, 10, 30, 100])
+    ax.set_xticklabels(["1", "3", "10", "30", "100"])
+    ax.minorticks_off()
+    ax.set_xlabel("number of reviews $n_i$")
+    ax.set_ylabel("rating")
+    ax.legend(frameon=False, loc="lower center", bbox_to_anchor=(.5, 1), ncol=2)
+    tidy(ax)
+    fig.tight_layout()
+    save(fig, "eb-restaurants.png")
+
+
 if __name__ == "__main__":
     graphical_models()
     x = bills()
@@ -341,3 +379,4 @@ if __name__ == "__main__":
     elbo_figures(flippers())
     jensen_figure()
     kl_figure()
+    eb_figure()
