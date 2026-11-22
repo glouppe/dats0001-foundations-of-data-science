@@ -281,7 +281,7 @@ Data often hold many similar units, each with its own parameter $\theta\_i$ draw
 
 .center.width-50[![](figures/lec8/eb-model.svg)]
 
-.italic[Example.] Restaurant $i$ has a mean rating $\theta\_i \sim \mathcal{N}(\mu, \tau^2)$ and reviews $\mathbf{x}\_i$ with entries $x\_{ij} \sim \mathcal{N}(\theta\_i, \sigma^2)$. The hyperparameters $\mu$ and $\tau$ describe how ratings vary across restaurants.
+.italic[Example.] Restaurant $i$ has a mean rating $\theta\_i \sim \mathcal{N}(\mu, \tau^2)$ and reviews $\mathbf{x}\_i$ with entries $x\_{ij} \sim \mathcal{N}(\theta\_i, \sigma^2)$. The hyperparameters $\alpha = (\mu, \tau)$ describe how ratings vary across restaurants.
 
 ---
 
