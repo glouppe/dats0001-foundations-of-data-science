@@ -318,7 +318,7 @@ class: middle
 
 .center.width-70[![](figures/lec8/eb-restaurants.png)]
 
-.center[EM on 150 simulated restaurants. <br>With few reviews, the posterior mean is pulled towards $\hat{\mu}$. <br>With many, it stays close to the average of the reviews.]
+.center[Restaurants whose reviews average 4.6, with $\hat{\mu}$ and $\hat{\tau}$ fitted by EM. <br>With few reviews, the posterior mean is pulled towards $\hat{\mu}$.]
 
 ---
 

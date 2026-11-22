@@ -350,21 +350,29 @@ def restaurants(N=150, sigma=1., seed=0, steps=200):
     return n, ybar, m, mu, np.sqrt(tau2)
 
 
-def eb_figure():
-    n, ybar, m, mu, tau = restaurants()
+def eb_figure(xbar=4.6, counts=(1, 3, 10, 30, 100), sigma=1.):
+    """Restaurants whose reviews average xbar, with more and more reviews: each average moves
+    to its posterior mean under the prior fitted by EM on the simulated restaurants."""
+    n, ybar, m, mu, tau = restaurants(sigma=sigma)
     print("  restaurants: mu %.2f, tau %.2f" % (mu, tau))
-    fig, ax = plt.subplots(figsize=(W, 3.2), dpi=200)
-    ax.axhline(mu, color=LIGHT, lw=1.2, ls=(0, (4, 3)))
-    ax.vlines(n, ybar, m, color=LIGHT, lw=.8)
-    ax.scatter(n, ybar, s=12, color=GREY, lw=0, label=r"average of the reviews $\bar{x}_i$")
-    ax.scatter(n, m, s=12, color=BLUE, lw=0, label=r"posterior mean of $\theta_i$")
-    ax.text(n.max() * 1.25, mu, r"$\hat{\mu}$", color=GREY, va="center")
-    ax.set_xscale("log")
-    ax.set_xticks([1, 3, 10, 30, 100])
-    ax.set_xticklabels(["1", "3", "10", "30", "100"])
-    ax.minorticks_off()
-    ax.set_xlabel("number of reviews $n_i$")
-    ax.set_ylabel("rating")
+    fig, ax = plt.subplots(figsize=(W, 2.8), dpi=200)
+    ax.axvline(mu, color=LIGHT, lw=1.2, ls=(0, (4, 3)))
+    ax.text(mu, len(counts) - .35, r"$\hat{\mu}$", color=GREY, ha="center")
+    for row, k in enumerate(counts):
+        v = 1 / (1 / tau ** 2 + k / sigma ** 2)
+        post = v * (mu / tau ** 2 + k * xbar / sigma ** 2)
+        y = len(counts) - 1 - row
+        ax.annotate("", (post, y), (xbar, y),
+                    arrowprops=dict(arrowstyle="-|>", color=LIGHT, lw=1.2, shrinkA=4, shrinkB=4))
+        ax.plot(xbar, y, "o", color=GREY, ms=6, label=r"average of the reviews $\bar{x}_i$" if row == 0 else None)
+        ax.plot(post, y, "o", color=BLUE, ms=6, label=r"posterior mean of $\theta_i$" if row == 0 else None)
+    ax.set_yticks(range(len(counts)))
+    ax.set_yticklabels(["%d review%s" % (k, "s" if k > 1 else "") for k in counts][::-1])
+    ax.tick_params(axis="y", length=0)
+    ax.spines["left"].set_visible(False)
+    ax.set_xlabel("rating")
+    ax.set_xlim(mu - .3, xbar + .3)
+    ax.set_ylim(-.6, len(counts) - .1)
     ax.legend(frameon=False, loc="lower center", bbox_to_anchor=(.5, 1), ncol=2)
     tidy(ax)
     fig.tight_layout()
