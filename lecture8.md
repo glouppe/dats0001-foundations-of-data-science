@@ -287,9 +287,11 @@ Data often hold many similar units, each with its own parameter $\theta\_i$ draw
 
 class: middle
 
-.bold[Empirical Bayes] estimates the hyperparameters by maximizing the marginal likelihood,
-$$\hat{\alpha} = \arg\max\_\alpha \log p(\mathbf{x} \mid \alpha) = \arg\max\_\alpha \sum\_{i=1}^N \log \int p(\mathbf{x}\_i \mid \theta\_i) p(\theta\_i \mid \alpha) d\theta\_i,$$
-and then infers each $\theta\_i$ with the fitted prior $p(\theta\_i \mid \hat{\alpha})$.
+.bold[Empirical Bayes] proceeds in two steps.
+1. Fit the population prior $p(\theta\_i \mid \alpha)$ to all the units, by maximizing the marginal likelihood,
+$$\hat{\alpha} = \arg\max\_\alpha \log p(\mathbf{x} \mid \alpha) = \arg\max\_\alpha \sum\_{i=1}^N \log \int p(\mathbf{x}\_i \mid \theta\_i) p(\theta\_i \mid \alpha) d\theta\_i.$$
+2. Infer each $\theta\_i$ as usual, with the fitted prior,
+$$p(\theta\_i \mid \mathbf{x}\_i, \hat{\alpha}) \propto p(\mathbf{x}\_i \mid \theta\_i) p(\theta\_i \mid \hat{\alpha}).$$
 
 A fully Bayesian treatment would put a prior on $\alpha$ and integrate it out. With many units, the posterior of $\alpha$ is concentrated, and replacing it by $\hat{\alpha}$ changes little.
 
