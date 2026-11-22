@@ -117,7 +117,18 @@ class: middle
 
 ## Evidence lower bound
 
-For any distribution $q(\mathbf{z})$,
+The likelihood is an expectation over the prior of the latent variables,
+$$\log p(\mathbf{x} \mid \theta) = \log \int p(\mathbf{x} \mid \mathbf{z}, \theta) p(\mathbf{z} \mid \theta) d\mathbf{z} = \log \mathbb{E}\_{p(\mathbf{z} \mid \theta)}\left[p(\mathbf{x} \mid \mathbf{z}, \theta)\right].$$
+It could be estimated by averaging $p(\mathbf{x} \mid \mathbf{z}, \theta)$ over samples of the prior. But a $\mathbf{z}$ drawn from the prior is unlikely to explain $\mathbf{x}$, and $p(\mathbf{x} \mid \mathbf{z}, \theta)$ is then close to zero.
+
+Instead, we draw $\mathbf{z}$ from a distribution $q(\mathbf{z})$ that favours the values explaining $\mathbf{x}$, and reweight,
+$$\log p(\mathbf{x} \mid \theta) = \log \mathbb{E}\_{q(\mathbf{z})}\left[\frac{p(\mathbf{x} \mid \mathbf{z}, \theta) p(\mathbf{z} \mid \theta)}{q(\mathbf{z})}\right].$$
+
+---
+
+class: middle
+
+By Jensen's inequality,
 $$\begin{aligned}
 \log p(\mathbf{x} \mid \theta) &= \log \mathbb{E}\_{q(\mathbf{z})}\left[\frac{p(\mathbf{x}, \mathbf{z} \mid \theta)}{q(\mathbf{z})}\right] \\\\
 &\geq \mathbb{E}\_{q(\mathbf{z})}\left[\log \frac{p(\mathbf{x}, \mathbf{z} \mid \theta)}{q(\mathbf{z})}\right] = \mathcal{L}(q, \theta),
