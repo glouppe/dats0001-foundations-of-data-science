@@ -151,14 +151,6 @@ class: middle
 
 class: middle
 
-.center.width-70[![](figures/lec8/em-elbo-nogap.png)]
-
-.center[With $q$ set to the posterior at $\theta^{(t)}$, the gap at $\theta^{(t)}$ vanishes.]
-
----
-
-class: middle
-
 ## Expectation-maximization algorithm
 
 EM maximizes the ELBO over $q$ and $\theta$ in turn. Starting from $\theta^{(0)}$, it repeats
@@ -174,6 +166,14 @@ $$q^{(t+1)}(\mathbf{z}) = p(\mathbf{z} \mid \mathbf{x}, \theta^{(t)}).$$
 .italic[Proof.] We have
 $$\mathcal{L}(q, \theta^{(t)}) = \log p(\mathbf{x} \mid \theta^{(t)}) - \text{KL}(q(\mathbf{z}) \\| p(\mathbf{z} \mid \mathbf{x}, \theta^{(t)})),$$
 where only the KL divergence depends on $q$. It is smallest, zero, when $q$ is the posterior. □
+
+---
+
+class: middle
+
+.center.width-70[![](figures/lec8/em-elbo-nogap.png)]
+
+.center[With $q$ set to the posterior at $\theta^{(t)}$, the gap at $\theta^{(t)}$ vanishes.]
 
 ---
 
