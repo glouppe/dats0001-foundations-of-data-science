@@ -259,54 +259,9 @@ $$\begin{aligned}
 
 class: middle
 
-.center.width-70[![](figures/lec8/em-bills-0.png)]
+.center.width-70[![](figures/lec8/em-bills.gif)]
 
-.center[Each penguin is coloured by its responsibilities, <br>each component drawn at two standard deviations.]
-
----
-
-class: middle
-count: false
-
-.center.width-70[![](figures/lec8/em-bills-1.png)]
-
-.center[Each penguin is coloured by its responsibilities, <br>each component drawn at two standard deviations.]
-
----
-
-class: middle
-count: false
-
-.center.width-70[![](figures/lec8/em-bills-2.png)]
-
-.center[Each penguin is coloured by its responsibilities, <br>each component drawn at two standard deviations.]
-
----
-
-class: middle
-count: false
-
-.center.width-70[![](figures/lec8/em-bills-3.png)]
-
-.center[Each penguin is coloured by its responsibilities, <br>each component drawn at two standard deviations.]
-
----
-
-class: middle
-count: false
-
-.center.width-70[![](figures/lec8/em-bills-4.png)]
-
-.center[Each penguin is coloured by its responsibilities, <br>each component drawn at two standard deviations.]
-
----
-
-class: middle
-count: false
-
-.center.width-70[![](figures/lec8/em-bills-5.png)]
-
-.center[Each penguin is coloured by its responsibilities. <br>The three components match the species of 96% of the penguins.]
+.center[One frame per iteration, each penguin coloured by its responsibilities. <br>The three components match the species of 96% of the penguins.]
 
 ---
 

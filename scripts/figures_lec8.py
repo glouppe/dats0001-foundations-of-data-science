@@ -176,13 +176,25 @@ def state(ax, x, step, title=True):
 
 
 def em_figures(x):
+    from PIL import Image
     history = em(x, seed=0)
-    for j, t in enumerate([0, 1, 3, 10, 30, 100]):
-        fig, ax = plt.subplots(figsize=(W, 3.6), dpi=200)
-        state(ax, x, history[t])
-        ax.set_title("iteration %d, log-likelihood %.0f" % (t, history[t][4]))
+    fig, ax = plt.subplots(figsize=(W, 3.6), dpi=150)
+    images, durations = [], []
+    for t, step in enumerate(history):                           # one frame per iteration
+        ax.clear()
+        state(ax, x, step)
+        ax.set_title("iteration %d, log-likelihood %.0f" % (t, step[4]))
         fig.tight_layout()
-        save(fig, "em-bills-%d.png" % j)
+        fig.canvas.draw()
+        images.append(Image.frombuffer("RGBA", fig.canvas.get_width_height(), fig.canvas.buffer_rgba())
+                      .convert("RGB").quantize(colors=64, method=Image.Quantize.MEDIANCUT))
+        durations.append(600 if t < 5 else 150)
+    durations[-1] = 3000
+    plt.close(fig)
+    path = "figures/lec8/em-bills.gif"
+    images[0].save(path, save_all=True, append_images=images[1:], duration=durations, loop=0,
+                   optimize=True)
+    print("wrote", path, "(%d frames)" % len(images))
     print("  log-likelihood: %s" % ", ".join("%.1f" % h[4] for h in history[:5]),
           "...", "%.1f" % history[-1][4])
 
