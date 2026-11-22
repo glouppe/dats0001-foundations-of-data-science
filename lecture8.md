@@ -279,7 +279,7 @@ class: middle
 
 A prior $p(\theta \mid \alpha)$ has hyperparameters $\alpha$, so far fixed in advance. Often they are unknown, but the data say something about them.
 
-.italic[Example.] Each restaurant $i$ on a review site has a true mean rating $\theta\_i$, observed through a few noisy reviews. The prior $p(\theta\_i \mid \mu, \tau) = \mathcal{N}(\theta\_i \mid \mu, \tau^2)$ describes how ratings vary across restaurants. One restaurant says little about $\mu$ and $\tau$, but thousands of restaurants together pin them down.
+.italic[Example.] Each restaurant $i$ on a review site has a mean rating $\theta\_i$, observed through a few noisy reviews. The prior $p(\theta\_i \mid \mu, \tau) = \mathcal{N}(\theta\_i \mid \mu, \tau^2)$ describes how ratings vary across restaurants. One restaurant says little about $\mu$ and $\tau$, but thousands of restaurants together pin them down.
 
 There are two ways to use this.
 - Put a prior on $\alpha$ and infer it with everything else.
