@@ -279,10 +279,10 @@ class: middle
 
 A prior $p(\theta \mid \alpha)$ has hyperparameters $\alpha$, so far fixed in advance. Often they are unknown, but the data say something about them.
 
-.italic[Example.] In Lecture 4, the distances $r\_i$ of 5000 stars share the prior $p(r\_i \mid L)$, whose length scale $L$ is unknown. One noisy parallax says little about $L$, but all the stars together pin it down, at 1.03 kpc.
+.italic[Example.] Each restaurant $i$ on a review site has a true mean rating $\theta\_i$, observed through a few noisy reviews. The prior $p(\theta\_i \mid \mu, \tau) = \mathcal{N}(\theta\_i \mid \mu, \tau^2)$ describes how ratings vary across restaurants. One restaurant says little about $\mu$ and $\tau$, but thousands of restaurants together pin them down.
 
 There are two ways to use this.
-- Put a prior on $\alpha$ and infer it with everything else, as in Lecture 4.
+- Put a prior on $\alpha$ and infer it with everything else.
 - Estimate $\alpha$ from the data, and plug the estimate into the prior.
 
 The second avoids a posterior over $\alpha$, which is costly when $\alpha$ is high-dimensional, such as the weights of a neural network.
