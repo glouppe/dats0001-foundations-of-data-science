@@ -281,6 +281,8 @@ A prior $p(\theta \mid \alpha)$ has hyperparameters $\alpha$, so far fixed in ad
 
 .italic[Example.] Each restaurant $i$ has a mean rating $\theta\_i$, observed through a few noisy reviews, with the prior $\mathcal{N}(\theta\_i \mid \mu, \tau^2)$. One restaurant says little about $\mu$ and $\tau$, but thousands together pin them down.
 
+Estimating $\mu$ and $\tau$ from all the restaurants, and using the fitted prior for each, shares information between them. A restaurant with three reviews is pulled towards the typical rating $\mu$; one with a thousand reviews barely moves.
+
 ---
 
 class: middle
