@@ -293,8 +293,6 @@ and then infers each $\theta\_i$ with the fitted prior $p(\theta\_i \mid \hat{\a
 
 A fully Bayesian treatment would put a prior on $\alpha$ and integrate it out. With many units, the posterior of $\alpha$ is concentrated, and replacing it by $\hat{\alpha}$ changes little.
 
-.alert[The data are used twice, to set the prior and to update it.]
-
 ---
 
 class: middle
