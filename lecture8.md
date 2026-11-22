@@ -277,11 +277,11 @@ class: middle
 
 ## Empirical Bayes
 
-Many data sets hold many similar units, such as restaurants, patients or schools. Each unit $i$ has its own parameter $\theta\_i$, drawn from a prior $p(\theta\_i \mid \alpha)$ shared by all. So far, the hyperparameters $\alpha$ were fixed in advance. Here, the data can estimate them.
+Data often hold many similar units, each with its own parameter $\theta\_i$ drawn from a shared prior $p(\theta\_i \mid \alpha)$. Rather than fixing the hyperparameters $\alpha$ in advance, the data can estimate them.
 
 .center.width-50[![](figures/lec8/eb-model.svg)]
 
-.italic[Example.] Each restaurant $i$ has a mean rating $\theta\_i \sim \mathcal{N}(\mu, \tau^2)$, observed through $n\_i$ noisy reviews $x\_{ij} \sim \mathcal{N}(\theta\_i, \sigma^2)$. One restaurant says little about $\mu$ and $\tau$, but thousands together pin them down.
+.italic[Example.] Each restaurant $i$ has a mean rating $\theta\_i \sim \mathcal{N}(\mu, \tau^2)$, observed through $n\_i$ noisy reviews $x\_{ij} \sim \mathcal{N}(\theta\_i, \sigma^2)$. One restaurant says little about $\mu$ and $\tau$, but thousands do.
 
 ---
 
