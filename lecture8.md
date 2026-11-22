@@ -277,7 +277,21 @@ class: middle
 
 ## Empirical Bayes
 
-In a Bayesian model, the prior $p(\theta \mid \alpha)$ has hyperparameters $\alpha$. .bold[Empirical Bayes] estimates them from the data, as
+A prior $p(\theta \mid \alpha)$ has hyperparameters $\alpha$, so far fixed in advance. Often they are unknown, but the data say something about them.
+
+.italic[Example.] In Lecture 4, the distances $r\_i$ of 5000 stars share the prior $p(r\_i \mid L)$, whose length scale $L$ is unknown. One noisy parallax says little about $L$, but all the stars together pin it down, at 1.03 kpc.
+
+There are two ways to use this.
+- Put a prior on $\alpha$ and infer it with everything else, as in Lecture 4.
+- Estimate $\alpha$ from the data, and plug the estimate into the prior.
+
+The second avoids a posterior over $\alpha$, which is costly when $\alpha$ is high-dimensional, such as the weights of a neural network.
+
+---
+
+class: middle
+
+.bold[Empirical Bayes] estimates the hyperparameters by maximizing the marginal likelihood,
 $$\hat{\alpha} = \arg\max\_\alpha p(\mathbf{x} \mid \alpha) = \arg\max\_\alpha \iint p(\mathbf{x}, \mathbf{z} \mid \theta) p(\theta \mid \alpha) d\mathbf{z} d\theta,$$
 and uses the prior $p(\theta \mid \hat{\alpha})$.
 
