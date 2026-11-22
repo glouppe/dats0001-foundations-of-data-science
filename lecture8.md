@@ -225,8 +225,12 @@ class: middle
 
 ## EM for the Gaussian mixture
 
-The E-step computes the .bold[responsibility] of component $k$ for penguin $i$,
-$$r\_{ik} = q^{(t+1)}(z\_i = k) = \frac{\pi\_k \mathcal{N}(\mathbf{x}\_i \mid \boldsymbol{\mu}\_k, \boldsymbol{\Sigma}\_k)}{\sum\_{j=1}^K \pi\_j \mathcal{N}(\mathbf{x}\_i \mid \boldsymbol{\mu}\_j, \boldsymbol{\Sigma}\_j)},$$
+The posterior factorizes over the penguins. By Bayes' rule, the E-step computes the .bold[responsibility] of component $k$ for penguin $i$,
+$$\begin{aligned}
+r\_{ik} = q^{(t+1)}(z\_i = k) &= p(z\_i = k \mid \mathbf{x}\_i, \theta^{(t)}) \\\\
+&= \frac{p(\mathbf{x}\_i \mid z\_i = k, \theta^{(t)}) p(z\_i = k \mid \theta^{(t)})}{\sum\_{j=1}^K p(\mathbf{x}\_i \mid z\_i = j, \theta^{(t)}) p(z\_i = j \mid \theta^{(t)})} \\\\
+&= \frac{\pi\_k \mathcal{N}(\mathbf{x}\_i \mid \boldsymbol{\mu}\_k, \boldsymbol{\Sigma}\_k)}{\sum\_{j=1}^K \pi\_j \mathcal{N}(\mathbf{x}\_i \mid \boldsymbol{\mu}\_j, \boldsymbol{\Sigma}\_j)},
+\end{aligned}$$
 with the parameters $\theta^{(t)}$.
 
 ---
