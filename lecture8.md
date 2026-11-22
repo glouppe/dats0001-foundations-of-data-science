@@ -237,9 +237,18 @@ with the parameters $\theta^{(t)}$.
 
 class: middle
 
-The M-step maximizes
-$$\sum\_{i=1}^N \sum\_{k=1}^K r\_{ik} \left[\log \pi\_k + \log \mathcal{N}(\mathbf{x}\_i \mid \boldsymbol{\mu}\_k, \boldsymbol{\Sigma}\_k)\right],$$
-which gives the estimates for known components, with each penguin weighted by $r\_{ik}$ and $N\_k = \sum\_{i} r\_{ik}$,
+The M-step maximizes the expected complete-data log-likelihood,
+$$\begin{aligned}
+\mathbb{E}\_{q^{(t+1)}}\left[\log p(\mathbf{x}\_{1:N}, z\_{1:N} \mid \theta)\right] &= \sum\_{i=1}^N \mathbb{E}\_{q^{(t+1)}(z\_i)}\left[\log p(\mathbf{x}\_i, z\_i \mid \theta)\right] \\\\
+&= \sum\_{i=1}^N \sum\_{k=1}^K r\_{ik} \log p(\mathbf{x}\_i, z\_i = k \mid \theta) \\\\
+&= \sum\_{i=1}^N \sum\_{k=1}^K r\_{ik} \left[\log \pi\_k + \log \mathcal{N}(\mathbf{x}\_i \mid \boldsymbol{\mu}\_k, \boldsymbol{\Sigma}\_k)\right].
+\end{aligned}$$
+
+---
+
+class: middle
+
+Setting the gradients to zero gives the M-step updates. They are the estimates for known components, with each penguin weighted by $r\_{ik}$ and $N\_k = \sum\_{i} r\_{ik}$,
 $$\begin{aligned}
 \boldsymbol{\mu}\_k^{(t+1)} &= \frac{1}{N\_k} \sum\_{i=1}^N r\_{ik} \mathbf{x}\_i, \\\\
 \boldsymbol{\Sigma}\_k^{(t+1)} &= \frac{1}{N\_k} \sum\_{i=1}^N r\_{ik} (\mathbf{x}\_i - \boldsymbol{\mu}\_k^{(t+1)})(\mathbf{x}\_i - \boldsymbol{\mu}\_k^{(t+1)})^T, \\\\
