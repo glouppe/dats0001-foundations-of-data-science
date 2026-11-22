@@ -38,10 +38,11 @@ class: middle
 ## Maximum likelihood
 
 Summing out the latent variables gives the log-likelihood
-$$\log p(\mathbf{x}\_{1:N} \mid \theta) = \sum\_{i=1}^N \log \sum\_{k=1}^K \pi\_k \mathcal{N}(\mathbf{x}\_i \mid \boldsymbol{\mu}\_k, \boldsymbol{\Sigma}\_k).$$
-Its gradient with respect to $\boldsymbol{\mu}\_k$ is
-$$\sum\_{i=1}^N \frac{\pi\_k \mathcal{N}(\mathbf{x}\_i \mid \boldsymbol{\mu}\_k, \boldsymbol{\Sigma}\_k)}{\sum\_{j=1}^K \pi\_j \mathcal{N}(\mathbf{x}\_i \mid \boldsymbol{\mu}\_j, \boldsymbol{\Sigma}\_j)} \boldsymbol{\Sigma}\_k^{-1} (\mathbf{x}\_i - \boldsymbol{\mu}\_k).$$
-The weight of each penguin depends on all the parameters, and setting the gradient to zero has no closed-form solution.
+$$\begin{aligned}
+\log p(\mathbf{x}\_{1:N} \mid \theta) &= \sum\_{i=1}^N \log \sum\_{k=1}^K p(\mathbf{x}\_i, z\_i = k \mid \theta) \\\\
+&= \sum\_{i=1}^N \log \sum\_{k=1}^K \pi\_k \mathcal{N}(\mathbf{x}\_i \mid \boldsymbol{\mu}\_k, \boldsymbol{\Sigma}\_k).
+\end{aligned}$$
+Its maximum has no closed-form solution.
 
 .alert[More generally, latent variable models have sums or integrals inside the logarithm, which are often intractable even to evaluate.]
 
