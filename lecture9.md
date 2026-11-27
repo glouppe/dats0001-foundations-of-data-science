@@ -14,7 +14,7 @@ class: middle
 
 .center.width-50[![](figures/lec9/lvm.svg)]
 
-In Lecture 8, the E-step of EM set $q$ to the posterior of the latent variables. When the posterior is intractable, the ELBO can still be maximized over a family $\mathcal{Q}$ of simpler distributions. This is .bold[variational inference] (VI).
+The E-step of EM sets $q$ to the posterior of the latent variables. When the posterior is intractable, the ELBO can still be maximized over a family $\mathcal{Q}$ of simpler distributions. This is .bold[variational inference] (VI).
 
 In this lecture, $\mathbf{z}$ gathers all the unknowns, parameters included. EM estimated the parameters by a point. VI approximates the posterior of all the unknowns, as MCMC does, but by optimization instead of sampling.
 
@@ -30,7 +30,7 @@ class: middle
 
 ## Evidence lower bound
 
-For any distribution $q(\mathbf{z})$, Lecture 8 showed that
+For any distribution $q(\mathbf{z})$, we showed that
 $$\log p(\mathbf{x}) = \mathcal{L}(q) + \text{KL}(q(\mathbf{z}) \\| p(\mathbf{z} \mid \mathbf{x})), \qquad \mathcal{L}(q) = \mathbb{E}\_{q(\mathbf{z})}\left[\log \frac{p(\mathbf{x}, \mathbf{z})}{q(\mathbf{z})}\right].$$
 The left side does not depend on $q$. Variational inference solves
 $$q^\* = \arg\max\_{q \in \mathcal{Q}} \mathcal{L}(q) = \arg\min\_{q \in \mathcal{Q}} \text{KL}(q(\mathbf{z}) \\| p(\mathbf{z} \mid \mathbf{x})).$$
@@ -100,7 +100,7 @@ class: middle
 
 ## Automatic differentiation variational inference
 
-ADVI maximizes the ELBO by stochastic gradient ascent. It needs only $\log p(\mathbf{x}, \mathbf{z})$ and its gradient, the same ingredients as HMC in Lecture 6, so it applies to any model whose log density is written as a program. It proceeds in three steps.
+ADVI maximizes the ELBO by stochastic gradient ascent. It needs only $\log p(\mathbf{x}, \mathbf{z})$ and its gradient, the same ingredients as HMC, so it applies to any model whose log density is written as a program. It proceeds in three steps.
 1. Map the latent variables to $\mathbb{R}^m$.
 2. Choose a Gaussian family in $\mathbb{R}^m$.
 3. Follow stochastic gradients of the ELBO.
@@ -147,7 +147,7 @@ Automatic differentiation computes each gradient. Stochastic gradient ascent fol
 
 class: middle
 
-.italic[Example.] Projectile motion (from Lecture 1), with one observed landing distance.
+.italic[Example.] Projectile motion, with one observed landing distance.
 
 .center.width-70[![](figures/lec9/advi-projectile.png)]
 
@@ -161,9 +161,9 @@ class: middle
 
 MCMC samples the posterior, and becomes exact as the chains grow. VI optimizes over a family, and is only as good as the family: with the reverse divergence, it typically underestimates the variance.
 
-VI is fast, and scales to large data sets with stochastic gradients. The Laplace approximation of Lecture 7 is another Gaussian approximation, fitted at the mode with the curvature there, where VI optimizes the ELBO.
+VI is fast, and scales to large data sets with stochastic gradients. The Laplace approximation is another Gaussian approximation, fitted at the mode with the curvature there, where VI optimizes the ELBO.
 
-The checks of Lecture 6 (calibration) and Lecture 7 (posterior predictive checks) apply to VI as to MCMC.
+Calibration and posterior predictive checks apply to VI as to MCMC.
 
 ---
 
@@ -177,7 +177,7 @@ class: middle
 
 ## Amortized variational inference
 
-With $N$ observations $\mathbf{x}\_i$, each with its own latent variables $\mathbf{z}\_i$ (the local variables of Lecture 4), VI fits one distribution $q(\mathbf{z}\_i)$ per observation.
+With $N$ observations $\mathbf{x}\_i$, each with its own latent variables $\mathbf{z}\_i$, VI fits one distribution $q(\mathbf{z}\_i)$ per observation.
 
 .bold[Amortized] VI instead trains one network $f(\mathbf{x}; \varphi)$ that maps any observation to the parameters of its variational distribution,
 $$q(\mathbf{z}\_i \mid \mathbf{x}\_i; \varphi) = q(\mathbf{z}\_i \mid f(\mathbf{x}\_i; \varphi)).$$
@@ -201,7 +201,7 @@ class: middle
 
 ## Beyond the ELBO
 
-VI, amortized or not, evaluates the density $p(\mathbf{x}, \mathbf{z})$ inside the ELBO. When the model is a simulator that can be run but not evaluated, the KL divergence is taken the other way (Lecture 10).
+VI, amortized or not, evaluates the density $p(\mathbf{x}, \mathbf{z})$ inside the ELBO. When the model is a simulator that can be run but not evaluated, the KL divergence is taken the other way. This is simulation-based inference.
 
 ---
 
