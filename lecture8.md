@@ -320,7 +320,7 @@ class: middle
 
 .center.width-70[![](figures/lec8/eb-restaurants.png)]
 
-.center[Left: EM fits the prior so that the review averages it implies match those observed. <br>Right: the posterior of a restaurant with 3 reviews averaging 4.6.]
+.center[Left: EM fits the prior so that its prior predictive matches the review averages. <br>Right: the posterior of a restaurant with 3 reviews averaging 4.6.]
 
 ---
 

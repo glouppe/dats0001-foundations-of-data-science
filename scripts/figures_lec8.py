@@ -364,7 +364,7 @@ def eb_figure(xbar=4.6, k=3, sigma=1.):
     fig, (left, right) = plt.subplots(1, 2, figsize=(W, 2.8), dpi=200, sharex=True)
     left.hist(ybar, bins=np.arange(1., 6.41, .2), density=True, color=LIGHT, lw=0,
               label="review averages")
-    left.plot(ts, implied, color=GREY, lw=1.4, ls=(0, (4, 3)), label="implied by the prior")
+    left.plot(ts, implied, color=GREY, lw=1.4, ls=(0, (4, 3)), label="prior predictive")
     left.plot(ts, prior, color=BLUE, lw=1.8, label="fitted prior")
     left.set_title("1. fit the prior to all restaurants")
     v = 1 / (1 / tau ** 2 + k / sigma ** 2)
