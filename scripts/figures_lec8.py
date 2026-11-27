@@ -333,7 +333,7 @@ def kl_figure():
 
 # Empirical Bayes on simulated restaurant ratings ---------------------------------------
 
-def restaurants(N=150, sigma=1., seed=0, steps=200):
+def restaurants(N=1000, sigma=1., seed=0, steps=200):
     """N restaurants with mean ratings theta_i ~ N(3.6, 0.4^2), each with n_i reviews of noise
     sigma. EM estimates mu and tau from the review averages; returns n, the averages, the
     posterior means and the estimates."""
@@ -350,31 +350,33 @@ def restaurants(N=150, sigma=1., seed=0, steps=200):
     return n, ybar, m, mu, np.sqrt(tau2)
 
 
-def eb_figure(xbar=4.6, counts=(1, 3, 10, 30, 100), sigma=1.):
-    """Restaurants whose reviews average xbar, with more and more reviews: each average moves
-    to its posterior mean under the prior fitted by EM on the simulated restaurants."""
+def eb_figure(xbar=4.6, k=3, sigma=1.):
+    """The two steps of empirical Bayes on the simulated restaurants. Left: the prior fitted by
+    EM, against the averages of the restaurants with many reviews, which are close to their
+    mean ratings. Right: one restaurant with k reviews averaging xbar, its likelihood, the fitted
+    prior and the posterior."""
     n, ybar, m, mu, tau = restaurants(sigma=sigma)
     print("  restaurants: mu %.2f, tau %.2f" % (mu, tau))
-    fig, ax = plt.subplots(figsize=(W, 2.8), dpi=200)
-    ax.axvline(mu, color=LIGHT, lw=1.2, ls=(0, (4, 3)))
-    ax.text(mu, len(counts) - .35, r"$\hat{\mu}$", color=GREY, ha="center")
-    for row, k in enumerate(counts):
-        v = 1 / (1 / tau ** 2 + k / sigma ** 2)
-        post = v * (mu / tau ** 2 + k * xbar / sigma ** 2)
-        y = len(counts) - 1 - row
-        ax.annotate("", (post, y), (xbar, y),
-                    arrowprops=dict(arrowstyle="-|>", color=LIGHT, lw=1.2, shrinkA=4, shrinkB=4))
-        ax.plot(xbar, y, "o", color=GREY, ms=6, label=r"average of the reviews $\bar{x}_i$" if row == 0 else None)
-        ax.plot(post, y, "o", color=BLUE, ms=6, label=r"posterior mean of $\theta_i$" if row == 0 else None)
-    ax.set_yticks(range(len(counts)))
-    ax.set_yticklabels(["%d review%s" % (k, "s" if k > 1 else "") for k in counts][::-1])
-    ax.tick_params(axis="y", length=0)
-    ax.spines["left"].set_visible(False)
-    ax.set_xlabel("rating")
-    ax.set_xlim(mu - .3, xbar + .3)
-    ax.set_ylim(-.6, len(counts) - .1)
-    ax.legend(frameon=False, loc="lower center", bbox_to_anchor=(.5, 1), ncol=2)
-    tidy(ax)
+    ts = np.linspace(1.8, 6.2, 400)
+    prior = norm.pdf(ts, mu, tau)
+    fig, (left, right) = plt.subplots(1, 2, figsize=(W, 2.8), dpi=200, sharex=True)
+    left.hist(ybar[n >= 20], bins=np.arange(1.8, 6.21, .2), density=True, color=LIGHT, lw=0,
+              label="averages, 20+ reviews")
+    left.plot(ts, prior, color=BLUE, lw=1.8, label="fitted prior")
+    left.set_title("1. fit the prior to all restaurants")
+    v = 1 / (1 / tau ** 2 + k / sigma ** 2)
+    post = v * (mu / tau ** 2 + k * xbar / sigma ** 2)
+    right.plot(ts, norm.pdf(ts, xbar, sigma / np.sqrt(k)), color=GREY, lw=1.4, ls=(0, (4, 3)),
+               label="likelihood, %d reviews" % k)
+    right.plot(ts, prior, color=BLUE, lw=1.8, label="fitted prior")
+    right.plot(ts, norm.pdf(ts, post, np.sqrt(v)), color=ORANGE, lw=1.8, label="posterior")
+    right.set_title("2. infer one restaurant")
+    for ax in (left, right):
+        ax.set_xlabel(r"mean rating $\theta_i$")
+        ax.set_yticks([])
+        ax.set_ylim(0, 1.6)
+        ax.legend(frameon=False, loc="upper left", fontsize=9)
+        tidy(ax)
     fig.tight_layout()
     save(fig, "eb-restaurants.png")
 

@@ -310,7 +310,7 @@ The M-step drops $\log p(\mathbf{x}\_i \mid \theta\_i)$ from the expected comple
 class: middle
 
 .italic[Example.] For the restaurants, with $\bar{x}\_i$ the average of the reviews, the E-step gives Gaussian posteriors of variance and mean
-$$v\_i = \left(\frac{1}{\tau^2} + \frac{n\_i}{\sigma^2}\right)^{-1}, \qquad m\_i = v\_i \left(\frac{\mu}{\tau^2} + \frac{n\_i \bar{x}\_i}{\sigma^2}\right),$$
+$$v\_i = \left(\frac{1}{\tau^2} + \frac{n\_i}{\sigma^2}\right)^{-1}, \qquad m\_i = v\_i \left(\frac{\mu}{\tau^2} + \frac{n\_i \bar{x}\_i}{\sigma^2}\right).$$
 The posterior mean $m\_i$ is a weighted average of $\bar{x}\_i$ and $\mu$, with weights $n\_i / \sigma^2$ and $1 / \tau^2$. The M-step sets
 $$\mu = \frac{1}{N} \sum\_{i=1}^N m\_i, \qquad \tau^2 = \frac{1}{N} \sum\_{i=1}^N \left[(m\_i - \mu)^2 + v\_i\right].$$
 
@@ -320,7 +320,7 @@ class: middle
 
 .center.width-70[![](figures/lec8/eb-restaurants.png)]
 
-.center[Restaurants whose reviews average 4.6, with $\hat{\mu}$ and $\hat{\tau}$ fitted by EM. <br>With few reviews, the posterior mean is pulled towards $\hat{\mu}$.]
+.center[Left: the prior fitted by EM on 1000 simulated restaurants. <br>Right: the posterior of a restaurant with 3 reviews averaging 4.6.]
 
 ---
 
