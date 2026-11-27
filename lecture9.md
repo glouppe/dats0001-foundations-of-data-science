@@ -75,12 +75,6 @@ where $J\_f$ is the Jacobian of $f$, and $\left| \det J\_f(\mathbf{u}) \right|$ 
 
 .center[A Gaussian through an invertible $f$. Each shaded interval keeps its mass, <br>so where $f$ stretches, around 0, the density drops.]
 
-???
-
-For a linear map $f(\mathbf{u}) = 2\mathbf{u}$ in three dimensions, a unit cube becomes a cube of volume 8, and the density is divided by $8 = |\det(2 I)|$.
-
-The sign of the determinant gives the orientation; its absolute value gives the scaling of volumes, an expansion when it is larger than 1.
-
 ---
 
 class: middle
