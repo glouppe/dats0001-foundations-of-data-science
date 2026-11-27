@@ -199,60 +199,6 @@ This is variational EM: the network $f$ replaces the E-step, and gradient steps 
 
 class: middle
 
-.avatars[![](figures/lec9/faces/fanny.jpg)![](figures/lec9/faces/adrien.jpg)]
-
-## Representation learning for cytometry data
-
-.center.width-100[![](figures/lec9/cytometry-flow.png)]
-
-Flow cytometry measures chemical markers on each cell as the cells flow, one by one, through a beam of light. It is used across biology and medicine, for immune profiling, diagnosis and drug development.
-
-.footnote[Credits: Bodart, De Voeght, et al., in preparation.]
-
----
-
-class: middle
-
-.avatars[![](figures/lec9/faces/fanny.jpg)![](figures/lec9/faces/adrien.jpg)]
-
-.center.width-100[![](figures/lec9/cytometry-screening.png)]
-
-A sample holds thousands of cells, each described by a dozen markers. Cell populations are usually identified by hand, marker after marker, which is slow and subjective.
-
-.footnote[Credits: Bodart, De Voeght, et al., in preparation.]
-
----
-
-class: middle
-
-.avatars[![](figures/lec9/faces/fanny.jpg)![](figures/lec9/faces/adrien.jpg)]
-
-Each cell $\mathbf{x}$ has a population $c$ and a representation $\mathbf{z}$,
-$$\begin{aligned}
-p(c) &= \text{Categorical}(c \mid \boldsymbol{\pi}), \\\\
-p(\mathbf{z} \mid c) &= \mathcal{N}(\mathbf{z} \mid \boldsymbol{\mu}\_\beta(c), \text{diag}(\boldsymbol{\sigma}^2\_\beta(c))), \\\\
-p(\mathbf{x} \mid \mathbf{z}) &= \mathcal{N}(\mathbf{x} \mid \boldsymbol{\mu}\_\theta(\mathbf{z}), \text{diag}(\boldsymbol{\sigma}^2\_\theta(\mathbf{z}))).
-\end{aligned}$$
-The first two lines are the Gaussian mixture of Lecture 8, in a learned space of representations. The functions $\boldsymbol{\mu}\_\beta, \boldsymbol{\sigma}\_\beta, \boldsymbol{\mu}\_\theta, \boldsymbol{\sigma}\_\theta$ are neural networks.
-
-Amortized VI fits the parameters $\boldsymbol{\pi}, \beta, \theta$, and infers the population and representation of each cell.
-
-.footnote[Credits: Bodart, De Voeght, et al., in preparation.]
-
----
-
-class: middle
-
-.avatars[![](figures/lec9/faces/fanny.jpg)![](figures/lec9/faces/adrien.jpg)]
-
-.center.width-100[![](figures/lec9/cytometry-marvin.png)]
-
-.footnote[Credits: Bodart, De Voeght, et al., in preparation.]
-
----
-
-class: middle
-
 ## Beyond the ELBO
 
 VI, amortized or not, evaluates the density $p(\mathbf{x}, \mathbf{z})$ inside the ELBO. When the model is a simulator that can be run but not evaluated, the KL divergence is taken the other way (Lecture 10).
