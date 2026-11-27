@@ -351,17 +351,20 @@ def restaurants(N=1000, sigma=1., seed=0, steps=200):
 
 
 def eb_figure(xbar=4.6, k=3, sigma=1.):
-    """The two steps of empirical Bayes on the simulated restaurants. Left: the prior fitted by
-    EM, against the averages of the restaurants with many reviews, which are close to their
-    mean ratings. Right: one restaurant with k reviews averaging xbar, its likelihood, the fitted
-    prior and the posterior."""
+    """The two steps of empirical Bayes on the simulated restaurants. Left: the review averages
+    of all the restaurants, the distribution of averages implied by the prior fitted by EM (a
+    mixture of N(mu, tau^2 + sigma^2 / n_i) over the restaurants), and the fitted prior itself,
+    narrower since it leaves out the noise of the reviews. Right: one restaurant with k reviews
+    averaging xbar, its likelihood, the fitted prior and the posterior."""
     n, ybar, m, mu, tau = restaurants(sigma=sigma)
     print("  restaurants: mu %.2f, tau %.2f" % (mu, tau))
-    ts = np.linspace(1.8, 6.2, 400)
+    ts = np.linspace(1., 6.4, 500)
     prior = norm.pdf(ts, mu, tau)
+    implied = norm.pdf(ts[:, None], mu, np.sqrt(tau ** 2 + sigma ** 2 / n)).mean(1)
     fig, (left, right) = plt.subplots(1, 2, figsize=(W, 2.8), dpi=200, sharex=True)
-    left.hist(ybar[n >= 20], bins=np.arange(1.8, 6.21, .2), density=True, color=LIGHT, lw=0,
-              label="averages, 20+ reviews")
+    left.hist(ybar, bins=np.arange(1., 6.41, .2), density=True, color=LIGHT, lw=0,
+              label="review averages")
+    left.plot(ts, implied, color=GREY, lw=1.4, ls=(0, (4, 3)), label="implied by the prior")
     left.plot(ts, prior, color=BLUE, lw=1.8, label="fitted prior")
     left.set_title("1. fit the prior to all restaurants")
     v = 1 / (1 / tau ** 2 + k / sigma ** 2)
@@ -372,7 +375,7 @@ def eb_figure(xbar=4.6, k=3, sigma=1.):
     right.plot(ts, norm.pdf(ts, post, np.sqrt(v)), color=ORANGE, lw=1.8, label="posterior")
     right.set_title("2. infer one restaurant")
     for ax in (left, right):
-        ax.set_xlabel(r"mean rating $\theta_i$")
+        ax.set_xlabel(r"rating")
         ax.set_yticks([])
         ax.set_ylim(0, 1.6)
         ax.legend(frameon=False, loc="upper left", fontsize=9)

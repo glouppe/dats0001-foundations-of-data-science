@@ -320,7 +320,7 @@ class: middle
 
 .center.width-70[![](figures/lec8/eb-restaurants.png)]
 
-.center[Left: the prior fitted by EM on 1000 simulated restaurants. <br>Right: the posterior of a restaurant with 3 reviews averaging 4.6.]
+.center[Left: EM fits the prior so that the review averages it implies match those observed. <br>Right: the posterior of a restaurant with 3 reviews averaging 4.6.]
 
 ---
 
