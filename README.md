@@ -25,7 +25,6 @@ Materials for DATS0001 Foundations of Data Science, ULiège, Fall 2026.
 | November 23 | Lecture 8: [Expectation-maximization](https://glouppe.github.io/dats0001-foundations-of-data-science/?p=lecture8.md) [[PDF](https://glouppe.github.io/dats0001-foundations-of-data-science/pdf/lec8.pdf)]<br>`nb08`: Expectation-maximization [[notebook](./nb08-em.ipynb)]<br>Reading: Dempster et al, [Maximum Likelihood from Incomplete Data via EM](https://www.jstor.org/stable/2984875), 1977<br>Reading: Neal & Hinton, [A view of the EM algorithm that justifies incremental, sparse, and other variants](https://glizen.com/radfordneal/ftp/emk.pdf), 1998 |
 | November 30 | Lecture 9: Variational inference<br>`nb09a`: Coordinate ascent variational inference<br>`nb09b`: Automatic differentiation variational inference<br>Reading: Kucukelbir et al, [Automatic differentiation variational inference](https://arxiv.org/abs/1603.00788), 2016 |
 | December 7 | Lecture 10: Simulation-based inference |
-| December 14 | Lecture 11: Wrap-up case study<br>`nb11`: Estimating air pollution from satellite data |
 | December 18 | [Case study](./project/case-study.ipynb) due |
 
 ## Case study

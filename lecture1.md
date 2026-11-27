@@ -336,7 +336,6 @@ class: middle
 - Lecture 8: Expectation-Maximization
 - Lecture 9: Variational Inference
 - Lecture 10: Simulation-based inference
-- Lecture 11: Case study
 
 ---
 
