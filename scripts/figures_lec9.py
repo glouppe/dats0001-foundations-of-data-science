@@ -135,28 +135,90 @@ def mean_field():
 # Change of variables ---------------------------------------------------------------------
 
 def change_of_variables():
-    """u ~ N(0, 1) and z = f(u) = u + 0.8 tanh(2u). Two intervals of u and their images carry
-    the same mass: where f stretches (around 0), the density of z is lower."""
+    """u ~ N(0, 1) and z = f(u) = u + 0.8 tanh(2u), drawn as in a textbook: f in the middle,
+    p(u) below it and p(z) on its left. Two intervals of u and their images under f carry the
+    same mass: where f is steep (around 0), the image is wider and the density of z lower."""
     f = lambda u: u + .8 * np.tanh(2 * u)
     df = lambda u: 1 + 1.6 / np.cosh(2 * u) ** 2
-    us = np.linspace(-3.5, 3.5, 1000)
-    fig, (left, right) = plt.subplots(1, 2, figsize=(W, 2.6), dpi=200, sharey=True)
-    left.plot(us, norm.pdf(us), color=GREY, lw=1.6)
-    right.plot(f(us), norm.pdf(us) / df(us), color=BLUE, lw=1.6)
-    for (a, b), color in [((-.15, .15), ORANGE), ((1.2, 1.5), GREEN)]:
+    us = np.linspace(-3, 3, 1000)
+    fig = plt.figure(figsize=(W, 3.6), dpi=200)
+    grid = fig.add_gridspec(2, 2, width_ratios=[1, 2.6], height_ratios=[2.4, 1],
+                            wspace=.05, hspace=.08)
+    curve = fig.add_subplot(grid[0, 1])
+    below = fig.add_subplot(grid[1, 1], sharex=curve)
+    left = fig.add_subplot(grid[0, 0], sharey=curve)
+    curve.plot(us, f(us), color=GREY, lw=1.6)
+    curve.text(2.1, f(2.1) - .9, r"$z = f(u)$", color=GREY, ha="left")
+    below.plot(us, norm.pdf(us), color=GREY, lw=1.6)
+    left.plot(norm.pdf(us) / df(us), f(us), color=BLUE, lw=1.6)
+    for (a, b), color in [((-.2, .2), ORANGE), ((1.2, 1.6), GREEN)]:
         seg = np.linspace(a, b, 50)
-        left.fill_between(seg, norm.pdf(seg), color=color, alpha=.5, lw=0)
-        right.fill_between(f(seg), norm.pdf(seg) / df(seg), color=color, alpha=.5, lw=0)
-    left.set_title(r"$p(u)$")
-    right.set_title(r"$p(z) = p(u) \, |f'(u)|^{-1}$")
-    left.set_xlabel(r"$u$")
-    right.set_xlabel(r"$z = f(u)$")
-    for ax in (left, right):
-        ax.set_yticks([])
-        ax.set_xlim(-3.5, 3.5) if ax is left else ax.set_xlim(f(-3.5), f(3.5))
+        below.fill_between(seg, norm.pdf(seg), color=color, alpha=.6, lw=0)
+        left.fill_betweenx(f(seg), norm.pdf(seg) / df(seg), color=color, alpha=.6, lw=0)
+        curve.fill_between(seg, -4, f(seg), color=color, alpha=.15, lw=0)
+        curve.fill_betweenx(f(seg), -3, seg, color=color, alpha=.15, lw=0)
+    curve.set_xlim(-3, 3)
+    curve.set_ylim(f(-3), f(3))
+    left.set_xlim(.45, 0)
+    below.set_ylim(0, .45)
+    below.set_xlabel(r"$u$")
+    left.set_ylabel(r"$z$")
+    below.text(-2.9, .3, r"$p(u)$", color=GREY)
+    left.text(.43, f(2.6), r"$p(z)$", color=BLUE)
+    for ax in (curve, below, left):
         tidy(ax)
-    fig.tight_layout()
+    curve.tick_params(labelbottom=False, labelleft=False)
+    below.set_yticks([])
+    left.set_xticks([])
+    curve.spines["left"].set_visible(False)
+    curve.spines["bottom"].set_visible(False)
+    curve.tick_params(length=0)
+    left.spines["left"].set_visible(False)
+    left.spines["right"].set_visible(True)
+    left.yaxis.tick_right()
+    left.tick_params(axis="y", labelright=False, length=0)
+    left.yaxis.set_label_position("left")
+    fig.subplots_adjust(left=.06, right=.98, top=.97, bottom=.14)
     save(fig, "change-of-variables.png")
+
+
+def change_of_variables_2d():
+    """A grid of the u plane and its image under a nonlinear f. A small square of area dV around
+    u goes to a curved quadrilateral, close to the parallelogram spanned by the columns of the
+    Jacobian J_f(u) times the sides of the square, of area |det J_f(u)| dV."""
+    f = lambda u1, u2: (u1 + .35 * np.sin(1.3 * u2), u2 + .25 * u1 ** 2)
+    def jac(u1, u2):
+        return np.array([[1., .35 * 1.3 * np.cos(1.3 * u2)], [.5 * u1, 1.]])
+    fig, (left, right) = plt.subplots(1, 2, figsize=(W, 2.8), dpi=200)
+    ticks = np.linspace(-2, 2, 9)
+    t = np.linspace(-2, 2, 200)
+    for c in ticks:
+        left.plot(t, np.full_like(t, c), color=LIGHT, lw=.8)
+        left.plot(np.full_like(t, c), t, color=LIGHT, lw=.8)
+        right.plot(*f(t, np.full_like(t, c)), color=LIGHT, lw=.8)
+        right.plot(*f(np.full_like(t, c), t), color=LIGHT, lw=.8)
+    u0, h = np.array([.5, .5]), .5
+    sq = np.array([[0, 0], [h, 0], [h, h], [0, h], [0, 0]]) + u0
+    left.fill(*sq.T, color=ORANGE, alpha=.6, lw=0)
+    side = np.concatenate([np.linspace(sq[k], sq[k + 1], 30) for k in range(4)])
+    right.fill(*f(*side.T), color=ORANGE, alpha=.6, lw=0)
+    J = jac(*u0)
+    par = np.array([[0, 0], J @ [h, 0], J @ [h, h], J @ [0, h], [0, 0]]) + np.array(f(*u0))
+    right.plot(*par.T, color=BLUE, lw=1.4, ls=(0, (3, 2)))
+    right.text(par[1, 0] + .15, par[1, 1] + .05, r"$|\det J_f(\mathbf{u})| \, dV$", color=BLUE,
+               va="center", bbox=dict(facecolor="white", edgecolor="none", pad=1))
+    left.text(u0[0] + h + .1, u0[1] + h / 2, r"$dV$", color=ORANGE, va="center",
+              bbox=dict(facecolor="white", edgecolor="none", pad=1))
+    left.set_title(r"$\mathbf{u}$")
+    right.set_title(r"$\mathbf{z} = f(\mathbf{u})$")
+    for ax in (left, right):
+        ax.set_aspect("equal")
+        ax.set_xticks([])
+        ax.set_yticks([])
+        for side_ in ("left", "bottom", "right", "top"):
+            ax.spines[side_].set_visible(False)
+    fig.tight_layout()
+    save(fig, "change-of-variables-2d.png")
 
 
 def normalizing_flow():
@@ -302,6 +364,7 @@ if __name__ == "__main__":
     kl_directions()
     mean_field()
     change_of_variables()
+    change_of_variables_2d()
     normalizing_flow()
     advi_transform()
     advi_projectile()

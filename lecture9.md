@@ -67,13 +67,40 @@ class: middle
 
 ## Change of variables
 
-A richer family transforms a simple distribution. Let $\mathbf{u} \sim p(\mathbf{u})$ and $\mathbf{z} = f(\mathbf{u})$, with $f$ invertible and differentiable. Probability mass is conserved in every small region, so
-$$p(\mathbf{z}) = p(\mathbf{u}) \left| \det J\_f(\mathbf{u}) \right|^{-1}, \qquad \mathbf{u} = f^{-1}(\mathbf{z}),$$
-where $J\_f$ is the Jacobian of $f$, and $\left| \det J\_f(\mathbf{u}) \right|$ the factor by which $f$ scales volumes around $\mathbf{u}$.
+A richer family transforms a simple distribution. Let $\mathbf{u} \sim p(\mathbf{u})$ and $\mathbf{z} = f(\mathbf{u})$, with $f$ invertible and differentiable. We look for the density of $\mathbf{z}$.
 
 .center.width-70[![](figures/lec9/change-of-variables.png)]
 
-.center[A Gaussian through an invertible $f$. Each shaded interval keeps its mass, <br>so where $f$ stretches, around 0, the density drops.]
+.center[Each interval of $u$ and its image under $f$ carry the same mass. <br>Where $f$ is steep, around 0, the image is wider and the density of $z$ lower.]
+
+---
+
+class: middle
+
+In one dimension, with $f$ increasing, $z \leq a$ holds exactly when $u \leq f^{-1}(a)$. The cumulative distribution functions are therefore equal,
+$$P(z \leq a) = P(u \leq f^{-1}(a)).$$
+Differentiating both sides with respect to $a$, by the chain rule,
+$$\begin{aligned}
+p\_z(a) &= p\_u(f^{-1}(a)) \, \frac{d f^{-1}(a)}{da} \\\\
+&= p\_u(u) \, \frac{1}{f'(u)}, \qquad u = f^{-1}(a),
+\end{aligned}$$
+since the derivative of the inverse is the inverse of the derivative.
+
+For $f$ decreasing, the inequality flips, $P(z \leq a) = 1 - P(u \leq f^{-1}(a))$, and the derivative changes sign. In both cases,
+$$p\_z(z) = p\_u(u) \left| f'(u) \right|^{-1}, \qquad u = f^{-1}(z).$$
+
+---
+
+class: middle
+
+In $d$ dimensions, $f$ is close to its linear approximation around $\mathbf{u}$,
+$$f(\mathbf{u} + \boldsymbol{\delta}) \approx f(\mathbf{u}) + J\_f(\mathbf{u}) \boldsymbol{\delta},$$
+with $J\_f$ the Jacobian of $f$. A linear map scales volumes by the absolute value of its determinant. A small region of volume $dV$ around $\mathbf{u}$ goes to a region of volume $\left| \det J\_f(\mathbf{u}) \right| dV$ around $\mathbf{z}$.
+
+.center.width-70[![](figures/lec9/change-of-variables-2d.png)]
+
+Both regions carry the same mass, $p(\mathbf{z}) \left| \det J\_f(\mathbf{u}) \right| dV = p(\mathbf{u}) \, dV$. This gives the .bold[change of variables] theorem,
+$$p(\mathbf{z}) = p(\mathbf{u}) \left| \det J\_f(\mathbf{u}) \right|^{-1}, \qquad \mathbf{u} = f^{-1}(\mathbf{z}).$$
 
 ---
 
