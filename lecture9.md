@@ -14,9 +14,15 @@ class: middle
 
 .center.width-50[![](figures/lec9/lvm.svg)]
 
-The E-step of EM sets $q$ to the posterior of the latent variables. When the posterior is intractable, the ELBO can still be maximized over a family $\mathcal{Q}$ of simpler distributions. This is .bold[variational inference] (VI).
+Given observed variables $\mathbf{x}$ and latent variables $\mathbf{z}$, we want the posterior
+$$p(\mathbf{z} \mid \mathbf{x}) = \frac{p(\mathbf{x} \mid \mathbf{z}) p(\mathbf{z})}{p(\mathbf{x})}, \qquad p(\mathbf{x}) = \int p(\mathbf{x}, \mathbf{z}) d\mathbf{z}.$$
+The integral is intractable in most models, and so is the posterior.
 
-In this lecture, $\mathbf{z}$ gathers all the unknowns, parameters included. EM estimated the parameters by a point. VI approximates the posterior of all the unknowns, as MCMC does, but by optimization instead of sampling.
+---
+
+class: middle
+
+The latent variables $\mathbf{z}$ gather all the unknowns, parameters included. Their posterior can be sampled by MCMC. Variational inference approximates it by optimization instead.
 
 ---
 
@@ -32,7 +38,7 @@ class: middle
 
 For any distribution $q(\mathbf{z})$, we showed that
 $$\log p(\mathbf{x}) = \mathcal{L}(q) + \text{KL}(q(\mathbf{z}) \\| p(\mathbf{z} \mid \mathbf{x})), \qquad \mathcal{L}(q) = \mathbb{E}\_{q(\mathbf{z})}\left[\log \frac{p(\mathbf{x}, \mathbf{z})}{q(\mathbf{z})}\right].$$
-The left side does not depend on $q$. Variational inference solves
+The left side does not depend on $q$. .bold[Variational inference] (VI) approximates the posterior by the distribution of a family $\mathcal{Q}$ that maximizes the ELBO,
 $$q^\* = \arg\max\_{q \in \mathcal{Q}} \mathcal{L}(q) = \arg\min\_{q \in \mathcal{Q}} \text{KL}(q(\mathbf{z}) \\| p(\mathbf{z} \mid \mathbf{x})).$$
 
 The ELBO needs only the joint density $p(\mathbf{x}, \mathbf{z})$, never the posterior. If $\mathcal{Q}$ holds every distribution, $q^\*$ is the posterior, as in the E-step.
