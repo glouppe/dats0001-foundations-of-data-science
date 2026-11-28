@@ -451,16 +451,15 @@ def advi_projectile():
             L = L + np.tril(np.asarray(params["off"]), -1)
         eps = np.random.default_rng(0).standard_normal((3000, 2))
         fits[name] = to_theta(np.asarray(params["mu"]) + eps @ L.T)
-    fig, axes = plt.subplots(1, 2, figsize=(W, 2.8), dpi=200, sharey=True)
     post = post[np.random.default_rng(0).choice(len(post), 4000, replace=False)]
-    for ax, (name, q) in zip(axes, fits.items()):
-        ax.scatter(*post.T, s=3, color=LIGHT, lw=0, label="MCMC")
-        ax.scatter(*q.T, s=3, color=BLUE, lw=0, alpha=.5, label="ADVI, " + name)
+    for name, q in fits.items():
+        fig, ax = plt.subplots(figsize=(W, 2.8), dpi=200)
+        ax.scatter(*post.T, s=3, color=LIGHT, lw=0, label=r"MCMC, $p(v, \alpha \mid x_\mathrm{obs})$")
+        ax.scatter(*q.T, s=3, color=BLUE, lw=0, alpha=.5, label=name + r" Gaussian, $q(v, \alpha)$")
         projectile_axes(ax)
-        ax.set_title("ADVI, " + name)
-    axes[1].set_ylabel("")
-    fig.tight_layout()
-    save(fig, "advi-projectile.png")
+        ax.legend(frameon=False, loc="lower center", bbox_to_anchor=(.5, 1), ncol=2, markerscale=3)
+        fig.tight_layout()
+        save(fig, "projectile-%s.png" % name.replace(" ", "-"))
 
 
 def amortized_flow(xs=(2., 4., 6.)):
