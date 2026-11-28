@@ -65,7 +65,7 @@ $$\begin{aligned}
 \end{aligned}$$
 where $\mathcal{L}(q) = \mathbb{E}\_{q(\mathbf{z})}\left[\log \frac{p(\mathbf{x}, \mathbf{z})}{q(\mathbf{z})}\right]$ is the .bold[evidence lower bound] (ELBO). Since $\log p(\mathbf{x})$ does not depend on $q$,
 $$q^\* = \arg\min\_{q \in \mathcal{Q}} \text{KL}(q(\mathbf{z}) \\| p(\mathbf{z} \mid \mathbf{x})) = \arg\max\_{q \in \mathcal{Q}} \mathcal{L}(q).$$
-The ELBO needs only the joint density $p(\mathbf{x}, \mathbf{z})$, never the posterior.
+Unlike the KL divergence, the ELBO involves only the joint density $p(\mathbf{x}, \mathbf{z})$, which we can evaluate.
 
 ---
 
