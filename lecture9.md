@@ -38,14 +38,8 @@ class: middle
 
 class: middle
 
-## Evidence lower bound
-
-For any distribution $q(\mathbf{z})$, we showed that
-$$\log p(\mathbf{x}) = \mathcal{L}(q) + \text{KL}(q(\mathbf{z}) \\| p(\mathbf{z} \mid \mathbf{x})), \qquad \mathcal{L}(q) = \mathbb{E}\_{q(\mathbf{z})}\left[\log \frac{p(\mathbf{x}, \mathbf{z})}{q(\mathbf{z})}\right].$$
-The left side does not depend on $q$. .bold[Variational inference] (VI) approximates the posterior by the distribution of a family $\mathcal{Q}$ that maximizes the ELBO,
-$$q^\* = \arg\max\_{q \in \mathcal{Q}} \mathcal{L}(q) = \arg\min\_{q \in \mathcal{Q}} \text{KL}(q(\mathbf{z}) \\| p(\mathbf{z} \mid \mathbf{x})).$$
-
-The ELBO needs only the joint density $p(\mathbf{x}, \mathbf{z})$, never the posterior. If $\mathcal{Q}$ holds every distribution, $q^\*$ is the posterior, as in the E-step.
+.bold[Variational inference] (VI) approximates the posterior by the closest distribution in a family $\mathcal{Q}$ of simpler distributions,
+$$q^\* = \arg\min\_{q \in \mathcal{Q}} \text{KL}(q(\mathbf{z}) \\| p(\mathbf{z} \mid \mathbf{x})).$$
 
 ---
 
@@ -56,6 +50,22 @@ The KL divergence is not symmetric. The .bold[forward] divergence $\text{KL}(p(\
 .center.width-70[![](figures/lec9/kl-directions.png)]
 
 .center[The Gaussian closest to a two-mode $p$ in each direction. <br>The forward divergence covers both modes; the reverse one settles on one.]
+
+---
+
+class: middle
+
+## Evidence lower bound
+
+The reverse divergence still involves the posterior. Expanding it with Bayes' rule,
+$$\begin{aligned}
+\text{KL}(q(\mathbf{z}) \\| p(\mathbf{z} \mid \mathbf{x})) &= \mathbb{E}\_{q(\mathbf{z})}\left[\log q(\mathbf{z}) - \log p(\mathbf{z} \mid \mathbf{x})\right] \\\\
+&= \mathbb{E}\_{q(\mathbf{z})}\left[\log q(\mathbf{z}) - \log p(\mathbf{x}, \mathbf{z})\right] + \log p(\mathbf{x}) \\\\
+&= -\mathcal{L}(q) + \log p(\mathbf{x}),
+\end{aligned}$$
+where $\mathcal{L}(q) = \mathbb{E}\_{q(\mathbf{z})}\left[\log \frac{p(\mathbf{x}, \mathbf{z})}{q(\mathbf{z})}\right]$ is the .bold[evidence lower bound] (ELBO). Since $\log p(\mathbf{x})$ does not depend on $q$,
+$$q^\* = \arg\max\_{q \in \mathcal{Q}} \mathcal{L}(q).$$
+The ELBO needs only the joint density $p(\mathbf{x}, \mathbf{z})$, never the posterior.
 
 ---
 
