@@ -146,9 +146,19 @@ For most models, such as the projectile, the ELBO has no closed form, and its op
 
 class: middle
 
+## Step 1: unconstrained space
+
+Latent variables may be constrained, such as $v > 0$ and $0 < \alpha < \pi / 2$ for the projectile. A Gaussian puts mass everywhere, including where the prior is zero. ADVI therefore maps the latent variables to $\mathbb{R}^m$ with an invertible map $T$, as
+$$\boldsymbol{\zeta} = T(\mathbf{z}),$$
+for instance $\zeta = \log z$ for $z > 0$. Mapping the latent variables changes their density. The change of variables theorem tells how.
+
+---
+
+class: middle
+
 ## Change of variables
 
-Mapping the latent variables changes their density. Let $\mathbf{u} \sim p(\mathbf{u})$ and $\mathbf{z} = f(\mathbf{u})$, with $f$ invertible and differentiable. We look for the density of $\mathbf{z}$.
+Let $\mathbf{u} \sim p(\mathbf{u})$ and $\mathbf{z} = f(\mathbf{u})$, with $f$ invertible and differentiable. We look for the density of $\mathbf{z}$.
 
 .center.width-70[![](figures/lec9/change-of-variables.png)]
 
@@ -187,7 +197,7 @@ $$p(\mathbf{z}) = p(\mathbf{u}) \left| \det J\_f(\mathbf{u}) \right|^{-1}, \qqua
 
 class: middle
 
-Latent variables may be constrained, such as a positive scale. ADVI maps them to $\mathbb{R}^m$ with an invertible $T$, for instance $\zeta = \log z$ for $z > 0$. With $\boldsymbol{\zeta} = T(\mathbf{z})$, the change of variables gives
+Applied to $\mathbf{z} = T^{-1}(\boldsymbol{\zeta})$, the change of variables gives the joint density in $\mathbb{R}^m$,
 $$p(\mathbf{x}, \boldsymbol{\zeta}) = p(\mathbf{x}, T^{-1}(\boldsymbol{\zeta})) \left| \det J\_{T^{-1}}(\boldsymbol{\zeta}) \right|.$$
 For the projectile, $v = 10 \, \sigma(\zeta\_1)$ and $\alpha = \pi \sigma(\zeta\_2) / 2$, with $\sigma$ the logistic function.
 
@@ -198,6 +208,8 @@ For the projectile, $v = 10 \, \sigma(\zeta\_1)$ and $\alpha = \pi \sigma(\zeta\
 ---
 
 class: middle
+
+## Step 2: Gaussian family
 
 In $\mathbb{R}^m$, the variational family is Gaussian, with variational parameters $\phi$.
 - Mean field, $q(\boldsymbol{\zeta}; \phi) = \mathcal{N}(\boldsymbol{\zeta} \mid \boldsymbol{\mu}, \text{diag}(\boldsymbol{\sigma}^2))$, with $\phi = (\boldsymbol{\mu}, \boldsymbol{\sigma})$.
@@ -212,6 +224,8 @@ $$g\_\phi(\boldsymbol{\zeta}) = \log p(\mathbf{x}, T^{-1}(\boldsymbol{\zeta})) +
 
 class: middle
 
+## Step 3: stochastic gradients
+
 The expectation is over $q$, which depends on $\phi$. Writing $\boldsymbol{\zeta} = \boldsymbol{\mu} + \mathbf{L} \boldsymbol{\epsilon}$ moves $\phi$ inside the expectation. This is the .bold[reparameterization],
 $$\begin{aligned}
 \mathcal{L}(\phi) &= \mathbb{E}\_{\mathcal{N}(\boldsymbol{\epsilon} \mid \mathbf{0}, \mathbf{I})}\left[g\_\phi(\boldsymbol{\mu} + \mathbf{L} \boldsymbol{\epsilon})\right], \\\\
@@ -224,7 +238,7 @@ Automatic differentiation computes each gradient. Stochastic gradient ascent fol
 
 class: middle
 
-.italic[Example.] ADVI on the projectile, with a mean-field Gaussian in $\boldsymbol{\zeta}$, $q(v, \alpha) = q(v) \, q(\alpha)$.
+.italic[Example.] ADVI on the projectile, with a mean-field Gaussian in $\boldsymbol{\zeta}$.
 
 .center.width-70[![](figures/lec9/projectile-mean-field.png)]
 
