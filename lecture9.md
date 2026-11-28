@@ -32,6 +32,16 @@ In this lecture, the latent variables $\mathbf{z}$ gather all the unknowns, para
 
 class: middle
 
+.italic[Example.] A ball is thrown from a height of 1.5 m with speed $v$ and angle $\alpha$, and lands at distance $x$, measured with a noise of 0.5 m. Here $\mathbf{z} = (v, \alpha)$, with uniform priors. Many speeds and angles land at the same distance, so the posterior is a curved ridge.
+
+.center.width-70[![](figures/lec9/projectile.png)]
+
+.center[Trajectories drawn from the posterior, and the posterior sampled by MCMC.]
+
+---
+
+class: middle
+
 # Variational inference
 
 ---
@@ -125,7 +135,7 @@ class: middle
 
 ## Automatic differentiation variational inference
 
-For most models, the ELBO has no closed form, and its optimum cannot be derived by hand as for the Gaussian posterior. .bold[Automatic differentiation variational inference] (ADVI) maximizes it by stochastic gradient ascent, for any model whose log density $\log p(\mathbf{x}, \mathbf{z})$ is written as a differentiable program. It proceeds in three steps.
+For most models, such as the projectile, the ELBO has no closed form, and its optimum cannot be derived by hand as for the Gaussian posterior. .bold[Automatic differentiation variational inference] (ADVI) maximizes it by stochastic gradient ascent, for any model whose log density $\log p(\mathbf{x}, \mathbf{z})$ is written as a differentiable program. It proceeds in three steps.
 1. Map the latent variables to $\mathbb{R}^m$, where a Gaussian is a sensible family.
 2. Choose a Gaussian family in $\mathbb{R}^m$.
 3. Estimate the gradient of the ELBO by sampling, and follow it.
@@ -179,6 +189,7 @@ class: middle
 
 Latent variables may be constrained, such as a positive scale. ADVI maps them to $\mathbb{R}^m$ with an invertible $T$, for instance $\zeta = \log z$ for $z > 0$. With $\boldsymbol{\zeta} = T(\mathbf{z})$, the change of variables gives
 $$p(\mathbf{x}, \boldsymbol{\zeta}) = p(\mathbf{x}, T^{-1}(\boldsymbol{\zeta})) \left| \det J\_{T^{-1}}(\boldsymbol{\zeta}) \right|.$$
+For the projectile, $v = 10 \, \sigma(\zeta\_1)$ and $\alpha = \pi \sigma(\zeta\_2) / 2$, with $\sigma$ the logistic function.
 
 .center.width-70[![](figures/lec9/advi-transform.png)]
 
@@ -213,11 +224,11 @@ Automatic differentiation computes each gradient. Stochastic gradient ascent fol
 
 class: middle
 
-.italic[Example.] Projectile motion, with one observed landing distance.
+.italic[Example.] ADVI on the projectile, with a mean-field and a full-rank Gaussian in $\boldsymbol{\zeta}$.
 
 .center.width-70[![](figures/lec9/advi-projectile.png)]
 
-.center[The posterior of $(v, \alpha)$ is a curved ridge, sampled by MCMC. <br>The mean-field Gaussian of ADVI covers only its middle.]
+.center[Both Gaussians (blue) against MCMC (grey). <br>Neither can follow the curved ridge, and both cover only its middle.]
 
 ---
 
@@ -262,6 +273,16 @@ Samples are drawn by passing $\mathbf{z}\_0$ through the flow, so the reparamete
 .center.width-70[![](figures/lec9/normalizing-flow.png)]
 
 .center[A Gaussian through two invertible functions.]
+
+---
+
+class: middle
+
+.italic[Example.] One conditional flow $q(v, \alpha \mid x; \varphi)$ for the projectile, trained with the ELBO averaged over landing distances $x$ simulated from the model.
+
+.center.width-70[![](figures/lec9/amortized-flow.png)]
+
+.center[The flow (blue) against MCMC (grey), for three landing distances. <br>Each posterior costs one pass through the flow, and follows the curved ridge.]
 
 ---
 

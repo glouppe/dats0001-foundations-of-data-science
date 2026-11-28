@@ -5,8 +5,9 @@ and 8.
 - the Gaussian fitted to a two-mode distribution by the forward and by the reverse KL divergence;
 - the mean-field Gaussian that maximizes the ELBO for a correlated Gaussian posterior, computed
   exactly (each factor has variance 1 / Lambda_jj, Lambda the precision matrix);
-- ADVI with a mean-field Gaussian against emcee, on the projectile of nb01, with the model,
-  observation and optimization of nb09-advi (Euler steps of 0.1 s, seed 777).
+- the projectile of nb01 as the guiding example: posterior trajectories and the posterior of
+  (v, alpha) by emcee; ADVI with a mean-field and a full-rank Gaussian; amortized VI with a
+  conditional normalizing flow, for three landing distances.
 
 Usage: uv run python scripts/figures_lec9.py
 """
@@ -316,86 +317,217 @@ def advi_transform():
     save(fig, "advi-transform.png")
 
 
-# ADVI on the projectile ------------------------------------------------------------------
+# The projectile ---------------------------------------------------------------------------
+# The ball of nb01, thrown from 1.5 m with speed v and angle alpha, without drag. Its landing
+# distance has a closed form, equal to nb01's fine Euler steps; the noise sd is 0.5 m and the
+# priors are uniform, v on (0, 10) and alpha on (0, pi/2). The variational families live in
+# zeta = (logit(v / 10), logit(alpha / (pi / 2))), as in ADVI.
 
-def trajectory_end(v, alpha, dt=0.1, G=9.81):
-    """Where the ball lands, with the Euler steps of nb09-advi."""
-    v_x, v_y = v * np.cos(alpha), v * np.sin(alpha)
-    x, y = 0., 1.5
-    while y > 0:
-        v_y += dt * -G
-        x += dt * v_x
-        y += dt * v_y
-    return x
+G, H, SIGMA, V_MAX, A_MAX = 9.81, 1.5, .5, 10., np.pi / 2
 
 
-def advi_projectile():
+def landing(v, alpha, xp=np):
+    return v * xp.cos(alpha) / G * (v * xp.sin(alpha) + xp.sqrt((v * xp.sin(alpha)) ** 2 + 2 * G * H))
+
+
+def flight(v, alpha, n=60):
+    t_end = (v * np.sin(alpha) + np.sqrt((v * np.sin(alpha)) ** 2 + 2 * G * H)) / G
+    t = np.linspace(0, t_end, n)
+    return v * np.cos(alpha) * t, H + v * np.sin(alpha) * t - G * t ** 2 / 2
+
+
+def x_observed():
+    return landing(5., np.pi / 4) + SIGMA * np.random.default_rng(1).standard_normal()
+
+
+def mcmc_projectile(x_obs, seed=0, steps=6000):
     import emcee
-    import jax
-    import jax.numpy as jnp
-    import jax.scipy as jsc
-
-    def landing(v, alpha, dt=0.1, G=9.81):
-        v_x, v_y = v * jnp.cos(alpha), v * jnp.sin(alpha)
-        x, y = 0., 1.5
-        while y > 0:
-            v_y += dt * -G
-            x += dt * v_x
-            y += dt * v_y
-        return x
-
-    sigmoid = jax.nn.sigmoid
-
-    def elbo(vp, x_obs, eps):
-        zeta = vp[0] + jnp.exp(vp[1]) * eps
-        v = 10. * sigmoid(zeta[0])
-        alpha = np.pi / 2 * sigmoid(zeta[1])
-        out = jnp.log(1 / 10.) + jnp.log(10. * sigmoid(zeta[0]) * (1 - sigmoid(zeta[0])))
-        out += jnp.log(2 / np.pi) + jnp.log(np.pi / 2 * sigmoid(zeta[1]) * (1 - sigmoid(zeta[1])))
-        out += jsc.stats.norm.logpdf(x_obs, loc=landing(v, alpha), scale=.5)
-        out += 1. + np.log(2 * np.pi) + jnp.sum(vp[1])        # entropy of q, two dimensions
-        return out
-
-    grad_elbo = jax.grad(elbo)
-    np.random.seed(777)                                        # as in nb09-advi
-    x_obs = trajectory_end(5., np.pi / 4) + .5 * np.random.randn()
-    vp = jnp.array([np.random.randn(2), np.random.randn(2)])
-    _ = np.random.randn(100, 2)                                # the test draws of nb09-advi
-    for _epoch in range(50):
-        g = jnp.zeros_like(vp)
-        for eps in np.random.randn(25, 2):
-            g += grad_elbo(vp, x_obs, eps)
-        vp += .02 * g / 25
-    zeta = np.asarray(vp[0]) + np.exp(np.asarray(vp[1])) * np.random.randn(4000, 2)
-    advi = np.column_stack([10. / (1 + np.exp(-zeta[:, 0])),
-                            np.pi / 2 / (1 + np.exp(-zeta[:, 1]))])
 
     def log_posterior(theta):
         v, alpha = theta
-        if not (0 < v < 10 and 0 < alpha < np.pi / 2):
+        if not (0 < v < V_MAX and 0 < alpha < A_MAX):
             return -np.inf
-        return norm.logpdf(x_obs, trajectory_end(v, alpha), .5)
+        return norm.logpdf(x_obs, landing(v, alpha), SIGMA)
 
-    rng = np.random.default_rng(0)
-    start = np.column_stack([rng.uniform(4, 9, 32), rng.uniform(.3, 1.2, 32)])
+    rng = np.random.default_rng(seed)
+    start = np.column_stack([rng.uniform(1, 9, 32), rng.uniform(.1, 1.4, 32)])
     sampler = emcee.EnsembleSampler(32, 2, log_posterior)
-    sampler.random_state = np.random.RandomState(0).get_state()
-    sampler.run_mcmc(start, 4000)
-    mcmc = sampler.get_chain(discard=1000, thin=10, flat=True)
-    print("  projectile: x_obs %.2f, %d MCMC draws" % (x_obs, len(mcmc)))
+    sampler.random_state = np.random.RandomState(seed).get_state()
+    sampler.run_mcmc(start, steps)
+    return sampler.get_chain(discard=1000, thin=10, flat=True)
 
-    fig, ax = plt.subplots(figsize=(W, 3.2), dpi=200)
-    ax.scatter(*mcmc.T, s=4, color=LIGHT, lw=0, label="MCMC (emcee)")
-    ax.scatter(*advi[:2000].T, s=4, color=BLUE, lw=0, alpha=.6, label="ADVI, mean field")
+
+def projectile_axes(ax):
     ax.set_xlabel(r"$v$ (m/s)")
     ax.set_ylabel(r"$\alpha$ (rad)")
-    ax.set_xlim(0, 10)
-    ax.set_ylim(0, np.pi / 2)
-    ax.legend(frameon=False, loc="lower center", bbox_to_anchor=(.5, 1), ncol=2, markerscale=3)
+    ax.set_xlim(0, V_MAX)
+    ax.set_ylim(0, A_MAX)
     tidy(ax)
+
+
+def projectile_setup():
+    """Left: trajectories drawn from the posterior, all landing near x_obs. Right: the posterior
+    of (v, alpha), sampled by MCMC."""
+    x_obs = x_observed()
+    post = mcmc_projectile(x_obs)
+    print("  projectile: x_obs %.2f m, %d MCMC draws" % (x_obs, len(post)))
+    rng = np.random.default_rng(0)
+    fig, (left, right) = plt.subplots(1, 2, figsize=(W, 2.8), dpi=200,
+                                      gridspec_kw=dict(width_ratios=[1.3, 1]))
+    for v, alpha in post[rng.choice(len(post), 40, replace=False)]:
+        left.plot(*flight(v, alpha), color=BLUE, lw=.8, alpha=.5)
+    left.plot([x_obs], [0], "o", color=ORANGE, ms=6, zorder=3)
+    left.text(x_obs, -.35, r"$x_\mathrm{obs}$", color=ORANGE, ha="center", va="top")
+    left.axhline(0, color=LIGHT, lw=1)
+    left.set_xlabel("distance (m)")
+    left.set_ylabel("height (m)")
+    left.set_ylim(-1.1, None)
+    left.spines["left"].set_bounds(0, 5)
+    left.set_yticks([0, 2, 4])
+    tidy(left)
+    right.scatter(*post[rng.choice(len(post), 4000, replace=False)].T, s=3, color=GREY, lw=0,
+                  alpha=.4)
+    projectile_axes(right)
+    right.set_title(r"$p(v, \alpha \mid x_\mathrm{obs})$")
+    fig.tight_layout()
+    save(fig, "projectile.png")
+
+
+def adam(grad, params, steps, lr=.01, seed=0):
+    """Plain Adam on a pytree of parameters, with a fresh key at every step."""
+    import jax
+    import jax.numpy as jnp
+    m = jax.tree_util.tree_map(jnp.zeros_like, params)
+    v = jax.tree_util.tree_map(jnp.zeros_like, params)
+    key = jax.random.PRNGKey(seed)
+    for t in range(1, steps + 1):
+        key, sub = jax.random.split(key)
+        g = grad(params, sub)
+        m = jax.tree_util.tree_map(lambda a, b: .9 * a + .1 * b, m, g)
+        v = jax.tree_util.tree_map(lambda a, b: .999 * a + .001 * b ** 2, v, g)
+        params = jax.tree_util.tree_map(
+            lambda p, a, b: p + lr * (a / (1 - .9 ** t)) / (jnp.sqrt(b / (1 - .999 ** t)) + 1e-8),
+            params, m, v)
+    return params
+
+
+def log_joint_zeta(zeta, x, jnp):
+    """log p(x, zeta), with the uniform priors carried to zeta by the logistic maps."""
+    import jax
+    s = jax.nn.sigmoid(zeta)
+    v, alpha = V_MAX * s[..., 0], A_MAX * s[..., 1]
+    log_jac = jnp.sum(jnp.log(s) + jnp.log1p(-s), -1) + np.log(V_MAX * A_MAX)
+    log_prior = -np.log(V_MAX * A_MAX)
+    mean = landing(v, alpha, jnp)
+    return log_prior + log_jac - .5 * ((x - mean) / SIGMA) ** 2 - np.log(SIGMA * np.sqrt(2 * np.pi))
+
+
+def to_theta(zeta):
+    s = 1 / (1 + np.exp(-zeta))
+    return np.column_stack([V_MAX * s[:, 0], A_MAX * s[:, 1]])
+
+
+def advi_projectile():
+    """ADVI on x_obs with a mean-field and a full-rank Gaussian in zeta, against MCMC."""
+    import jax
+    import jax.numpy as jnp
+    x_obs = x_observed()
+    post = mcmc_projectile(x_obs)
+    fits = {}
+    for name in ("mean field", "full rank"):
+        def elbo(params, key, full=name == "full rank"):
+            eps = jax.random.normal(key, (64, 2))
+            L = jnp.diag(jnp.exp(params["log_s"]))
+            if full:
+                L = L + jnp.tril(params["off"], -1)
+            zeta = params["mu"] + eps @ L.T
+            entropy = jnp.sum(params["log_s"])
+            return jnp.mean(log_joint_zeta(zeta, x_obs, jnp)) + entropy
+        grad = jax.jit(jax.grad(elbo))
+        params = {"mu": jnp.zeros(2), "log_s": jnp.zeros(2), "off": jnp.zeros((2, 2))}
+        params = adam(grad, params, 4000, lr=.02)
+        L = np.diag(np.exp(np.asarray(params["log_s"])))
+        if name == "full rank":
+            L = L + np.tril(np.asarray(params["off"]), -1)
+        eps = np.random.default_rng(0).standard_normal((3000, 2))
+        fits[name] = to_theta(np.asarray(params["mu"]) + eps @ L.T)
+    fig, axes = plt.subplots(1, 2, figsize=(W, 2.8), dpi=200, sharey=True)
+    post = post[np.random.default_rng(0).choice(len(post), 4000, replace=False)]
+    for ax, (name, q) in zip(axes, fits.items()):
+        ax.scatter(*post.T, s=3, color=LIGHT, lw=0, label="MCMC")
+        ax.scatter(*q.T, s=3, color=BLUE, lw=0, alpha=.5, label="ADVI, " + name)
+        projectile_axes(ax)
+        ax.set_title("ADVI, " + name)
+    axes[1].set_ylabel("")
     fig.tight_layout()
     save(fig, "advi-projectile.png")
 
+
+def amortized_flow(xs=(2., 4., 6.)):
+    """Amortized VI with a conditional normalizing flow q(zeta | x): eight affine coupling layers
+    whose scale and shift are small networks of (the other coordinate, x). Trained with the
+    ELBO averaged over landing distances drawn from the prior predictive, then evaluated at three
+    distances against MCMC."""
+    import jax
+    import jax.numpy as jnp
+
+    K, HIDDEN = 8, 64
+    keys = jax.random.split(jax.random.PRNGKey(0), K)
+
+    def init_layer(key):
+        k1, k2, k3 = jax.random.split(key, 3)
+        return {"W1": jax.random.normal(k1, (2, HIDDEN)) * .3, "b1": jnp.zeros(HIDDEN),
+                "W2": jax.random.normal(k2, (HIDDEN, HIDDEN)) * .1, "b2": jnp.zeros(HIDDEN),
+                "W3": jax.random.normal(k3, (HIDDEN, 2)) * .01, "b3": jnp.zeros(2)}
+
+    params = [init_layer(k) for k in keys]
+
+    def net(p, a, x):
+        h = jnp.tanh(jnp.stack([a, (x - 4.) / 2.], -1) @ p["W1"] + p["b1"])
+        h = jnp.tanh(h @ p["W2"] + p["b2"])
+        out = h @ p["W3"] + p["b3"]
+        return 2. * jnp.tanh(out[..., 0] / 2.), out[..., 1]
+
+    def flow(params, z0, x):
+        """z0 -> zeta, and log |det J| of the whole map."""
+        z, log_det = z0, 0.
+        for k, p in enumerate(params):
+            i, j = (0, 1) if k % 2 == 0 else (1, 0)
+            log_scale, shift = net(p, z[..., i], x)
+            zj = z[..., j] * jnp.exp(log_scale) + shift
+            z = z.at[..., j].set(zj)
+            log_det = log_det + log_scale
+        return z, log_det
+
+    def elbo(params, key):
+        k1, k2, k3 = jax.random.split(key, 3)
+        theta = jax.random.uniform(k1, (256, 2)) * jnp.array([V_MAX, A_MAX])
+        x = landing(theta[:, 0], theta[:, 1], jnp) + SIGMA * jax.random.normal(k2, (256,))
+        z0 = jax.random.normal(k3, (256, 2))
+        zeta, log_det = flow(params, z0, x)
+        log_q = jnp.sum(-.5 * z0 ** 2, -1) - np.log(2 * np.pi) - log_det
+        return jnp.mean(log_joint_zeta(zeta, x, jnp) - log_q)
+
+    grad = jax.jit(jax.grad(elbo))
+    params = adam(grad, params, 20000, lr=1e-3)
+    final = float(np.mean([elbo(params, k) for k in jax.random.split(jax.random.PRNGKey(9), 20)]))
+    print("  amortized flow: ELBO %.3f" % final)
+
+    fig, axes = plt.subplots(1, len(xs), figsize=(W, 2.4), dpi=200, sharey=True)
+    for ax, x in zip(axes, xs):
+        post = mcmc_projectile(x, steps=4000)
+        z0 = np.random.default_rng(0).standard_normal((2000, 2))
+        zeta, _ = flow(params, jnp.asarray(z0), jnp.full(2000, x))
+        q = to_theta(np.asarray(zeta))
+        ax.scatter(*post[np.random.default_rng(0).choice(len(post), 3000, replace=False)].T, s=2,
+                   color=LIGHT, lw=0)
+        ax.scatter(*q.T, s=2, color=BLUE, lw=0, alpha=.4)
+        projectile_axes(ax)
+        ax.set_title(r"$x = %g$ m" % x)
+    for ax in axes[1:]:
+        ax.set_ylabel("")
+    fig.tight_layout()
+    save(fig, "amortized-flow.png")
 
 if __name__ == "__main__":
     graphical_model()
@@ -406,4 +538,6 @@ if __name__ == "__main__":
     change_of_variables_2d()
     normalizing_flow()
     advi_transform()
+    projectile_setup()
     advi_projectile()
+    amortized_flow()
