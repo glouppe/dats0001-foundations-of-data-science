@@ -24,7 +24,7 @@ class: middle
 
 .info[
 
-In this lecture, the latent variables $\mathbf{z}$ gather all the unknowns, parameters included. Variational inference approximates their posterior by optimization.
+In this lecture, the latent variables $\mathbf{z}$ gather all the unknowns, parameters included.
 
 ]
 
