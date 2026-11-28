@@ -98,9 +98,22 @@ Independence makes $q$ easy to sample and to evaluate, but it cannot represent c
 
 class: middle
 
-For a Gaussian posterior $\mathcal{N}(\mathbf{z} \mid \boldsymbol{\mu}, \boldsymbol{\Sigma})$, with precision matrix $\boldsymbol{\Lambda} = \boldsymbol{\Sigma}^{-1}$, the factors that maximize the ELBO are
-$$q\_j(z\_j; \phi\_j^\*) = \mathcal{N}(z\_j \mid \mu\_j, 1 / \Lambda\_{jj}),$$
-where $1 / \Lambda\_{jj}$ is the variance of $z\_j$ given all the other variables. It is never larger than the marginal variance $\Sigma\_{jj}$, and equal only when $z\_j$ is uncorrelated with the others.
+For a Gaussian posterior $\mathcal{N}(\mathbf{z} \mid \boldsymbol{\mu}, \boldsymbol{\Sigma})$, with precision matrix $\boldsymbol{\Lambda} = \boldsymbol{\Sigma}^{-1}$,
+$$\log p(\mathbf{z} \mid \mathbf{x}) = -\frac{1}{2} (\mathbf{z} - \boldsymbol{\mu})^T \boldsymbol{\Lambda} (\mathbf{z} - \boldsymbol{\mu}) + \text{const}.$$
+With mean-field Gaussian factors, $q(\mathbf{z}; \phi) = \mathcal{N}(\mathbf{z} \mid \mathbf{m}, \text{diag}(\mathbf{s}^2))$, the ELBO is
+$$\begin{aligned}
+\mathcal{L}(\phi) &= \mathbb{E}\_{q(\mathbf{z}; \phi)}\left[\log p(\mathbf{z} \mid \mathbf{x}) - \log q(\mathbf{z}; \phi)\right] + \log p(\mathbf{x}) \\\\
+&= -\frac{1}{2} \mathbb{E}\_{q(\mathbf{z}; \phi)}\left[(\mathbf{z} - \boldsymbol{\mu})^T \boldsymbol{\Lambda} (\mathbf{z} - \boldsymbol{\mu})\right] + \sum\_j \log s\_j + \text{const} \\\\
+&= -\frac{1}{2} (\mathbf{m} - \boldsymbol{\mu})^T \boldsymbol{\Lambda} (\mathbf{m} - \boldsymbol{\mu}) - \frac{1}{2} \sum\_{j} \Lambda\_{jj} s\_j^2 + \sum\_j \log s\_j + \text{const}.
+\end{aligned}$$
+The second line uses the entropy of a Gaussian. In the third, the cross terms $\Lambda\_{jk}$ vanish since the factors are independent. Setting the gradients to zero gives
+$$\mathbf{m} = \boldsymbol{\mu}, \qquad -\Lambda\_{jj} s\_j + \frac{1}{s\_j} = 0 \quad \Rightarrow \quad s\_j^2 = \frac{1}{\Lambda\_{jj}}.$$
+
+---
+
+class: middle
+
+The variance $1 / \Lambda\_{jj}$ is the variance of $z\_j$ given all the other variables. It is never larger than the marginal variance $\Sigma\_{jj}$, and equal only when $z\_j$ is uncorrelated with the others.
 
 .center.width-70[![](figures/lec9/mean-field.png)]
 
