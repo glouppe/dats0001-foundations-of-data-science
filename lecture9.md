@@ -80,7 +80,7 @@ $$\phi^\* = \arg\max\_\phi \mathcal{L}(\phi), \qquad \mathcal{L}(\phi) = \mathbb
 
 .center.width-70[![](figures/lec9/variational-family.png)]
 
-.center[The optimum is where a level set of the KL divergence (dashed) touches $\mathcal{Q}$. <br>If $p(\mathbf{z} \mid \mathbf{x}) \in \mathcal{Q}$, the optimum is the posterior itself.]
+.center[The optimum is where a level set of $\text{KL}(q \\| p(\mathbf{z} \mid \mathbf{x}))$ (dashed) touches $\mathcal{Q}$. <br>If $p(\mathbf{z} \mid \mathbf{x}) \in \mathcal{Q}$, the optimum is the posterior itself.]
 
 ---
 
