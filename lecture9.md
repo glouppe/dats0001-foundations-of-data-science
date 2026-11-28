@@ -22,7 +22,7 @@ The integral is intractable in most models, and so is the posterior.
 
 class: middle
 
-The latent variables $\mathbf{z}$ gather all the unknowns, parameters included. Their posterior can be sampled by MCMC. Variational inference approximates it by optimization instead.
+In this lecture, the latent variables $\mathbf{z}$ gather all the unknowns, parameters included. Variational inference approximates their posterior by optimization.
 
 ---
 
