@@ -102,29 +102,35 @@ def kl_directions():
 # The variational family ------------------------------------------------------------------
 
 def variational_family():
-    """The space of distributions over z, the family Q inside it, the posterior outside, and
-    the optimization path from an initial q to q*, the member of Q closest to the posterior."""
+    """The family Q as a region of the space of distributions over z, the posterior outside it,
+    and level sets of the KL divergence to the posterior (circles, schematically). Gradient
+    steps on phi move q from q(z; phi_0) to q(z; phi*), where a level set touches Q."""
+    centre, a, b = np.array([-.6, 0.]), 1.7, .95
+    post = np.array([1.9, .5])
+    ts = np.linspace(0, 2 * np.pi, 2000)
+    rim = centre + np.column_stack([a * np.cos(ts), b * np.sin(ts)])
+    star = rim[np.argmin(np.linalg.norm(rim - post, axis=1))]
+    d = np.linalg.norm(star - post)
     fig, ax = plt.subplots(figsize=(W, 2.6), dpi=200)
-    ax.add_patch(Ellipse((-.6, 0), 3.4, 1.9, facecolor=BLUE, alpha=.12, lw=0))
-    ax.add_patch(Ellipse((-.6, 0), 3.4, 1.9, facecolor="none", edgecolor=BLUE, lw=1.4))
-    ax.text(-2.05, .55, r"$\mathcal{Q}$", color=BLUE, fontsize=16)
-    post = np.array([2.3, .45])
-    star = np.array([1.05, .2])
-    ax.plot(*post, "o", color=GREY, ms=7)
-    ax.text(post[0] + .12, post[1] + .12, r"$p(\mathbf{z} \mid \mathbf{x})$", color=GREY)
-    path = np.array([[-1.6, -.5], [-1.0, -.45], [-.45, -.25], [.1, -.05], [.6, .1], star])
-    ax.plot(*path.T, color=BLUE, lw=1.4, ls=(0, (3, 2)))
-    ax.plot(*path[0], "o", color=BLUE, ms=5, mfc="white")
-    ax.text(path[0, 0], path[0, 1] + .15, r"initial $q$", color=BLUE, ha="center", va="bottom")
+    for k, r in enumerate([d, d + .45, d + .9]):
+        ax.add_patch(plt.Circle(post, r, facecolor="none", edgecolor=ORANGE, lw=1.,
+                                ls=(0, (3, 2)), alpha=1 - .3 * k))
+    ax.add_patch(Ellipse(centre, 2 * a, 2 * b, facecolor=BLUE, alpha=.12, lw=0))
+    ax.add_patch(Ellipse(centre, 2 * a, 2 * b, facecolor="none", edgecolor=BLUE, lw=1.4))
+    ax.text(centre[0] - .95 * a, centre[1] + .75 * b, r"$\mathcal{Q}$", color=BLUE, fontsize=16)
+    start = np.array([-1.7, -.45])
+    control = star - 1.2 * (post - star) / d                  # arrive along the gradient
+    w = np.linspace(0, 1, 100)[:, None]
+    path = (1 - w) ** 2 * start + 2 * w * (1 - w) * control + w ** 2 * star
+    ax.plot(*path.T, color=BLUE, lw=1.4)
+    ax.plot(*start, "o", color=BLUE, ms=5, mfc="white")
+    ax.text(*(start + [0, .14]), r"$q(\mathbf{z}; \phi_0)$", color=BLUE, ha="center", va="bottom")
     ax.plot(*star, "o", color=BLUE, ms=7)
-    ax.text(star[0] - .05, star[1] + .15, r"$q^*$", color=BLUE, ha="right")
-    ax.annotate("", post, star, arrowprops=dict(arrowstyle="<->", color=ORANGE, lw=1.4,
-                                                 shrinkA=5, shrinkB=5))
-    ax.text((star[0] + post[0]) / 2 + .35, (star[1] + post[1]) / 2 - .25,
-            r"$\mathrm{KL}(q^* \,\|\, p(\mathbf{z} \mid \mathbf{x}))$", color=ORANGE,
-            ha="center", va="top")
-    ax.set_xlim(-2.6, 3.6)
-    ax.set_ylim(-1.15, 1.15)
+    ax.text(*(star + [-.08, .1]), r"$q(\mathbf{z}; \phi^*)$", color=BLUE, ha="right", va="bottom")
+    ax.plot(*post, "o", color=GREY, ms=7)
+    ax.text(*(post + [.12, .12]), r"$p(\mathbf{z} \mid \mathbf{x})$", color=GREY)
+    ax.set_xlim(-2.6, 3.4)
+    ax.set_ylim(-1.45, 1.45)
     ax.set_aspect("equal")
     ax.set_axis_off()
     fig.tight_layout()

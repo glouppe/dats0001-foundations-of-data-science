@@ -73,11 +73,14 @@ class: middle
 
 ## Variational family
 
-The family $\mathcal{Q}$ is a choice. Its members must be easy to sample from and to evaluate, since the ELBO is an expectation over $q$ of $\log p(\mathbf{x}, \mathbf{z}) - \log q(\mathbf{z})$. In practice, the members are indexed by .bold[variational parameters] $\phi$, as $q(\mathbf{z}; \phi)$, and VI maximizes the ELBO over $\phi$.
+The family is indexed by .bold[variational parameters] $\phi$,
+$$\mathcal{Q} = \\{ q(\mathbf{z}; \phi) : \phi \in \Phi \\},$$
+and VI maximizes the ELBO over them,
+$$\phi^\* = \arg\max\_\phi \mathcal{L}(\phi), \qquad \mathcal{L}(\phi) = \mathbb{E}\_{q(\mathbf{z}; \phi)}\left[\log p(\mathbf{x}, \mathbf{z}) - \log q(\mathbf{z}; \phi)\right].$$
 
 .center.width-70[![](figures/lec9/variational-family.png)]
 
-A richer family gets closer to the posterior, and reaches it when $\mathcal{Q}$ contains it. A simpler family is cheaper to optimize.
+.center[The optimum is where a level set of the KL divergence (dashed) touches $\mathcal{Q}$. <br>If $p(\mathbf{z} \mid \mathbf{x}) \in \mathcal{Q}$, the optimum is the posterior itself.]
 
 ---
 
