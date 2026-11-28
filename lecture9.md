@@ -108,7 +108,7 @@ Independence makes $q$ easy to sample and to evaluate, but it cannot represent c
 
 class: middle
 
-For a Gaussian posterior $\mathcal{N}(\mathbf{z} \mid \boldsymbol{\mu}, \boldsymbol{\Sigma})$, with precision matrix $\boldsymbol{\Lambda} = \boldsymbol{\Sigma}^{-1}$,
+To see what the mean field captures of a correlated posterior, we fit it to a Gaussian posterior $\mathcal{N}(\mathbf{z} \mid \boldsymbol{\mu}, \boldsymbol{\Sigma})$, for which the ELBO has a closed form. With the precision matrix $\boldsymbol{\Lambda} = \boldsymbol{\Sigma}^{-1}$,
 $$\log p(\mathbf{z} \mid \mathbf{x}) = -\frac{1}{2} (\mathbf{z} - \boldsymbol{\mu})^T \boldsymbol{\Lambda} (\mathbf{z} - \boldsymbol{\mu}) + \text{const}.$$
 With mean-field Gaussian factors, $q(\mathbf{z}; \phi) = \mathcal{N}(\mathbf{z} \mid \mathbf{m}, \text{diag}(\mathbf{s}^2))$, the ELBO is
 $$\begin{aligned}
@@ -123,7 +123,7 @@ $$\mathbf{m} = \boldsymbol{\mu}, \qquad -\Lambda\_{jj} s\_j + \frac{1}{s\_j} = 0
 
 class: middle
 
-The variance $1 / \Lambda\_{jj}$ is the variance of $z\_j$ given all the other variables. It is never larger than the marginal variance $\Sigma\_{jj}$, and equal only when $z\_j$ is uncorrelated with the others.
+The mean field captures the posterior means exactly. Its variances $1 / \Lambda\_{jj}$ are the variances of each $z\_j$ given all the other variables. They are never larger than the marginal variances $\Sigma\_{jj}$, and equal only when $z\_j$ is uncorrelated with the others.
 
 .center.width-70[![](figures/lec9/mean-field.png)]
 
