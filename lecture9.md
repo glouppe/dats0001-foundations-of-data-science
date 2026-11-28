@@ -88,13 +88,23 @@ class: middle
 
 ## Mean-field variational inference
 
-The simplest family assumes the latent variables independent under $q$,
-$$q(\mathbf{z}) = \prod\_{j=1}^m q\_j(z\_j).$$
-This is the .bold[mean-field] family.
+The simplest choice of $\mathcal{Q}$ makes the latent variables independent,
+$$q(\mathbf{z}; \phi) = \prod\_{j=1}^m q\_j(z\_j; \phi\_j),$$
+each factor with its own variational parameters. This is the .bold[mean-field] family. With Gaussian factors, $\phi\_j = (\mu\_j, \sigma\_j)$.
+
+Independence makes $q$ easy to sample and to evaluate, but it cannot represent correlations between the latent variables.
+
+---
+
+class: middle
+
+For a Gaussian posterior $\mathcal{N}(\mathbf{z} \mid \boldsymbol{\mu}, \boldsymbol{\Sigma})$, with precision matrix $\boldsymbol{\Lambda} = \boldsymbol{\Sigma}^{-1}$, the factors that maximize the ELBO are
+$$q\_j(z\_j; \phi\_j^\*) = \mathcal{N}(z\_j \mid \mu\_j, 1 / \Lambda\_{jj}),$$
+where $1 / \Lambda\_{jj}$ is the variance of $z\_j$ given all the other variables. It is never larger than the marginal variance $\Sigma\_{jj}$, and equal only when $z\_j$ is uncorrelated with the others.
 
 .center.width-70[![](figures/lec9/mean-field.png)]
 
-.center[The mean-field Gaussian that maximizes the ELBO for a correlated posterior. <br>It misses the correlation, and it is too narrow in every direction.]
+.center[The mean-field Gaussian for a correlated Gaussian posterior. <br>It misses the correlation, and it is too narrow in every direction.]
 
 ---
 
