@@ -133,16 +133,6 @@ The variance $1 / \Lambda\_{jj}$ is the variance of $z\_j$ given all the other v
 
 class: middle
 
-.italic[Example.] The mean-field Gaussian approximation of the projectile posterior, $q(v, \alpha) = q(v) \, q(\alpha)$, fitted by ADVI (next slides).
-
-.center.width-70[![](figures/lec9/projectile-mean-field.png)]
-
-.center[It covers only the middle of the ridge, <br>and misses how $v$ and $\alpha$ vary together along it.]
-
----
-
-class: middle
-
 ## Automatic differentiation variational inference
 
 For most models, such as the projectile, the ELBO has no closed form, and its optimum cannot be derived by hand as for the Gaussian posterior. .bold[Automatic differentiation variational inference] (ADVI) maximizes it by stochastic gradient ascent, for any model whose log density $\log p(\mathbf{x}, \mathbf{z})$ is written as a differentiable program. It proceeds in three steps.
@@ -234,11 +224,21 @@ Automatic differentiation computes each gradient. Stochastic gradient ascent fol
 
 class: middle
 
+.italic[Example.] ADVI on the projectile, with a mean-field Gaussian in $\boldsymbol{\zeta}$, $q(v, \alpha) = q(v) \, q(\alpha)$.
+
+.center.width-70[![](figures/lec9/projectile-mean-field.png)]
+
+.center[It covers only the middle of the ridge, <br>and misses how $v$ and $\alpha$ vary together along it.]
+
+---
+
+class: middle
+
 .italic[Example.] ADVI on the projectile, with a full-rank Gaussian in $\boldsymbol{\zeta}$.
 
 .center.width-70[![](figures/lec9/projectile-full-rank.png)]
 
-.center[The full-rank Gaussian tilts with the ridge, slightly, but cannot follow its curve. <br>It covers only the middle, like the mean field.]
+.center[The full-rank Gaussian tilts with the ridge, slightly, but cannot follow its curve. <br>It also covers only the middle.]
 
 ---
 
