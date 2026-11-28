@@ -71,6 +71,18 @@ Unlike the KL divergence, the ELBO involves only the joint density $p(\mathbf{x}
 
 class: middle
 
+## Variational family
+
+The family $\mathcal{Q}$ is a choice. Its members must be easy to sample from and to evaluate, since the ELBO is an expectation over $q$ of $\log p(\mathbf{x}, \mathbf{z}) - \log q(\mathbf{z})$. In practice, the members are indexed by .bold[variational parameters] $\phi$, as $q(\mathbf{z}; \phi)$, and VI maximizes the ELBO over $\phi$.
+
+.center.width-70[![](figures/lec9/variational-family.png)]
+
+A richer family gets closer to the posterior, and reaches it when $\mathcal{Q}$ contains it. A simpler family is cheaper to optimize.
+
+---
+
+class: middle
+
 ## Mean-field variational inference
 
 The simplest family assumes the latent variables independent under $q$,

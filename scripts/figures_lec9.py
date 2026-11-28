@@ -99,6 +99,38 @@ def kl_directions():
     save(fig, "kl-directions.png")
 
 
+# The variational family ------------------------------------------------------------------
+
+def variational_family():
+    """The space of distributions over z, the family Q inside it, the posterior outside, and
+    the optimization path from an initial q to q*, the member of Q closest to the posterior."""
+    fig, ax = plt.subplots(figsize=(W, 2.6), dpi=200)
+    ax.add_patch(Ellipse((-.6, 0), 3.4, 1.9, facecolor=BLUE, alpha=.12, lw=0))
+    ax.add_patch(Ellipse((-.6, 0), 3.4, 1.9, facecolor="none", edgecolor=BLUE, lw=1.4))
+    ax.text(-2.05, .55, r"$\mathcal{Q}$", color=BLUE, fontsize=16)
+    post = np.array([2.3, .45])
+    star = np.array([1.05, .2])
+    ax.plot(*post, "o", color=GREY, ms=7)
+    ax.text(post[0] + .12, post[1] + .12, r"$p(\mathbf{z} \mid \mathbf{x})$", color=GREY)
+    path = np.array([[-1.6, -.5], [-1.0, -.45], [-.45, -.25], [.1, -.05], [.6, .1], star])
+    ax.plot(*path.T, color=BLUE, lw=1.4, ls=(0, (3, 2)))
+    ax.plot(*path[0], "o", color=BLUE, ms=5, mfc="white")
+    ax.text(path[0, 0], path[0, 1] + .15, r"initial $q$", color=BLUE, ha="center", va="bottom")
+    ax.plot(*star, "o", color=BLUE, ms=7)
+    ax.text(star[0] - .05, star[1] + .15, r"$q^*$", color=BLUE, ha="right")
+    ax.annotate("", post, star, arrowprops=dict(arrowstyle="<->", color=ORANGE, lw=1.4,
+                                                 shrinkA=5, shrinkB=5))
+    ax.text((star[0] + post[0]) / 2 + .35, (star[1] + post[1]) / 2 - .25,
+            r"$\mathrm{KL}(q^* \,\|\, p(\mathbf{z} \mid \mathbf{x}))$", color=ORANGE,
+            ha="center", va="top")
+    ax.set_xlim(-2.6, 3.6)
+    ax.set_ylim(-1.15, 1.15)
+    ax.set_aspect("equal")
+    ax.set_axis_off()
+    fig.tight_layout()
+    save(fig, "variational-family.png")
+
+
 # Mean field ------------------------------------------------------------------------------
 
 def gaussian_ellipse(ax, cov, color, label, ls="-"):
@@ -362,6 +394,7 @@ def advi_projectile():
 if __name__ == "__main__":
     graphical_model()
     kl_directions()
+    variational_family()
     mean_field()
     change_of_variables()
     change_of_variables_2d()
