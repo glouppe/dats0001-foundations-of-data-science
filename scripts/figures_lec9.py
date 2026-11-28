@@ -272,7 +272,7 @@ def normalizing_flow():
     z2, d2 = f2(z1), d1 / df2(z1)
     fig, axes = plt.subplots(1, 3, figsize=(W, 2.2), dpi=200, sharey=True)
     for ax, (z, d), title in zip(axes, [(z0, d0), (z1, d1), (z2, d2)],
-                                 [r"$p(z_0)$", r"$q(z_1)$, $z_1 = f_1(z_0)$", r"$q(z_2)$, $z_2 = f_2(z_1)$"]):
+                                 [r"$p(z_0)$", r"$q(z_1)$, $z_1 = g_1(z_0)$", r"$q(z_2)$, $z_2 = g_2(z_1)$"]):
         ax.fill_between(z, d, color=BLUE, alpha=.25, lw=0)
         ax.plot(z, d, color=BLUE, lw=1.6)
         ax.set_title(title)

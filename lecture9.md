@@ -123,9 +123,22 @@ The variance $1 / \Lambda\_{jj}$ is the variance of $z\_j$ given all the other v
 
 class: middle
 
+## Automatic differentiation variational inference
+
+For most models, the ELBO has no closed form, and its optimum cannot be derived by hand as for the Gaussian posterior. .bold[Automatic differentiation variational inference] (ADVI) maximizes it by stochastic gradient ascent, for any model whose log density $\log p(\mathbf{x}, \mathbf{z})$ is written as a differentiable program. It proceeds in three steps.
+1. Map the latent variables to $\mathbb{R}^m$, where a Gaussian is a sensible family.
+2. Choose a Gaussian family in $\mathbb{R}^m$.
+3. Estimate the gradient of the ELBO by sampling, and follow it.
+
+.footnote[Credits: [Kucukelbir et al](https://arxiv.org/abs/1603.00788), 2016.]
+
+---
+
+class: middle
+
 ## Change of variables
 
-A richer family transforms a simple distribution. Let $\mathbf{u} \sim p(\mathbf{u})$ and $\mathbf{z} = f(\mathbf{u})$, with $f$ invertible and differentiable. We look for the density of $\mathbf{z}$.
+Mapping the latent variables changes their density. Let $\mathbf{u} \sim p(\mathbf{u})$ and $\mathbf{z} = f(\mathbf{u})$, with $f$ invertible and differentiable. We look for the density of $\mathbf{z}$.
 
 .center.width-70[![](figures/lec9/change-of-variables.png)]
 
@@ -159,32 +172,6 @@ with $J\_f$ the Jacobian of $f$. A linear map scales volumes by the absolute val
 
 Both regions carry the same mass, $p(\mathbf{z}) \left| \det J\_f(\mathbf{u}) \right| dV = p(\mathbf{u}) \, dV$. This gives the .bold[change of variables] theorem,
 $$p(\mathbf{z}) = p(\mathbf{u}) \left| \det J\_f(\mathbf{u}) \right|^{-1}, \qquad \mathbf{u} = f^{-1}(\mathbf{z}).$$
-
----
-
-class: middle
-
-## Normalizing flows
-
-A .bold[normalizing flow] composes $K$ invertible functions, $\mathbf{z}\_K = f\_K \circ \cdots \circ f\_1(\mathbf{z}\_0)$ with $\mathbf{z}\_0 \sim p(\mathbf{z}\_0)$, each a neural network built to be invertible with a cheap Jacobian determinant. Applying the change of variables once per function,
-$$\log q(\mathbf{z}\_K) = \log p(\mathbf{z}\_0) - \sum\_{k=1}^K \log \left| \det J\_{f\_k}(\mathbf{z}\_{k-1}) \right|.$$
-
-.center.width-70[![](figures/lec9/normalizing-flow.png)]
-
-.center[A Gaussian through two invertible functions. <br>Each one reshapes the density, which stays exact.]
-
----
-
-class: middle
-
-## Automatic differentiation variational inference
-
-ADVI maximizes the ELBO by stochastic gradient ascent. It needs only $\log p(\mathbf{x}, \mathbf{z})$ and its gradient, the same ingredients as HMC, so it applies to any model whose log density is written as a program. It proceeds in three steps.
-1. Map the latent variables to $\mathbb{R}^m$.
-2. Choose a Gaussian family in $\mathbb{R}^m$.
-3. Follow stochastic gradients of the ELBO.
-
-.footnote[Credits: [Kucukelbir et al](https://arxiv.org/abs/1603.00788), 2016.]
 
 ---
 
@@ -261,6 +248,20 @@ With $N$ observations $\mathbf{x}\_i$, each with its own latent variables $\math
 .bold[Amortized] VI instead trains one network $f(\mathbf{x}; \varphi)$ that maps any observation to the parameters of its variational distribution,
 $$q(\mathbf{z}\_i \mid \mathbf{x}\_i; \varphi) = q(\mathbf{z}\_i \mid f(\mathbf{x}\_i; \varphi)).$$
 Once trained, the variational distribution of a new observation costs one pass through the network.
+
+---
+
+class: middle
+
+## Normalizing flows
+
+The network $f$ may output the mean and variance of a Gaussian, too simple for a curved posterior such as the ridge of the projectile. A .bold[normalizing flow] is a richer family. It composes $K$ invertible neural networks, $\mathbf{z}\_K = g\_K \circ \cdots \circ g\_1(\mathbf{z}\_0)$ with $\mathbf{z}\_0 \sim \mathcal{N}(\mathbf{0}, \mathbf{I})$, each taking $\mathbf{x}$ as an extra input and with a cheap Jacobian determinant. By the change of variables,
+$$\log q(\mathbf{z}\_K \mid \mathbf{x}) = \log p(\mathbf{z}\_0) - \sum\_{k=1}^K \log \left| \det J\_{g\_k}(\mathbf{z}\_{k-1}) \right|.$$
+Samples are drawn by passing $\mathbf{z}\_0$ through the flow, so the reparameterization applies unchanged.
+
+.center.width-70[![](figures/lec9/normalizing-flow.png)]
+
+.center[A Gaussian through two invertible functions.]
 
 ---
 
